@@ -1,2 +1,2 @@
 # mantle
-A helping library for writing scripts in GmodLibrary for Gmod
+A helping GLua library for writing scripts in Gmod
