@@ -89,12 +89,13 @@ local function create_vgui()
 	end
 
 	local color_button = Color(76, 76, 76)
+	local color_button_hovered = Color(52, 70, 109)
 
 	function Mantle.ui.btn(s)
 		s:SetTall(32)
 		s.Paint = nil
 		s.PaintOver = function(self, w, h)
-			draw.RoundedBox(6, 0, 0, w, h, color_button)
+			draw.RoundedBox(6, 0, 0, w, h, self:IsHovered() and color_button_hovered or color_button)
 
 			draw.SimpleText(s:GetText(), 'Fated.18', w * 0.5, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
