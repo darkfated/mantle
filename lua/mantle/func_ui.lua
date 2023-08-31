@@ -1,4 +1,5 @@
 Mantle.ui = {}
+Mantle.func = {}
 
 local function create_fonts()
 	for s = 1, 50 do
@@ -8,6 +9,28 @@ local function create_fonts()
 			weight = 500,
 			extended = true
 		})
+	end
+end
+
+local function create_ui_func()
+	local color_white = Color(255, 255, 255)
+	local mat_blur = Material('pp/blurscreen')
+	local scrw, scrh = ScrW(), ScrH()
+
+	function Mantle.func.blur(panel)
+		local x, y = panel:LocalToScreen(0, 0)
+
+		surface.SetDrawColor(color_white)
+		surface.SetMaterial(mat_blur)
+
+		for i = 1, 6 do
+			mat_blur:SetFloat('$blur', i)
+			mat_blur:Recompute()
+
+			render.UpdateScreenEffectTexture()
+
+			surface.DrawTexturedRect(-x, -y, scrw, scrh)
+		end
 	end
 end
 
@@ -79,6 +102,7 @@ local function create_vgui()
 end
 
 create_fonts()
+create_ui_func()
 create_vgui()
 
 concommand.Add('mantle_ui_test', function()
