@@ -107,7 +107,7 @@ create_ui_func()
 create_vgui()
 
 concommand.Add('mantle_ui_test', function()
-	local frame = vgui.Create("DFrame")
+	local frame = vgui.Create('DFrame')
 	Mantle.ui.frame(frame, 'Test', 600, 400, true)
 	frame:Center()
 	frame:MakePopup()
