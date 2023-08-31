@@ -35,10 +35,10 @@ local function create_ui_func()
 end
 
 local function create_vgui()
-	local color_white = Color(255,255,255)
+	local color_white = Color(255, 255, 255)
 	local mat_close = Material('mantle/close_btn.png')
-	local color_header = Color(51,51,51)
-	local color_background = Color(34,34,34)
+	local color_header = Color(51, 51, 51)
+	local color_background = Color(34, 34, 34)
 
 	function Mantle.ui.frame(s, title, width, height, close_bool)
 		s:SetSize(width, height)
@@ -75,7 +75,7 @@ local function create_vgui()
 		end
 	end
 
-	local color_vbar = Color(63,66,102)
+	local color_vbar = Color(63, 66, 102)
 
 	function Mantle.ui.sp(s)
 		local vbar = s:GetVBar()
@@ -88,7 +88,7 @@ local function create_vgui()
 		end
 	end
 
-	local color_button = Color(76,76,76)
+	local color_button = Color(76, 76, 76)
 
 	function Mantle.ui.btn(s)
 		s:SetTall(32)
