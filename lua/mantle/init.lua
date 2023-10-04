@@ -2,6 +2,7 @@ local function run_scripts()
 	local cl = SERVER and AddCSLuaFile or include
 	local sv = SERVER and include or function() end
 
+	cl('colors.lua')
 	cl('func_ui.lua')
 end
 

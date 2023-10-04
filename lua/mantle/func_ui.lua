@@ -1,5 +1,5 @@
-Mantle.ui = {}
 Mantle.func = {}
+Mantle.ui = {}
 
 local function create_fonts()
 	for s = 1, 50 do
@@ -37,8 +37,6 @@ end
 local function create_vgui()
 	local color_white = Color(255, 255, 255)
 	local mat_close = Material('mantle/close_btn.png')
-	local color_header = Color(51, 51, 51)
-	local color_background = Color(34, 34, 34)
 
 	function Mantle.ui.frame(s, title, width, height, close_bool)
 		s:SetSize(width, height)
@@ -46,8 +44,8 @@ local function create_vgui()
 		s:ShowCloseButton(false)
 		s:DockPadding(6, 30, 6, 6)
 		s.Paint = function(_, w, h)
-			draw.RoundedBoxEx(6, 0, 0, w, 24, color_header, true, true)
-			draw.RoundedBoxEx(6, 0, 24, w, h - 24, color_background, false, false, true, true)
+			draw.RoundedBoxEx(6, 0, 0, w, 24, Mantle.color.header, true, true)
+			draw.RoundedBoxEx(6, 0, 24, w, h - 24, Mantle.color.background, false, false, true, true)
 
 			draw.SimpleText(title, 'Fated.16', 6, 4, color_white)
 		end
@@ -75,8 +73,6 @@ local function create_vgui()
 		end
 	end
 
-	local color_vbar = Color(63, 66, 102)
-
 	function Mantle.ui.sp(s)
 		local vbar = s:GetVBar()
 		vbar:SetWide(12)
@@ -84,26 +80,29 @@ local function create_vgui()
 		vbar.btnDown.Paint = nil
 		vbar.btnUp.Paint = nil
 		vbar.btnGrip.Paint = function(_, w, h)
-			draw.RoundedBox(6, 6, 0, w - 6, h, color_vbar)
+			draw.RoundedBox(6, 6, 0, w - 6, h, Mantle.color.vbar)
 		end
 	end
 
-	local color_button = Color(76, 76, 76)
-	local color_button_hovered = Color(52, 70, 109)
-
 	function Mantle.ui.btn(s)
 		s:SetTall(32)
-		s.Paint = nil
-		s.PaintOver = function(self, w, h)
-			draw.RoundedBox(6, 0, 0, w, h, self:IsHovered() and color_button_hovered or color_button)
+		s.Paint = function(self, w, h)
+			if !self.btn_text then
+				self.btn_text = self:GetText()
+				self:SetText('')
+			end
 
-			draw.SimpleText(s:GetText(), 'Fated.18', w * 0.5, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			draw.RoundedBox(6, 0, 0, w, h, self:IsHovered() and Mantle.color.button_hovered or Mantle.color.button)
+
+			Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
+
+			draw.SimpleText(self.btn_text, 'Fated.18', w * 0.5, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
 	end
 end
 
-create_fonts()
 create_ui_func()
+create_fonts()
 create_vgui()
 
 concommand.Add('mantle_ui_test', function()
