@@ -138,6 +138,21 @@ local function create_vgui()
 			draw.SimpleText(self.btn_text, 'Fated.18', w * 0.5, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
 	end
+
+	function Mantle.ui.desc_entry(parent, title, placeholder)
+		local label = vgui.Create('DLabel', parent)
+        label:Dock(TOP)
+        label:SetText(title)
+        label:SetFont('Fated.16')
+    
+        local entry = vgui.Create('DTextEntry', parent)
+        entry:Dock(TOP)
+        entry:DockMargin(0, 4, 0, 0)
+        entry:SetPlaceholderText(placeholder)
+        entry:SetFont('Fated.16')
+
+		return entry
+	end
 end
 
 create_ui_func()
