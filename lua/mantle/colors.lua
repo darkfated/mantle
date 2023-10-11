@@ -9,6 +9,7 @@ Mantle.color = {
 	button_shadow = Color(57, 55, 69, 150),
 
     panel = {
-        Color(106, 106, 114)
+        Color(106, 106, 114),
+        Color(60, 60, 64)
     }
 }
