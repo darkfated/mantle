@@ -75,6 +75,8 @@ end
 
 local function create_vgui()
 	local color_white = Color(255, 255, 255)
+	local color_gray = Color(200, 200, 200)
+	local color_red = Color(255, 50, 50)
 	local mat_close = Material('mantle/close_btn.png')
 
 	function Mantle.ui.frame(s, title, width, height, close_bool)
@@ -152,6 +154,59 @@ local function create_vgui()
         entry:SetFont('Fated.16')
 
 		return entry
+	end
+
+	function Mantle.ui.player_selector(doclick, func_check)
+		Mantle.ui.menu_player_selector = vgui.Create('DFrame')
+		Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false)
+		Mantle.ui.menu_player_selector:Center()
+		Mantle.ui.menu_player_selector:MakePopup()
+
+		Mantle.ui.menu_player_selector.sp = vgui.Create('DScrollPanel', Mantle.ui.menu_player_selector)
+		Mantle.ui.sp(Mantle.ui.menu_player_selector.sp)
+		Mantle.ui.menu_player_selector.sp:Dock(FILL)
+		Mantle.ui.menu_player_selector.sp:DockMargin(6, 6, 6, 6)
+
+		for i, pl in pairs(player.GetAll()) do
+			if func_check(pl) then
+				continue 
+			end
+
+			local panel_ply = vgui.Create('DButton', Mantle.ui.menu_player_selector.sp)
+			panel_ply:Dock(TOP)
+			panel_ply:DockMargin(0, 0, 0, 6)
+			panel_ply:SetTall(40)
+			panel_ply:SetText('')
+			panel_ply.Paint = function(self, w, h)
+				draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel[1])
+				Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
+
+				if IsValid(pl) then
+					draw.SimpleText(pl:Name(), 'Fated.18', w * 0.5, h * 0.5, self:IsHovered() and color_gray or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				else
+					draw.SimpleText('Вышел', 'Fated.18', w * 0.5, h * 0.5, color_red, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				end
+			end
+			panel_ply.DoClick = function()
+				if IsValid(pl) then
+					doclick(pl)
+				end
+			end
+
+			panel_ply.avatar = vgui.Create('AvatarImage', panel_ply)
+			panel_ply.avatar:SetSize(32, 32)
+			panel_ply.avatar:SetPos(4, 4)
+			panel_ply.avatar:SetPlayer(pl)
+		end
+
+		Mantle.ui.menu_player_selector.btn_close = vgui.Create('DButton', Mantle.ui.menu_player_selector)
+		Mantle.ui.btn(Mantle.ui.menu_player_selector.btn_close)
+		Mantle.ui.menu_player_selector.btn_close:Dock(BOTTOM)
+		Mantle.ui.menu_player_selector.btn_close:DockMargin(0, 6, 0, 0)
+		Mantle.ui.menu_player_selector.btn_close:SetText('Закрыть')
+		Mantle.ui.menu_player_selector.btn_close.DoClick = function()
+			Mantle.ui.menu_player_selector:Remove()
+		end
 	end
 end
 
