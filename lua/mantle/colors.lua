@@ -10,6 +10,7 @@ Mantle.color = {
 
     panel = {
         Color(106, 106, 114),
-        Color(60, 60, 64)
+        Color(60, 60, 64),
+        Color(193, 193, 193)
     }
 }
