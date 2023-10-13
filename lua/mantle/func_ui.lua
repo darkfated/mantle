@@ -110,7 +110,7 @@ local function create_vgui()
             end
             s.cls.DoRightClick = function()
                 local DM = DermaMenu()
-                DM:AddOption('Remove Window', function()
+                DM:AddOption('Закрыть окно', function()
                     s:Remove()
                 end)
                 DM:Open()
