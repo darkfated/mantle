@@ -2,11 +2,11 @@ Mantle.color = {
     header = Color(51, 51, 51),
     background = Color(34, 34, 34),
 
-    vbar = Color(63, 66, 102),
+    vbar = Color(102, 107, 164),
 
-	button = Color(76, 76, 76),
-	button_hovered = Color(52, 70, 109),
-	button_shadow = Color(57, 55, 69, 150),
+    button = Color(76, 76, 76),
+    button_hovered = Color(52, 70, 109),
+    button_shadow = Color(57, 55, 69, 150),
 
     panel = {
         Color(106, 106, 114),
