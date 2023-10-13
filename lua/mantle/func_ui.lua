@@ -129,7 +129,7 @@ local function create_vgui()
         end
     end
 
-    function Mantle.ui.btn(s)
+    function Mantle.ui.btn(s, icon, icon_size)
         s:SetTall(32)
         s.Paint = function(self, w, h)
             if !self.btn_text then
@@ -141,7 +141,13 @@ local function create_vgui()
 
             Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
 
-            draw.SimpleText(self.btn_text, 'Fated.18', w * 0.5, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(self.btn_text, 'Fated.18', w * 0.5 + (icon and icon_size * 0.5 - 2 or 0), h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+            if icon then
+                surface.SetDrawColor(color_white)
+                surface.SetMaterial(icon)
+                surface.DrawTexturedRect(2, (h - icon_size) * 0.5, icon_size, icon_size)
+            end
         end
     end
 
