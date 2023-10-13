@@ -160,8 +160,10 @@ local function create_vgui()
         local entry = vgui.Create('DTextEntry', parent)
         entry:Dock(TOP)
         entry:DockMargin(0, 4, 0, 0)
+        entry:SetTall(24)
         entry:SetPlaceholderText(placeholder)
         entry:SetFont('Fated.16')
+        entry:SetDrawLanguageID(false)
 
         return entry
     end
