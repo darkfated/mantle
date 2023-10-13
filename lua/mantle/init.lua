@@ -4,6 +4,8 @@ local function run_scripts()
 
 	cl('colors.lua')
 	cl('func_ui.lua')
+
+	cl('modules/shadows.lua')
 end
 
 local function init()
