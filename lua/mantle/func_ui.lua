@@ -203,6 +203,8 @@ local function create_vgui()
                 if IsValid(pl) then
                     doclick(pl)
                 end
+
+                Mantle.ui.menu_player_selector:Remove()
             end
 
             panel_ply.avatar = vgui.Create('AvatarImage', panel_ply)
