@@ -84,11 +84,12 @@ local function create_vgui()
 		s:SetTitle('')
 		s:ShowCloseButton(false)
 		s:DockPadding(6, 30, 6, 6)
-		s.Paint = function(_, w, h)
+		s.f_title = title
+		s.Paint = function(self, w, h)
 			draw.RoundedBoxEx(6, 0, 0, w, 24, Mantle.color.header, true, true)
 			draw.RoundedBoxEx(6, 0, 24, w, h - 24, Mantle.color.background, false, false, true, true)
 
-			draw.SimpleText(title, 'Fated.16', 6, 4, color_white)
+			draw.SimpleText(self.f_title, 'Fated.16', 6, 4, color_white)
 		end
 
 		if close_bool then
