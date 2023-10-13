@@ -129,7 +129,7 @@ local function create_vgui()
         end
     end
 
-    function Mantle.ui.btn(s, icon, icon_size)
+    function Mantle.ui.btn(s, icon, icon_size, btn_color)
         s:SetTall(32)
         s.Paint = function(self, w, h)
             if !self.btn_text then
@@ -137,7 +137,7 @@ local function create_vgui()
                 self:SetText('')
             end
 
-            draw.RoundedBox(6, 0, 0, w, h, self:IsHovered() and Mantle.color.button_hovered or Mantle.color.button)
+            draw.RoundedBox(6, 0, 0, w, h, self:IsHovered() and Mantle.color.button_hovered or (btn_color and btn_color or Mantle.color.button))
 
             Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
 
