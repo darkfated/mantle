@@ -169,6 +169,10 @@ local function create_vgui()
     end
 
     function Mantle.ui.player_selector(doclick, func_check)
+        if IsValid(Mantle.ui.menu_player_selector) then
+            Mantle.ui.menu_player_selector:Remove()
+        end
+
         Mantle.ui.menu_player_selector = vgui.Create('DFrame')
         Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false)
         Mantle.ui.menu_player_selector:Center()
