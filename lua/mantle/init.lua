@@ -6,6 +6,8 @@ local function run_scripts()
 	cl('func_ui.lua')
 
 	cl('modules/shadows.lua')
+	cl('modules/material_url.lua')
+
 end
 
 local function init()
