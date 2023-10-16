@@ -259,6 +259,8 @@ local function create_vgui()
             local col = Mantle.ui.menu_color_picker.picker:GetColor()
 
             func(Color(col.r, col.g, col.b))
+
+            Mantle.ui.menu_color_picker:Remove()
         end
     end
 end
