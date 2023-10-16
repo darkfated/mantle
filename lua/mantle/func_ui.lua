@@ -142,7 +142,7 @@ local function create_vgui()
             if !off_grad_bool then
                 Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
             end
-            
+
             draw.SimpleText(self.btn_text, 'Fated.18', w * 0.5 + (icon and icon_size * 0.5 - 2 or 0), h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
             if icon then
@@ -229,7 +229,7 @@ local function create_vgui()
         end
     end
 
-    function Mantle.ui.color_picker(func)
+    function Mantle.ui.color_picker(func, color_standart)
         if IsValid(Mantle.ui.menu_color_picker) then
             Mantle.ui.menu_color_picker:Remove()
         end
@@ -242,6 +242,10 @@ local function create_vgui()
         Mantle.ui.menu_color_picker.picker = vgui.Create('DColorMixer', Mantle.ui.menu_color_picker)
         Mantle.ui.menu_color_picker.picker:Dock(FILL)
         Mantle.ui.menu_color_picker.picker:SetAlphaBar(false)
+
+        if color_standart then
+            Mantle.ui.menu_color_picker.picker:SetColor(color_standart)
+        end
 
         Mantle.ui.menu_color_picker.btn_close = vgui.Create('DButton', Mantle.ui.menu_color_picker)
         Mantle.ui.btn(Mantle.ui.menu_color_picker.btn_close, nil, nil, Color(210, 65, 65))
