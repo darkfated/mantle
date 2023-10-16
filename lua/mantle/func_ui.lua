@@ -226,6 +226,41 @@ local function create_vgui()
             Mantle.ui.menu_player_selector:Remove()
         end
     end
+
+    function Mantle.ui.color_picker(func)
+        if IsValid(Mantle.ui.menu_color_picker) then
+            Mantle.ui.menu_color_picker:Remove()
+        end
+
+        Mantle.ui.menu_color_picker = vgui.Create('DFrame')
+        Mantle.ui.frame(Mantle.ui.menu_color_picker, 'Выбор цвета', 250, 400, false)
+        Mantle.ui.menu_color_picker:Center()
+        Mantle.ui.menu_color_picker:MakePopup()
+
+        Mantle.ui.menu_color_picker.picker = vgui.Create('DColorMixer', Mantle.ui.menu_color_picker)
+        Mantle.ui.menu_color_picker.picker:Dock(FILL)
+        Mantle.ui.menu_color_picker.picker:SetAlphaBar(false)
+
+        Mantle.ui.menu_color_picker.btn_close = vgui.Create('DButton', Mantle.ui.menu_color_picker)
+        Mantle.ui.btn(Mantle.ui.menu_color_picker.btn_close, nil, nil, Color(210, 65, 65))
+        Mantle.ui.menu_color_picker.btn_close:Dock(BOTTOM)
+        Mantle.ui.menu_color_picker.btn_close:DockMargin(0, 6, 0, 0)
+        Mantle.ui.menu_color_picker.btn_close:SetText('Закрыть')
+        Mantle.ui.menu_color_picker.btn_close.DoClick = function()
+            Mantle.ui.menu_color_picker:Remove()
+        end
+
+        Mantle.ui.menu_color_picker.btn_select = vgui.Create('DButton', Mantle.ui.menu_color_picker)
+        Mantle.ui.btn(Mantle.ui.menu_color_picker.btn_select)
+        Mantle.ui.menu_color_picker.btn_select:Dock(BOTTOM)
+        Mantle.ui.menu_color_picker.btn_select:DockMargin(0, 6, 0, 0)
+        Mantle.ui.menu_color_picker.btn_select:SetText('Выбрать')
+        Mantle.ui.menu_color_picker.btn_select.DoClick = function()
+            local col = Mantle.ui.menu_color_picker.picker:GetColor()
+
+            func(Color(col.r, col.g, col.b))
+        end
+    end
 end
 
 create_ui_func()
