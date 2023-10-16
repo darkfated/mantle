@@ -35,15 +35,3 @@ function http.DownloadMaterial(url, path, callback, retry_count)
         end)
     end
 end
-
---[[ Example:
-http.DownloadMaterial('https://i.imgur.com/Msmeqkq.png', 'beelze_pixel.png', function(example)
-    local w, h = 128, 128
-
-    hook.Add('HUDPaint', 'http.DownloadMaterial', function()
-        surface.SetDrawColor(255, 255, 255)
-        surface.SetMaterial(example)
-        surface.DrawTexturedRect(ScrW() * 0.5 - w * 0.5, ScrH() * 0.5 - h * 0.5, w, h)
-    end)
-end)
-]]--
