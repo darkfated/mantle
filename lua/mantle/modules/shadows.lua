@@ -3,7 +3,7 @@ local scrw, scrh = ScrW(), ScrH()
 BSHADOWS = {}
 
 local resStr = scrw .. scrh
-print(scrw .. scrh)
+
 BSHADOWS.RenderTarget = GetRenderTarget('bshadows_original_' .. resStr, scrw, scrh)
 BSHADOWS.RenderTarget2 = GetRenderTarget('bshadows_shadow_' .. resStr, scrw, scrh)
 BSHADOWS.ShadowMaterial = CreateMaterial('bshadows', 'UnlitGeneric', {
