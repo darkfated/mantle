@@ -141,7 +141,7 @@ local function create_vgui()
             if self:IsHovered() then
                 self.hoverStatus = math.Clamp(self.hoverStatus + 4 * FrameTime(), 0, 255)
             else
-                self.hoverStatus = math.Clamp(self.hoverStatus - 6 * FrameTime(), 0, 255)
+                self.hoverStatus = math.Clamp(self.hoverStatus - 8 * FrameTime(), 0, 255)
             end
 
             draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, btn_color and btn_color or Mantle.color.button)
