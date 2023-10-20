@@ -170,14 +170,21 @@ local function create_vgui()
         label:Dock(TOP)
         label:SetText(title)
         label:SetFont('Fated.16')
-    
-        local entry = vgui.Create('DTextEntry', parent)
-        entry:Dock(TOP)
-        entry:DockMargin(0, 4, 0, 0)
-        entry:SetTall(24)
+
+        local entry
+        
+        local entry_background = vgui.Create('DPanel', parent)
+        entry_background:Dock(TOP)
+        entry_background:DockMargin(0, 4, 0, 0)
+        entry_background:SetTall(24)
+        
+        entry = vgui.Create('DTextEntry', entry_background)
+        entry:Dock(FILL)
+        entry:DockMargin(2, 4, 2, 4)
         entry:SetPlaceholderText(placeholder)
         entry:SetFont('Fated.16')
         entry:SetDrawLanguageID(false)
+        entry:SetPaintBackground(false)
 
         return entry
     end
