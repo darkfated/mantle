@@ -129,7 +129,7 @@ local function create_vgui()
         end
     end
 
-    function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool, btn_color_hov)
+    function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool, btn_color_hov, off_hov_bool)
         s:SetTall(32)
         s.hoverStatus = 0
         s.Paint = function(self, w, h)
@@ -146,10 +146,12 @@ local function create_vgui()
 
             draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, btn_color and btn_color or Mantle.color.button)
 
-            local color_hover = btn_color_hov and btn_color_hov or Mantle.color.button_hovered 
-            color_hover = Color(color_hover.r, color_hover.g, color_hover.b, 255 * self.hoverStatus)
+            if !off_hov_bool then
+                local color_hover = btn_color_hov and btn_color_hov or Mantle.color.button_hovered 
+                color_hover = Color(color_hover.r, color_hover.g, color_hover.b, 255 * self.hoverStatus)
 
-            draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, color_hover)
+                draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, color_hover)
+            end
 
             if !off_grad_bool then
                 Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
