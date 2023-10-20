@@ -1,3 +1,9 @@
+--[[
+	* mantle *
+	GitHub: https://github.com/darkfated/mantle
+	Author's discord: darkfated
+]]--
+
 local function run_scripts()
 	local cl = SERVER and AddCSLuaFile or include
 	local sv = SERVER and include or function() end
