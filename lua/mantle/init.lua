@@ -28,12 +28,3 @@ local function init()
 end
 
 init()
-
-local menu = vgui.Create('DFrame')
-menu:SetSize(120, 120)
-menu:Center()
-menu:MakePopup()
-
-menu.btn = vgui.Create('DButton', menu)
-Mantle.ui.btn(menu.btn, Material('icon16/accept.png'), 16, Color(25, 25, 25), 4, false, Color(237, 79, 79), false)
-menu.btn:Dock(FILL)
