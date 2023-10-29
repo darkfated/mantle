@@ -35,7 +35,9 @@ local function create_ui_func()
 
     local list_gradient = {
         surface.GetTextureID('gui/gradient_up'),
-        surface.GetTextureID('gui/gradient_down')
+        surface.GetTextureID('gui/gradient_down'),
+        surface.GetTextureID('vgui/gradient-l'),
+        surface.GetTextureID('vgui/gradient-r')
     }
 
     function Mantle.func.gradient(_x, _y, _w, _h, direction, color_shadow)
