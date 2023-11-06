@@ -111,11 +111,10 @@ local function create_vgui()
                 s:Remove()
             end
             s.cls.DoRightClick = function()
-                local DM = DermaMenu()
+                local DM = Mantle.ui.derma_menu()
                 DM:AddOption('Закрыть окно', function()
                     s:Remove()
-                end)
-                DM:Open()
+                end, 'icon16/cross.png')
             end
         end
     end
