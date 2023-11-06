@@ -292,6 +292,88 @@ local function create_vgui()
             Mantle.ui.menu_color_picker:Remove()
         end
     end
+
+    function Mantle.ui.derma_menu()
+        while IsValid(Mantle.ui.menu_derma_menu) do
+            Mantle.ui.menu_derma_menu:Remove()
+        end
+
+        local mouse_pos_x, mouse_pos_y = input.GetCursorPos()
+
+        Mantle.ui.menu_derma_menu = vgui.Create('DPanel')
+        Mantle.ui.menu_derma_menu:SetSize(200, 100)
+        Mantle.ui.menu_derma_menu:SetPos(mouse_pos_x - Mantle.ui.menu_derma_menu:GetWide() * 0.5, mouse_pos_y)
+        Mantle.ui.menu_derma_menu:MakePopup()
+        Mantle.ui.menu_derma_menu:SetIsMenu(true)
+        Mantle.ui.menu_derma_menu.Paint = function(self, w, h)
+            local x, y = self:LocalToScreen()
+
+            BSHADOWS.BeginShadow()
+                draw.RoundedBox(6, x, y, w, h, Mantle.color.panel[1])
+            BSHADOWS.EndShadow(1, 2, 2, 255, 0, 0)
+        end
+        Mantle.ui.menu_derma_menu.tall = 0
+        Mantle.ui.menu_derma_menu.max_width = 0
+
+        RegisterDermaMenuForClose(Mantle.ui.menu_derma_menu)
+
+        function Mantle.ui.menu_derma_menu:AddOption(name, func, icon)
+            local option = vgui.Create('DButton', Mantle.ui.menu_derma_menu)
+            Mantle.ui.btn(option)
+            option:Dock(TOP)
+            option:DockMargin(4, Mantle.ui.menu_derma_menu.tall == 0 and 4 or 0, 4, 4)
+            option:SetTall(20)
+            option:SetText(name)
+            option.DoClick = function()
+                Mantle.func.sound()
+
+                func()
+
+                Mantle.ui.menu_derma_menu:Remove()
+            end
+
+            surface.SetFont('Fated.18')
+
+            Mantle.ui.menu_derma_menu.max_width = math.max(Mantle.ui.menu_derma_menu.max_width, surface.GetTextSize(name))
+
+            if icon then
+                option.icon = vgui.Create('DPanel', option)
+                option.icon:SetSize(16, 16)
+                option.icon:SetPos(2, 2)
+
+                local mat_icon = Material(icon)
+
+                option.icon.Paint = function(_, w, h)
+                    surface.SetDrawColor(color_white)
+                    surface.SetMaterial(mat_icon)
+                    surface.DrawTexturedRect(0, 0, w, h)
+                end
+            end
+
+            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 24 + (Mantle.ui.menu_derma_menu.tall == 0 and 4 or 0)
+            Mantle.ui.menu_derma_menu:SetTall(Mantle.ui.menu_derma_menu.tall)
+            Mantle.ui.menu_derma_menu:SetWide(Mantle.ui.menu_derma_menu.max_width + 72)
+        end
+
+        function Mantle.ui.menu_derma_menu:AddSpacer()
+            local pan_spacer = vgui.Create('DPanel', Mantle.ui.menu_derma_menu)
+            pan_spacer:Dock(TOP)
+            pan_spacer:DockMargin(0, 0, 0, 4)
+            pan_spacer:SetTall(4)
+            pan_spacer.Paint = function(_, w, h)
+                draw.RoundedBox(2, 6, 0, w - 12, h, Mantle.color.panel[2])
+            end
+
+            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 8
+            Mantle.ui.menu_derma_menu:SetTall(Mantle.ui.menu_derma_menu.tall)
+        end
+
+        function Mantle.ui.menu_derma_menu:GetDeleteSelf()
+            return true
+        end
+
+        return Mantle.ui.menu_derma_menu
+    end
 end
 
 create_ui_func()
