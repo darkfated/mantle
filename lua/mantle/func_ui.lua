@@ -68,7 +68,7 @@ local function create_ui_func()
     
     function Mantle.func.h(h)
         if !Mantle.func.h_save[h] then
-            Mantle.func.h_save[h] = h / 1920 * scrh
+            Mantle.func.h_save[h] = h / 1080 * scrh
         end
     
         return Mantle.func.h_save[h]
