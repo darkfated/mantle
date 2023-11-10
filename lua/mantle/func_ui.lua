@@ -292,6 +292,26 @@ local function create_vgui()
         end
     end
 
+    local function ClampPanelPosition(panel)
+        local x, y = panel:GetPos()
+        local w, h = panel:GetSize()
+        local screenWidth, screenHeight = ScrW(), ScrH()
+ 
+        if x < 0 then
+            x = 0
+        elseif x + w > screenWidth then
+            x = screenWidth - w
+        end
+
+        if y < 0 then
+            y = 0
+        elseif y + h > screenHeight then
+            y = screenHeight - h
+        end
+    
+        panel:SetPos(x, y)
+    end
+
     function Mantle.ui.derma_menu()
         while IsValid(Mantle.ui.menu_derma_menu) do
             Mantle.ui.menu_derma_menu:Remove()
@@ -308,16 +328,21 @@ local function create_vgui()
             local x, y = self:LocalToScreen()
 
             BSHADOWS.BeginShadow()
-                draw.RoundedBox(6, x, y, w, h, Mantle.color.panel[1])
+                draw.RoundedBox(6, x, y, w, h, Mantle.color.background)
             BSHADOWS.EndShadow(1, 2, 2, 255, 0, 0)
         end
         Mantle.ui.menu_derma_menu.tall = 0
         Mantle.ui.menu_derma_menu.max_width = 0
 
+        Mantle.ui.menu_derma_menu.sp = vgui.Create('DScrollPanel', Mantle.ui.menu_derma_menu)
+        Mantle.ui.sp(Mantle.ui.menu_derma_menu.sp)
+        Mantle.ui.menu_derma_menu.sp:Dock(FILL)
+        Mantle.ui.menu_derma_menu.sp:DockMargin(2, 2, 2, 2)
+
         RegisterDermaMenuForClose(Mantle.ui.menu_derma_menu)
 
         function Mantle.ui.menu_derma_menu:AddOption(name, func, icon)
-            local option = vgui.Create('DButton', Mantle.ui.menu_derma_menu)
+            local option = vgui.Create('DButton', Mantle.ui.menu_derma_menu.sp)
             Mantle.ui.btn(option)
             option:Dock(TOP)
             option:DockMargin(4, Mantle.ui.menu_derma_menu.tall == 0 and 4 or 0, 4, 4)
@@ -349,9 +374,11 @@ local function create_vgui()
                 end
             end
 
-            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 24 + (Mantle.ui.menu_derma_menu.tall == 0 and 4 or 0)
-            Mantle.ui.menu_derma_menu:SetTall(Mantle.ui.menu_derma_menu.tall)
+            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 26 + (Mantle.ui.menu_derma_menu.tall == 0 and 4 or 0)
+            Mantle.ui.menu_derma_menu:SetTall(math.Clamp(Mantle.ui.menu_derma_menu.tall, 0, ScrH() * 0.5))
             Mantle.ui.menu_derma_menu:SetWide(Mantle.ui.menu_derma_menu.max_width + 72)
+
+            ClampPanelPosition(Mantle.ui.menu_derma_menu)
         end
 
         function Mantle.ui.menu_derma_menu:AddSpacer()
