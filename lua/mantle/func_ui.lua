@@ -331,13 +331,13 @@ local function create_vgui()
                 draw.RoundedBox(6, x, y, w, h, Mantle.color.background)
             BSHADOWS.EndShadow(1, 2, 2, 255, 0, 0)
         end
-        Mantle.ui.menu_derma_menu.tall = 0
+        Mantle.ui.menu_derma_menu.tall = 6
         Mantle.ui.menu_derma_menu.max_width = 0
 
         Mantle.ui.menu_derma_menu.sp = vgui.Create('DScrollPanel', Mantle.ui.menu_derma_menu)
         Mantle.ui.sp(Mantle.ui.menu_derma_menu.sp)
         Mantle.ui.menu_derma_menu.sp:Dock(FILL)
-        Mantle.ui.menu_derma_menu.sp:DockMargin(2, 2, 2, 2)
+        Mantle.ui.menu_derma_menu.sp:DockMargin(2, 4, 2, 2)
 
         RegisterDermaMenuForClose(Mantle.ui.menu_derma_menu)
 
@@ -345,7 +345,7 @@ local function create_vgui()
             local option = vgui.Create('DButton', Mantle.ui.menu_derma_menu.sp)
             Mantle.ui.btn(option)
             option:Dock(TOP)
-            option:DockMargin(4, Mantle.ui.menu_derma_menu.tall == 0 and 4 or 0, 4, 4)
+            option:DockMargin(2, Mantle.ui.menu_derma_menu.tall == 0 and 2 or 0, 2, 2)
             option:SetTall(20)
             option:SetText(name)
             option.DoClick = function()
@@ -374,7 +374,7 @@ local function create_vgui()
                 end
             end
 
-            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 26 + (Mantle.ui.menu_derma_menu.tall == 0 and 4 or 0)
+            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 22 + (Mantle.ui.menu_derma_menu.tall == 0 and 2 or 0)
             Mantle.ui.menu_derma_menu:SetTall(math.Clamp(Mantle.ui.menu_derma_menu.tall, 0, ScrH() * 0.5))
             Mantle.ui.menu_derma_menu:SetWide(Mantle.ui.menu_derma_menu.max_width + 72)
 
@@ -382,15 +382,15 @@ local function create_vgui()
         end
 
         function Mantle.ui.menu_derma_menu:AddSpacer()
-            local pan_spacer = vgui.Create('DPanel', Mantle.ui.menu_derma_menu)
+            local pan_spacer = vgui.Create('DPanel', Mantle.ui.menu_derma_menu.sp)
             pan_spacer:Dock(TOP)
-            pan_spacer:DockMargin(0, 0, 0, 4)
+            pan_spacer:DockMargin(0, 2, 0, 4)
             pan_spacer:SetTall(4)
             pan_spacer.Paint = function(_, w, h)
                 draw.RoundedBox(2, 6, 0, w - 12, h, Mantle.color.panel[2])
             end
 
-            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 8
+            Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 10
             Mantle.ui.menu_derma_menu:SetTall(Mantle.ui.menu_derma_menu.tall)
         end
 
