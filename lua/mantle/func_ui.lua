@@ -133,6 +133,7 @@ local function create_vgui()
     function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool, btn_color_hov, off_hov_bool)
         s:SetTall(32)
         s.hoverStatus = 0
+        s.btn_font = 'Fated.18'
         s.Paint = function(self, w, h)
             if !self.btn_text then
                 self.btn_text = self:GetText()
@@ -158,7 +159,7 @@ local function create_vgui()
                 Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
             end
 
-            draw.SimpleText(self.btn_text, 'Fated.18', w * 0.5 + (icon and icon_size * 0.5 - 2 or 0), h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(self.btn_text, self.btn_font, w * 0.5 + (icon and icon_size * 0.5 - 2 or 0), h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
             if icon then
                 surface.SetDrawColor(color_white)
