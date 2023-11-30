@@ -87,6 +87,7 @@ local function create_vgui()
         s:ShowCloseButton(false)
         s:DockPadding(6, 30, 6, 6)
         s.f_title = title
+        s.center_title = ''
         s.Paint = function(self, w, h)
             local x, y = self:LocalToScreen()
 
@@ -115,6 +116,16 @@ local function create_vgui()
                 DM:AddOption('Закрыть окно', function()
                     s:Remove()
                 end, 'icon16/cross.png')
+            end
+        end
+
+        s.btn_center_title = vgui.Create('DButton', s)
+        s.btn_center_title:SetSize(width * 0.5, 24)
+        s.btn_center_title:SetPos(width * 0.25, 0)
+        s.btn_center_title:SetText('')
+        s.btn_center_title.Paint = function(_, w, h)
+            if s.center_title != '' then
+                draw.SimpleText(s.center_title, 'Fated.24', w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
     end
