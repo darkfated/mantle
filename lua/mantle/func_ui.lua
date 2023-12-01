@@ -88,12 +88,13 @@ local function create_vgui()
         s:DockPadding(6, 30, 6, 6)
         s.f_title = title
         s.center_title = ''
+        s.background_alpha = true
         s.Paint = function(self, w, h)
             local x, y = self:LocalToScreen()
 
             BSHADOWS.BeginShadow()
                 draw.RoundedBoxEx(6, x, y, w, 24, Mantle.color.header, true, true)
-                draw.RoundedBoxEx(6, x, y + 24, w, h - 24, Mantle.color.background, false, false, true, true)
+                draw.RoundedBoxEx(6, x, y + 24, w, h - 24, s.background_alpha and Mantle.color.background_alpha or Mantle.color.background, false, false, true, true)
                 draw.SimpleText(self.f_title, 'Fated.16', x + 6, y + 4, color_white)
             BSHADOWS.EndShadow(1, 2, 2, 255, 0, 0)
         end

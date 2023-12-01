@@ -1,6 +1,7 @@
 Mantle.color = {
     header = Color(51, 51, 51),
     background = Color(34, 34, 34),
+    background_alpha = Color(34, 34, 34, 210),
 
     vbar = Color(102, 107, 164),
 
