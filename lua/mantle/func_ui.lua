@@ -337,6 +337,7 @@ local function create_vgui()
         Mantle.ui.menu_derma_menu:SetPos(mouse_pos_x - Mantle.ui.menu_derma_menu:GetWide() * 0.5, mouse_pos_y)
         Mantle.ui.menu_derma_menu:MakePopup()
         Mantle.ui.menu_derma_menu:SetIsMenu(true)
+        Mantle.ui.menu_derma_menu:SetKeyBoardInputEnabled(false)
         Mantle.ui.menu_derma_menu.Paint = function(self, w, h)
             local x, y = self:LocalToScreen()
 
