@@ -13,7 +13,7 @@ local function run_scripts()
 
     cl('modules/shadows.lua')
     cl('modules/material_url.lua')
-
+    cl('modules/test_menu.lua')
 end
 
 local function init()

@@ -492,22 +492,3 @@ end
 create_ui_func()
 create_fonts()
 create_vgui()
-
-concommand.Add('mantle_ui_test', function()
-    local frame = vgui.Create('DFrame')
-    Mantle.ui.frame(frame, 'Test', 600, 400, true)
-    frame:Center()
-    frame:MakePopup()
-
-    local main_sp = vgui.Create('DScrollPanel', frame)
-    Mantle.ui.sp(main_sp)
-    main_sp:Dock(FILL)
-    
-    for i = 1, 22 do
-        local btn = vgui.Create('DButton', main_sp)
-        Mantle.ui.btn(btn)
-        btn:Dock(TOP)
-        btn:DockMargin(0, 0, 0, 6)
-        btn:SetText('Button ' .. i)
-    end
-end)
