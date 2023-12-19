@@ -175,7 +175,9 @@ local function create_vgui()
             if icon then
                 surface.SetDrawColor(color_white)
                 surface.SetMaterial(icon)
-                surface.DrawTexturedRect(2, (h - icon_size) * 0.5, icon_size, icon_size)
+
+                local indent = (h - icon_size) * 0.5
+                surface.DrawTexturedRect(indent, indent, icon_size, icon_size)
             end
         end
     end
