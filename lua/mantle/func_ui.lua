@@ -184,17 +184,18 @@ local function create_vgui()
     function Mantle.ui.desc_entry(parent, title, placeholder)
         local label = vgui.Create('DLabel', parent)
         label:Dock(TOP)
+        label:DockMargin(4, 0, 4, 0)
         label:SetText(title)
         label:SetFont('Fated.16')
-
-        local entry
         
         local entry_background = vgui.Create('DPanel', parent)
         entry_background:Dock(TOP)
         entry_background:DockMargin(0, 4, 0, 0)
+        entry_background:DockMargin(4, 4, 4, 0)
         entry_background:SetTall(24)
         
         entry = vgui.Create('DTextEntry', entry_background)
+        local entry = vgui.Create('DTextEntry', entry_background)
         entry:Dock(FILL)
         entry:DockMargin(2, 4, 2, 4)
         entry:SetPlaceholderText(placeholder)
