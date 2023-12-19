@@ -191,11 +191,9 @@ local function create_vgui()
         
         local entry_background = vgui.Create('DPanel', parent)
         entry_background:Dock(TOP)
-        entry_background:DockMargin(0, 4, 0, 0)
         entry_background:DockMargin(4, 4, 4, 0)
         entry_background:SetTall(24)
         
-        entry = vgui.Create('DTextEntry', entry_background)
         local entry = vgui.Create('DTextEntry', entry_background)
         entry:Dock(FILL)
         entry:DockMargin(2, 4, 2, 4)
@@ -207,6 +205,77 @@ local function create_vgui()
         return entry
     end
 
+    function Mantle.ui.panel_tabs(parent)
+        local panel_tabs = vgui.Create('DPanel', parent)
+        panel_tabs:Dock(FILL)
+        panel_tabs.Paint = nil
+        panel_tabs.content = {}
+        panel_tabs.active_tab = ''
+
+        panel_tabs.sp = vgui.Create('DHorizontalScroller', panel_tabs)
+        panel_tabs.sp:Dock(TOP)
+        panel_tabs.sp:DockMargin(0, 0, 0, 6)
+        panel_tabs.sp:SetTall(24)
+        panel_tabs.sp:SetOverlap(-6)
+
+        panel_tabs.panel_content = vgui.Create('DPanel', panel_tabs)
+        panel_tabs.panel_content:Dock(FILL)
+        panel_tabs.panel_content.Paint = function(_, w, h)
+            if panel_tabs.active_tab == '' then
+                draw.SimpleText('Выберете вкладку', 'Fated.16', w * 0.5, h * 0.5 - panel_tabs.sp:GetTall() - 7, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+        end
+
+        function panel_tabs:AddTab(title, panel)
+            panel_tabs.content[title] = panel
+            panel_tabs.content[title]:SetParent(panel_tabs.panel_content)
+            panel_tabs.content[title]:Dock(FILL)
+            panel_tabs.content[title]:SetVisible(false)
+
+            local btn_tab = vgui.Create('DButton', panel_tabs.sp)
+            surface.SetFont('Fated.20')
+            btn_tab:SetSize(surface.GetTextSize(title) + 10, 20)
+            btn_tab:SetText('')
+            btn_tab.Paint = function(self, w, h)
+                draw.RoundedBox(6, 0, 0, w, h, panel_tabs.active_tab == title and Mantle.color.panel[2] or Mantle.color.theme)
+
+                if self:IsHovered() then
+                    draw.RoundedBox(6, 0, 0, w, h, Mantle.color.button_shadow)
+                end
+
+                draw.SimpleText(title, 'Fated.20', w * 0.5, 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            btn_tab.DoClick = function()
+                panel_tabs:ActiveTab(title)
+            end
+            btn_tab.DoRightClick = function()
+                local DM = Mantle.ui.derma_menu()
+
+                for tab_name, _ in pairs(panel_tabs.content) do
+                    DM:AddOption(tab_name, function()
+                        panel_tabs:ActiveTab(tab_name)
+                    end)
+                end
+            end
+
+            panel_tabs.sp:AddPanel(btn_tab)
+        end
+
+        function panel_tabs:ActiveTab(title)
+            for tab_title, tab in pairs(panel_tabs.content) do
+                if tab_title != title then
+                    tab:SetVisible(false)
+                else
+                    tab:SetVisible(true)
+
+                    panel_tabs.active_tab = title
+                end
+            end
+        end
+
+        return panel_tabs
+    end
+
     function Mantle.ui.player_selector(doclick, func_check)
         if IsValid(Mantle.ui.menu_player_selector) then
             Mantle.ui.menu_player_selector:Remove()
@@ -216,6 +285,7 @@ local function create_vgui()
         Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false)
         Mantle.ui.menu_player_selector:Center()
         Mantle.ui.menu_player_selector:MakePopup()
+        Mantle.ui.menu_player_selector.background_alpha = false
 
         Mantle.ui.menu_player_selector.sp = vgui.Create('DScrollPanel', Mantle.ui.menu_player_selector)
         Mantle.ui.sp(Mantle.ui.menu_player_selector.sp)
@@ -257,7 +327,7 @@ local function create_vgui()
         end
 
         Mantle.ui.menu_player_selector.btn_close = vgui.Create('DButton', Mantle.ui.menu_player_selector)
-        Mantle.ui.btn(Mantle.ui.menu_player_selector.btn_close)
+        Mantle.ui.btn(Mantle.ui.menu_player_selector.btn_close, nil, nil, nil, nil, nil, Color(210, 65, 65))
         Mantle.ui.menu_player_selector.btn_close:Dock(BOTTOM)
         Mantle.ui.menu_player_selector.btn_close:DockMargin(0, 6, 0, 0)
         Mantle.ui.menu_player_selector.btn_close:SetText('Закрыть')
@@ -275,6 +345,7 @@ local function create_vgui()
         Mantle.ui.frame(Mantle.ui.menu_color_picker, 'Выбор цвета', 250, 400, false)
         Mantle.ui.menu_color_picker:Center()
         Mantle.ui.menu_color_picker:MakePopup()
+        Mantle.ui.menu_color_picker.background_alpha = false
 
         Mantle.ui.menu_color_picker.picker = vgui.Create('DColorMixer', Mantle.ui.menu_color_picker)
         Mantle.ui.menu_color_picker.picker:Dock(FILL)
@@ -285,7 +356,7 @@ local function create_vgui()
         end
 
         Mantle.ui.menu_color_picker.btn_close = vgui.Create('DButton', Mantle.ui.menu_color_picker)
-        Mantle.ui.btn(Mantle.ui.menu_color_picker.btn_close, nil, nil, Color(210, 65, 65))
+        Mantle.ui.btn(Mantle.ui.menu_color_picker.btn_close, nil, nil, Color(210, 65, 65), nil, nil, nil, true)
         Mantle.ui.menu_color_picker.btn_close:Dock(BOTTOM)
         Mantle.ui.menu_color_picker.btn_close:DockMargin(0, 6, 0, 0)
         Mantle.ui.menu_color_picker.btn_close:SetText('Закрыть')

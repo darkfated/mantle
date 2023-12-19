@@ -1,9 +1,9 @@
 Mantle.color = {
+    theme = Color(102, 107, 164),
+
     header = Color(51, 51, 51),
     background = Color(34, 34, 34),
     background_alpha = Color(34, 34, 34, 210),
-
-    vbar = Color(102, 107, 164),
 
     button = Color(76, 76, 76),
     button_hovered = Color(52, 70, 109),
