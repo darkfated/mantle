@@ -221,7 +221,7 @@ local function create_vgui()
         Mantle.ui.menu_player_selector.sp:DockMargin(6, 6, 6, 6)
 
         for i, pl in pairs(player.GetAll()) do
-            if func_check(pl) then
+            if IsValid(func_check) and func_check(pl) then
                 continue 
             end
 
