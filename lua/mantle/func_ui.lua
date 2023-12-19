@@ -134,11 +134,10 @@ local function create_vgui()
     function Mantle.ui.sp(s)
         local vbar = s:GetVBar()
         vbar:SetWide(12)
+        vbar:SetHideButtons(true)
         vbar.Paint = nil
-        vbar.btnDown.Paint = nil
-        vbar.btnUp.Paint = nil
         vbar.btnGrip.Paint = function(_, w, h)
-            draw.RoundedBox(6, 6, 0, w - 6, h, Mantle.color.vbar)
+            draw.RoundedBox(6, 6, 0, w - 6, h, Mantle.color.theme)
         end
     end
 
