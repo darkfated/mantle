@@ -15,3 +15,9 @@ Mantle.color = {
         Color(193, 193, 193)
     }
 }
+
+Mantle.color.panel_alpha = {
+    Color(Mantle.color.panel[1].r, Mantle.color.panel[1].g, Mantle.color.panel[1].b, 150),
+    Color(Mantle.color.panel[2].r, Mantle.color.panel[2].g, Mantle.color.panel[2].b, 150),
+    Color(Mantle.color.panel[3].r, Mantle.color.panel[3].g, Mantle.color.panel[3].b, 150)
+}
