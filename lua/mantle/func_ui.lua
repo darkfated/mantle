@@ -262,6 +262,10 @@ local function create_vgui()
         end
 
         function panel_tabs:ActiveTab(title)
+            if title == panel_tabs.active_tab then
+                return
+            end
+
             for tab_title, tab in pairs(panel_tabs.content) do
                 if tab_title != title then
                     tab:SetVisible(false)
