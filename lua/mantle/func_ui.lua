@@ -205,6 +205,32 @@ local function create_vgui()
         return entry
     end
 
+    function Mantle.ui.checkbox(parent, text, convar)
+        local panel = vgui.Create('DPanel', parent)
+        panel:Dock(TOP)
+        panel:DockMargin(4, 0, 4, 0)
+        panel:SetTall(28)
+        panel.Paint = function(_, w, h)
+            draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
+            draw.SimpleText(text, 'Fated.18', 8, h * 0.5 - 1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+
+        local option = vgui.Create('DButton', panel)
+        option:Dock(RIGHT)
+        option:SetWide(56)
+        option:SetText('')
+        option.enabled = GetConVar(convar):GetBool()
+        option.Paint = function(self, w, h)
+            draw.RoundedBoxEx(6, 0, 0, w, h, Mantle.color.panel_alpha[1], false, true, false, true)
+            draw.SimpleText(self.enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.19', w * 0.5 - 1, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+        option.DoClick = function()
+            RunConsoleCommand(convar, option.enabled and 0 or 1)
+
+            option.enabled = !option.enabled
+        end
+    end
+
     function Mantle.ui.panel_tabs(parent)
         local panel_tabs = vgui.Create('DPanel', parent)
         panel_tabs:Dock(FILL)
