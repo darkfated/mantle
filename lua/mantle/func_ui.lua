@@ -323,8 +323,8 @@ local function create_vgui()
         Mantle.ui.menu_player_selector.sp:DockMargin(6, 6, 6, 6)
 
         for i, pl in pairs(player.GetAll()) do
-            if IsValid(func_check) and func_check(pl) then
-                continue 
+            if isfunction(func_check) and func_check(pl) then
+                continue
             end
 
             local panel_ply = vgui.Create('DButton', Mantle.ui.menu_player_selector.sp)
