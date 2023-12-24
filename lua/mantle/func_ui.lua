@@ -126,7 +126,7 @@ local function create_vgui()
         s.btn_center_title:SetText('')
         s.btn_center_title.Paint = function(_, w, h)
             if s.center_title != '' then
-                draw.SimpleText(s.center_title, 'Fated.24', w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(s.center_title, 'Fated.24', w * 0.5, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
     end
