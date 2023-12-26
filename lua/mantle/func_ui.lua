@@ -252,7 +252,7 @@ local function create_vgui()
             end
         end
 
-        function panel_tabs:AddTab(title, panel, icon)
+        function panel_tabs:AddTab(title, panel, icon, col, col_hov)
             panel_tabs.content[title] = panel
             panel_tabs.content[title]:SetParent(panel_tabs.panel_content)
             panel_tabs.content[title]:Dock(FILL)
@@ -263,7 +263,7 @@ local function create_vgui()
             btn_tab:SetSize(surface.GetTextSize(title) + 10 + (icon and 18 or 0), 20)
             btn_tab:SetText('')
             btn_tab.Paint = function(self, w, h)
-                draw.RoundedBox(6, 0, 0, w, h, panel_tabs.active_tab == title and Mantle.color.panel[2] or Mantle.color.theme)
+                draw.RoundedBox(6, 0, 0, w, h, panel_tabs.active_tab == title and (col_hov and col_hov or Mantle.color.panel[2]) or (col and col or Mantle.color.theme))
 
                 if self:IsHovered() then
                     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.button_shadow)
