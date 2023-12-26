@@ -262,6 +262,12 @@ local function create_vgui()
             surface.SetFont('Fated.20')
             btn_tab:SetSize(surface.GetTextSize(title) + 10 + (icon and 18 or 0), 20)
             btn_tab:SetText('')
+
+            if icon then
+                btn_tab.icon = Material(icon)
+                panel_tabs.content[title].icon = icon
+            end
+
             btn_tab.Paint = function(self, w, h)
                 draw.RoundedBox(6, 0, 0, w, h, panel_tabs.active_tab == title and (col_hov and col_hov or Mantle.color.panel[2]) or (col and col or Mantle.color.theme))
 
@@ -269,11 +275,11 @@ local function create_vgui()
                     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.button_shadow)
                 end
 
-                draw.SimpleText(title, 'Fated.20', w * 0.5 + (icon and 9 or 0), 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(title, 'Fated.20', w * 0.5 + (self.icon and 9 or 0), 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-                if icon then
+                if self.icon then
                     surface.SetDrawColor(color_white)
-                    surface.SetMaterial(icon)
+                    surface.SetMaterial(self.icon)
                     surface.DrawTexturedRect(4, 4, 16, 16)
                 end
             end
@@ -283,10 +289,10 @@ local function create_vgui()
             btn_tab.DoRightClick = function()
                 local DM = Mantle.ui.derma_menu()
 
-                for tab_name, _ in pairs(panel_tabs.content) do
+                for tab_name, tab in pairs(panel_tabs.content) do
                     DM:AddOption(tab_name, function()
                         panel_tabs:ActiveTab(tab_name)
-                    end)
+                    end, tab.icon)
                 end
             end
 
