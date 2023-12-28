@@ -319,10 +319,6 @@ local function create_vgui()
     end
 
     function Mantle.ui.player_selector(doclick, func_check)
-        if IsValid(Mantle.ui.menu_player_selector) then
-            Mantle.ui.menu_player_selector:Remove()
-        end
-
         Mantle.ui.menu_player_selector = vgui.Create('DFrame')
         Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false)
         Mantle.ui.menu_player_selector:Center()
@@ -379,10 +375,6 @@ local function create_vgui()
     end
 
     function Mantle.ui.color_picker(func, color_standart)
-        if IsValid(Mantle.ui.menu_color_picker) then
-            Mantle.ui.menu_color_picker:Remove()
-        end
-
         Mantle.ui.menu_color_picker = vgui.Create('DFrame')
         Mantle.ui.frame(Mantle.ui.menu_color_picker, 'Выбор цвета', 250, 400, false)
         Mantle.ui.menu_color_picker:Center()
@@ -528,6 +520,28 @@ local function create_vgui()
         end
 
         return Mantle.ui.menu_derma_menu
+    end
+
+    function Mantle.ui.text_box(title, desc, func)
+        Mantle.ui.menu_text_box = vgui.Create('DFrame')
+        Mantle.ui.frame(Mantle.ui.menu_text_box, title, 300, 120, true)
+        Mantle.ui.menu_text_box:SetSize(300, 120)
+        Mantle.ui.menu_text_box:Center()
+        Mantle.ui.menu_text_box:MakePopup()
+        Mantle.ui.menu_text_box.background_alpha = false
+
+        local entry = Mantle.ui.desc_entry(Mantle.ui.menu_text_box, desc)
+
+        local btn_accept = vgui.Create('DButton', Mantle.ui.menu_text_box)
+        Mantle.ui.btn(btn_accept, nil, nil, Color(44, 124, 62), nil, nil, Color(35, 103, 51))
+        btn_accept:Dock(FILL)
+        btn_accept:DockMargin(0, 8, 0, 0)
+        btn_accept:SetText('Применить')
+        btn_accept.DoClick = function()
+            func(entry:GetText())
+
+            Mantle.ui.menu_text_box:Remove()
+        end
     end
 end
 
