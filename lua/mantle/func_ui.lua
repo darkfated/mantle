@@ -182,12 +182,14 @@ local function create_vgui()
         end
     end
 
-    function Mantle.ui.desc_entry(parent, title, placeholder)
-        local label = vgui.Create('DLabel', parent)
-        label:Dock(TOP)
-        label:DockMargin(4, 0, 4, 0)
-        label:SetText(title)
-        label:SetFont('Fated.16')
+    function Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)
+        if !bool_title_off then
+            local label = vgui.Create('DLabel', parent)
+            label:Dock(TOP)
+            label:DockMargin(4, 0, 4, 0)
+            label:SetText(title)
+            label:SetFont('Fated.16')
+        end
         
         local entry_background = vgui.Create('DPanel', parent)
         entry_background:Dock(TOP)
@@ -202,7 +204,7 @@ local function create_vgui()
         entry:SetDrawLanguageID(false)
         entry:SetPaintBackground(false)
 
-        return entry
+        return entry, entry_background
     end
 
     function Mantle.ui.checkbox(parent, text, convar)
