@@ -232,7 +232,7 @@ local function create_vgui()
             option.enabled = !option.enabled
         end
 
-        return panel
+        return panel, option
     end
 
     function Mantle.ui.panel_tabs(parent)
