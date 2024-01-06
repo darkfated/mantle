@@ -19,8 +19,8 @@ end
 
 local function init()
     if SERVER then
-        resource.AddWorkshop('2924839375')
-        resource.AddFile('materials/mantle/close_btn.png')
+        resource.AddWorkshop('2924839375') -- DarkFated font
+        resource.AddWorkshop('3126986993') -- Mantle
     end
 
     Mantle = Mantle or {}
