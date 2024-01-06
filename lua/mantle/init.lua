@@ -10,6 +10,7 @@ local function run_scripts()
 
     cl('colors.lua')
     cl('func_ui.lua')
+    cl('vgui.lua')
 
     cl('modules/shadows.lua')
     cl('modules/material_url.lua')
