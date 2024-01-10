@@ -1,20 +1,33 @@
 --[[
-    * mantle *
+    * Mantle *
     GitHub: https://github.com/darkfated/mantle
     Author's discord: darkfated
 ]]--
 
 local function run_scripts()
-    local cl = SERVER and AddCSLuaFile or include
-    local sv = SERVER and include or function() end
+    Mantle.run_cl('colors.lua')
+    Mantle.run_cl('func_ui.lua')
+    Mantle.run_cl('vgui.lua')
 
-    cl('colors.lua')
-    cl('func_ui.lua')
-    cl('vgui.lua')
+    Mantle.run_cl('modules/shadows.lua')
+    Mantle.run_cl('modules/material_url.lua')
+    Mantle.run_cl('modules/test_menu.lua')
+end
 
-    cl('modules/shadows.lua')
-    cl('modules/material_url.lua')
-    cl('modules/test_menu.lua')
+local function run_addons()
+    local function LoadAddon(addonName)
+        local addonPath = 'mantle_addons/' .. addonName
+        local initPath = addonPath .. '/init.lua'
+
+        Mantle.run_cl(initPath)
+        Mantle.run_sv(initPath)
+    end
+
+    local _, addons_name = file.Find('mantle_addons/*', 'LUA')
+    
+    for _, addon in ipairs(addons_name) do
+        LoadAddon(addon)
+    end
 end
 
 local function init()
@@ -24,8 +37,11 @@ local function init()
     end
 
     Mantle = Mantle or {}
+    Mantle.run_cl = SERVER and AddCSLuaFile or include
+    Mantle.run_sv = SERVER and include or function() end
 
     run_scripts()
+    run_addons()
 end
 
 init()
