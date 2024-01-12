@@ -20,6 +20,10 @@ function Mantle.ui.frame(s, title, width, height, close_bool)
             draw.RoundedBoxEx(6, x, y, w, 24, Mantle.color.header, true, true)
             draw.RoundedBoxEx(6, x, y + 24, w, h - 24, s.background_alpha and Mantle.color.background_alpha or Mantle.color.background, false, false, true, true)
             draw.SimpleText(self.f_title, 'Fated.16', x + 6, y + 4, color_white)
+            
+            if self.center_title then
+                draw.SimpleText(s.center_title, 'Fated.24', x + w * 0.5, y + 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
         BSHADOWS.EndShadow(1, 2, 2, 255, 0, 0)
     end
 
@@ -41,16 +45,6 @@ function Mantle.ui.frame(s, title, width, height, close_bool)
             DM:AddOption('Закрыть окно', function()
                 s:Remove()
             end, 'icon16/cross.png')
-        end
-    end
-
-    s.btn_center_title = vgui.Create('DButton', s)
-    s.btn_center_title:SetSize(width * 0.5, 24)
-    s.btn_center_title:SetPos(width * 0.25, 0)
-    s.btn_center_title:SetText('')
-    s.btn_center_title.Paint = function(_, w, h)
-        if s.center_title != '' then
-            draw.SimpleText(s.center_title, 'Fated.24', w * 0.5, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
 end
