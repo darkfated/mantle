@@ -13,4 +13,4 @@ You can take a look at the visual capabilities of the library by looking at othe
 ## Additional information
 🔧 [Wiki](https://github.com/darkfated/mantle/wiki): here you can see how to implement this or that part of the library
 
-✅ [Steam Workshop](https://github.com/darkfated/mantle/wiki): to automatically update to the latest version, subscribe to the addon or add to your collection
+✅ [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993): to automatically update to the latest version, subscribe to the addon or add to your collection
