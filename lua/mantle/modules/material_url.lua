@@ -10,7 +10,7 @@ function http.DownloadMaterial(url, path, callback, retry_count)
     local data_path = 'data/' .. path
 
     if file.Exists(path, 'DATA') then
-        WebImageCache[url] = Material(data_path, 'smooth mips')
+        WebImageCache[url] = Material(data_path, 'noclamp mips')
 
         callback(WebImageCache[url])
     else
@@ -21,7 +21,7 @@ function http.DownloadMaterial(url, path, callback, retry_count)
             
             file.Write(path, img)
 
-            WebImageCache[url] = Material(data_path, 'smooth mips')
+            WebImageCache[url] = Material(data_path, 'noclamp mips')
 
             callback(WebImageCache[url])
         end, function()
