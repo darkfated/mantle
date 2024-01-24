@@ -241,6 +241,10 @@ function Mantle.ui.panel_tabs(parent)
 end
 
 function Mantle.ui.player_selector(doclick, func_check)
+    if IsValid(Mantle.ui.menu_player_selector) then
+        Mantle.ui.menu_player_selector:Remove()
+    end
+
     Mantle.ui.menu_player_selector = vgui.Create('DFrame')
     Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false)
     Mantle.ui.menu_player_selector:Center()
@@ -250,7 +254,6 @@ function Mantle.ui.player_selector(doclick, func_check)
     Mantle.ui.menu_player_selector.sp = vgui.Create('DScrollPanel', Mantle.ui.menu_player_selector)
     Mantle.ui.sp(Mantle.ui.menu_player_selector.sp)
     Mantle.ui.menu_player_selector.sp:Dock(FILL)
-    Mantle.ui.menu_player_selector.sp:DockMargin(6, 6, 6, 6)
 
     for i, pl in pairs(player.GetAll()) do
         if isfunction(func_check) and func_check(pl) then
@@ -260,7 +263,7 @@ function Mantle.ui.player_selector(doclick, func_check)
         local panel_ply = vgui.Create('DButton', Mantle.ui.menu_player_selector.sp)
         panel_ply:Dock(TOP)
         panel_ply:DockMargin(0, 0, 0, 6)
-        panel_ply:SetTall(40)
+        panel_ply:SetTall(28)
         panel_ply:SetText('')
         panel_ply.Paint = function(self, w, h)
             draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel[1])
@@ -281,9 +284,9 @@ function Mantle.ui.player_selector(doclick, func_check)
         end
 
         panel_ply.avatar = vgui.Create('AvatarImage', panel_ply)
-        panel_ply.avatar:SetSize(32, 32)
+        panel_ply.avatar:SetSize(20, 20)
         panel_ply.avatar:SetPos(4, 4)
-        panel_ply.avatar:SetPlayer(pl)
+        panel_ply.avatar:SetPlayer(pl, 24)
     end
 
     Mantle.ui.menu_player_selector.btn_close = vgui.Create('DButton', Mantle.ui.menu_player_selector)
