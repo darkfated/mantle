@@ -302,6 +302,10 @@ function Mantle.ui.player_selector(doclick, func_check)
 end
 
 function Mantle.ui.color_picker(func, color_standart)
+    if IsValid(Mantle.ui.menu_color_picker) then
+        Mantle.ui.menu_color_picker:Remove()
+    end
+
     Mantle.ui.menu_color_picker = vgui.Create('DFrame')
     Mantle.ui.frame(Mantle.ui.menu_color_picker, 'Выбор цвета', 250, 400, false)
     Mantle.ui.menu_color_picker:Center()
