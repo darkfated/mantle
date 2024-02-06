@@ -463,14 +463,22 @@ function Mantle.ui.text_box(title, desc, func)
 
     local entry = Mantle.ui.desc_entry(Mantle.ui.menu_text_box, desc)
 
+    local function apply_func()
+        func(entry:GetText())
+
+        Mantle.ui.menu_text_box:Remove()
+    end
+
+    entry.OnEnter = function()
+        apply_func()
+    end
+
     local btn_accept = vgui.Create('DButton', Mantle.ui.menu_text_box)
     Mantle.ui.btn(btn_accept, nil, nil, Color(44, 124, 62), nil, nil, Color(35, 103, 51))
     btn_accept:Dock(FILL)
     btn_accept:DockMargin(0, 8, 0, 0)
     btn_accept:SetText('Применить')
     btn_accept.DoClick = function()
-        func(entry:GetText())
-
-        Mantle.ui.menu_text_box:Remove()
+        apply_func()
     end
 end
