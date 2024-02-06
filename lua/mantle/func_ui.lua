@@ -72,6 +72,44 @@ local function create_ui_func()
     
         return Mantle.func.h_save[h]
     end
+
+    local function ent_text(text, y)
+        surface.SetFont('Fated.40')
+    
+        local tw, th = surface.GetTextSize(text)
+        local bx, by = -tw * 0.5 - 10, y - 5
+        local bw, bh = tw + 20, th + 20
+    
+        surface.SetDrawColor(Mantle.color.background_alpha)
+        surface.DrawRect(bx, by, bw, bh)
+        surface.SetDrawColor(color_white)
+        surface.DrawRect(bx, by + bh - 4, bw, 4)
+
+        surface.SetTextColor(color_white)
+        surface.SetTextPos(-tw * 0.5, y)
+        surface.DrawText(text)
+    end
+
+    function Mantle.func.draw_ent_text(ent, txt, posY)
+        local dist = EyePos():DistToSqr(ent:GetPos())
+
+        if dist > 60000 then
+            return
+        end
+        
+        surface.SetAlphaMultiplier(math.Clamp(3 - (dist / 20000), 0, 1))
+
+        local _, max = ent:GetRotatedAABB(ent:OBBMins(), ent:OBBMaxs())
+        local rot = (ent:GetPos() - EyePos()):Angle().yaw - 90
+        local sin = math.sin(CurTime() + ent:EntIndex()) / 3 + 0.5
+        local center = ent:LocalToWorld(ent:OBBCenter())
+
+        cam.Start3D2D(center + Vector(0, 0, math.abs(max.z / 2) + 12 + sin), Angle(0, rot, 90), 0.13)
+            ent_text(txt, posY)
+        cam.End3D2D()
+
+        surface.SetAlphaMultiplier(1)
+    end
 end
 
 create_ui_func()
