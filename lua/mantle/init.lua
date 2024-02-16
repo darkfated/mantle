@@ -12,6 +12,8 @@ local function run_scripts()
     Mantle.run_cl('modules/shadows.lua')
     Mantle.run_cl('modules/material_url.lua')
     Mantle.run_cl('modules/test_menu.lua')
+    Mantle.run_cl('modules/notify.lua')
+    Mantle.run_sv('modules/notify.lua')
 end
 
 local function run_addons()
