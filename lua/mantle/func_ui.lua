@@ -114,3 +114,7 @@ end
 
 create_ui_func()
 create_fonts()
+
+hook.Add('OnScreenSizeChanged', 'Mantle', function()
+    create_ui_func()
+end)
