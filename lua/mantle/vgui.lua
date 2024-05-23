@@ -54,7 +54,11 @@ function Mantle.ui.sp(s)
     vbar:SetWide(12)
     vbar:SetHideButtons(true)
     vbar.Paint = nil
-    vbar.btnGrip.Paint = function(_, w, h)
+    vbar.btnGrip.Paint = function(self, w, h)
+        if self.Depressed then
+            self:SetCursor('sizens')
+        end
+
         draw.RoundedBox(6, 6, 0, w - 6, h, Mantle.color.theme)
     end
 end
