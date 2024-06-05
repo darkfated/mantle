@@ -79,9 +79,9 @@ local function create_ui_func()
         local tw, th = surface.GetTextSize(text)
         local bx, by = -tw * 0.5 - 10, y - 5
         local bw, bh = tw + 20, th + 20
-    
-        surface.SetDrawColor(Mantle.color.background_alpha)
-        surface.DrawRect(bx, by, bw, bh)
+
+        draw.RoundedBoxEx(12, bx, by, bw, bh, Mantle.color.background_alpha, true, true, false, false)
+
         surface.SetDrawColor(color_white)
         surface.DrawRect(bx, by + bh - 4, bw, 4)
 
