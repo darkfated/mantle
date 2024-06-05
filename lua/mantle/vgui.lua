@@ -486,3 +486,135 @@ function Mantle.ui.text_box(title, desc, func)
         apply_func()
     end
 end
+
+local function DrawArc(cx, cy, radius, thickness, startAngle, endAngle, color)
+    local arc = {}
+    local innerRadius = radius - thickness
+
+    for i = startAngle, endAngle, 1 do
+        local rad = math.rad(i)
+        table.insert(arc, {
+            x = cx + math.cos(rad) * radius,
+            y = cy + math.sin(rad) * radius,
+        })
+    end
+
+    for i = endAngle, startAngle, -1 do
+        local rad = math.rad(i)
+        table.insert(arc, {
+            x = cx + math.cos(rad) * innerRadius,
+            y = cy + math.sin(rad) * innerRadius,
+        })
+    end
+
+    surface.SetDrawColor(color)
+    draw.NoTexture()
+    surface.DrawPoly(arc)
+end
+
+local segmentColors = {}
+
+function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool)
+    if IsValid(Mantle.ui.menu_ratial_panel) then
+        Mantle.ui.menu_ratial_panel:Remove()
+    end
+
+    Mantle.ui.menu_ratial_panel = vgui.Create('DPanel')
+    Mantle.ui.menu_ratial_panel:SetSize(ScrW(), ScrH())
+    Mantle.ui.menu_ratial_panel:Center()
+    Mantle.ui.menu_ratial_panel:MakePopup()
+    
+    if !disable_start_anim_bool then
+        Mantle.ui.menu_ratial_panel:SetAlpha(0)
+        Mantle.ui.menu_ratial_panel:AlphaTo(255, 0.1, 0)
+    end
+
+    for i = 1, #items_config do
+        segmentColors[i] = Mantle.color.header
+    end
+
+    local centerX, centerY = ScrW() / 2, ScrH() / 2
+    local radius = 200
+    local thickness = 90
+    local selectedSegment = nil
+    local hoveredText = nil
+
+    Mantle.ui.menu_ratial_panel.Paint = function(_, w, h)
+        draw.RoundedBox(0, 0, 0, w, h, Mantle.color.background_alpha)
+
+        local angleStep = 360 / #items_config
+
+        for i, btnConfig in ipairs(items_config) do
+            local startAngle = (i - 1) * angleStep
+            local endAngle = i * angleStep
+            local isHovered = (selectedSegment == i)
+            local targetColor = isHovered and Mantle.color.theme or Mantle.color.header
+            local currentColor = segmentColors[i]
+            
+            segmentColors[i] = Color(
+                Lerp(FrameTime() * 10, currentColor.r, targetColor.r),
+                Lerp(FrameTime() * 10, currentColor.g, targetColor.g),
+                Lerp(FrameTime() * 10, currentColor.b, targetColor.b),
+                Lerp(FrameTime() * 10, currentColor.a, targetColor.a)
+            )
+
+            DrawArc(centerX, centerY, radius, thickness, startAngle, endAngle, segmentColors[i])
+
+            local midAngle = math.rad((startAngle + endAngle) / 2)
+            local buttonX = centerX + math.cos(midAngle) * (radius - thickness / 1.9)
+            local buttonY = centerY + math.sin(midAngle) * (radius - thickness / 1.9)
+
+            draw.SimpleText(btnConfig.name, 'Fated.20', buttonX, buttonY, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+            if isHovered then
+                hoveredText = btnConfig.name
+            end
+        end
+
+        if hoveredText then
+            draw.SimpleText(hoveredText, 'Fated.22', centerX, centerY, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+    end
+
+    function Mantle.ui.menu_ratial_panel:Think()
+        local mouseX, mouseY = Mantle.ui.menu_ratial_panel:CursorPos()
+        local dx, dy = mouseX - centerX, mouseY - centerY
+        local angle = math.deg(math.atan2(dy, dx))
+
+        if angle < 0 then
+            angle = angle + 360
+        end
+
+        selectedSegment = math.floor(angle / (360 / #items_config)) + 1
+    end
+
+    local function ClosePanel()
+        Mantle.ui.menu_ratial_panel:AlphaTo(0, 0.07, 0.1, function(_, self)
+            self:Remove()
+        end)
+    end
+
+    function Mantle.ui.menu_ratial_panel:OnMousePressed(mousecode)
+        local mouseX, mouseY = Mantle.ui.menu_ratial_panel:CursorPos()
+        local dx, dy = mouseX - centerX, mouseY - centerY
+        local distance = math.sqrt(dx * dx + dy * dy)
+
+        if mousecode == MOUSE_LEFT then
+            if distance <= radius and selectedSegment then
+                local btnConfig = items_config[selectedSegment]
+
+                if btnConfig and btnConfig.func then
+                    btnConfig.func()
+                end
+                
+                ClosePanel()
+            elseif distance > radius then
+                ClosePanel()
+            end
+        elseif mousecode == MOUSE_RIGHT then
+            ClosePanel()
+        end
+    end
+
+    return Mantle.ui.menu_ratial_panel
+end
