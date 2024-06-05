@@ -585,7 +585,13 @@ function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool)
             angle = angle + 360
         end
 
-        selectedSegment = math.floor(angle / (360 / #items_config)) + 1
+        local newSegment = math.floor(angle / (360 / #items_config)) + 1
+
+        if newSegment != selectedSegment then
+            Mantle.func.sound('mantle/ratio_btn.ogg')
+        end
+
+        selectedSegment = newSegment
     end
 
     local function ClosePanel()
