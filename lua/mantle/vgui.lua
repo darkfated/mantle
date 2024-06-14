@@ -5,7 +5,7 @@ local color_gray = Color(200, 200, 200)
 local color_red = Color(255, 50, 50)
 local mat_close = Material('mantle/close_btn.png')
 
-function Mantle.ui.frame(s, title, width, height, close_bool)
+function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
     s:SetSize(width, height)
     s:SetTitle('')
     s:ShowCloseButton(false)
@@ -25,6 +25,10 @@ function Mantle.ui.frame(s, title, width, height, close_bool)
                 draw.SimpleText(s.center_title, 'Fated.24', x + w * 0.5, y + 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         BSHADOWS.EndShadow(1, 2, 2, 255, 0, 0)
+    end
+
+    if anim_bool then
+        Mantle.func.animate_appearance(s, width, height, 0.1, 0.2)
     end
 
     if close_bool then
@@ -252,7 +256,7 @@ function Mantle.ui.player_selector(doclick, func_check)
     end
 
     Mantle.ui.menu_player_selector = vgui.Create('DFrame')
-    Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false)
+    Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false, true)
     Mantle.ui.menu_player_selector:Center()
     Mantle.ui.menu_player_selector:MakePopup()
     Mantle.ui.menu_player_selector.background_alpha = false
@@ -328,6 +332,7 @@ function Mantle.ui.color_picker(func, color_standart)
     Mantle.ui.btn(Mantle.ui.menu_color_picker.btn_close, nil, nil, Color(210, 65, 65), nil, nil, nil, true)
     Mantle.ui.menu_color_picker.btn_close:Dock(BOTTOM)
     Mantle.ui.menu_color_picker.btn_close:DockMargin(0, 6, 0, 0)
+    Mantle.ui.menu_color_picker.btn_close:SetTall(28)
     Mantle.ui.menu_color_picker.btn_close:SetText('Закрыть')
     Mantle.ui.menu_color_picker.btn_close.DoClick = function()
         Mantle.ui.menu_color_picker:Remove()
@@ -337,6 +342,7 @@ function Mantle.ui.color_picker(func, color_standart)
     Mantle.ui.btn(Mantle.ui.menu_color_picker.btn_select)
     Mantle.ui.menu_color_picker.btn_select:Dock(BOTTOM)
     Mantle.ui.menu_color_picker.btn_select:DockMargin(0, 6, 0, 0)
+    Mantle.ui.menu_color_picker.btn_select:SetTall(28)
     Mantle.ui.menu_color_picker.btn_select:SetText('Выбрать')
     Mantle.ui.menu_color_picker.btn_select.DoClick = function()
         local col = Mantle.ui.menu_color_picker.picker:GetColor()
@@ -459,8 +465,7 @@ end
 
 function Mantle.ui.text_box(title, desc, func)
     Mantle.ui.menu_text_box = vgui.Create('DFrame')
-    Mantle.ui.frame(Mantle.ui.menu_text_box, title, 300, 120, true)
-    Mantle.ui.menu_text_box:SetSize(300, 120)
+    Mantle.ui.frame(Mantle.ui.menu_text_box, title, 300, 120, true, true)
     Mantle.ui.menu_text_box:Center()
     Mantle.ui.menu_text_box:MakePopup()
     Mantle.ui.menu_text_box.background_alpha = false

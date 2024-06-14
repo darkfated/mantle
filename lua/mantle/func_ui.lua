@@ -110,6 +110,36 @@ local function create_ui_func()
 
         surface.SetAlphaMultiplier(1)
     end
+
+    function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_duration)
+        local startTime = SysTime()
+        local scale_factor = 0.9
+    
+        local initial_w = target_w * scale_factor
+        local initial_h = target_h * scale_factor
+    
+        panel:SetSize(initial_w, initial_h)
+        panel:SetAlpha(0)
+        panel:Center()
+    
+        panel.Think = function()
+            local elapsed = SysTime() - startTime
+            local size_progress = math.Clamp(elapsed / duration, 0, 1)
+            local alpha_progress = math.Clamp(elapsed / alpha_duration, 0, 1)
+    
+            local current_w = Lerp(size_progress, initial_w, target_w)
+            local current_h = Lerp(size_progress, initial_h, target_h)
+            panel:SetSize(current_w, current_h)
+            panel:Center()
+    
+            local alpha = Lerp(alpha_progress, 0, 255)
+            panel:SetAlpha(alpha)
+    
+            if size_progress == 1 and alpha_progress == 1 then
+                panel.Think = nil
+            end
+        end
+    end
 end
 
 create_ui_func()
