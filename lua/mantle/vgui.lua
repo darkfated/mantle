@@ -519,7 +519,7 @@ end
 
 local segmentColors = {}
 
-function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool)
+function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool, disable_background_bool)
     if IsValid(Mantle.ui.menu_ratial_panel) then
         Mantle.ui.menu_ratial_panel:Remove()
     end
@@ -545,7 +545,9 @@ function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool)
     local hoveredText = nil
 
     Mantle.ui.menu_ratial_panel.Paint = function(_, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, Mantle.color.background_alpha)
+        if !disable_background_bool then
+            draw.RoundedBox(0, 0, 0, w, h, Mantle.color.background_alpha)
+        end
 
         local angleStep = 360 / #items_config
 
@@ -577,6 +579,7 @@ function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool)
         end
 
         if hoveredText then
+            draw.SimpleText(hoveredText, 'Fated.22', centerX + 1, centerY + 1, color_black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             draw.SimpleText(hoveredText, 'Fated.22', centerX, centerY, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
@@ -599,10 +602,14 @@ function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool)
         selectedSegment = newSegment
     end
 
-    local function ClosePanel()
-        Mantle.ui.menu_ratial_panel:AlphaTo(0, 0.07, 0.1, function(_, self)
-            self:Remove()
-        end)
+    local function ClosePanel(end_anim_off_bool)
+        if !end_anim_off_bool then
+            Mantle.ui.menu_ratial_panel:AlphaTo(0, 0.07, 0.1, function(_, self)
+                self:Remove()
+            end)
+        else
+            Mantle.ui.menu_ratial_panel:Remove()
+        end
     end
 
     function Mantle.ui.menu_ratial_panel:OnMousePressed(mousecode)
@@ -618,7 +625,7 @@ function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool)
                     btnConfig.func()
                 end
                 
-                ClosePanel()
+                ClosePanel(btnConfig.off_anim)
             elseif distance > radius then
                 ClosePanel()
             end

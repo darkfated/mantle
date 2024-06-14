@@ -111,7 +111,7 @@ local function create_ui_func()
         surface.SetAlphaMultiplier(1)
     end
 
-    function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_duration)
+    function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_duration, func_callback)
         local startTime = SysTime()
         local scale_factor = 0.9
     
@@ -137,6 +137,10 @@ local function create_ui_func()
     
             if size_progress == 1 and alpha_progress == 1 then
                 panel.Think = nil
+
+                if func_callback then
+                    func_callback(panel)
+                end
             end
         end
     end
