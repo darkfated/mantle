@@ -51,7 +51,7 @@ local function create_ui_func()
     end
 
     function Mantle.func.sound(snd)
-        surface.PlaySound(snd or 'UI/buttonclickrelease.wav')
+        surface.PlaySound(snd or 'mantle/btn_click.ogg')
     end
 
     Mantle.func.w_save = {}
