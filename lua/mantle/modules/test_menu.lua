@@ -20,7 +20,7 @@ local config_pop_actions = {
         'Выбор игрока',
         function()
             Mantle.ui.player_selector(function(pl)
-                chat.AddText('Вы выбрали игрока: ' .. pl:Name())
+                chat.AddText('Вы выбрали игрока: ', color_white, pl:Name())
             end)
         end
     },
@@ -28,7 +28,7 @@ local config_pop_actions = {
         'Выбор цвета через палитру',
         function()
             Mantle.ui.color_picker(function(col)
-                chat.AddText('Вы выбрали цвет: ' .. tostring(col))
+                chat.AddText('Вы выбрали цвет: ', col, tostring(col))
             end, Color(25, 59, 102))
         end
     },
@@ -36,7 +36,7 @@ local config_pop_actions = {
         'Написание текста',
         function()
             Mantle.ui.text_box('Заголовок', 'Описание того, что вводиться', function(s)
-                chat.AddText('Вы ввели: ' .. s)
+                chat.AddText('Вы ввели: ', color_white, s)
             end)
         end
     }
@@ -44,9 +44,10 @@ local config_pop_actions = {
 
 local function Create()
     local frame = vgui.Create('DFrame')
-    Mantle.ui.frame(frame, 'Тест компонентов UI Mantle', 600, 400, true)
+    Mantle.ui.frame(frame, 'Тест компонентов Mantle UI', 600, 400, true, true)
     frame:Center()
     frame:MakePopup()
+    frame.center_title = 'Главный заголовок'
 
     local panel_tabs = Mantle.ui.panel_tabs(frame)
 
