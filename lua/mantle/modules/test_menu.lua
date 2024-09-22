@@ -88,6 +88,8 @@ local function Create()
     local convar_fps = Mantle.ui.checkbox(panel_interactive, 'Показывать ФПС', 'cl_showfps')
     convar_fps:DockMargin(6, 12, 6, 0)
 
+    local slider = Mantle.ui.slidebox(panel_interactive, 'Net статистика', 0, 4, 'net_graph')
+
     panel_tabs:AddTab('Интерактивные элементы', panel_interactive, 'icon16/accept.png')
     panel_tabs:ActiveTab('Всплывающие меню')
 end
