@@ -1,11 +1,18 @@
 Mantle.func = {}
 
 local function create_fonts()
-    for s = 1, 50 do
+    for s = 14, 40 do
         surface.CreateFont('Fated.' .. s, {
             font = 'Montserrat Medium',
             size = s,
-            weight = 500,
+            extended = true
+        })
+    end
+
+    for s = 14, 40 do
+        surface.CreateFont('Fated.' .. s .. 'b', {
+            font = 'Montserrat Bold',
+            size = s,
             extended = true
         })
     end

@@ -22,7 +22,7 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
             draw.SimpleText(self.f_title, 'Fated.16', x + 6, y + 4, color_white)
             
             if self.center_title then
-                draw.SimpleText(s.center_title, 'Fated.24', x + w * 0.5, y + 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(s.center_title, 'Fated.20b', x + w * 0.5, y + 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         BSHADOWS.EndShadow(1, 2, 2, 255, 0, 0)
     end
@@ -322,6 +322,8 @@ function Mantle.ui.player_selector(doclick, func_check)
         end
         panel_ply.DoClick = function()
             if IsValid(pl) then
+                Mantle.func.sound()
+                
                 doclick(pl)
             end
 
@@ -380,6 +382,8 @@ function Mantle.ui.color_picker(func, color_standart)
     Mantle.ui.menu_color_picker.btn_select:SetTall(28)
     Mantle.ui.menu_color_picker.btn_select:SetText('Выбрать')
     Mantle.ui.menu_color_picker.btn_select.DoClick = function()
+        Mantle.func.sound()
+
         local col = Mantle.ui.menu_color_picker.picker:GetColor()
 
         func(Color(col.r, col.g, col.b))
@@ -523,6 +527,8 @@ function Mantle.ui.text_box(title, desc, func)
     btn_accept:DockMargin(0, 8, 0, 0)
     btn_accept:SetText('Применить')
     btn_accept.DoClick = function()
+        Mantle.func.sound()
+
         apply_func()
     end
 end
