@@ -108,41 +108,38 @@ function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool,
     end
 end
 
-local draw, mfw, mfh = draw, Mantle.func.w, Mantle.func.h
-local drawRounderBox = draw.RoundedBox
-local MantleColorTheme, MantleColorPanelAlpha  = Mantle.color.theme, Mantle.color.panel_alpha[2]
-
--- https://i.imgur.com/O8JD9Y5.png
-
-function Mantle.ui.slidebox(parent, label, min, max, conVarName)
-    local val = GetConVar(conVarName):GetFloat() or 0
+function Mantle.ui.slidebox(parent, label, min, max, convar_name, decimals)
+    local val = GetConVar(convar_name):GetFloat() or 0
     
     local slider = vgui.Create('DNumSlider', parent)
     slider:Dock(TOP)
+    slider:DockMargin(0, 6, 0, 0)
     slider:SetMinMax(min, max)
     slider:SetValue(val)
+    slider.decimals = decimals or 0
     slider.Label:SetWide(0)
     slider.TextArea:SetWide(0)
 
-    local command = conVarName .. " "
+    local command = convar_name .. ' '
     slider.OnValueChanged = function(s, val)
-        s:SetValue(val)
-        LocalPlayer():ConCommand(command .. val)
+        local value = math.Round(val, decimals)
+
+        s:SetValue(value)
+        LocalPlayer():ConCommand(command .. math.Round(value, 0))
     end
 
     slider.Slider.Paint = nil
-
-    slider.Slider.Knob.Paint = function(self, w, h)
-        drawRounderBox(16, mfw(0), mfh(14), mfw(16), mfh(16), MantleColorTheme)
-    end
-
     slider.PerformLayout = nil
-
     slider.Paint = function(self, w, h)
-        drawRounderBox(10, mfw(5), mfh(30), w - 5, 5, MantleColorPanelAlpha)
-        drawRounderBox(label, "Fated.18", 0, 0, color_white, TEXT_ALIGN_LEFT)
+        draw.RoundedBox(4, 0, h - 10, w, 6, Mantle.color.panel_alpha[1])
+
+        draw.SimpleText(label, 'Fated.18', 0, -4, color_white)
+        draw.SimpleText(self:GetValue(), 'Fated.18', w, -4, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
     end
-    
+    slider.Slider.Knob.Paint = function(self, w, h)
+        draw.RoundedBox(16, 0, 8, 16, 16, Mantle.color.theme)
+    end
+
     return slider
 end
 
