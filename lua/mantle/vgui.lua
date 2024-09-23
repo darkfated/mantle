@@ -42,7 +42,9 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
             surface.DrawTexturedRect(0, 0, w, h)
         end
         s.cls.DoClick = function()
-            s:Remove()
+            s:AlphaTo(0, 0.1, 0, function()
+                s:Remove()
+            end)
         end
         s.cls.DoRightClick = function()
             local DM = Mantle.ui.derma_menu()
@@ -342,7 +344,9 @@ function Mantle.ui.player_selector(doclick, func_check)
     Mantle.ui.menu_player_selector.btn_close:DockMargin(0, 6, 0, 0)
     Mantle.ui.menu_player_selector.btn_close:SetText('Закрыть')
     Mantle.ui.menu_player_selector.btn_close.DoClick = function()
-        Mantle.ui.menu_player_selector:Remove()
+        Mantle.ui.menu_player_selector:AlphaTo(0, 0.1, 0, function()
+            Mantle.ui.menu_player_selector:Remove()
+        end)
     end
 end
 
