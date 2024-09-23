@@ -293,10 +293,11 @@ function Mantle.ui.player_selector(doclick, func_check)
     end
 
     Mantle.ui.menu_player_selector = vgui.Create('DFrame')
-    Mantle.ui.frame(Mantle.ui.menu_player_selector, 'Выбор игрока', 250, 400, false, true)
+    Mantle.ui.frame(Mantle.ui.menu_player_selector, '', 250, 400, false, true)
     Mantle.ui.menu_player_selector:Center()
     Mantle.ui.menu_player_selector:MakePopup()
     Mantle.ui.menu_player_selector.background_alpha = false
+    Mantle.ui.menu_player_selector.center_title = 'Выбор игрока'
 
     Mantle.ui.menu_player_selector.sp = vgui.Create('DScrollPanel', Mantle.ui.menu_player_selector)
     Mantle.ui.sp(Mantle.ui.menu_player_selector.sp)
@@ -356,10 +357,11 @@ function Mantle.ui.color_picker(func, color_standart)
     end
 
     Mantle.ui.menu_color_picker = vgui.Create('DFrame')
-    Mantle.ui.frame(Mantle.ui.menu_color_picker, 'Выбор цвета', 250, 400, false)
+    Mantle.ui.frame(Mantle.ui.menu_color_picker, '', 250, 400, false)
     Mantle.ui.menu_color_picker:Center()
     Mantle.ui.menu_color_picker:MakePopup()
     Mantle.ui.menu_color_picker.background_alpha = false
+    Mantle.ui.menu_color_picker.center_title = 'Выбор цвета'
 
     Mantle.ui.menu_color_picker.picker = vgui.Create('DColorMixer', Mantle.ui.menu_color_picker)
     Mantle.ui.menu_color_picker.picker:Dock(FILL)
