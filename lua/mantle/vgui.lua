@@ -110,36 +110,61 @@ function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool,
     end
 end
 
-function Mantle.ui.slidebox(parent, label, min, max, convar_name, decimals)
-    local val = GetConVar(convar_name):GetFloat() or 0
-    
-    local slider = vgui.Create('DNumSlider', parent)
+function Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, decimals)
+    local slider = vgui.Create('DButton', parent)
     slider:Dock(TOP)
     slider:DockMargin(0, 6, 0, 0)
-    slider:SetMinMax(min, max)
-    slider:SetValue(val)
-    slider.decimals = decimals or 0
-    slider.Label:SetWide(0)
-    slider.TextArea:SetWide(0)
+    slider:SetTall(40)
+    slider:SetText('')
 
-    local command = convar_name .. ' '
-    slider.OnValueChanged = function(s, val)
-        local value = math.Round(val, decimals)
+    local value = GetConVar(slide_convar):GetFloat()
+    local sections = max_value - min_value
+    local smoothPos = 0
+    local targetPos = 0
 
-        s:SetValue(value)
-        LocalPlayer():ConCommand(command .. math.Round(value, 0))
+    local function UpdateSliderPosition(new_value)
+        local progress = (new_value - min_value) / sections
+        targetPos = (slider:GetWide() - 16) * progress
+        LocalPlayer():ConCommand(slide_convar .. ' ' .. new_value)
+        value = new_value
     end
 
-    slider.Slider.Paint = nil
-    slider.PerformLayout = nil
+    UpdateSliderPosition(value)
+
     slider.Paint = function(self, w, h)
-        draw.RoundedBox(4, 0, h - 10, w, 6, Mantle.color.panel_alpha[1])
+        draw.RoundedBox(4, 0, h - 16, w, 6, Mantle.color.panel_alpha[1])
 
-        draw.SimpleText(label, 'Fated.18', 0, -4, color_white)
-        draw.SimpleText(self:GetValue(), 'Fated.18', w, -4, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+        smoothPos = Lerp(FrameTime() * 10, smoothPos, targetPos)
+        
+        draw.RoundedBox(16, smoothPos, 18, 16, 16, Mantle.color.theme)
+
+        draw.SimpleText(label, 'Fated.18', 4, 0, color_white)
+        draw.SimpleText(math.Round(value, decimals), 'Fated.18', w - 4, 0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
     end
-    slider.Slider.Knob.Paint = function(self, w, h)
-        draw.RoundedBox(16, 0, 8, 16, 16, Mantle.color.theme)
+
+    local function UpdateSliderByCursorPos(x)
+        local progress = math.Clamp(x / (slider:GetWide() - 16), 0, 1)
+        local new_value = math.Round(min_value + (progress * sections), decimals)
+        UpdateSliderPosition(new_value)
+    end
+
+    slider.OnMousePressed = function(_, mcode)
+        if mcode == MOUSE_LEFT then
+            UpdateSliderByCursorPos(slider:CursorPos())
+            slider:MouseCapture(true)
+        end
+    end
+
+    slider.OnMouseReleased = function(_, mcode)
+        if mcode == MOUSE_LEFT then
+            slider:MouseCapture(false)
+        end
+    end
+
+    slider.OnCursorMoved = function(_, x, _)
+        if input.IsMouseDown(MOUSE_LEFT) then
+            UpdateSliderByCursorPos(x)
+        end
     end
 
     return slider
@@ -401,18 +426,17 @@ end
 local function ClampPanelPosition(panel)
     local x, y = panel:GetPos()
     local w, h = panel:GetSize()
-    local screenWidth, screenHeight = ScrW(), ScrH()
 
     if x < 0 then
         x = 0
-    elseif x + w > screenWidth then
-        x = screenWidth - w
+    elseif x + w > Mantle.func.sw then
+        x = Mantle.func.sw - w
     end
 
     if y < 0 then
         y = 0
-    elseif y + h > screenHeight then
-        y = screenHeight - h
+    elseif y + h > Mantle.func.sh then
+        y = Mantle.func.sh - h
     end
 
     panel:SetPos(x, y)
@@ -482,7 +506,7 @@ function Mantle.ui.derma_menu()
         end
 
         Mantle.ui.menu_derma_menu.tall = Mantle.ui.menu_derma_menu.tall + 22 + (Mantle.ui.menu_derma_menu.tall == 0 and 2 or 0)
-        Mantle.ui.menu_derma_menu:SetTall(math.Clamp(Mantle.ui.menu_derma_menu.tall, 0, ScrH() * 0.5))
+        Mantle.ui.menu_derma_menu:SetTall(math.Clamp(Mantle.ui.menu_derma_menu.tall, 0, Mantle.func.sh * 0.5))
         Mantle.ui.menu_derma_menu:SetWide(Mantle.ui.menu_derma_menu.max_width + 72)
 
         ClampPanelPosition(Mantle.ui.menu_derma_menu)
@@ -572,7 +596,7 @@ function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool, disable_b
     end
 
     Mantle.ui.menu_ratial_panel = vgui.Create('DPanel')
-    Mantle.ui.menu_ratial_panel:SetSize(ScrW(), ScrH())
+    Mantle.ui.menu_ratial_panel:SetSize(Mantle.func.sw, Mantle.func.sh)
     Mantle.ui.menu_ratial_panel:Center()
     Mantle.ui.menu_ratial_panel:MakePopup()
     
@@ -585,7 +609,7 @@ function Mantle.ui.ratial_panel(items_config, disable_start_anim_bool, disable_b
         segmentColors[i] = Mantle.color.header
     end
 
-    local centerX, centerY = ScrW() / 2, ScrH() / 2
+    local centerX, centerY = Mantle.func.sw * 0.5, Mantle.func.sh * 0.5
     local radius = 200
     local thickness = 90
     local selectedSegment = nil

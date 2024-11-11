@@ -1,7 +1,10 @@
-Mantle.func = {}
+Mantle.func = {
+    sw = ScrW(),
+    sh = ScrH()
+}
 
 local function create_fonts()
-    for s = 14, 40 do
+    for s = 12, 40 do
         surface.CreateFont('Fated.' .. s, {
             font = 'Montserrat Medium',
             size = s,
@@ -21,7 +24,6 @@ end
 local function create_ui_func()
     local color_white = Color(255, 255, 255)
     local mat_blur = Material('pp/blurscreen')
-    local scrw, scrh = ScrW(), ScrH()
 
     function Mantle.func.blur(panel)
         local x, y = panel:LocalToScreen(0, 0)
@@ -30,12 +32,14 @@ local function create_ui_func()
         surface.SetMaterial(mat_blur)
 
         for i = 1, 6 do
-            mat_blur:SetFloat('$blur', i)
-            mat_blur:Recompute()
+            if !mat_blur:GetFloat('$blur') then
+                mat_blur:SetFloat('$blur', i)
+                mat_blur:Recompute()
+            end
 
             render.UpdateScreenEffectTexture()
 
-            surface.DrawTexturedRect(-x, -y, scrw, scrh)
+            surface.DrawTexturedRect(-x, -y, Mantle.func.sw, Mantle.func.sh)
         end
     end
 
@@ -66,7 +70,7 @@ local function create_ui_func()
     
     function Mantle.func.w(w)
         if !Mantle.func.w_save[w] then
-            Mantle.func.w_save[w] = w / 1920 * scrw
+            Mantle.func.w_save[w] = w / 1920 * Mantle.func.sw
         end
     
         return Mantle.func.w_save[w]
@@ -74,7 +78,7 @@ local function create_ui_func()
     
     function Mantle.func.h(h)
         if !Mantle.func.h_save[h] then
-            Mantle.func.h_save[h] = h / 1080 * scrh
+            Mantle.func.h_save[h] = h / 1080 * Mantle.func.sh
         end
     
         return Mantle.func.h_save[h]
@@ -157,5 +161,11 @@ create_ui_func()
 create_fonts()
 
 hook.Add('OnScreenSizeChanged', 'Mantle', function()
-    create_ui_func()
+    local newW, newH = ScrW(), ScrH()
+
+    if newW != Mantle.func.sw and newH != Mantle.func.sh then
+        Mantle.func.sw, Mantle.func.sh = newW, newH
+
+        create_ui_func()
+    end
 end)
