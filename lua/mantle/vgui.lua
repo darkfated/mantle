@@ -192,6 +192,14 @@ function Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)
     entry:SetDrawLanguageID(false)
     entry:SetPaintBackground(false)
 
+    entry.OnGetFocus = function(self)
+        self:SetTextColor(Color(255, 255, 255))  -- Цвет текста при фокусе
+    end
+
+    entry.OnLoseFocus = function(self)
+        self:SetTextColor(Color(200, 200, 200))  -- Цвет текста, когда текстовое поле не в фокусе
+    end
+
     return entry, entry_background
 end
 
