@@ -16,7 +16,7 @@ else
     net.Receive('Mantle-Notify', function()
         local headerText = net.ReadString()
         local headerColor = net.ReadColor()
-        local headerColorDop = Color(header_color.r + 10, header_color.g + 10, header_color.b + 10)
+        local headerColorDop = Color(headerColor.r + 10, headerColor.g + 10, headerColor.b + 10)
         local txt = net.ReadString()
     
         chat.AddText(headerColorDop, '[', headerColor, headerText, headerColorDop, '] ', color_white, txt)
