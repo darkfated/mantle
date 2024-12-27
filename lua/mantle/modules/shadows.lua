@@ -1,19 +1,22 @@
-local function create_shadows()
-    local scrw, scrh = ScrW(), ScrH()
+local math_sin = math.sin
+local math_cos = math.cos
+local math_rad = math.rad
+local math_ceil = math.ceil
 
-    BSHADOWS = {}
+local function CreateBShadows()
+    BShadows = {}
 
-    local resStr = scrw .. scrh
+    local resStr = Mantle.func.sw .. Mantle.func.sh
 
-    BSHADOWS.RenderTarget = GetRenderTarget('bshadows_original_' .. resStr, scrw, scrh)
-    BSHADOWS.RenderTarget2 = GetRenderTarget('bshadows_shadow_' .. resStr, scrw, scrh)
-    BSHADOWS.ShadowMaterial = CreateMaterial('bshadows', 'UnlitGeneric', {
+    BShadows.RenderTarget = GetRenderTarget('BShadows_original_' .. resStr, Mantle.func.sw, Mantle.func.sh)
+    BShadows.RenderTarget2 = GetRenderTarget('BShadows_shadow_' .. resStr, Mantle.func.sw, Mantle.func.sh)
+    BShadows.ShadowMaterial = CreateMaterial('BShadows', 'UnlitGeneric', {
         ['$translucent'] = 1,
         ['$vertexalpha'] = 1,
         ['alpha'] = 1
     })
 
-    BSHADOWS.ShadowMaterialGrayscale = CreateMaterial('bshadows_grayscale', 'UnlitGeneric', {
+    BShadows.ShadowMaterialGrayscale = CreateMaterial('BShadows_grayscale', 'UnlitGeneric', {
         ['$translucent'] = 1,
         ['$vertexalpha'] = 1,
         ['$alpha'] = 1,
@@ -21,8 +24,8 @@ local function create_shadows()
         ['$color2'] = '0 0 0'
     })
 
-    BSHADOWS.BeginShadow = function()
-        render.PushRenderTarget(BSHADOWS.RenderTarget)
+    BShadows.BeginShadow = function()
+        render.PushRenderTarget(BShadows.RenderTarget)
 
         render.OverrideAlphaWriteEnable(true, true)
         render.Clear(0, 0, 0, 0)
@@ -31,82 +34,82 @@ local function create_shadows()
         cam.Start2D()
     end
 
-    BSHADOWS.EndShadow = function(intensity, spread, blur, opacity, direction, distance, _shadowOnly)
+    BShadows.EndShadow = function(intensity, spread, blur, opacity, direction, distance, bool_shadow_only)
         opacity = opacity or 255
         direction = direction or 0
         distance = distance or 0
-        _shadowOnly = _shadowOnly or false
+        bool_shadow_only = bool_shadow_only or false
 
-        render.CopyRenderTargetToTexture(BSHADOWS.RenderTarget2)
+        render.CopyRenderTargetToTexture(BShadows.RenderTarget2)
 
         if blur > 0 then
             render.OverrideAlphaWriteEnable(true, true)
-            render.BlurRenderTarget(BSHADOWS.RenderTarget2, spread, spread, blur)
+            render.BlurRenderTarget(BShadows.RenderTarget2, spread, spread, blur)
             render.OverrideAlphaWriteEnable(false, false)
         end
 
         render.PopRenderTarget()
 
-        BSHADOWS.ShadowMaterial:SetTexture('$basetexture', BSHADOWS.RenderTarget)
-        BSHADOWS.ShadowMaterialGrayscale:SetTexture('$basetexture', BSHADOWS.RenderTarget2)
+        BShadows.ShadowMaterial:SetTexture('$basetexture', BShadows.RenderTarget)
+        BShadows.ShadowMaterialGrayscale:SetTexture('$basetexture', BShadows.RenderTarget2)
 
-        local xOffset = math.sin(math.rad(direction)) * distance
-        local yOffset = math.cos(math.rad(direction)) * distance
+        local xOffset = math_sin(math_rad(direction)) * distance
+        local yOffset = math_cos(math_rad(direction)) * distance
 
-        BSHADOWS.ShadowMaterialGrayscale:SetFloat('$alpha', opacity / 255)
-        render.SetMaterial(BSHADOWS.ShadowMaterialGrayscale)
+        BShadows.ShadowMaterialGrayscale:SetFloat('$alpha', opacity / 255)
+        render.SetMaterial(BShadows.ShadowMaterialGrayscale)
 
-        for i = 1, math.ceil(intensity) do
-            render.DrawScreenQuadEx(xOffset, yOffset, scrw, scrh)
+        for i = 1, math_ceil(intensity) do
+            render.DrawScreenQuadEx(xOffset, yOffset, Mantle.func.sw, Mantle.func.sh)
         end
 
-        if !_shadowOnly then
-            BSHADOWS.ShadowMaterial:SetTexture('$basetexture', BSHADOWS.RenderTarget)
-            render.SetMaterial(BSHADOWS.ShadowMaterial)
+        if !bool_shadow_only then
+            BShadows.ShadowMaterial:SetTexture('$basetexture', BShadows.RenderTarget)
+            render.SetMaterial(BShadows.ShadowMaterial)
             render.DrawScreenQuad()
         end
 
         cam.End2D()
     end
 
-    BSHADOWS.DrawShadowTexture = function(texture, intensity, spread, blur, opacity, direction, distance, shadowOnly)
+    BShadows.DrawShadowTexture = function(texture, intensity, spread, blur, opacity, direction, distance, bool_shadow_only)
         opacity = opacity or 255
         direction = direction or 0
         distance = distance or 0
-        shadowOnly = shadowOnly or false
+        bool_shadow_only = bool_shadow_only or false
 
-        render.CopyTexture(texture, BSHADOWS.RenderTarget2)
+        render.CopyTexture(texture, BShadows.RenderTarget2)
 
         if blur > 0 then
-            render.PushRenderTarget(BSHADOWS.RenderTarget2)
+            render.PushRenderTarget(BShadows.RenderTarget2)
             render.OverrideAlphaWriteEnable(true, true)
-            render.BlurRenderTarget(BSHADOWS.RenderTarget2, spread, spread, blur)
+            render.BlurRenderTarget(BShadows.RenderTarget2, spread, spread, blur)
             render.OverrideAlphaWriteEnable(false, false)
             render.PopRenderTarget()
         end
 
-        BSHADOWS.ShadowMaterialGrayscale:SetTexture('$basetexture', BSHADOWS.RenderTarget2)
+        BShadows.ShadowMaterialGrayscale:SetTexture('$basetexture', BShadows.RenderTarget2)
 
-        local xOffset = math.sin(math.rad(direction)) * distance
-        local yOffset = math.cos(math.rad(direction)) * distance
+        local xOffset = math_sin(math_rad(direction)) * distance
+        local yOffset = math_cos(math_rad(direction)) * distance
 
-        BSHADOWS.ShadowMaterialGrayscale:SetFloat('$alpha', opacity / 255)
-        render.SetMaterial(BSHADOWS.ShadowMaterialGrayscale)
+        BShadows.ShadowMaterialGrayscale:SetFloat('$alpha', opacity / 255)
+        render.SetMaterial(BShadows.ShadowMaterialGrayscale)
 
-        for i = 1, math.ceil(intensity) do
-            render.DrawScreenQuadEx(xOffset, yOffset, scrw, scrh)
+        for i = 1, math_ceil(intensity) do
+            render.DrawScreenQuadEx(xOffset, yOffset, Mantle.func.sw, Mantle.func.sh)
         end
 
-        if !shadowOnly then
-            BSHADOWS.ShadowMaterial:SetTexture('$basetexture', texture)
-            render.SetMaterial(BSHADOWS.ShadowMaterial)
+        if !bool_shadow_only then
+            BShadows.ShadowMaterial:SetTexture('$basetexture', texture)
+            render.SetMaterial(BShadows.ShadowMaterial)
             render.DrawScreenQuad()
         end
     end
 end
 
-create_shadows()
+CreateBShadows()
 
 hook.Add('OnScreenSizeChanged', 'Mantle.Shadows', function()
-    create_shadows()
+    CreateBShadows()
 end)
