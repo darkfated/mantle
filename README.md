@@ -1,16 +1,22 @@
 # Mantle
-A helping GLua library for writing scripts in Gmod
+🎈 GLua библиотека для написания кода в Garry's Mod: создание интерфейсов и использование удобных утилит
 
-## Opportunities
-- Using custom VGUI
-- Creating shadows in the interface via the "shadows" module
-- Downloading the material from the link for its further use
-- And much more in the future!
+## Возможность
+- Использование кастомного VGUI
+- Создание теней благодаря модулю "shadows"
+- Загрузка материала через ссылку
+- Создание уведомлений
+- И многое другое в будущем!
 
-## Take a look at the UI
-You can take a look at the visual capabilities of the library by looking at other works done on Mantle. But also log into the game and enter the `mantle_ui_test` command in the console
+## Демонстрация UI составляющей
+Для запуска меню библиотеки, воспользуйтесь консольной командой `mantle_menu`
 
-## Additional information
-🔧 [Wiki](https://github.com/darkfated/mantle/wiki): here you can see how to implement this or that part of the library
+![VGUI элементы](https://github.com/user-attachments/assets/08d6358a-43a1-41f7-ae3d-3c45aaa66c48)
+![Всплывающие меню](https://github.com/user-attachments/assets/4a0638d1-0d69-444d-93ce-6d6fa25c814b)
 
-✅ [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993): to automatically update to the latest version, subscribe to the addon or add to your collection
+*Для удобства, документация встроена напрямую в игру*
+
+## Дополнительная информация
+**Подпишитесь и добавьте в серверную коллекцию библиотеку Mantle, чтобы получать обновления автоматически**
+
+✅ [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993)
