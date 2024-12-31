@@ -155,7 +155,7 @@ local function CreateMenu()
         end
         testTabs:AddTab('Test2', testTab2)
 
-        CreateTitle('Слайдер (MantleSlideBox`)', {
+        CreateTitle('Слайдер (MantleSlideBox)', {
             {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
             {':SetConvar(string convar)', 'Установить ConVar'},
             {':SetText(string text)', 'Установить текстовое обозначение'},
