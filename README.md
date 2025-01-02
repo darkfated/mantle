@@ -29,7 +29,7 @@ http.DownloadMaterial('https://i.imgur.com/eEnGbcp.jpeg', 'dog.png', function(yo
         surface.SetDrawColor(255, 255, 255)
         surface.SetMaterial(your_mat)
         surface.DrawTexturedRect(5, 5, 250, 330)
-    end
+    end)
 end)
 ```
 
