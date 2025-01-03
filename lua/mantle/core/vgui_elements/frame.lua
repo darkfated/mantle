@@ -84,6 +84,10 @@ function PANEL:ShowAnimation()
     Mantle.func.animate_appearance(self, self:GetWide(), self:GetTall(), 0.1, 0.2)
 end
 
+function PANEL:DisableCloseBtn()
+    self.cls:SetVisible(false)
+end
+
 function PANEL:Paint(w, h)
     local x, y = self:LocalToScreen()
 

@@ -102,7 +102,8 @@ local function CreateMenu()
             {':SetAlphaBackground(bool is_alpha)', 'Включить/выключить прозрачность окна (дефолт - false)'},
             {':SetTitle(string title)', 'Установить заголовок'},
             {':SetCenterTitle(string title)', 'Установить центральный заголовок'},
-            {':ShowAnimation()', 'Активировать анимацию при появлении меню'}
+            {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
+            {':DisableCloseBtn()', 'Скрыть кнопку закрытия'}
         }, panel)
 
         local btnFrame = vgui.Create('MantleBtn', panel)
