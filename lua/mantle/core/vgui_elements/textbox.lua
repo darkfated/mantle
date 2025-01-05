@@ -6,6 +6,7 @@ function Mantle.ui.text_box(title, desc, func)
     Mantle.ui.menu_text_box:SetSize(300, 120)
     Mantle.ui.menu_text_box:Center()
     Mantle.ui.menu_text_box:MakePopup()
+    Mantle.ui.menu_text_box:SetTitle(title)
     Mantle.ui.menu_text_box.background_alpha = false
 
     local entry = vgui.Create('MantleEntry', Mantle.ui.menu_text_box)
