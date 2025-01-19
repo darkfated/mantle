@@ -196,7 +196,7 @@ local function CreateMenu()
         return panel
     end
 
-    tabs:AddTab('UI Элементы', CreateTabElements())
+    tabs:AddTab('UI Элементы', CreateTabElements(), Material('icon16/page_white.png'))
 
     local function CreateShowMenus()
         local panel = vgui.Create('MantleScrollPanel')
@@ -261,7 +261,7 @@ local function CreateMenu()
         return panel
     end
 
-    tabs:AddTab('Всплывающие', CreateShowMenus())
+    tabs:AddTab('Всплывающие', CreateShowMenus(), Material('icon16/database.png'))
 end
 
 concommand.Add('mantle_menu', CreateMenu)
