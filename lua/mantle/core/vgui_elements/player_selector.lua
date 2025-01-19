@@ -12,6 +12,7 @@ function Mantle.ui.player_selector(do_click, func_check)
     Mantle.ui.menu_player_selector:MakePopup()
     Mantle.ui.menu_player_selector:SetTitle('')
     Mantle.ui.menu_player_selector:SetCenterTitle('Выбор игрока')
+    Mantle.ui.menu_player_selector:ShowAnimation()
 
     Mantle.ui.menu_player_selector.sp = vgui.Create('MantleScrollPanel', Mantle.ui.menu_player_selector)
     Mantle.ui.sp(Mantle.ui.menu_player_selector.sp)
