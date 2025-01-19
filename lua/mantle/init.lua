@@ -24,6 +24,7 @@ local function RunScripts()
     Mantle.run_cl('core/vgui_elements/slidebox.lua')
     Mantle.run_cl('core/vgui_elements/tabs.lua')
     Mantle.run_cl('core/vgui_elements/textbox.lua')
+    Mantle.run_cl('core/vgui_elements/category.lua')
 
     Mantle.run_cl('modules/shadows.lua')
     Mantle.run_cl('modules/material_url.lua')

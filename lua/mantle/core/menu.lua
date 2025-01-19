@@ -157,6 +157,29 @@ local function CreateMenu()
         end
         testTabs:AddTab('Test2', testTab2)
 
+        CreateTitle('Категория (MantleCategory)', {
+            {':SetText(string name)', 'Установить название'},
+            {':AddItem(object panel)', 'Добавить в категорию элемент'},
+            {':SetColor(color col)', 'Установить кастомный цвет категории'}
+        }, panel)
+
+        local cat = vgui.Create('MantleCategory', panel)
+        cat:Dock(TOP)
+        cat:DockMargin(0, 6, 0, 0)
+
+        local panGreen = vgui.Create('DPanel', cat)
+        panGreen:Dock(TOP)
+        panGreen:SetTall(50)
+        panGreen.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(93, 179, 101)) end
+        cat:AddItem(panGreen)
+
+        local panRed = vgui.Create('DPanel', cat)
+        panRed:Dock(TOP)
+        panRed:DockMargin(0, 6, 0, 0)
+        panRed:SetTall(50)
+        panRed.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(179, 110, 93)) end
+        cat:AddItem(panRed)
+
         CreateTitle('Слайдер (MantleSlideBox)', {
             {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
             {':SetConvar(string convar)', 'Установить ConVar'},
