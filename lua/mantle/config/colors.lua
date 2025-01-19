@@ -1,6 +1,4 @@
 Mantle.color = {
-    theme = Color(102, 107, 164), -- основной
-
     header = Color(51, 51, 51), -- верхняя панель
     background = Color(34, 34, 34), -- фон
     background_alpha = Color(34, 34, 34, 210), -- фон с прозрачностью
@@ -8,7 +6,6 @@ Mantle.color = {
     sp = Color(53, 53, 53), -- задний фон скролл панели
 
     button = Color(76, 76, 76), -- кнопка
-    button_hovered = Color(52, 70, 109), -- кнопка при нажатии
     button_shadow = Color(57, 55, 69, 150), -- тень кнопки для градиента
 
     panel = { -- варианты цветов для панели
