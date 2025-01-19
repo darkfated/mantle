@@ -55,6 +55,7 @@ function PANEL:GetBool()
 end
 
 function PANEL:SetConvar(convar)
+    self.bool_enabled = GetConVar(convar):GetBool()
     self.convar = convar
 end
 
