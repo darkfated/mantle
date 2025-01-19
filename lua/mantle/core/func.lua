@@ -177,6 +177,20 @@ local function CreateFunc()
             end
         end
     end
+
+    --[[
+        Плавное изменение цвета с одного на другой
+    ]]--
+    function Mantle.func.LerpColor(frac, from, to)
+        local ft = FrameTime() * frac
+
+        return Color(
+            Lerp(ft, from.r, to.r),
+            Lerp(ft, from.g, to.g),
+            Lerp(ft, from.b, to.b),
+            Lerp(ft, from.a, to.a)
+        )
+    end
 end
 
 CreateFunc()
