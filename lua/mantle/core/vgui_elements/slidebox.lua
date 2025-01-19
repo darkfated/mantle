@@ -62,12 +62,16 @@ function PANEL:UpdateSliderByCursorPos(x)
     self:UpdateSliderPosition(new_value)
 end
 
+local mat_slider = Material('mantle/slider.png')
+
 function PANEL:Paint(w, h)
     draw.RoundedBox(4, 0, h - 16, w, 6, Mantle.color.panel_alpha[1])
 
     self.smoothPos = Lerp(FrameTime() * 10, self.smoothPos, self.targetPos)
 
-    draw.RoundedBox(16, self.smoothPos, h - 22, 16, 16, Mantle.color.theme)
+    surface.SetDrawColor(Mantle.color.theme)
+    surface.SetMaterial(mat_slider)
+    surface.DrawTexturedRect(self.smoothPos, h - 22, 16, 16)
 
     draw.SimpleText(self.text, 'Fated.18', 4, 0, color_white)
     draw.SimpleText(math_round(self.value, self.decimals), 'Fated.18', w - 4, 0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
