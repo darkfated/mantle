@@ -103,7 +103,8 @@ local function CreateMenu()
             {':SetTitle(string title)', 'Установить заголовок'},
             {':SetCenterTitle(string title)', 'Установить центральный заголовок'},
             {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
-            {':DisableCloseBtn()', 'Скрыть кнопку закрытия'}
+            {':DisableCloseBtn()', 'Скрыть кнопку закрытия'},
+            {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'}
         }, panel)
 
         local btnFrame = vgui.Create('MantleBtn', panel)

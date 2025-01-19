@@ -88,6 +88,10 @@ function PANEL:DisableCloseBtn()
     self.cls:SetVisible(false)
 end
 
+function PANEL:SetDraggable(is_draggable)
+    self.top_panel:SetVisible(is_draggable)
+end
+
 function PANEL:Paint(w, h)
     local x, y = self:LocalToScreen()
 
