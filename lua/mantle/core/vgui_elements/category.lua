@@ -5,6 +5,7 @@ function PANEL:Init()
     self:DockPadding(0, 36, 0, 0)
     self.name = 'Категория'
     self.bool_opened = false
+    self.bool_header_centered = false
     self.content_size = 0
     self.header_color = Mantle.color.theme
     self.header_color_standard = Mantle.color.theme
@@ -14,8 +15,10 @@ function PANEL:Init()
     self.header:SetText('')
     self.header.Paint = function(_, w, h)
         draw.RoundedBox(8, 0, 0, w, h, self.header_color)
-        draw.SimpleText(self.name, 'Fated.20', 9, 5, color_black)
-        draw.SimpleText(self.name, 'Fated.20', 8, 4, color_white)
+        local posX = self.bool_header_centered and w * 0.5 or 8
+        local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
+        draw.SimpleText(self.name, 'Fated.20', posX, 5, color_black, alignX)
+        draw.SimpleText(self.name, 'Fated.20', posX, 4, color_white, alignX)
 
         self.header_color = Mantle.func.LerpColor(8, self.header_color, self.bool_opened and self.header_color_opened or self.header_color_standard)
     end
@@ -30,6 +33,10 @@ end
 
 function PANEL:SetText(name)
     self.name = name
+end
+
+function PANEL:SetCenterText(is_centered)
+    self.bool_header_centered = is_centered
 end
 
 function PANEL:AddItem(panel)
