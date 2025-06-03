@@ -63,7 +63,8 @@ local function CreateMenu()
             {':SetTxt(string text)', 'Установить текст'},
             {':SetColor(color col)', 'Установить цвет кнопки'},
             {':SetColorHover(color col)', 'Установить цвет наведения'},
-            {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'}
+            {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'},
+            {':SetRipple(bool enable)', 'Включить/выключить ripple-эффект (волна при клике, дефолт - false)'}
         }, panel)
 
         local button = vgui.Create('MantleBtn', panel)
@@ -71,6 +72,7 @@ local function CreateMenu()
         button:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
         button:SetTall(40)
         button:SetTxt('Click')
+        button:SetRipple(true)
 
         CreateTitle('Тумблер (MantleCheckBox)', {
             {':SetTxt(string text)', 'Установить текст'},
@@ -138,6 +140,9 @@ local function CreateMenu()
 
         CreateTitle('Вкладки (MantleTabs)', {
             {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'},
+            {':SetTabStyle(string style)', 'Установить стиль вкладок: "modern" (сверху, по умолчанию) или "classic" (слева)'},
+            {':SetTabHeight(int height)', 'Высота вкладки (modern)'},
+            {':SetIndicatorHeight(int height)', 'Высота индикатора активной вкладки (modern)'}
         }, panel)
 
         local testTabs = vgui.Create('MantleTabs', panel)
