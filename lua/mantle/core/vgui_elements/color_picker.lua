@@ -1,48 +1,202 @@
 local color_close = Color(210, 65, 65)
+local color_accept = Color(44, 124, 62)
+local color_outline = Color(30, 30, 30)
 
 function Mantle.ui.color_picker(func, color_standart)
     if IsValid(Mantle.ui.menu_color_picker) then
         Mantle.ui.menu_color_picker:Remove()
     end
 
+    local selected_color = color_standart or Color(255, 255, 255)
+    local hue = 0
+    local saturation = 1
+    local value = 1
+    
+    if color_standart then
+        local r, g, b = color_standart.r / 255, color_standart.g / 255, color_standart.b / 255
+        local h, s, v = ColorToHSV(Color(r * 255, g * 255, b * 255))
+        hue = h
+        saturation = s
+        value = v
+    end
+
     Mantle.ui.menu_color_picker = vgui.Create('MantleFrame')
-    Mantle.ui.menu_color_picker:SetSize(250, 400)
+    Mantle.ui.menu_color_picker:SetSize(300, 378)
     Mantle.ui.menu_color_picker:Center()
     Mantle.ui.menu_color_picker:MakePopup()
     Mantle.ui.menu_color_picker:SetTitle('')
     Mantle.ui.menu_color_picker:SetCenterTitle('Выбор цвета')
+    Mantle.ui.menu_color_picker:SetAlpha(0)
 
-    Mantle.ui.menu_color_picker.picker = vgui.Create('DColorMixer', Mantle.ui.menu_color_picker)
-    Mantle.ui.menu_color_picker.picker:Dock(FILL)
-    Mantle.ui.menu_color_picker.picker:SetAlphaBar(false)
+    local container = vgui.Create('Panel', Mantle.ui.menu_color_picker)
+    container:Dock(FILL)
+    container:DockMargin(10, 10, 10, 10)
+    container.Paint = nil
 
-    if color_standart then
-        Mantle.ui.menu_color_picker.picker:SetColor(color_standart)
+    local preview = vgui.Create('Panel', container)
+    preview:Dock(TOP)
+    preview:SetTall(40)
+    preview:DockMargin(0, 0, 0, 10)
+    preview.Paint = function(self, w, h)
+        draw.RoundedBox(6, 0, 0, w, h, color_outline)
+        draw.RoundedBox(6, 2, 2, w - 4, h - 4, selected_color)
     end
 
-    Mantle.ui.menu_color_picker.btn_close = vgui.Create('MantleBtn', Mantle.ui.menu_color_picker)
-    Mantle.ui.menu_color_picker.btn_close:Dock(BOTTOM)
-    Mantle.ui.menu_color_picker.btn_close:DockMargin(0, 6, 0, 0)
-    Mantle.ui.menu_color_picker.btn_close:SetTall(28)
-    Mantle.ui.menu_color_picker.btn_close:SetTxt('Закрыть')
-    Mantle.ui.menu_color_picker.btn_close:SetColor(color_close)
-    Mantle.ui.menu_color_picker.btn_close:SetHover(false)
-    Mantle.ui.menu_color_picker.btn_close.DoClick = function()
+    local colorField = vgui.Create('Panel', container)
+    colorField:Dock(TOP)
+    colorField:SetTall(200)
+    colorField:DockMargin(0, 0, 0, 10)
+    
+    local colorCursor = { x = 0, y = 0 }
+    local isDraggingColor = false
+    
+    colorField.OnMousePressed = function(self, keyCode)
+        if keyCode == MOUSE_LEFT then
+            isDraggingColor = true
+            self:OnCursorMoved(self:CursorPos())
+            Mantle.func.sound()
+        end
+    end
+    
+    colorField.OnMouseReleased = function(self, keyCode)
+        if keyCode == MOUSE_LEFT then
+            isDraggingColor = false
+        end
+    end
+    
+    colorField.OnCursorMoved = function(self, x, y)
+        if isDraggingColor then
+            local w, h = self:GetSize()
+            x = math.Clamp(x, 0, w)
+            y = math.Clamp(y, 0, h)
+            
+            colorCursor.x = x
+            colorCursor.y = y
+            
+            saturation = x / w
+            value = 1 - (y / h)
+            
+            selected_color = HSVToColor(hue, saturation, value)
+        end
+    end
+    
+    colorField.Paint = function(self, w, h)
+        draw.RoundedBox(6, 0, 0, w, h, Color(30, 30, 30))
+        
+        local segments = 100
+        local segmentSize = w / segments
+        
+        for x = 0, segments do
+            for y = 0, segments do
+                local s = x / segments
+                local v = 1 - (y / segments)
+                local segX = x * segmentSize
+                local segY = y * segmentSize
+                
+                surface.SetDrawColor(HSVToColor(hue, s, v))
+                surface.DrawRect(segX, segY, segmentSize + 1, segmentSize + 1)
+            end
+        end
+
+        surface.SetDrawColor(255, 255, 255, 200)
+        surface.DrawOutlinedRect(colorCursor.x - 5, colorCursor.y - 5, 10, 10, 2)
+    end
+
+    local hueSlider = vgui.Create('Panel', container)
+    hueSlider:Dock(TOP)
+    hueSlider:SetTall(20)
+    hueSlider:DockMargin(0, 0, 0, 10)
+    
+    local huePos = 0
+    local isDraggingHue = false
+    
+    hueSlider.OnMousePressed = function(self, keyCode)
+        if keyCode == MOUSE_LEFT then
+            isDraggingHue = true
+            self:OnCursorMoved(self:CursorPos())
+            Mantle.func.sound()
+        end
+    end
+    
+    hueSlider.OnMouseReleased = function(self, keyCode)
+        if keyCode == MOUSE_LEFT then
+            isDraggingHue = false
+        end
+    end
+    
+    hueSlider.OnCursorMoved = function(self, x, y)
+        if isDraggingHue then
+            local w = self:GetWide()
+            x = math.Clamp(x, 0, w)
+            
+            huePos = x
+            hue = (x / w) * 360
+            
+            selected_color = HSVToColor(hue, saturation, value)
+        end
+    end
+    
+    hueSlider.Paint = function(self, w, h)
+        draw.RoundedBox(6, 0, 0, w, h, Color(30, 30, 30))
+        
+        local segments = 36
+        local segmentWidth = w / segments
+        
+        for i = 0, segments - 1 do
+            local hueVal = (i / segments) * 360
+            local x = i * segmentWidth
+            
+            surface.SetDrawColor(HSVToColor(hueVal, 1, 1))
+            surface.DrawRect(x, 1, segmentWidth + 1, h - 2)
+        end
+
+        surface.SetDrawColor(255, 255, 255, 200)
+        surface.DrawOutlinedRect(huePos - 2, 0, 4, h, 2)
+    end
+
+    local rgbContainer = vgui.Create('Panel', container)
+    rgbContainer:Dock(TOP)
+    rgbContainer:SetTall(60)
+    rgbContainer:DockMargin(0, 0, 0, 10)
+    rgbContainer.Paint = nil
+
+    local btnContainer = vgui.Create('Panel', container)
+    btnContainer:Dock(BOTTOM)
+    btnContainer:SetTall(30)
+    btnContainer.Paint = nil
+
+    local btnClose = vgui.Create('MantleBtn', btnContainer)
+    btnClose:Dock(LEFT)
+    btnClose:SetWide(90)
+    btnClose:SetTxt('Отмена')
+    btnClose:SetColor(color_close)
+    btnClose:SetHover(false)
+    btnClose.DoClick = function()
         Mantle.ui.menu_color_picker:Remove()
-    end
-
-    Mantle.ui.menu_color_picker.btn_select = vgui.Create('MantleBtn', Mantle.ui.menu_color_picker)
-    Mantle.ui.menu_color_picker.btn_select:Dock(BOTTOM)
-    Mantle.ui.menu_color_picker.btn_select:DockMargin(0, 6, 0, 0)
-    Mantle.ui.menu_color_picker.btn_select:SetTall(28)
-    Mantle.ui.menu_color_picker.btn_select:SetTxt('Выбрать')
-    Mantle.ui.menu_color_picker.btn_select.DoClick = function()
         Mantle.func.sound()
+    end
 
-        local col = Mantle.ui.menu_color_picker.picker:GetColor()
-
-        func(Color(col.r, col.g, col.b))
-
+    local btnSelect = vgui.Create('MantleBtn', btnContainer)
+    btnSelect:Dock(RIGHT)
+    btnSelect:SetWide(90)
+    btnSelect:SetTxt('Выбрать')
+    btnSelect:SetColor(color_accept)
+    btnSelect:SetHover(false)
+    btnSelect.DoClick = function()
+        Mantle.func.sound()
+        func(selected_color)
         Mantle.ui.menu_color_picker:Remove()
     end
+
+    timer.Simple(0, function() 
+        if IsValid(colorField) and IsValid(hueSlider) then
+            colorCursor.x = saturation * colorField:GetWide()
+            colorCursor.y = (1 - value) * colorField:GetTall()
+            huePos = (hue / 360) * hueSlider:GetWide()
+        end
+    end)
+
+    timer.Simple(0.1, function()
+        Mantle.ui.menu_color_picker:SetAlpha(255)
+    end)
 end
