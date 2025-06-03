@@ -214,6 +214,9 @@ hook.Add('OnScreenSizeChanged', 'Mantle', function()
     if newW != Mantle.func.sw and newH != Mantle.func.sh then
         Mantle.func.sw, Mantle.func.sh = newW, newH
 
+        Mantle.func.w_save = {}
+        Mantle.func.h_save = {}
+
         CreateFunc()
         CreateFonts()
     end
