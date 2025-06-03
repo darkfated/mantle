@@ -15,47 +15,46 @@ local function CreateMenu()
     tabs:Dock(FILL)
 
     local function CreateInfo(info, pan)
-        local panelInfo = vgui.Create('Panel', pan)
+        local panelInfo = vgui.Create('Panel')
         panelInfo:Dock(TOP)
         panelInfo:SetTall(56)
 
         surface.SetFont('Fated.20')
         local infoWide = surface.GetTextSize(info[1]) + 16
         panelInfo.Paint = function(_, w, h)
-            draw.RoundedBox(0, 0, 0, w, h, Mantle.color.panel_alpha[2])
-            draw.RoundedBoxEx(6, 0, 0, infoWide, 30, Mantle.color.panel[1], false, true, false, true)
-            draw.SimpleText(info[1], 'Fated.20', 9, 5, color_black)
+            draw.RoundedBox(0, 4, 0, w - 4, h, Mantle.color.panel_alpha[2])
+            draw.RoundedBox(6, 0, 0, infoWide, 30, Mantle.color.panel[1])
             draw.SimpleText(info[1], 'Fated.20', 8, 4, color_white)
             draw.SimpleText(info[2], 'Fated.16', 8, 34, color_white)
         end
+
+        pan:AddItem(panelInfo)
     end
 
-    local isFirstTitle = true
-
-    local function CreateTitle(title, info_table, pan)
-        local panelTitle = vgui.Create('Panel', pan)
-        panelTitle:Dock(TOP)
-        panelTitle:DockMargin(0, isFirstTitle and 0 or 12, 0, 0)
-        panelTitle:SetTall(24)
-        panelTitle.Paint = function(_, w, h)
-            draw.RoundedBoxEx(6, 0, 0, w, h, Mantle.color.panel_alpha[2], true, true, false, false)
-            draw.SimpleText(title, 'Fated.20', w * 0.5, 12, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
-
-        if isFirstTitle then
-            isFirstTitle = nil
-        end
+    local function CreateCategory(name, info_table, pan, ui_element)
+        local panel = vgui.Create('MantleCategory', pan)
+        panel:Dock(TOP)
+        panel:DockMargin(0, 0, 0, 6)
+        panel:SetText(name)
 
         for _, info in ipairs(info_table) do
-            CreateInfo(info, pan)
+            CreateInfo(info, panel)
         end
+
+        panel:AddItem(ui_element)
     end
 
     local function CreateTabElements()
         local panel = vgui.Create('MantleScrollPanel')
         local menuWide = menuMantle:GetWide()
 
-        CreateTitle('Кнопка (MantleBtn)', {
+        -- Кнопка
+        local btn = vgui.Create('MantleBtn')
+        btn:SetTxt('Click')
+        btn:SetTall(40)
+        btn:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        btn:Dock(TOP)
+        CreateCategory('Кнопка (MantleBtn)', {
             {':SetHover(bool is_hover)', 'Включить/выключить цвет наведения (дефолт - true)'},
             {':SetFont(string font)', 'Установить шрифт'},
             {':SetRadius(int rad)', 'Установить размер закругления'},
@@ -63,57 +62,41 @@ local function CreateMenu()
             {':SetTxt(string text)', 'Установить текст'},
             {':SetColor(color col)', 'Установить цвет кнопки'},
             {':SetColorHover(color col)', 'Установить цвет наведения'},
-            {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'},
-            {':SetRipple(bool enable)', 'Включить/выключить ripple-эффект (волна при клике, дефолт - false)'}
-        }, panel)
+            {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'}
+        }, panel, btn)
 
-        local button = vgui.Create('MantleBtn', panel)
-        button:Dock(TOP)
-        button:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
-        button:SetTall(40)
-        button:SetTxt('Click')
-        button:SetRipple(true)
-
-        CreateTitle('Тумблер (MantleCheckBox)', {
+        -- Чекбокс
+        local checkbox = vgui.Create('MantleCheckBox')
+        checkbox:SetTxt('Отображение HUD')
+        checkbox:SetConvar('cl_drawhud')
+        checkbox:SetDescription('Показать информационный интерфейс')
+        checkbox:DockMargin(menuWide * 0.1, 6, menuWide * 0.1, 0)
+        checkbox:Dock(TOP)
+        CreateCategory('Тумблер (MantleCheckBox)', {
             {':SetTxt(string text)', 'Установить текст'},
             {':GetBool()', 'Получить bool-значение тумблера'},
             {':SetConvar(string convar)', 'Установить ConVar'},
             {':SetDescription(string desc)', 'Установить описание для тумблера'}
-        }, panel)
+        }, panel, checkbox)
 
-        local checkbox = vgui.Create('MantleCheckBox', panel)
-        checkbox:Dock(TOP)
-        checkbox:DockMargin(menuWide * 0.1, 6, menuWide * 0.1, 0)
-        checkbox:SetTxt('Отображение HUD')
-        checkbox:SetConvar('cl_drawhud')
-        checkbox:SetDescription('Показать информационный интерфейс')
-        
-        CreateTitle('Ввод текста (MantleEntry)', {
+        -- Ввод текста
+        local entry = vgui.Create('MantleEntry')
+        entry:SetTitle('Никнейм')
+        entry:SetPlaceholder('darkf')
+        entry:DockMargin(menuWide * 0.15, 6, menuWide * 0.15, 0)
+        entry:Dock(TOP)
+        CreateCategory('Ввод текста (MantleEntry)', {
             {':SetTitle(string text)', 'Установить заголовок'},
             {':SetPlaceholder(string text)', 'Установить фоновый текст (появляется при пустом поле)'},
             {':GetValue()', 'Получить string-значение поля'}
-        }, panel)
+        }, panel, entry)
 
-        local entry = vgui.Create('MantleEntry', panel)
-        entry:Dock(TOP)
-        entry:DockMargin(menuWide * 0.15, 6, menuWide * 0.15, 0)
-        entry:SetTitle('Никнейм')
-        entry:SetPlaceholder('darkf')
-
-        CreateTitle('Окно (MantleFrame)', {
-            {':SetAlphaBackground(bool is_alpha)', 'Включить/выключить прозрачность окна (дефолт - false)'},
-            {':SetTitle(string title)', 'Установить заголовок'},
-            {':SetCenterTitle(string title)', 'Установить центральный заголовок'},
-            {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
-            {':DisableCloseBtn()', 'Скрыть кнопку закрытия'},
-            {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'}
-        }, panel)
-
-        local btnFrame = vgui.Create('MantleBtn', panel)
-        btnFrame:Dock(TOP)
-        btnFrame:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
-        btnFrame:SetTall(40)
+        -- Окно
+        local btnFrame = vgui.Create('MantleBtn')
         btnFrame:SetTxt('Открыть окно')
+        btnFrame:SetTall(40)
+        btnFrame:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        btnFrame:Dock(TOP)
         btnFrame.DoClick = function()
             local frame = vgui.Create('MantleFrame')
             frame:SetSize(400, 300)
@@ -121,82 +104,83 @@ local function CreateMenu()
             frame:MakePopup()
             frame:SetCenterTitle('Центр')
         end
+        CreateCategory('Окно (MantleFrame)', {
+            {':SetAlphaBackground(bool is_alpha)', 'Включить/выключить прозрачность окна (дефолт - false)'},
+            {':SetTitle(string title)', 'Установить заголовок'},
+            {':SetCenterTitle(string title)', 'Установить центральный заголовок'},
+            {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
+            {':DisableCloseBtn()', 'Скрыть кнопку закрытия'},
+            {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'}
+        }, panel, btnFrame)
 
-        CreateTitle('Панель прокрутки (MantleScrollPanel)', {}, panel)
-
-        local sp = vgui.Create('MantleScrollPanel', panel)
-        sp:Dock(TOP)
-        sp:DockMargin(menuWide * 0.11, 6, menuWide * 0.11, 0)
-        sp:SetTall(200)
-
-        for spK = 1, 20 do
+        -- ScrollPanel
+        local sp = vgui.Create('MantleScrollPanel')
+        sp:SetTall(120)
+        for spK = 1, 5 do
             local spPanel = vgui.Create('DPanel', sp)
             spPanel:Dock(TOP)
             spPanel:DockMargin(0, 0, 6, 6)
+            spPanel:SetTall(24)
             spPanel.Paint = function(_, w, h)
                 draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[1])
             end
         end
+        sp:DockMargin(menuWide * 0.11, 6, menuWide * 0.11, 0)
+        sp:Dock(TOP)
+        CreateCategory('Панель прокрутки (MantleScrollPanel)', {}, panel, sp)
 
-        CreateTitle('Вкладки (MantleTabs)', {
-            {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'},
-            {':SetTabStyle(string style)', 'Установить стиль вкладок: "modern" (сверху, по умолчанию) или "classic" (слева)'},
-            {':SetTabHeight(int height)', 'Высота вкладки (modern)'},
-            {':SetIndicatorHeight(int height)', 'Высота индикатора активной вкладки (modern)'}
-        }, panel)
-
-        local testTabs = vgui.Create('MantleTabs', panel)
-        testTabs:Dock(TOP)
+        -- Вкладки
+        local testTabs = vgui.Create('MantleTabs')
+        testTabs:SetTall(80)
         testTabs:DockMargin(menuWide * 0.05, 6, menuWide * 0.05, 0)
-        testTabs:SetTall(120)
-
+        testTabs:Dock(TOP)
         local testTab1 = vgui.Create('DPanel')
         testTab1.Paint = function(_, w, h)
             draw.RoundedBox(6, 0, 0, w, h, Color(53, 98, 40))
         end
         testTabs:AddTab('Test1', testTab1)
-
         local testTab2 = vgui.Create('DPanel')
         testTab2.Paint = function(_, w, h)
             draw.RoundedBox(6, 0, 0, w, h, Color(108, 41, 45))
         end
         testTabs:AddTab('Test2', testTab2)
+        CreateCategory('Вкладки (MantleTabs)', {
+            {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'}
+        }, panel, testTabs)
 
-        CreateTitle('Категория (MantleCategory)', {
-            {':SetText(string name)', 'Установить название'},
-            {':AddItem(object panel)', 'Добавить в категорию элемент'},
-            {':SetColor(color col)', 'Установить кастомный цвет категории'}
-        }, panel)
-
-        local cat = vgui.Create('MantleCategory', panel)
+        -- Категория
+        local cat = vgui.Create('MantleCategory')
+        cat:SetTall(110)
         cat:Dock(TOP)
-        cat:DockMargin(0, 6, 0, 0)
-
         local panGreen = vgui.Create('DPanel', cat)
         panGreen:Dock(TOP)
         panGreen:SetTall(50)
         panGreen.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(93, 179, 101)) end
         cat:AddItem(panGreen)
-
         local panRed = vgui.Create('DPanel', cat)
         panRed:Dock(TOP)
         panRed:DockMargin(0, 6, 0, 0)
         panRed:SetTall(50)
         panRed.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(179, 110, 93)) end
         cat:AddItem(panRed)
+        CreateCategory('Категория (MantleCategory)', {
+            {':SetText(string name)', 'Установить название'},
+            {':AddItem(object panel)', 'Добавить в категорию элемент'},
+            {':SetColor(color col)', 'Установить кастомный цвет категории'}
+        }, panel, cat)
 
-        CreateTitle('Слайдер (MantleSlideBox)', {
-            {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
-            {':SetConvar(string convar)', 'Установить ConVar'},
-            {':SetText(string text)', 'Установить текстовое обозначение'},
-        }, panel)
-
-        local slider = vgui.Create('MantleSlideBox', panel)
-        slider:Dock(TOP)
-        slider:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        -- Слайдер
+        local slider = vgui.Create('MantleSlideBox')
         slider:SetRange(0, 4)
         slider:SetConvar('net_graph')
         slider:SetText('График')
+        slider:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        slider:Dock(TOP)
+        CreateCategory('Слайдер (MantleSlideBox)', {
+            {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
+            {':SetConvar(string convar)', 'Установить ConVar'},
+            {':SetText(string text)', 'Установить текстовое обозначение'}
+        }, panel, slider)
 
         return panel
     end
