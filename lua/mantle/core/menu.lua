@@ -225,7 +225,7 @@ local function CreateMenu()
                     {name = 'Вывести 6', func = function() chat.AddText('6') end}
                 }
 
-                Mantle.ui.ratial_panel(config)
+                Mantle.ui.radial_panel(config)
             end},
             {'Написание текста', function()
                 Mantle.ui.text_box('Заголовок', 'Описание того, что вводиться', function(s)
