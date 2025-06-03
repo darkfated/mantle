@@ -4,97 +4,178 @@ function PANEL:Init()
     self.text = ''
     self.min_value = 0
     self.max_value = 1
-    self.decimals = 2
+    self.decimals = 0
     self.convar = nil
     self.value = 0
     self.smoothPos = 0
     self.targetPos = 0
+    self.dragging = false
+    self.hover = false
+    self:SetTall(60)
+    self.OnValueChanged = function() end
 
-    self:SetTall(40)
+    self._convar_last = nil
+    self._convar_timer = self:CreateConVarSyncTimer()
+end
 
-    timer.Simple(0, function()
-        if IsValid(self) then
-            self:SyncSliderWithConvar()
+function PANEL:CreateConVarSyncTimer()
+    return timer.Create('MantleSlideBoxSync' .. tostring(self), 0.1, 0, function()
+        if not IsValid(self) or not self.convar then return end
+        local cvar = GetConVar(self.convar)
+        if not cvar then return end
+        local val = cvar:GetFloat()
+        if self._convar_last ~= val then
+            self._convar_last = val
+            self:SetValue(val, true)
         end
     end)
+end
+
+function PANEL:OnRemove()
+    timer.Remove('MantleSlideBoxSync' .. tostring(self))
 end
 
 function PANEL:SetRange(min_value, max_value, decimals)
     self.min_value = min_value
     self.max_value = max_value
     self.decimals = decimals or 0
+    self:SetValue(self.value or min_value)
 end
 
 function PANEL:SetConvar(convar)
     self.convar = convar
-
-    self:SyncSliderWithConvar()
+    local cvar = GetConVar(convar)
+    if cvar then
+        self:SetValue(cvar:GetFloat(), true)
+        self._convar_last = cvar:GetFloat()
+    end
 end
 
 function PANEL:SetText(text)
     self.text = text
 end
 
-local math_clamp = math.Clamp
-local math_round = math.Round
-
-function PANEL:SyncSliderWithConvar()
-    if self.convar then
-        local convar_value = GetConVar(self.convar):GetFloat()
-        self.value = math_clamp(convar_value, self.min_value, self.max_value)
-        self:UpdateSliderPosition(self.value)
+function PANEL:SetValue(val, fromConVar)
+    val = math.Clamp(val, self.min_value, self.max_value)
+    if self.decimals > 0 then
+        val = math.Round(val, self.decimals)
+    else
+        val = math.Round(val)
     end
+    self.value = val
+    local progress = (val - self.min_value) / (self.max_value - self.min_value)
+    self.targetPos = math.Clamp((self:GetWide() - 32) * progress, 0, self:GetWide() - 32)
+    if self.convar and not fromConVar then
+        RunConsoleCommand(self.convar, tostring(val))
+        self._convar_last = val
+    end
+    if self.OnValueChanged then self:OnValueChanged(val) end
 end
 
-function PANEL:UpdateSliderPosition(new_value)
-    self.value = new_value
-    local progress = (new_value - self.min_value) / (self.max_value - self.min_value)
-    self.targetPos = math_clamp((self:GetWide() - 16) * progress, 0, self:GetWide() - 16)
-
-    if self.convar then
-        LocalPlayer():ConCommand(self.convar .. ' ' .. new_value)
-    end
+function PANEL:GetValue()
+    return self.value
 end
 
 function PANEL:UpdateSliderByCursorPos(x)
-    local progress = math_clamp(x / (self:GetWide() - 16), 0, 1)
-    local new_value = math_round(self.min_value + (progress * (self.max_value - self.min_value)), self.decimals)
-    self:UpdateSliderPosition(new_value)
+    local progress = math.Clamp(x / (self:GetWide() - 32), 0, 1)
+    local new_value = self.min_value + (progress * (self.max_value - self.min_value))
+    if self.decimals > 0 then
+        new_value = math.Round(new_value, self.decimals)
+    else
+        new_value = math.Round(new_value)
+    end
+    self:SetValue(new_value)
 end
 
-local mat_slider = Material('mantle/slider.png')
-
 function PANEL:Paint(w, h)
-    draw.RoundedBox(4, 0, h - 16, w, 6, Mantle.color.panel_alpha[1])
+    local padX = 16
+    local padTop = 2
+    local barY = 32
+    local barH = 6
+    local barR = barH/2
+    local handleR = 7
+    local handleW, handleH = handleR*2, handleR*2
+    local textFont = 'Fated.18'
+    local minmaxFont = 'Fated.14'
+    local valueFont = 'Fated.16'
+    local minmaxPadY = 12
 
-    self.smoothPos = Lerp(FrameTime() * 10, self.smoothPos, self.targetPos)
+    -- Текст сверху (с большим отступом)
+    draw.SimpleText(self.text, textFont, padX, padTop, color_white)
 
-    surface.SetDrawColor(Mantle.color.theme)
-    surface.SetMaterial(mat_slider)
-    surface.DrawTexturedRect(self.smoothPos, h - 22, 16, 16)
+    -- Линия
+    local barStart = padX + handleR
+    local barEnd = w - padX - handleR
+    local barW = barEnd - barStart
+    local progress = (self.value - self.min_value) / (self.max_value - self.min_value)
+    local activeW = math.Clamp(barW * progress, 0, barW)
 
-    draw.SimpleText(self.text, 'Fated.18', 4, 0, color_white)
-    draw.SimpleText(math_round(self.value, self.decimals), 'Fated.18', w - 4, 0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+    -- Фон линии
+    draw.RoundedBox(barR, barStart, barY, barW, barH, Mantle.color.panel_alpha[2])
+    Mantle.func.gradient(barStart, barY, barW, barH, 1, Mantle.color.button_shadow)
+
+    -- Активная линия
+    draw.RoundedBox(barR, barStart, barY, activeW, barH, Mantle.color.theme)
+
+    -- Маленький шарик-ручка (идеально круглый)
+    self.smoothPos = Lerp(FrameTime() * 12, self.smoothPos or 0, activeW)
+    local handleX = barStart + self.smoothPos
+    local handleY = barY + barH/2
+    local handleCol = (self.dragging or self.hover) and Mantle.color.theme or Mantle.color.button
+    surface.SetDrawColor(handleCol)
+    draw.NoTexture()
+    draw.Circle(handleX, handleY, handleR, 32)
+    surface.SetDrawColor(color_white)
+    draw.Circle(handleX, handleY, handleR-2, 32)
+
+    -- Значение справа от линии
+    draw.SimpleText(self.value, valueFont, barEnd + handleR + 4, barY + barH/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+    -- min/max под линией
+    draw.SimpleText(self.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, Mantle.color.gray, TEXT_ALIGN_LEFT)
+    draw.SimpleText(self.max_value, minmaxFont, barEnd, barY + barH + minmaxPadY - 4, Mantle.color.gray, TEXT_ALIGN_RIGHT)
+end
+
+function draw.Circle(x, y, radius, seg)
+    local cir = {}
+    for i = 0, seg do
+        local a = math.rad((i / seg) * -360)
+        table.insert(cir, {x = x + math.sin(a) * radius, y = y + math.cos(a) * radius})
+    end
+    surface.DrawPoly(cir)
 end
 
 function PANEL:OnMousePressed(mcode)
     if mcode == MOUSE_LEFT then
         local x = self:CursorPos()
         self:UpdateSliderByCursorPos(x)
+        self.dragging = true
         self:MouseCapture(true)
+        self.ripple_x = x
+        self.ripple_anim = 0
+        self.ripple_active = true
     end
 end
 
 function PANEL:OnMouseReleased(mcode)
     if mcode == MOUSE_LEFT then
+        self.dragging = false
         self:MouseCapture(false)
     end
 end
 
 function PANEL:OnCursorMoved(x)
-    if input.IsMouseDown(MOUSE_LEFT) then
+    if self.dragging then
         self:UpdateSliderByCursorPos(x)
     end
+end
+
+function PANEL:OnCursorEntered()
+    self.hover = true
+end
+
+function PANEL:OnCursorExited()
+    self.hover = false
 end
 
 vgui.Register('MantleSlideBox', PANEL, 'Panel')
