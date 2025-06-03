@@ -145,6 +145,9 @@ local function CreateMenu()
         end
         testTabs:AddTab('Test2', testTab2)
         CreateCategory('Вкладки (MantleTabs)', {
+            {':SetTabStyle(string style)', 'Установить стиль вкладок (modern или classic)'},
+            {':SetTabHeight(int height)', 'Установить высоту вкладок'},
+            {':SetIndicatorHeight(int height)', 'Установить высоту индикатора вкладок'},
             {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'}
         }, panel, testTabs)
 
@@ -152,12 +155,12 @@ local function CreateMenu()
         local cat = vgui.Create('MantleCategory')
         cat:SetTall(110)
         cat:Dock(TOP)
-        local panGreen = vgui.Create('DPanel', cat)
+        local panGreen = vgui.Create('DPanel')
         panGreen:Dock(TOP)
         panGreen:SetTall(50)
         panGreen.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(93, 179, 101)) end
         cat:AddItem(panGreen)
-        local panRed = vgui.Create('DPanel', cat)
+        local panRed = vgui.Create('DPanel')
         panRed:Dock(TOP)
         panRed:DockMargin(0, 6, 0, 0)
         panRed:SetTall(50)

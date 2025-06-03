@@ -6,7 +6,6 @@ function PANEL:Init()
     self.tab_height = 38
     self.animation_speed = 8
     self.tab_style = 'modern' -- modern или classic
-    self.tab_spacing = 8
     self.indicator_height = 2
 
     self.panel_tabs = vgui.Create('Panel', self)
