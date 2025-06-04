@@ -339,7 +339,7 @@ local function CreateMenu()
                     ChangeHoverBtn()
                     Mantle.func.SetCustomColors()
                 end)
-            end, buttonTheme.col)
+            end, buttonThemeBtn.col)
         end
 
         local buttonResetCustomColors = vgui.Create('MantleBtn', panel)
