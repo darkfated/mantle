@@ -5,12 +5,12 @@ function PANEL:Init()
     vbar:SetWide(6)
     vbar:SetHideButtons(true)
     vbar.Paint = function(_, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Mantle.color.sp)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.spacer, RNDX.SHAPE_IOS)
 
         self.pnlCanvas:DockPadding(0, 0, m_bNoSizing and 0 or 6, 0)
     end
     vbar.btnGrip.Paint = function(_, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Mantle.color.theme)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.theme, RNDX.SHAPE_IOS)
     end
 end
 

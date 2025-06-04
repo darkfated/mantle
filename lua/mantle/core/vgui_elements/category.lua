@@ -14,7 +14,7 @@ function PANEL:Init()
     self.header = vgui.Create('Button', self)
     self.header:SetText('')
     self.header.Paint = function(_, w, h)
-        draw.RoundedBox(8, 0, 0, w, h, self.header_color)
+        RNDX.Draw(16, 0, 0, w, h, self.header_color, RNDX.SHAPE_IOS)
         local posX = self.bool_header_centered and w * 0.5 or 8
         local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
         draw.SimpleText(self.name, 'Fated.20', posX, 5, color_black, alignX)

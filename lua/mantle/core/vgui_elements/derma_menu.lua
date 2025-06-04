@@ -108,7 +108,7 @@ function PANEL:AddSpacer()
     spacer:SetTall(1)
     spacer.sumTall = 13
     spacer.Paint = function(_, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, Mantle.color.panel[2])
+        RNDX.Draw(0, 0, 0, w, h, Mantle.color.panel[2])
     end
 
     table.insert(self.Items, spacer)

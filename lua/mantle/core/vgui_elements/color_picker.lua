@@ -1,6 +1,7 @@
 local color_close = Color(210, 65, 65)
 local color_accept = Color(44, 124, 62)
 local color_outline = Color(30, 30, 30)
+local color_target = Color(255, 255, 255, 200)
 
 function Mantle.ui.color_picker(func, color_standart)
     if IsValid(Mantle.ui.menu_color_picker) then
@@ -38,8 +39,8 @@ function Mantle.ui.color_picker(func, color_standart)
     preview:SetTall(40)
     preview:DockMargin(0, 0, 0, 10)
     preview.Paint = function(self, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, color_outline)
-        draw.RoundedBox(6, 2, 2, w - 4, h - 4, selected_color)
+        RNDX.Draw(16, 0, 0, w, h, color_outline, RNDX.SHAPE_IOS)
+        RNDX.Draw(16, 2, 2, w - 4, h - 4, selected_color, RNDX.SHAPE_IOS)
     end
 
     local colorField = vgui.Create('Panel', container)
@@ -81,8 +82,6 @@ function Mantle.ui.color_picker(func, color_standart)
     end
     
     colorField.Paint = function(self, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Color(30, 30, 30))
-        
         local segments = 100
         local segmentSize = w / segments
         
@@ -98,8 +97,7 @@ function Mantle.ui.color_picker(func, color_standart)
             end
         end
 
-        surface.SetDrawColor(255, 255, 255, 200)
-        surface.DrawOutlinedRect(colorCursor.x - 5, colorCursor.y - 5, 10, 10, 2)
+        RNDX.DrawCircleOutlined(colorCursor.x, colorCursor.y, 12, color_target, 2, RNDX.SHAPE_IOS)
     end
 
     local hueSlider = vgui.Create('Panel', container)
@@ -137,9 +135,7 @@ function Mantle.ui.color_picker(func, color_standart)
     end
     
     hueSlider.Paint = function(self, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Color(30, 30, 30))
-        
-        local segments = 36
+        local segments = 100
         local segmentWidth = w / segments
         
         for i = 0, segments - 1 do
@@ -150,8 +146,7 @@ function Mantle.ui.color_picker(func, color_standart)
             surface.DrawRect(x, 1, segmentWidth + 1, h - 2)
         end
 
-        surface.SetDrawColor(255, 255, 255, 200)
-        surface.DrawOutlinedRect(huePos - 2, 0, 4, h, 2)
+        RNDX.Draw(0, huePos - 2, 0, 4, h, color_target)
     end
 
     local rgbContainer = vgui.Create('Panel', container)

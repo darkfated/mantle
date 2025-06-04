@@ -17,7 +17,7 @@ function PANEL:Init()
     self.btn:Dock(RIGHT)
     self.btn:SetText('')
     self.btn.Paint = function(_, w, h)
-        draw.RoundedBoxEx(6, 0, 2, w - 2, h - 4, Mantle.color.panel_alpha[1], false, true, false, true)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.panel_alpha[1], RNDX.SHAPE_IOS + RNDX.NO_TL + RNDX.NO_BL)
         local col = self.btn:IsHovered() and (self.bool_enabled and color_on or color_off) or color_white
         draw.SimpleText(self.bool_enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.20', w * 0.5 - 1, h * 0.5, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
@@ -70,7 +70,7 @@ function PANEL:SetDescription(desc)
 end
 
 function PANEL:Paint(w, h)
-    draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
+    RNDX.Draw(16, 0, 0, w, h, Mantle.color.panel_alpha[2], RNDX.SHAPE_IOS)
     Mantle.func.gradient(w - 220, 0, 164, h, 4, Mantle.color.button_shadow)
     draw.SimpleText(self.text, 'Fated.18', 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
@@ -80,7 +80,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:PerformLayout(w, h)
-    self.btn:SetWide(56)
+    self.btn:SetWide(60)
 end
 
 vgui.Register('MantleCheckBox', PANEL, 'Button')

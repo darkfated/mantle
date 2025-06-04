@@ -125,7 +125,7 @@ local function CreateMenu()
             spPanel:DockMargin(0, 0, 6, 6)
             spPanel:SetTall(24)
             spPanel.Paint = function(_, w, h)
-                draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[1])
+                RNDX.Draw(16, 0, 0, w - 12, h, Mantle.color.panel_alpha[1], RNDX.SHAPE_IOS)
             end
         end
         sp:DockMargin(menuWide * 0.11, 6, menuWide * 0.11, 0)
@@ -144,12 +144,12 @@ local function CreateMenu()
         testTabs:Dock(TOP)
         local testTab1 = vgui.Create('DPanel')
         testTab1.Paint = function(_, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(53, 98, 40))
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(53, 98, 40), RNDX.SHAPE_IOS)
         end
         testTabs:AddTab('Test1', testTab1)
         local testTab2 = vgui.Create('DPanel')
         testTab2.Paint = function(_, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(108, 41, 45))
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(108, 41, 45), RNDX.SHAPE_IOS)
         end
         testTabs:AddTab('Test2', testTab2)
 
@@ -160,12 +160,12 @@ local function CreateMenu()
         testTabs2:SetTabStyle('classic')
         local testTab3 = vgui.Create('DPanel')
         testTab3.Paint = function(_, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(51, 61, 116))
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(51, 61, 116), RNDX.SHAPE_IOS)
         end
         testTabs2:AddTab('Test3', testTab3)
         local testTab4 = vgui.Create('DPanel')
         testTab4.Paint = function(_, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(138, 89, 43))
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(138, 89, 43), RNDX.SHAPE_IOS)
         end
         testTabs2:AddTab('Test4', testTab4)
 
@@ -180,17 +180,22 @@ local function CreateMenu()
         local cat = vgui.Create('MantleCategory')
         cat:SetTall(110)
         cat:Dock(TOP)
+        cat:DockMargin(0, 6, 0, 0)
         cat:SetCenterText(true)
         local panGreen = vgui.Create('DPanel')
         panGreen:Dock(TOP)
         panGreen:SetTall(50)
-        panGreen.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(93, 179, 101)) end
+        panGreen.Paint = function(_, w, h)
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(93, 179, 101), RNDX.SHAPE_IOS)
+        end
         cat:AddItem(panGreen)
         local panRed = vgui.Create('DPanel')
         panRed:Dock(TOP)
         panRed:DockMargin(0, 6, 0, 0)
         panRed:SetTall(50)
-        panRed.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(179, 110, 93)) end
+        panRed.Paint = function(_, w, h)
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(179, 110, 93), RNDX.SHAPE_IOS)
+        end
         cat:AddItem(panRed)
         CreateCategory('Категория (MantleCategory)', {
             {':SetText(string name)', 'Установить название'},

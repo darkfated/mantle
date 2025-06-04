@@ -111,11 +111,11 @@ function PANEL:Paint(w, h)
     local activeW = math.Clamp(barW * progress, 0, barW)
 
     -- Фон линии
-    draw.RoundedBox(barR, barStart, barY, barW, barH, Mantle.color.panel_alpha[2])
-    Mantle.func.gradient(barStart, barY, barW, barH, 1, Mantle.color.button_shadow)
+    RNDX.Draw(16, barStart, barY, barW, barH, Mantle.color.panel_alpha[2])
+    RNDX.Draw(16, barStart, barY, barW, barH, Mantle.color.button_shadow)
 
     -- Активная линия
-    draw.RoundedBox(barR, barStart, barY, activeW, barH, Mantle.color.theme)
+    RNDX.Draw(16, barStart, barY, activeW, barH, Mantle.color.theme)
 
     -- Маленький шарик-ручка (идеально круглый)
     self.smoothPos = Lerp(FrameTime() * 12, self.smoothPos or 0, activeW)

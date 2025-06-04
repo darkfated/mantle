@@ -7,7 +7,7 @@ function PANEL:Init()
 
     self.main = vgui.Create('Panel', self)
     self.main.Paint = function(_, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, color_white)
+        RNDX.Draw(16, 0, 0, w, h, color_white, RNDX.SHAPE_IOS)
     end
 
     self.entry = vgui.Create('DTextEntry', self.main)

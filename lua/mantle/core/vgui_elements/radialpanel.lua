@@ -114,7 +114,7 @@ function Mantle.ui.radial_panel(items_config, options)
 
     menu.Paint = function(self, w, h)
         if !disable_background then
-            draw.RoundedBox(0, 0, 0, w, h, Mantle.color.background_alpha)
+            RNDX.Draw(0, 0, 0, w, h, Mantle.color.background_alpha)
         end
 
         if scale_animation then
