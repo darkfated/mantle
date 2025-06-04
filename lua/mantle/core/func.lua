@@ -1,4 +1,4 @@
-CreateClientConVar('mantle_col_theme', '[102,107,164]', true, false)
+CreateClientConVar('mantle_col_theme', '[106,108,197]', true, false)
 CreateClientConVar('mantle_col_hoverbtn', '[52,70,109]', true, false)
 
 Mantle.func = {
