@@ -359,7 +359,7 @@ local function CreateMenu()
         return panel
     end
 
-    tabs:AddTab('Настройки', CreateTabSettings())
+    tabs:AddTab('Настройки', CreateTabSettings(), Material('icon16/application_osx_terminal.png'))
 end
 
 concommand.Add('mantle_menu', CreateMenu)
