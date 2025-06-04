@@ -98,19 +98,15 @@ local function CreateFunc()
 
     local function EntText(text, y)
         surface.SetFont('Fated.40')
-    
         local tw, th = surface.GetTextSize(text)
-        local bx, by = -tw * 0.5 - 10, y - 5
-        local bw, bh = tw + 20, th + 20
+        local bx, by = -tw * 0.5 - 18, y - 12
+        local bw, bh = tw + 36, th + 24
 
-        draw.RoundedBoxEx(12, bx, by, bw, bh, Mantle.color.background_alpha, true, true, false, false)
+        RNDX.Draw(32, bx, by, bw, bh - 6, Mantle.color.background_alpha, RNDX.SHAPE_IOS + RNDX.NO_BL + RNDX.NO_BR + RNDX.BLUR)
+        RNDX.Draw(32, bx, by, bw, bh - 6, Mantle.color.background_alpha, RNDX.SHAPE_IOS + RNDX.NO_BL + RNDX.NO_BR)
+        RNDX.Draw(16, bx, by + bh - 6, bw, 6, color_white, RNDX.SHAPE_IOS + RNDX.NO_TL + RNDX.NO_TR)
 
-        surface.SetDrawColor(color_white)
-        surface.DrawRect(bx, by + bh - 4, bw, 4)
-
-        surface.SetTextColor(color_white)
-        surface.SetTextPos(-tw * 0.5, y)
-        surface.DrawText(text)
+        draw.SimpleText(text, 'Fated.40', 0, y - 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
     end
 
     --[[
@@ -119,22 +115,15 @@ local function CreateFunc()
     ]]--
     function Mantle.func.draw_ent_text(ent, txt, posY)
         local dist = EyePos():DistToSqr(ent:GetPos())
-
-        if dist > 60000 then
-            return
-        end
-        
+        if dist > 60000 then return end
         surface.SetAlphaMultiplier(math_clamp(3 - (dist / 20000), 0, 1))
-
         local _, max = ent:GetRotatedAABB(ent:OBBMins(), ent:OBBMaxs())
         local rot = (ent:GetPos() - EyePos()):Angle().yaw - 90
         local sin = math_sin(CurTime() + ent:EntIndex()) / 3 + 0.5
         local center = ent:LocalToWorld(ent:OBBCenter())
-
         cam.Start3D2D(center + Vector(0, 0, math_abs(max.z / 2) + 12 + sin), Angle(0, rot, 90), 0.13)
             EntText(txt, posY)
         cam.End3D2D()
-
         surface.SetAlphaMultiplier(1)
     end
 
