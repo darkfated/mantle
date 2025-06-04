@@ -1,48 +1,53 @@
 local PANEL = {}
 
-local color_on = Color(86, 135, 79)
-local color_off = Color(141, 52, 52)
-
 function PANEL:Init()
-    self.text = 'Параметр'
-    self.bool_enabled = false
-    self.convar = ''
+    self.text = ''
     self.description = ''
-
+    self.convar = ''
+    self.value = false
+    self.hoverAnim = 0
+    self.circleAnim = 0
     self:SetText('')
-    self:SetCursor('arrow')
-    self:SetTall(28)
+    self:SetCursor('hand')
+    self:SetTall(32)
 
-    self.btn = vgui.Create('Button', self)
-    self.btn:Dock(RIGHT)
-    self.btn:SetText('')
-    self.btn.Paint = function(_, w, h)
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.panel_alpha[1], RNDX.SHAPE_IOS + RNDX.NO_TL + RNDX.NO_BL)
-        local col = self.btn:IsHovered() and (self.bool_enabled and color_on or color_off) or color_white
-        draw.SimpleText(self.bool_enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.20', w * 0.5 - 1, h * 0.5, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-    self.btn.DoClick = function()
-        if self.convar != '' then
-            RunConsoleCommand(self.convar, self.bool_enabled and 0 or 1)
+    self.toggle = vgui.Create('DButton', self)
+    self.toggle:Dock(RIGHT)
+    self.toggle:SetWide(48)
+    self.toggle:DockMargin(0, 0, 8, 0)
+    self.toggle:SetText('')
+    self.toggle:SetCursor('hand')
+    self.toggle.Paint = function(_, w, h)
+        if self.toggle:IsHovered() then
+            self.hoverAnim = math.Clamp(self.hoverAnim + FrameTime() * 6, 0, 1)
+        else
+            self.hoverAnim = math.Clamp(self.hoverAnim - FrameTime() * 10, 0, 1)
         end
 
-        self.bool_enabled = !self.bool_enabled
+        self.circleAnim = Lerp(FrameTime() * 12, self.circleAnim, self.value and 1 or 0)
+        local trackH = 20
+        local trackY = (h - trackH) / 2
+        RNDX.Draw(16, 0, trackY, w, trackH, Mantle.color.button, RNDX.SHAPE_IOS)
+        
+        if self.hoverAnim > 0 then
+            RNDX.Draw(16, 0, trackY, w, trackH, Color(Mantle.color.button_hovered.r, Mantle.color.button_hovered.g, Mantle.color.button_hovered.b, self.hoverAnim * 80), RNDX.SHAPE_IOS)
+        end
 
+        local circleSize = 16
+        local pad = trackY + (trackH - circleSize) / 2
+        local x0 = pad
+        local x1 = w - circleSize - pad
+        local circleX = Lerp(self.circleAnim, x0, x1)
+        local circleCol = self.value and Mantle.color.theme or Mantle.color.gray
+
+        RNDX.DrawCircle(circleX + circleSize/2, h/2, circleSize, circleCol)
+    end
+    self.toggle.DoClick = function()
+        if self.convar ~= '' then
+            RunConsoleCommand(self.convar, self.value and 0 or 1)
+        end
+        self.value = not self.value
         Mantle.func.sound()
-    end
-end
-
-function PANEL:DoClick()
-    if self.description == '' then
-        return
-    end
-
-    if self:GetTall() == 28 then
-        self:SetTall(44)
-        self.bool_desc = true
-    else
-        self:SetTall(28)
-        self.bool_desc = false
     end
 end
 
@@ -50,16 +55,16 @@ function PANEL:SetTxt(text)
     self.text = text
 end
 
-function PANEL:SetValue(value)
-    self.bool_enabled = value
+function PANEL:SetValue(val)
+    self.value = val
 end
 
 function PANEL:GetBool()
-    return self.bool_enabled
+    return self.value
 end
 
 function PANEL:SetConvar(convar)
-    self.bool_enabled = GetConVar(convar):GetBool()
+    self.value = GetConVar(convar):GetBool()
     self.convar = convar
 end
 
@@ -71,16 +76,24 @@ end
 
 function PANEL:Paint(w, h)
     RNDX.Draw(16, 0, 0, w, h, Mantle.color.panel_alpha[2], RNDX.SHAPE_IOS)
-    Mantle.func.gradient(w - 220, 0, 164, h, 4, Mantle.color.button_shadow)
-    draw.SimpleText(self.text, 'Fated.18', 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+    draw.SimpleText(self.text, 'Fated.18', 12, h * 0.5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    if self.description ~= '' and self:GetTall() > 32 then
+        draw.SimpleText(self.description, 'Fated.16', 12, h - 6, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+    end
+end
 
-    if self:GetTall() == 44 then
-        draw.SimpleText(self.description, 'Fated.16', 8, h - 5, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+function PANEL:DoClick()
+    if self.description == '' then return end
+    if self:GetTall() == 32 then
+        self:SetTall(48)
+    else
+        self:SetTall(32)
     end
 end
 
 function PANEL:PerformLayout(w, h)
-    self.btn:SetWide(60)
+    self.toggle:SetWide(48)
+    self.toggle:DockMargin(0, 0, 8, 0)
 end
 
-vgui.Register('MantleCheckBox', PANEL, 'Button')
+vgui.Register('MantleCheckBox', PANEL, 'Panel')
