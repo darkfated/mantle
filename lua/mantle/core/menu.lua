@@ -212,6 +212,30 @@ local function CreateMenu()
             {':SetText(string text)', 'Установить текстовое обозначение'}
         }, panel, slider)
 
+        -- Выбор варианта
+        local combo = vgui.Create('MantleComboBox')
+        combo:SetPlaceholder('Выберите вариант')
+        combo:AddChoice('Вариант 1', 'value1')
+        combo:AddChoice('Вариант 2', 'value2')
+        combo:AddChoice('Вариант 3', 'value3')
+        combo:AddChoice('Вариант 4', 'value4')
+        combo:AddChoice('Вариант 5', 'value5')
+        combo:AddChoice('Вариант 6', 'value6')
+        combo:AddChoice('Вариант 7', 'value7')
+        combo:AddChoice('Вариант 8', 'value8')
+        combo.OnSelect = function(self, idx, text, data)
+            chat.AddText(color_white, 'Вы выбрали: ', Mantle.color.theme, text, color_white, ' (', tostring(data), ')')
+        end
+        combo:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        combo:Dock(TOP)
+        CreateCategory('Выпадающий список (MantleComboBox)', {
+            {':AddChoice(string text, any data)', 'Добавить вариант в список (data — любое значение, связанное с пунктом)'},
+            {':SetValue(string text)', 'Установить выбранное значение по тексту'},
+            {':GetValue()', 'Получить выбранное значение (текст)'},
+            {':SetPlaceholder(string text)', 'Установить текст-заполнитель (placeholder)'},
+            {':OnSelect(idx, text, data)', 'Вызывается при выборе варианта: idx — индекс, text — текст, data — значение'}
+        }, panel, combo)
+
         return panel
     end
 
