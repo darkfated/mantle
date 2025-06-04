@@ -228,7 +228,7 @@ local function CreateMenu()
         combo:AddChoice('Вариант 6', 'value6')
         combo:AddChoice('Вариант 7', 'value7')
         combo:AddChoice('Вариант 8', 'value8')
-        combo.OnSelect = function(self, idx, text, data)
+        combo.OnSelect = function(idx, text, data)
             chat.AddText(color_white, 'Вы выбрали: ', Mantle.color.theme, text, color_white, ' (', tostring(data), ')')
         end
         combo:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
