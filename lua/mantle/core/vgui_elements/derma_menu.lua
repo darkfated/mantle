@@ -52,6 +52,7 @@ function PANEL:AddOption(text, func, icon, optData)
     option:Dock(TOP)
     option:DockMargin(2, 2, 2, 0)
     option:SetTall(26)
+    option.sumTall = 28
     option.Icon = icon
     option.Text = text
     option.DoClick = function()
@@ -105,6 +106,7 @@ function PANEL:AddSpacer()
     spacer:Dock(TOP)
     spacer:DockMargin(8, 6, 8, 6)
     spacer:SetTall(1)
+    spacer.sumTall = 13
     spacer.Paint = function(_, w, h)
         draw.RoundedBox(0, 0, 0, w, h, Mantle.color.panel[2])
     end
@@ -117,11 +119,11 @@ function PANEL:AddSpacer()
 end
 
 function PANEL:UpdateSize()
-    local height = 24
+    local height = 16
 
     for _, item in ipairs(self.Items) do
         if IsValid(item) then
-            height = height + item:GetTall() + 2
+            height = height + item.sumTall
         end
     end
 
