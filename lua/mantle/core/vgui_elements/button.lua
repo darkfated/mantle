@@ -4,7 +4,7 @@ function PANEL:Init()
     self.hover_status = 0
     self.bool_hover = true
     self.font = 'Fated.18'
-    self.radius = 6
+    self.radius = 16
     self.icon = ''
     self.icon_size = 16
     self.text = 'Кнопка'
@@ -68,6 +68,7 @@ function PANEL:OnMousePressed(mousecode)
 end
 
 local math_clamp = math.Clamp
+local btnFlags = RNDX.SHAPE_IOS
 
 function PANEL:Paint(w, h)
     if self:IsHovered() then
@@ -76,14 +77,14 @@ function PANEL:Paint(w, h)
         self.hover_status = math_clamp(self.hover_status - 8 * FrameTime(), 0, 1)
     end
 
-    draw.RoundedBox(self.radius, 0, 0, w, h, self.col)
+    RNDX.Draw(self.radius, 0, 0, w, h, self.col, btnFlags)
 
     if self.bool_hover then
-        draw.RoundedBox(self.radius, 0, 0, w, h, Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255))
+        RNDX.Draw(self.radius, 0, 0, w, h, Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255), btnFlags)
     end
 
     if self.bool_gradient then
-        Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
+        Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow, self.radius, btnFlags)
     end
 
     if self.click_alpha > 0 then
@@ -97,7 +98,7 @@ function PANEL:Paint(w, h)
             self.ripple_color.a * self.click_alpha
         )
         
-        draw.RoundedBox(w, self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size, ripple_color)
+        RNDX.Draw(w, self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size, ripple_color, btnFlags)
     end
 
     draw.SimpleText(

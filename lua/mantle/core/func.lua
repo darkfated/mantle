@@ -55,24 +55,18 @@ local function CreateFunc()
     end
 
     local listGradients = {
-        surface.GetTextureID('gui/gradient_up'),
-        surface.GetTextureID('gui/gradient_down'),
-        surface.GetTextureID('vgui/gradient-l'),
-        surface.GetTextureID('vgui/gradient-r')
+        Material('vgui/gradient_up'),
+        Material('vgui/gradient_down'),
+        Material('vgui/gradient-l'),
+        Material('vgui/gradient-r')
     }
 
     --[[
         Отрисовка градиента
     ]]--
-    function Mantle.func.gradient(_x, _y, _w, _h, direction, color_shadow)
-        draw.TexturedQuad{
-            texture = listGradients[direction],
-            color = color_shadow,
-            x = _x,
-            y = _y,
-            w = _w,
-            h = _h
-        }
+    function Mantle.func.gradient(_x, _y, _w, _h, direction, color_shadow, radius, flags)
+        radius = radius and radius or 0
+        RNDX.DrawMaterial(radius, _x, _y, _w, _h, color_shadow, listGradients[direction], flags)
     end
 
     function Mantle.func.sound(snd)
