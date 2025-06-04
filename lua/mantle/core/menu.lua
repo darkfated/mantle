@@ -22,8 +22,8 @@ local function CreateMenu()
         surface.SetFont('Fated.20')
         local infoWide = surface.GetTextSize(info[1]) + 16
         panelInfo.Paint = function(_, w, h)
-            draw.RoundedBox(0, 4, 0, w - 4, h, Mantle.color.panel_alpha[2])
-            draw.RoundedBox(6, 0, 0, infoWide, 30, Mantle.color.panel[1])
+            RNDX.Draw(0, 4, 0, w - 4, h, Mantle.color.panel_alpha[2])
+            RNDX.Draw(16, 0, 0, infoWide, 30, Mantle.color.panel[1], RNDX.SHAPE_IOS)
             draw.SimpleText(info[1], 'Fated.20', 8, 4, color_white)
             draw.SimpleText(info[2], 'Fated.16', 8, 34, color_white)
         end
