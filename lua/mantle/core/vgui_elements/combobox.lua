@@ -89,7 +89,7 @@ function PANEL:OpenMenu()
 
     local menuPadding = 6
     local itemHeight = 26
-    local menuHeight = (#self.choices * (itemHeight + 2)) + (menuPadding * 2)
+    local menuHeight = (#self.choices * (itemHeight + 2)) + (menuPadding * 2) + 2
 
     self.menu = vgui.Create('DPanel')
     self.menu:SetSize(self:GetWide(), menuHeight)
