@@ -1,6 +1,4 @@
 local PANEL = {}
-local color_background = Color(29, 29, 29)
-local color_hover = Color(60, 65, 80, 255)
 local color_shadow = Color(0, 0, 0, 120)
 
 local function ClampMenuPosition(panel)
@@ -40,7 +38,7 @@ function PANEL:Paint(w, h)
     local x, y = self:LocalToScreen(0, 0)
 
     BShadows.BeginShadow()
-        RNDX.Draw(16, x, y, w, h, color_background, RNDX.SHAPE_IOS)
+        RNDX.Draw(16, x, y, w, h, Mantle.color.background_dermapanel, RNDX.SHAPE_IOS)
     BShadows.EndShadow(1, 2, 2, 255, 0, 0)
 end
 
@@ -82,7 +80,7 @@ function PANEL:AddOption(text, func, icon, optData)
         h = h or pnl:GetTall()
 
         if pnl:IsHovered() then
-            RNDX.Draw(16, 0, 0, w, h, color_hover, RNDX.SHAPE_IOS)
+            RNDX.Draw(16, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
         end
 
         if iconMat then

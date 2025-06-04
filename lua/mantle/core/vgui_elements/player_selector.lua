@@ -1,5 +1,5 @@
-local color_gray = Color(200, 200, 200)
 local color_disconnect = Color(210, 65, 65)
+local color_card_bg = Color(45, 45, 55)
 
 function Mantle.ui.player_selector(do_click, func_check)
     if IsValid(Mantle.ui.menu_player_selector) then
@@ -7,62 +7,98 @@ function Mantle.ui.player_selector(do_click, func_check)
     end
 
     Mantle.ui.menu_player_selector = vgui.Create('MantleFrame')
-    Mantle.ui.menu_player_selector:SetSize(250, 400)
+    Mantle.ui.menu_player_selector:SetSize(340, 400)
     Mantle.ui.menu_player_selector:Center()
     Mantle.ui.menu_player_selector:MakePopup()
     Mantle.ui.menu_player_selector:SetTitle('')
     Mantle.ui.menu_player_selector:SetCenterTitle('Выбор игрока')
     Mantle.ui.menu_player_selector:ShowAnimation()
 
-    Mantle.ui.menu_player_selector.sp = vgui.Create('MantleScrollPanel', Mantle.ui.menu_player_selector)
-    Mantle.ui.sp(Mantle.ui.menu_player_selector.sp)
+    local contentPanel = vgui.Create('Panel', Mantle.ui.menu_player_selector)
+    contentPanel:Dock(FILL)
+    contentPanel:DockMargin(8, 0, 8, 8)
+    Mantle.ui.menu_player_selector.sp = vgui.Create('MantleScrollPanel', contentPanel)
     Mantle.ui.menu_player_selector.sp:Dock(FILL)
 
-    for i, pl in pairs(player.GetAll()) do
-        if isfunction(func_check) and func_check(pl) then
-            continue
-        end
+    local CARD_HEIGHT = 44
+    local AVATAR_SIZE = 32
+    local AVATAR_X = 14
 
-        local plyPanel = vgui.Create('Button', Mantle.ui.menu_player_selector.sp)
-        plyPanel:Dock(TOP)
-        plyPanel:DockMargin(0, 0, 0, 6)
-        plyPanel:SetTall(28)
-        plyPanel:SetText('')
-        plyPanel.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel[1])
-            Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
-
-            if IsValid(pl) then
-                draw.SimpleText(pl:Name(), 'Fated.18', w * 0.5, h * 0.5, self:IsHovered() and color_gray or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            else
-                draw.SimpleText('Вышел', 'Fated.18', w * 0.5, h * 0.5, color_disconnect, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
+    local function CreatePlayerCard(pl)
+        local card = vgui.Create('DButton', Mantle.ui.menu_player_selector.sp)
+        card:Dock(TOP)
+        card:DockMargin(0, 5, 0, 0)
+        card:SetTall(CARD_HEIGHT)
+        card:SetText('')
+        card.OnCursorEntered = function(self)
+            self.Hovered = true
+            self:SetCursor('hand')
         end
-        plyPanel.DoClick = function()
+        card.OnCursorExited = function(self)
+            self.Hovered = false
+            self:SetCursor('arrow')
+        end
+        card.DoClick = function()
             if IsValid(pl) then
                 Mantle.func.sound()
-                
                 do_click(pl)
             end
 
             Mantle.ui.menu_player_selector:Remove()
         end
+        card.Paint = function(self, w, h)
+            RNDX.Draw(10, 0, 0, w, h, self.Hovered and Mantle.color.hover or color_card_bg, RNDX.SHAPE_IOS)
 
-        plyPanel.avatar = vgui.Create('AvatarImage', plyPanel)
-        plyPanel.avatar:SetSize(20, 20)
-        plyPanel.avatar:SetPos(4, 4)
-        plyPanel.avatar:SetPlayer(pl, 24)
+            if self.Hovered then
+                RNDX.DrawShadows(10, 0, 0, w, h, Color(0, 0, 0, 40), 3, 1, RNDX.SHAPE_IOS)
+            end
+
+            local infoX = AVATAR_X + AVATAR_SIZE + 10
+
+            if !IsValid(pl) then
+                draw.SimpleText('Вышел', 'Fated.18', infoX, h * 0.5, color_disconnect, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                return
+            end
+
+            draw.SimpleText(pl:Name(), 'Fated.18', infoX, 6, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            local group = pl:GetUserGroup() or 'user'
+            group = string.upper(string.sub(group, 1, 1)) .. string.sub(group, 2)
+            draw.SimpleText(group, 'Fated.14', infoX, h - 6, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+            draw.SimpleText(pl:Ping() .. ' мс', 'Fated.16', w - 20, h - 6, Mantle.color.gray, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+
+            local statusColor = color_disconnect
+            if pl:IsBot() then
+                statusColor = Color(70, 150, 220)
+            else
+                statusColor = Color(120, 180, 70)
+            end
+
+            RNDX.DrawCircle(w - 24, 14, 12, statusColor)
+        end
+
+        local avatarImg = vgui.Create('AvatarImage', card)
+        avatarImg:SetSize(AVATAR_SIZE, AVATAR_SIZE)
+        avatarImg:SetPos(AVATAR_X, (CARD_HEIGHT - AVATAR_SIZE) * 0.5)
+        avatarImg:SetPlayer(pl, 64)
+        avatarImg:SetMouseInputEnabled(false)
+        avatarImg:SetKeyboardInputEnabled(false)
+        avatarImg.PaintOver = function() end
+        avatarImg:SetPos(AVATAR_X, (card:GetTall() - AVATAR_SIZE) * 0.5)
+
+        return card
+    end
+
+    for _, pl in player.Iterator() do
+        CreatePlayerCard(pl)
     end
 
     Mantle.ui.menu_player_selector.btn_close = vgui.Create('MantleBtn', Mantle.ui.menu_player_selector)
     Mantle.ui.menu_player_selector.btn_close:Dock(BOTTOM)
-    Mantle.ui.menu_player_selector.btn_close:DockMargin(0, 6, 0, 0)
-    Mantle.ui.menu_player_selector.btn_close:SetTall(30)
+    Mantle.ui.menu_player_selector.btn_close:DockMargin(16, 8, 16, 12)
+    Mantle.ui.menu_player_selector.btn_close:SetTall(36)
     Mantle.ui.menu_player_selector.btn_close:SetTxt('Закрыть')
     Mantle.ui.menu_player_selector.btn_close:SetColorHover(color_disconnect)
     Mantle.ui.menu_player_selector.btn_close.DoClick = function()
-        Mantle.ui.menu_player_selector:AlphaTo(0, 0.1, 0, function()
-            Mantle.ui.menu_player_selector:Remove()
-        end)
+        Mantle.ui.menu_player_selector:Remove()
     end
 end

@@ -2,6 +2,7 @@ Mantle.color = {
     header = Color(51, 51, 51), -- верхняя панель
     background = Color(34, 34, 34), -- фон
     background_alpha = Color(34, 34, 34, 210), -- фон с прозрачностью
+    background_dermapanel = Color(29, 29, 29), -- фон для DermaMenu
 
     sp = Color(53, 53, 53), -- задний фон скролл панели
 
@@ -13,6 +14,8 @@ Mantle.color = {
         Color(60, 60, 64),
         Color(193, 193, 193)
     },
+
+    hover = Color(60, 65, 80),
 
     gray = Color(190, 190, 190, 220)
 }
