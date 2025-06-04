@@ -50,6 +50,10 @@ function PANEL:SetTxt(text)
     self.text = text
 end
 
+function PANEL:SetValue(value)
+    self.bool_enabled = value
+end
+
 function PANEL:GetBool()
     return self.bool_enabled
 end

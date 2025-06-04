@@ -54,6 +54,7 @@ local function CreateMenu()
         btn:SetTall(40)
         btn:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
         btn:Dock(TOP)
+        btn:SetRipple(true)
         CreateCategory('Кнопка (MantleBtn)', {
             {':SetHover(bool is_hover)', 'Включить/выключить цвет наведения (дефолт - true)'},
             {':SetFont(string font)', 'Установить шрифт'},
@@ -62,7 +63,8 @@ local function CreateMenu()
             {':SetTxt(string text)', 'Установить текст'},
             {':SetColor(color col)', 'Установить цвет кнопки'},
             {':SetColorHover(color col)', 'Установить цвет наведения'},
-            {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'}
+            {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'},
+            {':SetRipple(bool is_ripple)', 'Включить/выключить эффект волн (дефолт - false)'}
         }, panel, btn)
 
         -- Чекбокс
@@ -74,6 +76,7 @@ local function CreateMenu()
         checkbox:Dock(TOP)
         CreateCategory('Тумблер (MantleCheckBox)', {
             {':SetTxt(string text)', 'Установить текст'},
+            {':SetValue(bool value)', 'Установить bool-значение тумблера'},
             {':GetBool()', 'Получить bool-значение тумблера'},
             {':SetConvar(string convar)', 'Установить ConVar'},
             {':SetDescription(string desc)', 'Установить описание для тумблера'}
