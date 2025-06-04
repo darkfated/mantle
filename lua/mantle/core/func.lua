@@ -1,6 +1,3 @@
-CreateClientConVar('mantle_col_theme', '[106,108,197]', true, false)
-CreateClientConVar('mantle_col_hoverbtn', '[52,70,109]', true, false)
-
 Mantle.func = {
     sw = ScrW(),
     sh = ScrH()
@@ -188,15 +185,6 @@ local function CreateFunc()
             Lerp(ft, from.a, to.a)
         )
     end
-
-    function Mantle.func.SetCustomColors()
-        local tableTheme = util.JSONToTable(GetConVar('mantle_col_theme'):GetString())
-        local tableHoverButton = util.JSONToTable(GetConVar('mantle_col_hoverbtn'):GetString())
-        Mantle.color.theme = Color(tableTheme[1], tableTheme[2], tableTheme[3])
-        Mantle.color.button_hovered = Color(tableHoverButton[1], tableHoverButton[2], tableHoverButton[3])
-    end
-
-    Mantle.func.SetCustomColors()
 end
 
 CreateFunc()
