@@ -53,12 +53,17 @@ function PANEL:Rebuild()
 
     for id, tab in ipairs(self.tabs) do
         local btnTab = vgui.Create('Button', self.panel_tabs)
-        
         if self.tab_style == 'modern' then
+            surface.SetFont('Fated.18')
+            local textW = select(1, surface.GetTextSize(tab.name))
+            local iconW = tab.icon and 16 or 0
+            local iconTextGap = tab.icon and 8 or 0
+            local padding = 16
+            local btnWidth = padding + iconW + iconTextGap + textW + padding
             btnTab:Dock(LEFT)
             btnTab:DockMargin(0, 0, 6, 0)
             btnTab:SetTall(34)
-            btnTab:SetWide(140)
+            btnTab:SetWide(btnWidth)
         else
             btnTab:Dock(TOP)
             btnTab:DockMargin(0, 0, 0, 6)
@@ -79,34 +84,37 @@ function PANEL:Rebuild()
         btnTab.Paint = function(s, w, h)
             if self.tab_style == 'modern' then
                 -- Современный стиль с индикатором внизу
+                local isActive = self.active_id == id
+
                 if s:IsHovered() then
-                    draw.RoundedBox(8, 0, 0, w, h, color_btn_hovered)
+                    RNDX.Draw(16, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS + (isActive and RNDX.NO_BL + RNDX.NO_BR or 0))
                 end
                 
-                local isActive = self.active_id == id
-                
                 if isActive then
-                    draw.RoundedBox(2, 0, h - self.indicator_height, w, self.indicator_height, Mantle.color.theme)
+                    RNDX.Draw(0, 0, h - self.indicator_height, w, self.indicator_height, Mantle.color.theme)
+                end
+
+                local padding = 16
+                local iconW = tab.icon and 16 or 0
+                local iconTextGap = tab.icon and 8 or 0
+                local textX = padding + (iconW > 0 and (iconW + iconTextGap) or 0)
+
+                if tab.icon then
+                    RNDX.DrawMaterial(0, padding, (h - 16) * 0.5, 16, 16, isActive and Mantle.color.theme or color_white, tab.icon)
                 end
 
                 draw.SimpleText(
-                    tab.name, 
-                    'Fated.18', 
-                    tab.icon and 34 or w * 0.5, 
-                    h * 0.5, 
-                    isActive and Mantle.color.theme or color_white, 
-                    tab.icon and TEXT_ALIGN_LEFT or TEXT_ALIGN_CENTER, 
+                    tab.name,
+                    'Fated.18',
+                    textX,
+                    h * 0.5,
+                    isActive and Mantle.color.theme or color_white,
+                    TEXT_ALIGN_LEFT,
                     TEXT_ALIGN_CENTER
                 )
-
-                if tab.icon then
-                    surface.SetDrawColor(isActive and Mantle.color.theme or color_white)
-                    surface.SetMaterial(tab.icon)
-                    surface.DrawTexturedRect(8, (h - 20) * 0.5, 20, 20)
-                end
             else
                 if s:IsHovered() then
-                    draw.RoundedBox(8, 0, 0, w, h, color_btn_hovered)
+                    RNDX.Draw(24, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS)
                 end
 
                 local color_target = Color(255, 255, 255)
@@ -120,15 +128,13 @@ function PANEL:Rebuild()
                 local b = Lerp(FrameTime() * self.animation_speed, color_draw.b, color_target.b)
                 color_draw = Color(r, g, b)
 
-                draw.SimpleText(tab.name, 'Fated.20', 41, h * 0.5, color_black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                draw.SimpleText(tab.name, 'Fated.20', 40, h * 0.5 - 1, color_draw, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(tab.name, 'Fated.20', 39, h * 0.5, color_black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(tab.name, 'Fated.20', 38, h * 0.5 - 1, color_draw, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
                 if tab.icon then
-                    surface.SetDrawColor(color_draw)
-                    surface.SetMaterial(tab.icon)
-                    surface.DrawTexturedRect(2, 2, 30, 30)
+                    RNDX.DrawMaterial(0, 5, 5, 24, 24, color_draw, tab.icon)
                 else
-                    draw.RoundedBox(6, 0, 0, 30, 30, color_draw)
+                    RNDX.Draw(24, 5, 5, 24, 24, color_draw, RNDX.SHAPE_IOS)
                 end
             end
         end

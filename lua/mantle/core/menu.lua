@@ -133,8 +133,13 @@ local function CreateMenu()
         CreateCategory('Панель прокрутки (MantleScrollPanel)', {}, panel, sp)
 
         -- Вкладки
-        local testTabs = vgui.Create('MantleTabs')
-        testTabs:SetTall(80)
+        local panelTabs = vgui.Create('DPanel')
+        panelTabs:Dock(TOP)
+        panelTabs:SetTall(200)
+        panelTabs.Paint = nil
+
+        local testTabs = vgui.Create('MantleTabs', panelTabs) -- modern стиль
+        testTabs:SetTall(90)
         testTabs:DockMargin(menuWide * 0.05, 6, menuWide * 0.05, 0)
         testTabs:Dock(TOP)
         local testTab1 = vgui.Create('DPanel')
@@ -147,12 +152,29 @@ local function CreateMenu()
             draw.RoundedBox(6, 0, 0, w, h, Color(108, 41, 45))
         end
         testTabs:AddTab('Test2', testTab2)
+
+        local testTabs2 = vgui.Create('MantleTabs', panelTabs) -- classic стиль
+        testTabs2:SetTall(90)
+        testTabs2:DockMargin(menuWide * 0.05, 10, menuWide * 0.05, 0)
+        testTabs2:Dock(TOP)
+        testTabs2:SetTabStyle('classic')
+        local testTab3 = vgui.Create('DPanel')
+        testTab3.Paint = function(_, w, h)
+            draw.RoundedBox(6, 0, 0, w, h, Color(51, 61, 116))
+        end
+        testTabs2:AddTab('Test3', testTab3)
+        local testTab4 = vgui.Create('DPanel')
+        testTab4.Paint = function(_, w, h)
+            draw.RoundedBox(6, 0, 0, w, h, Color(138, 89, 43))
+        end
+        testTabs2:AddTab('Test4', testTab4)
+
         CreateCategory('Вкладки (MantleTabs)', {
             {':SetTabStyle(string style)', 'Установить стиль вкладок (modern или classic)'},
             {':SetTabHeight(int height)', 'Установить высоту вкладок'},
             {':SetIndicatorHeight(int height)', 'Установить высоту индикатора вкладок'},
             {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'}
-        }, panel, testTabs)
+        }, panel, panelTabs)
 
         -- Категория
         local cat = vgui.Create('MantleCategory')
@@ -209,7 +231,7 @@ local function CreateMenu()
         
                 for i = 1, 5 do
                     DM:AddOption('Опция ' .. i, function()
-                        chat.AddText('Привет всем!')
+                        chat.AddText('Привет всем! ' .. i)
                     end)
                 end
         
@@ -337,7 +359,7 @@ local function CreateMenu()
         return panel
     end
 
-    tabs:AddTab('Настройки', CreateTabSettings(), Material('icon16/bullet_wrench.png'))
+    tabs:AddTab('Настройки', CreateTabSettings())
 end
 
 concommand.Add('mantle_menu', CreateMenu)
