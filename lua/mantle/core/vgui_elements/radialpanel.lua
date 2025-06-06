@@ -9,6 +9,8 @@ local math_min = math.min
 
 function PANEL:Init()
     self.options = {}
+    self.menuStack = {}
+    self.currentMenu = nil
 
     local baseRadius = 280
     local baseInnerRadius = 96
@@ -75,7 +77,7 @@ function PANEL:Init()
                 local angle = math_atan2(mouseY - centerY, mouseX - centerX)
                 if angle < 0 then angle = angle + math_rad(360) end
                 
-                local optionCount = #self.options
+                local optionCount = #self:GetCurrentOptions()
                 if optionCount > 0 then
                     local sectorSize = math_rad(360) / optionCount
                     local selectedIndex = math.floor(angle / sectorSize) + 1
@@ -83,10 +85,16 @@ function PANEL:Init()
                     if selectedIndex <= optionCount then
                         self:SelectOption(selectedIndex)
                         Mantle.func.sound()
-                        self:Remove()
                     end
                 end
-            elseif dist <= self.innerRadius or dist >= self.radius then
+            elseif dist <= self.innerRadius then
+                if #self.menuStack > 0 then
+                    self:GoBack()
+                    Mantle.func.sound()
+                else
+                    self:Remove()
+                end
+            elseif dist >= self.radius then
                 self:Remove()
             end
         end
@@ -100,7 +108,7 @@ function PANEL:Init()
             local angle = math_atan2(mouseY - centerY, mouseX - centerX)
             if angle < 0 then angle = angle + math_rad(360) end
             
-            local optionCount = #self.options
+            local optionCount = #self:GetCurrentOptions()
             if optionCount > 0 then
                 local sectorSize = math_rad(360) / optionCount
                 hovered = math.floor(angle / sectorSize) + 1
@@ -159,11 +167,11 @@ function PANEL:Paint(w, h)
     draw.SimpleText(self.centerText, self.titleFont, centerX, centerY - Mantle.func.h(13) * self.scale, Color(255, 255, 255, self.currentAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(self.centerDesc, self.descFont, centerX, centerY + Mantle.func.h(13) * self.scale, Color(255, 255, 255, 180 * alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     
-    local optionCount = #self.options
+    local optionCount = #self:GetCurrentOptions()
     if optionCount > 0 then
         local sectorSize = math_rad(360) / optionCount
         
-        for i, option in ipairs(self.options) do
+        for i, option in ipairs(self:GetCurrentOptions()) do
             local startAngle = (i - 1) * sectorSize
             local endAngle = i * sectorSize
             local midAngle = startAngle + sectorSize / 2
@@ -225,14 +233,31 @@ function PANEL:DrawCircleOutline(cx, cy, radius, color, thickness)
     surface.DrawLine(points[#points].x, points[#points].y, points[1].x, points[1].y)
 end
 
-function PANEL:AddOption(text, func, icon, desc)
-    table.insert(self.options, {text = text, func = func, icon = icon, desc = desc})
+function PANEL:AddOption(text, func, icon, desc, submenu)
+    table.insert(self.options, {
+        text = text,
+        func = func,
+        icon = icon,
+        desc = desc,
+        submenu = submenu
+    })
     return #self.options
 end
 
 function PANEL:SelectOption(index)
-    if self.options[index] and self.options[index].func then
-        self.options[index].func()
+    local options = self:GetCurrentOptions()
+    if options[index] then
+        local option = options[index]
+        
+        if option.submenu then
+            table.insert(self.menuStack, self.currentMenu)
+
+            self.currentMenu = option.submenu
+            self:UpdateCenterText()
+        elseif option.func then
+            option.func()
+            self:Remove()
+        end
     end
 end
 
@@ -269,4 +294,52 @@ function Mantle.ui.radial_menu(x, y)
     local m = vgui.Create('MantleRadialPanel')
     Mantle.ui.menu_radial = m
     return m
+end
+
+function PANEL:GetCurrentOptions()
+    if self.currentMenu then
+        return self.currentMenu.options or {}
+    end
+    return self.options
+end
+
+function PANEL:GoBack()
+    if #self.menuStack > 0 then
+        self.currentMenu = table.remove(self.menuStack)
+        self:UpdateCenterText()
+    end
+end
+
+function PANEL:UpdateCenterText()
+    if self.currentMenu then
+        self.centerText = self.currentMenu.title or 'Меню'
+        self.centerDesc = self.currentMenu.desc or 'Выберите опцию'
+    else
+        self.centerText = 'Меню'
+        self.centerDesc = 'Выберите опцию'
+    end
+end
+
+function PANEL:CreateSubMenu(title, desc)
+    local submenu = {
+        title = title,
+        desc = desc,
+        options = {}
+    }
+
+    function submenu:AddOption(text, func, icon, desc)
+        table.insert(self.options, {
+            text = text,
+            func = func,
+            icon = icon,
+            desc = desc
+        })
+        return #self.options
+    end
+
+    return submenu
+end
+
+function PANEL:AddSubMenuOption(text, submenu, icon, desc)
+    return self:AddOption(text, nil, icon, desc, submenu)
 end

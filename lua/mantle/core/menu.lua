@@ -277,6 +277,17 @@ local function CreateMenu()
             {'Круговое меню', function()
                 local rm = Mantle.ui.radial_menu()
                 rm:SetCenterText('Действия', 'Выберите действие')
+
+                local weaponsMenu = rm:CreateSubMenu('Оружие', 'Выберите оружие')
+                weaponsMenu:AddOption('Пистолет', function() 
+                    chat.AddText(Mantle.color.theme, 'Выбран пистолет') 
+                end, 'icon16/gun.png', 'Обычный пистолет')
+                weaponsMenu:AddOption('Винтовка', function() 
+                    chat.AddText(Mantle.color.theme, 'Выбрана винтовка') 
+                end, 'icon16/gun.png', 'Мощная винтовка')
+                rm:AddSubMenuOption('Оружие', weaponsMenu, 'icon16/gun.png', 'Выберите оружие')
+
+                -- Обычные опции
                 rm:AddOption('Выбросить', function()
                     chat.AddText('Выбросить оружие')
                 end, 'icon16/gun.png', 'Выбросить оружие')
@@ -318,7 +329,7 @@ local function CreateMenu()
 
         return panel
     end
-    
+
     tabs:AddTab('Всплывающие', CreateShowMenus(), Material('icon16/database.png'))
 end
 
