@@ -275,16 +275,26 @@ local function CreateMenu()
                 end)
             end},
             {'Круговое меню', function()
-                local config = {
-                    {name = 'Вывести 1', func = function() chat.AddText('1') end},
-                    {name = 'Вывести 2', func = function() chat.AddText('2') end},
-                    {name = 'Вывести 3', func = function() chat.AddText('3') end},
-                    {name = 'Вывести 4', func = function() chat.AddText('4') end},
-                    {name = 'Вывести 5', func = function() chat.AddText('5') end},
-                    {name = 'Вывести 6', func = function() chat.AddText('6') end}
-                }
-
-                Mantle.ui.radial_panel(config)
+                local rm = Mantle.ui.radial_menu()
+                rm:SetCenterText('Действия', 'Выберите действие')
+                rm:AddOption('Выбросить', function()
+                    chat.AddText('Выбросить оружие')
+                end, 'icon16/gun.png', 'Выбросить оружие')
+                rm:AddOption('Кинуть кубик', function()
+                    chat.AddText('Действие выполнено')
+                end, 'icon16/controller.png', 'Рандом кубика')
+                rm:AddOption('Погибнуть', function()
+                    chat.AddText('Действие выполнено')
+                end, 'icon16/world.png', 'Попрощаться с миром')
+                rm:AddOption('Хакнуть', function()
+                    chat.AddText('Действие выполнено')
+                end, 'icon16/server.png', 'Взломать сервер')
+                rm:AddOption('Посмотреть баланс', function()
+                    chat.AddText('Действие выполнено')
+                end, 'icon16/money.png', 'Сколько у вас денег')
+                rm:AddOption('Нет иконки', function()
+                    chat.AddText('Действие выполнено')
+                end, nil, 'Где иконка?')
             end},
             {'Написание текста', function()
                 Mantle.ui.text_box('Заголовок', 'Описание того, что вводиться', function(s)
