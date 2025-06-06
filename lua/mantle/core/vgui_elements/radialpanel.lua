@@ -135,8 +135,7 @@ function PANEL:Paint(w, h)
     local centerX, centerY = Mantle.func.sw / 2, Mantle.func.sh / 2
     local alpha = self.currentAlpha/255
 
-    surface.SetDrawColor(0, 0, 0, 200 * alpha)
-    surface.DrawRect(0, 0, w, h)
+    RNDX.Draw(0, 0, 0, w, h, Color(0, 0, 0, 100 * alpha), RNDX.SHAPE_RECT)
     
     local outerSize = self.radius * 2 + Mantle.func.w(20) * self.scale
     local currentRadius = self.radius * self.scaleAnim
@@ -177,9 +176,7 @@ function PANEL:Paint(w, h)
             if option.icon and option.icon != false and option.icon != nil then
                 local iconMat = Material(option.icon)
                 local iconSize = Mantle.func.w(32) * self.scale * self.scaleAnim
-                surface.SetMaterial(iconMat)
-                surface.SetDrawColor(255, 255, 255, self.currentAlpha)
-                surface.DrawTexturedRect(textX - iconSize/2, textY - iconSize - Mantle.func.h(8) * self.scale * self.paddingScale, iconSize, iconSize)
+                RNDX.DrawMaterial(0, textX - iconSize/2, textY - iconSize - Mantle.func.h(8) * self.scale * self.paddingScale, iconSize, iconSize, Color(255, 255, 255, self.currentAlpha), iconMat)
                 
                 draw.SimpleText(option.text, self.font, textX, textY + Mantle.func.h(4) * self.scale * self.paddingScale, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 
