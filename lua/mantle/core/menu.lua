@@ -345,6 +345,117 @@ local function CreateMenu()
     end
 
     tabs:AddTab('Всплывающие', CreateShowMenus(), Material('icon16/database.png'))
+
+    local function CreateLegacyTest()
+        local panel = vgui.Create('MantleScrollPanel')
+        local menuWide = menuMantle:GetWide()
+
+        local btnFrame = vgui.Create('MantleBtn')
+        btnFrame:SetTxt('Открыть Legacy Frame')
+        btnFrame:SetTall(40)
+        btnFrame:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        btnFrame:Dock(TOP)
+        btnFrame.DoClick = function()
+            local frame = vgui.Create('DFrame')
+            frame:SetSize(400, 300)
+            frame:Center()
+            frame:MakePopup()
+            Mantle.ui.frame(frame, 'Legacy Frame', 400, 300, true, true)
+            
+            local scroll = vgui.Create('DScrollPanel', frame)
+            scroll:Dock(FILL)
+            Mantle.ui.sp(scroll)
+            
+            -- Тест кнопок с разными параметрами
+            local btn1 = vgui.Create('DButton', scroll)
+            btn1:Dock(TOP)
+            btn1:DockMargin(10, 10, 10, 0)
+            btn1:SetText('Обычная кнопка')
+            Mantle.ui.btn(btn1)
+            
+            local btn2 = vgui.Create('DButton', scroll)
+            btn2:Dock(TOP)
+            btn2:DockMargin(10, 10, 10, 0)
+            btn2:SetText('Кнопка с иконкой')
+            Mantle.ui.btn(btn2, Material('icon16/accept.png'), 16)
+            
+            local btn3 = vgui.Create('DButton', scroll)
+            btn3:Dock(TOP)
+            btn3:DockMargin(10, 10, 10, 0)
+            btn3:SetText('Кнопка без градиента')
+            Mantle.ui.btn(btn3, nil, nil, nil, nil, true)
+            
+            local btn4 = vgui.Create('DButton', scroll)
+            btn4:Dock(TOP)
+            btn4:DockMargin(10, 10, 10, 0)
+            btn4:SetText('Кнопка без ховера')
+            Mantle.ui.btn(btn4, nil, nil, nil, nil, nil, nil, true)
+            
+            -- Тест слайдеров
+            local slider1 = Mantle.ui.slidebox(scroll, 'Слайдер (0-100)', 0, 100, 'net_graph', 0)
+            slider1:DockMargin(10, 20, 10, 0)
+            
+            local slider2 = Mantle.ui.slidebox(scroll, 'Слайдер (0-1)', 0, 1, 'cl_drawhud', 2)
+            slider2:DockMargin(10, 20, 10, 0)
+            
+            -- Тест полей ввода
+            local entry1, entry_bg1 = Mantle.ui.desc_entry(scroll, 'Поле с заголовком', 'Введите текст...')
+            entry_bg1:DockMargin(10, 20, 10, 0)
+            
+            local entry2, entry_bg2 = Mantle.ui.desc_entry(scroll, nil, 'Поле без заголовка')
+            entry_bg2:DockMargin(10, 20, 10, 0)
+            
+            -- Тест чекбоксов
+            local checkbox1, checkbox_btn1 = Mantle.ui.checkbox(scroll, 'Чекбокс с ConVar', 'cl_drawhud')
+            checkbox1:DockMargin(10, 20, 10, 0)
+            
+            local checkbox2, checkbox_btn2 = Mantle.ui.checkbox(scroll, 'Чекбокс без ConVar')
+            checkbox2:DockMargin(10, 20, 10, 0)
+            
+            -- Тест вкладок
+            local panelTabs = vgui.Create('DPanel', scroll)
+            panelTabs:Dock(TOP)
+            panelTabs:SetTall(250)
+            panelTabs.Paint = nil
+
+            local tabs = Mantle.ui.panel_tabs(panelTabs)
+            tabs:DockMargin(10, 20, 10, 0)
+            
+            -- Добавляем вкладки с разными стилями
+            local tab1 = vgui.Create('DPanel')
+            tab1.Paint = function(_, w, h)
+                draw.SimpleText('Вкладка 1', 'Fated.20', w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            tabs:AddTab('Вкладка 1', tab1, 'icon16/page_white.png')
+            
+            local tab2 = vgui.Create('DPanel')
+            tab2.Paint = function(_, w, h)
+                draw.SimpleText('Вкладка 2', 'Fated.20', w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            tabs:AddTab('Вкладка 2', tab2, 'icon16/page_white_edit.png', Color(100, 200, 100))
+            
+            local tab3 = vgui.Create('DPanel')
+            tab3.Paint = function(_, w, h)
+                draw.SimpleText('Вкладка 3', 'Fated.20', w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            tabs:AddTab('Вкладка 3', tab3, 'icon16/page_white_gear.png', nil, Color(200, 100, 100))
+            
+            tabs:ActiveTab('Вкладка 1')
+        end
+        CreateCategory('Legacy Frame (не стоит использовать)', {
+            {'Mantle.ui.frame(frame, title, width, height, close_bool, anim_bool)', 'Создание окна с кастомным стилем'},
+            {'Mantle.ui.sp(scroll)', 'Стилизация скролл панели'},
+            {'Mantle.ui.btn(btn, icon, icon_size, btn_color, btn_radius, off_grad_bool, btn_color_hov, off_hov_bool)', 'Стилизация кнопки'},
+            {'Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, decimals)', 'Создание слайдера'},
+            {'Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)', 'Создание поля ввода'},
+            {'Mantle.ui.checkbox(parent, text, convar)', 'Создание чекбокса'},
+            {'Mantle.ui.panel_tabs(parent)', 'Создание панели с вкладками'}
+        }, panel, btnFrame)
+
+        return panel
+    end
+
+    tabs:AddTab('Legacy UI', CreateLegacyTest(), Material('icon16/application_view_list.png'))
 end
 
 concommand.Add('mantle_menu', CreateMenu)

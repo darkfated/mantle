@@ -172,7 +172,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, d
 end
 
 function Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)
-    if !bool_title_off then
+    if !bool_title_off and title then
         local label = vgui.Create('DLabel', parent)
         label:Dock(TOP)
         label:DockMargin(4, 0, 4, 0)
