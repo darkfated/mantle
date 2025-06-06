@@ -246,6 +246,59 @@ local function CreateMenu()
             {':OnSelect(idx, text, data)', 'Вызывается при выборе варианта: idx — индекс, text — текст, data — значение'}
         }, panel, combo)
 
+        -- Таблица
+        local tableExample = vgui.Create('MantleTable')
+        tableExample:Dock(TOP)
+        tableExample:DockMargin(menuWide * 0.1, 6, menuWide * 0.1, 0)
+        tableExample:SetTall(250)
+
+        tableExample:AddColumn('Название', 200, TEXT_ALIGN_LEFT, true)
+        tableExample:AddColumn('Тип', 120, TEXT_ALIGN_CENTER, true)
+        tableExample:AddColumn('Качество', 100, TEXT_ALIGN_CENTER, true)
+        tableExample:AddColumn('Цена', 100, TEXT_ALIGN_RIGHT, true)
+
+        local products = {
+            {'Молоко "Домик в деревне"', 'Молочка', 'Высшее', '89'},
+            {'Хлеб "Бородинский"', 'Выпечка', 'Стандарт', '45'},
+            {'Сок "Добрый"', 'Напитки', 'Премиум', '120'},
+            {'Шоколад "Аленка"', 'Конфеты', 'Высшее', '95'},
+            {'Йогурт "Активиа"', 'Молочка', 'Премиум', '65'},
+            {'Пельмени "Сибирские"', 'Заморозка', 'Стандарт', '350'},
+            {'Колбаса "Докторская"', 'Мясо', 'Высшее', '450'},
+            {'Сыр "Российский"', 'Молочка', 'Стандарт', '380'},
+            {'Пицца "Пепперони"', 'Заморозка', 'Премиум', '450'},
+            {'Чай "Липтон"', 'Напитки', 'Стандарт', '180'},
+            {'Печенье "Юбилейное"', 'Выпечка', 'Стандарт', '85'},
+            {'Масло "Крестьянское"', 'Молочка', 'Высшее', '120'},
+            {'Сметана "Простоквашино"', 'Молочка', 'Стандарт', '65'},
+            {'Курица "Бройлер"', 'Мясо', 'Стандарт', '280'},
+            {'Рыба "Минтай"', 'Морепродукты', 'Стандарт', '320'},
+            {'Яблоки "Голден"', 'Фрукты', 'Высшее', '180'},
+            {'Картофель', 'Овощи', 'Стандарт', '45'},
+            {'Морковь', 'Овощи', 'Стандарт', '35'},
+            {'Бананы', 'Фрукты', 'Стандарт', '120'},
+            {'Апельсины', 'Фрукты', 'Премиум', '180'}
+        }
+
+        for _, product in ipairs(products) do
+            tableExample:AddItem(unpack(product))
+        end
+        
+        tableExample:SetAction(function(row_data)
+            chat.AddText(color_white, 'Выбран продукт: ', Mantle.color.theme, row_data[1], color_white, ' (', row_data[2], ')')
+        end)
+
+        CreateCategory('Таблица (MantleTable)', {
+            {':AddColumn(string name, number width, number align, bool sortable)', 'Добавить колонку'},
+            {':AddItem(...)', 'Добавить строку. Количество аргументов должно соответствовать количеству колонок'},
+            {':SetAction(function(table row_data))', 'Установить функцию, вызываемую при клике на строку. row_data — массив значений строки'},
+            {':SetRightClickAction(function(table row_data))', 'Установить функцию, вызываемую при правом клике на строку'},
+            {':Clear()', 'Очистить таблицу от всех строк'},
+            {':GetSelectedRow()', 'Получить данные выбранной строки (массив значений)'},
+            {':GetRowCount()', 'Получить количество строк в таблице'},
+            {':RemoveRow(number index)', 'Удалить строку по индексу (начиная с 1)'}
+        }, panel, tableExample)
+
         return panel
     end
 
