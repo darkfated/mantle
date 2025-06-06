@@ -116,10 +116,7 @@ function PANEL:Paint(w, h)
         
         local posX = (w - surface.GetTextSize(self.text) - self.icon_size) * 0.5 - 2
         local posY = (h - self.icon_size) * 0.5
-
-        surface.SetDrawColor(color_white)
-        surface.SetMaterial(self.icon)
-        surface.DrawTexturedRect(posX, posY, self.icon_size, self.icon_size)
+        RNDX.DrawMaterial(0, posX, posY, self.icon_size, self.icon_size, color_white, self.icon)
     end
 end
 

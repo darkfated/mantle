@@ -133,8 +133,7 @@ function PANEL:OpenMenu()
             )
 
             if self.selected == choice.text then
-                surface.SetDrawColor(Mantle.color.theme)
-                surface.DrawRect(4, h * 0.5 - 1, 4, 2)
+                RNDX.Draw(0, 4, h * 0.5 - 1, 4, 2, Mantle.color.theme)
             end
         end
         option.DoClick = function()
