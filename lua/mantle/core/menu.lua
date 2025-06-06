@@ -181,11 +181,16 @@ local function CreateMenu()
         }, panel, panelTabs)
 
         -- Категория
-        local cat = vgui.Create('MantleCategory')
-        cat:SetTall(110)
+        local panelCat = vgui.Create('Panel')
+        panelCat:Dock(TOP)
+        panelCat:DockMargin(0, 6, 0, 0)
+        panelCat:SetTall(142)
+        panelCat.Paint = nil
+
+        local cat = vgui.Create('MantleCategory', panelCat)
         cat:Dock(TOP)
-        cat:DockMargin(0, 6, 0, 0)
         cat:SetCenterText(true)
+        cat:SetActive(true)
         local panGreen = vgui.Create('DPanel')
         panGreen:Dock(TOP)
         panGreen:SetTall(50)
@@ -207,7 +212,7 @@ local function CreateMenu()
             {':SetColor(color col)', 'Установить кастомный цвет категории'},
             {':SetCenterText(bool is_centered)', 'Установить центрирование названия'},
             {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'}
-        }, panel, cat)
+        }, panel, panelCat)
 
         -- Слайдер
         local slider = vgui.Create('MantleSlideBox')
