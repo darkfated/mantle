@@ -7,13 +7,14 @@ local math_atan2 = math.atan2
 local math_sqrt = math.sqrt
 local math_min = math.min
 
-function PANEL:Init()
+function PANEL:Init(options)
+    options = options or {}
     self.options = {}
     self.menuStack = {}
     self.currentMenu = nil
 
-    local baseRadius = 280
-    local baseInnerRadius = 96
+    local baseRadius = options.radius or 280
+    local baseInnerRadius = options.inner_radius or 96
     
     local minWidth = 1366
     local minHeight = 768
@@ -50,6 +51,11 @@ function PANEL:Init()
     self.currentAlpha = 0
     self.scaleAnim = 0
     self.scale = scale
+
+    -- Кастомизация
+    self.disable_background = options.disable_background or false
+    self.hover_sound = options.hover_sound or "mantle/ratio_btn.ogg"
+    self.scale_animation = options.scale_animation != false
     
     self:SetSize(Mantle.func.sw, Mantle.func.sh)
     self:SetPos(0, 0)
@@ -63,8 +69,12 @@ function PANEL:Init()
     self.Think = function()
         if self.currentAlpha < 255 then
             self.currentAlpha = math.Clamp(255 * ((SysTime() - self.blurStart) / self.fadeInTime), 0, 255)
-            self.scaleAnim = math.Clamp(((SysTime() - self.blurStart) / self.fadeInTime), 0, 1)
-            self.scaleAnim = 0.8 + (self.scaleAnim * 0.2)
+            if self.scale_animation then
+                self.scaleAnim = math.Clamp(((SysTime() - self.blurStart) / self.fadeInTime), 0, 1)
+                self.scaleAnim = 0.8 + (self.scaleAnim * 0.2)
+            else
+                self.scaleAnim = 1
+            end
         end
     
         local mouseDown = input.IsMouseDown(MOUSE_LEFT)
@@ -116,6 +126,10 @@ function PANEL:Init()
             end
         end
         
+        if self.hoverOption != hovered and hovered and self.hover_sound then
+            surface.PlaySound(self.hover_sound)
+        end
+        
         self.hoverOption = hovered
         self.hoverAnim = math.Clamp(self.hoverAnim + (self.hoverOption and 4 or -8) * FrameTime(), 0, 1)
         self._mouseWasDown = mouseDown
@@ -143,7 +157,9 @@ function PANEL:Paint(w, h)
     local centerX, centerY = Mantle.func.sw / 2, Mantle.func.sh / 2
     local alpha = self.currentAlpha/255
 
-    RNDX.Draw(0, 0, 0, w, h, Color(0, 0, 0, 100 * alpha), RNDX.SHAPE_RECT)
+    if not self.disable_background then
+        RNDX.Draw(0, 0, 0, w, h, Color(0, 0, 0, 100 * alpha), RNDX.SHAPE_RECT)
+    end
     
     local outerSize = self.radius * 2 + Mantle.func.w(20) * self.scale
     local currentRadius = self.radius * self.scaleAnim
@@ -286,12 +302,13 @@ end
 
 vgui.Register('MantleRadialPanel', PANEL, 'DPanel')
 
-function Mantle.ui.radial_menu(x, y)
+function Mantle.ui.radial_menu(options)
     if IsValid(Mantle.ui.menu_radial) then
         Mantle.ui.menu_radial:Remove()
     end
     
     local m = vgui.Create('MantleRadialPanel')
+    m:Init(options)
     Mantle.ui.menu_radial = m
     return m
 end

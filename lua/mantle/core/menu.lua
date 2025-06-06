@@ -275,6 +275,20 @@ local function CreateMenu()
                 end)
             end},
             {'Круговое меню', function()
+                --[[
+                Имеется возможность настроить радиальное меню
+
+                local configRadial = {
+                    disable_background = true, -- отключает фон
+                    hover_sound = 'buttons/button14.wav', -- звук при наведении
+                    scale_animation = false, -- отключает анимацию масштабирования
+                    radius = 300, -- радиус меню
+                    inner_radius = 100 -- радиус внутреннего круга
+                }
+
+                local rm = Mantle.ui.radial_menu(configRadial)
+                --]]
+
                 local rm = Mantle.ui.radial_menu()
                 rm:SetCenterText('Действия', 'Выберите действие')
 
