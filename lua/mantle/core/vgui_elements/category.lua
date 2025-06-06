@@ -45,10 +45,24 @@ function PANEL:AddItem(panel)
     local _, marginTop, _, marginBottom = panel:GetDockMargin()
 
     self.content_size = self.content_size + panel:GetTall() + marginTop + marginBottom
+
+    if self.bool_opened then
+        self:SetTall(30 + self.content_size + 12)
+    end
 end
 
 function PANEL:SetColor(col)
     self.header_color_standard = col
+end
+
+function PANEL:SetActive(is_active)
+    if self.bool_opened == is_active then return end
+    
+    self.bool_opened = is_active
+    self.header_color = is_active and self.header_color_opened or self.header_color_standard
+    
+    local totalTall = 30 + (is_active and self.content_size + 12 or 0)
+    self:SetTall(totalTall)
 end
 
 function PANEL:PerformLayout(w, h)

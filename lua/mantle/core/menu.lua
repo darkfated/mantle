@@ -31,11 +31,15 @@ local function CreateMenu()
         pan:AddItem(panelInfo)
     end
 
-    local function CreateCategory(name, info_table, pan, ui_element)
+    local function CreateCategory(name, info_table, pan, ui_element, is_active)
         local panel = vgui.Create('MantleCategory', pan)
         panel:Dock(TOP)
         panel:DockMargin(0, 0, 0, 6)
         panel:SetText(name)
+
+        if is_active then
+            panel:SetActive(true)
+        end
 
         for _, info in ipairs(info_table) do
             CreateInfo(info, panel)
@@ -201,7 +205,8 @@ local function CreateMenu()
             {':SetText(string name)', 'Установить название'},
             {':AddItem(object panel)', 'Добавить в категорию элемент'},
             {':SetColor(color col)', 'Установить кастомный цвет категории'},
-            {':SetCenterText(bool is_centered)', 'Установить центрирование названия'}
+            {':SetCenterText(bool is_centered)', 'Установить центрирование названия'},
+            {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'}
         }, panel, cat)
 
         -- Слайдер
@@ -450,7 +455,7 @@ local function CreateMenu()
             {'Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)', 'Создание поля ввода'},
             {'Mantle.ui.checkbox(parent, text, convar)', 'Создание чекбокса'},
             {'Mantle.ui.panel_tabs(parent)', 'Создание панели с вкладками'}
-        }, panel, btnFrame)
+        }, panel, btnFrame, true)
 
         return panel
     end
