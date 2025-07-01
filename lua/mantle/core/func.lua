@@ -13,27 +13,32 @@ local function CreateFonts()
     end
 
     local old_surface_SetFont = surface.SetFont
-
     local createdFonts = {
         ['Fated.16'] = true
     }
-
     CreateFont('Fated.16', 'Montserrat Medium', 16)
 
     function surface.SetFont(font)
-        if font:sub(1,6) == 'Fated.' and not createdFonts[font] then
-            local sizePart = font:sub(7)
-            local isBold = sizePart:sub(-1) == 'b'
-            local numPart = isBold and sizePart:sub(1, -2) or sizePart
-            local sizeNum = tonumber(numPart)
-
-            if sizeNum then
-                local family = isBold and 'Montserrat Bold' or 'Montserrat Medium'
-                CreateFont(font, family, sizeNum)
+        if type(font) != 'string' then
+            if font == nil then
+                ErrorNoHalt('surface.SetFont called with nil! Using fallback font')
+                old_surface_SetFont('DermaDefault')
+                return
             end
-
-            createdFonts[font] = true
+            old_surface_SetFont(font)
+            return
         end
+
+        if !createdFonts[font] and font:match('^Fated%.') then
+            local size, isBold = font:match('^Fated%.(%d+)(b?)$')
+            if size then
+                size = tonumber(size)
+                local fontFamily = isBold == 'b' and 'Montserrat Bold' or 'Montserrat Medium'
+                CreateFont(font, fontFamily, size)
+                createdFonts[font] = true
+            end
+        end
+        
         old_surface_SetFont(font)
     end
 end
