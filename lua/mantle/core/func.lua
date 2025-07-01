@@ -12,13 +12,29 @@ local function CreateFonts()
         })
     end
 
-    CreateFont('Fated.12', 'Montserrat Medium', 12)
-    CreateFont('Fated.17', 'Montserrat Medium', 17)
-    CreateFont('Fated.19', 'Montserrat Medium', 19)
+    local old_surface_SetFont = surface.SetFont
 
-    for s = 14, 40, 2 do
-        CreateFont('Fated.' .. s, 'Montserrat Medium', s)
-        CreateFont('Fated.' .. s .. 'b', 'Montserrat Bold', s) -- жирный вариант
+    local createdFonts = {
+        ['Fated.16'] = true
+    }
+
+    CreateFont('Fated.16', 'Montserrat Medium', 16)
+
+    function surface.SetFont(font)
+        if font:sub(1,6) == 'Fated.' and not createdFonts[font] then
+            local sizePart = font:sub(7)
+            local isBold = sizePart:sub(-1) == 'b'
+            local numPart = isBold and sizePart:sub(1, -2) or sizePart
+            local sizeNum = tonumber(numPart)
+
+            if sizeNum then
+                local family = isBold and 'Montserrat Bold' or 'Montserrat Medium'
+                CreateFont(font, family, sizeNum)
+            end
+
+            createdFonts[font] = true
+        end
+        old_surface_SetFont(font)
     end
 end
 
@@ -189,6 +205,6 @@ hook.Add('OnScreenSizeChanged', 'Mantle', function()
         Mantle.func.h_save = {}
 
         CreateFunc()
-        CreateFonts()
+        -- CreateFonts()
     end
 end)
