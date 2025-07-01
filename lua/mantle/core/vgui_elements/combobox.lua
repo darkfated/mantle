@@ -103,10 +103,8 @@ function PANEL:OpenMenu()
     self.menu:SetKeyboardInputEnabled(false)
     self.menu:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding)
     self.menu.Paint = function(s, w, h)
-        local x, y = s:LocalToScreen(0, 0)
-        BShadows.BeginShadow()
-            RNDX.Draw(16, x, y, w, h, Mantle.color.background_dermapanel, RNDX.SHAPE_IOS)
-        BShadows.EndShadow(1, 2, 2, 255, 0, 0)
+        RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.background_dermapanel, RNDX.SHAPE_IOS)
     end
 
     surface.SetFont(self.font)

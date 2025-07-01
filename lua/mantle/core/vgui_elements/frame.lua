@@ -94,18 +94,15 @@ local flagsHeader = RNDX.NO_BL + RNDX.NO_BR
 local flagsBackground = RNDX.NO_TL + RNDX.NO_TR
 
 function PANEL:Paint(w, h)
-    local x, y = self:LocalToScreen()
+    RNDX.DrawShadows(6, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
+    RNDX.Draw(6, 0, 0, w, 24, Mantle.color.header, flagsHeader)
+    RNDX.Draw(6, 0, 24, w, h - 24, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, flagsBackground)
 
-    BShadows.BeginShadow()
-        RNDX.Draw(6, x, y, w, 24, Mantle.color.header, flagsHeader)
-        RNDX.Draw(6, x, y + 24, w, h - 24, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, flagsBackground)
+    if self.center_title != '' then
+        draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
 
-        if self.center_title != '' then
-            draw.SimpleText(self.center_title, 'Fated.20b', x + w * 0.5, y + 12, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
-
-        draw.SimpleText(self.title, 'Fated.16', x + 6, y + 4, color_white)
-    BShadows.EndShadow(1, 2, 2, 255, 0, 0)
+    draw.SimpleText(self.title, 'Fated.16', 6, 4, color_white)
 end
 
 function PANEL:PerformLayout(w, h)

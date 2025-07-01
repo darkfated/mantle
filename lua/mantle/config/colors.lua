@@ -19,6 +19,7 @@ Mantle.color = {
     },
 
     hover = Color(60, 65, 80),
+    window_shadow = Color(0, 0, 0, 150), -- тень окна
 
     gray = Color(190, 190, 190, 220)
 }
