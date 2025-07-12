@@ -27,7 +27,7 @@ function Mantle.ui.color_picker(func, color_standart)
     Mantle.ui.menu_color_picker:MakePopup()
     Mantle.ui.menu_color_picker:SetTitle('')
     Mantle.ui.menu_color_picker:SetCenterTitle('Выбор цвета')
-    Mantle.ui.menu_color_picker:SetAlpha(0)
+    Mantle.ui.menu_color_picker:SetAlphaBackground(true)
 
     local container = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     container:Dock(FILL)
@@ -39,7 +39,7 @@ function Mantle.ui.color_picker(func, color_standart)
     preview:SetTall(40)
     preview:DockMargin(0, 0, 0, 10)
     preview.Paint = function(self, w, h)
-        RNDX.Draw(16, 0, 0, w, h, color_outline, RNDX.SHAPE_IOS)
+        RNDX.DrawShadows(16, 2, 2, w - 4, h - 4, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
         RNDX.Draw(16, 2, 2, w - 4, h - 4, selected_color, RNDX.SHAPE_IOS)
     end
 
@@ -84,6 +84,8 @@ function Mantle.ui.color_picker(func, color_standart)
     colorField.Paint = function(self, w, h)
         local segments = 100
         local segmentSize = w / segments
+
+        RNDX.DrawShadows(0, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
         
         for x = 0, segments do
             for y = 0, segments do
@@ -137,6 +139,8 @@ function Mantle.ui.color_picker(func, color_standart)
     hueSlider.Paint = function(self, w, h)
         local segments = 100
         local segmentWidth = w / segments
+
+        RNDX.DrawShadows(0, 0, 0, w, h, Mantle.color.panelpopup, 5, 20, RNDX.SHAPE_IOS)
         
         for i = 0, segments - 1 do
             local hueVal = (i / segments) * 360
