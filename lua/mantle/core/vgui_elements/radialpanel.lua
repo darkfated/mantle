@@ -54,7 +54,7 @@ function PANEL:Init(options)
 
     -- Кастомизация
     self.disable_background = options.disable_background or false
-    self.hover_sound = options.hover_sound or "mantle/ratio_btn.ogg"
+    self.hover_sound = options.hover_sound or 'mantle/ratio_btn.ogg'
     self.scale_animation = options.scale_animation != false
     
     self:SetSize(Mantle.func.sw, Mantle.func.sh)
