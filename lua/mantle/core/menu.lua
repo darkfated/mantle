@@ -224,7 +224,9 @@ local function CreateMenu()
         CreateCategory('Слайдер (MantleSlideBox)', {
             {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
             {':SetConvar(string convar)', 'Установить ConVar'},
-            {':SetText(string text)', 'Установить текстовое обозначение'}
+            {':SetText(string text)', 'Установить текстовое обозначение'},
+            {':SetValue(string val)', 'Установить значение'},
+            {':GetValue()', 'Получить выбранное значение (число)'},
         }, panel, slider)
 
         -- Выбор варианта
