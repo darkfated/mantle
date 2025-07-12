@@ -103,7 +103,7 @@ function PANEL:CreateHeader()
     self.header:Clear()
     
     self.header.Paint = function(_, w, h)
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.header, RNDX.SHAPE_IOS)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
     end
     
     local xPos = 0

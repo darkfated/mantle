@@ -2,12 +2,10 @@ Mantle.color = {
     header = Color(51, 51, 51), -- верхняя панель
     background = Color(34, 34, 34), -- фон
     background_alpha = Color(34, 34, 34, 210), -- фон с прозрачностью
-    background_dermapanel = Color(29, 29, 29), -- фон для DermaMenu
+    background_panelpopup = Color(29, 29, 29), -- фон для DermaMenu
 
-    sp = Color(53, 53, 53), -- задний фон скролл панели
-
-    button = Color(76, 76, 76), -- кнопка
-    button_shadow = Color(57, 55, 69, 150), -- тень кнопки для градиента
+    button = Color(56, 56, 56), -- кнопка
+    button_shadow = Color(0, 0, 0, 30), -- тень кнопки для градиента
     button_hovered = Color(52, 70, 109), -- кнопка при наведении
 
     category = Color(54, 54, 56), -- категория
@@ -16,12 +14,14 @@ Mantle.color = {
     theme = Color(106, 108, 197), -- тема интерфейса
 
     panel = { -- варианты цветов для панели
-        Color(106, 106, 114),
+        Color(71, 71, 75),
         Color(60, 60, 64),
         Color(193, 193, 193)
     },
 
-    hover = Color(60, 65, 80),
+    focus_panel = Color(46, 46, 46), -- универсальный цвет для элементов
+    hover = Color(60, 65, 80), -- универсальное выделение
+
     window_shadow = Color(0, 0, 0, 150), -- тень окна
 
     gray = Color(190, 190, 190, 220)

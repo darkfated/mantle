@@ -177,7 +177,7 @@ function PANEL:Paint(w, h)
     
     BShadows.BeginShadow()
     RNDX.Draw(currentInnerRadius, centerX - currentInnerRadius, centerY - currentInnerRadius, 
-        currentInnerRadius * 2, currentInnerRadius * 2, ColorAlpha(Mantle.color.background_dermapanel, self.currentAlpha), RNDX.SHAPE_CIRCLE)
+        currentInnerRadius * 2, currentInnerRadius * 2, ColorAlpha(Mantle.color.background_panelpopup, self.currentAlpha), RNDX.SHAPE_CIRCLE)
     BShadows.EndShadow(1, 1, 1, 200 * alpha, 0, 0)
     
     draw.SimpleText(self.centerText, self.titleFont, centerX, centerY - Mantle.func.h(13) * self.scale, Color(255, 255, 255, self.currentAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)

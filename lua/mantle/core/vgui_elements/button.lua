@@ -77,14 +77,15 @@ function PANEL:Paint(w, h)
         self.hover_status = math_clamp(self.hover_status - 8 * FrameTime(), 0, 1)
     end
 
+    RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
     RNDX.Draw(self.radius, 0, 0, w, h, self.col, btnFlags)
-
-    if self.bool_hover then
-        RNDX.Draw(self.radius, 0, 0, w, h, Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255), btnFlags)
-    end
 
     if self.bool_gradient then
         Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow, self.radius, btnFlags)
+    end
+
+    if self.bool_hover then
+        RNDX.Draw(self.radius, 0, 0, w, h, Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255), btnFlags)
     end
 
     if self.click_alpha > 0 then

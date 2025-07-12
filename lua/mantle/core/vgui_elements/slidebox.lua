@@ -111,7 +111,8 @@ function PANEL:Paint(w, h)
     local activeW = math.Clamp(barW * progress, 0, barW)
 
     -- Фон линии
-    RNDX.Draw(16, barStart, barY, barW, barH, Mantle.color.panel_alpha[2])
+    RNDX.DrawShadows(16, barStart, barY, barW, barH, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    RNDX.Draw(16, barStart, barY, barW, barH, Mantle.color.focus_panel)
     RNDX.Draw(16, barStart, barY, barW, barH, Mantle.color.button_shadow)
 
     -- Активная линия

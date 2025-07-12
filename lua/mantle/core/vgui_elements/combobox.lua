@@ -21,7 +21,8 @@ function PANEL:Init()
             self.hoverAnim = math.Clamp(self.hoverAnim - FrameTime() * 8, 0, 1)
         end
 
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.button, RNDX.SHAPE_IOS)
+        RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
         if self.hoverAnim > 0 then
             RNDX.Draw(16, 0, 0, w, h, Color(
                 Mantle.color.button_hovered.r,
@@ -104,7 +105,7 @@ function PANEL:OpenMenu()
     self.menu:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding)
     self.menu.Paint = function(s, w, h)
         RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.background_dermapanel, RNDX.SHAPE_IOS)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.background_panelpopup, RNDX.SHAPE_IOS)
     end
 
     surface.SetFont(self.font)

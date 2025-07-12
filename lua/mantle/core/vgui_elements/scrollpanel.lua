@@ -5,7 +5,7 @@ function PANEL:Init()
     vbar:SetWide(6)
     vbar:SetHideButtons(true)
     vbar.Paint = function(_, w, h)
-        RNDX.Draw(32, 0, 0, w, h, Mantle.color.sp)
+        RNDX.Draw(32, 0, 0, w, h, Mantle.color.focus_panel)
 
         self.pnlCanvas:DockPadding(0, 0, m_bNoSizing and 0 or 6, 0)
     end

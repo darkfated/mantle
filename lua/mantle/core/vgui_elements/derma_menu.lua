@@ -36,7 +36,7 @@ end
 
 function PANEL:Paint(w, h)
     RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
-    RNDX.Draw(16, 0, 0, w, h, Mantle.color.background_dermapanel, RNDX.SHAPE_IOS)
+    RNDX.Draw(16, 0, 0, w, h, Mantle.color.background_panelpopup, RNDX.SHAPE_IOS)
 end
 
 function PANEL:AddOption(text, func, icon, optData)
@@ -103,7 +103,7 @@ function PANEL:AddSpacer()
     spacer:SetTall(1)
     spacer.sumTall = 13
     spacer.Paint = function(_, w, h)
-        RNDX.Draw(0, 0, 0, w, h, Mantle.color.panel[2])
+        RNDX.Draw(0, 0, 0, w, h, Mantle.color.focus_panel)
     end
 
     table.insert(self.Items, spacer)
