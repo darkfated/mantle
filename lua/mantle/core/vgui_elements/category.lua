@@ -7,9 +7,9 @@ function PANEL:Init()
     self.bool_opened = false
     self.bool_header_centered = false
     self.content_size = 0
-    self.header_color = Mantle.color.theme
-    self.header_color_standard = Mantle.color.theme
-    self.header_color_opened = Mantle.color.panel_alpha[2]
+    self.header_color = Mantle.color.category
+    self.header_color_standard = self.header_color
+    self.header_color_opened = Mantle.color.category_opened
 
     self.header = vgui.Create('Button', self)
     self.header:SetText('')

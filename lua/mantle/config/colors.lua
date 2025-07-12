@@ -10,6 +10,9 @@ Mantle.color = {
     button_shadow = Color(57, 55, 69, 150), -- тень кнопки для градиента
     button_hovered = Color(52, 70, 109), -- кнопка при наведении
 
+    category = Color(54, 54, 56), -- категория
+    category_opened = Color(54, 54, 56, 0), -- категория открыта
+
     theme = Color(106, 108, 197), -- тема интерфейса
 
     panel = { -- варианты цветов для панели
