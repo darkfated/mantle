@@ -3,7 +3,7 @@ local PANEL = {}
 local mat_close = Material('mantle/close_btn.png')
 
 function PANEL:Init()
-    self.bool_alpha = false
+    self.bool_alpha = true
     self.title = 'Заголовок'
     self.center_title = ''
 
@@ -96,6 +96,10 @@ local flagsBackground = RNDX.NO_TL + RNDX.NO_TR
 function PANEL:Paint(w, h)
     RNDX.DrawShadows(6, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
     RNDX.Draw(6, 0, 0, w, 24, Mantle.color.header, flagsHeader)
+
+    if self.bool_alpha then
+        RNDX.Draw(6, 0, 24, w, h - 24, Mantle.color.window_blur, flagsBackground + RNDX.BLUR)
+    end
     RNDX.Draw(6, 0, 24, w, h - 24, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, flagsBackground)
 
     if self.center_title != '' then

@@ -309,7 +309,7 @@ local function CreateMenu()
         return panel
     end
 
-    tabs:AddTab('UI Элементы', CreateTabElements(), Material('icon16/page_white.png'))
+    tabs:AddTab('UI Элементы', CreateTabElements(), Material('icon16/chart_pie.png'))
 
     local function CreateShowMenus()
         local panel = vgui.Create('MantleScrollPanel')
@@ -409,7 +409,7 @@ local function CreateMenu()
         return panel
     end
 
-    tabs:AddTab('Всплывающие', CreateShowMenus(), Material('icon16/database.png'))
+    tabs:AddTab('Всплывающие', CreateShowMenus(), Material('icon16/application_double.png'))
 
     local function CreateLegacyTest()
         local panel = vgui.Create('MantleScrollPanel')
@@ -520,7 +520,21 @@ local function CreateMenu()
         return panel
     end
 
-    tabs:AddTab('Legacy UI', CreateLegacyTest(), Material('icon16/application_view_list.png'))
+    tabs:AddTab('Legacy UI', CreateLegacyTest(), Material('icon16/exclamation.png'))
+
+    local function CreateSettings()
+        local panel = vgui.Create('MantleScrollPanel')
+        local menuWide = menuMantle:GetWide()
+
+        local checkboxDepth = vgui.Create('MantleCheckBox', panel)
+        checkboxDepth:Dock(TOP)
+        checkboxDepth:SetTxt('Глубины элементов')
+        checkboxDepth:SetConvar('mantle_depth_ui')
+
+        return panel
+    end
+
+    tabs:AddTab('Настройки', CreateSettings(), Material('icon16/cog.png'))
 end
 
 concommand.Add('mantle_menu', CreateMenu)

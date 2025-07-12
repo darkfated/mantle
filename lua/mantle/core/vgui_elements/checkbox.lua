@@ -44,7 +44,7 @@ function PANEL:Init()
     end
     self.toggle.DoClick = function()
         if self.convar ~= '' then
-            RunConsoleCommand(self.convar, self.value and 0 or 1)
+            LocalPlayer():ConCommand(self.convar .. ' ' .. (self.value and 0 or 1))
         end
         self.value = not self.value
         Mantle.func.sound()
@@ -75,7 +75,9 @@ function PANEL:SetDescription(desc)
 end
 
 function PANEL:Paint(w, h)
-    RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    if Mantle.ui.convar.depth_ui then
+        RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    end
     RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
     draw.SimpleText(self.text, 'Fated.18', 12, h * 0.5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     if self.description ~= '' and self:GetTall() > 32 then

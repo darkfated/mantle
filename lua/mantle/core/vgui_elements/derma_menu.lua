@@ -78,6 +78,9 @@ function PANEL:AddOption(text, func, icon, optData)
         h = h or pnl:GetTall()
 
         if pnl:IsHovered() then
+            if Mantle.ui.convar.depth_ui then
+                RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+            end
             RNDX.Draw(16, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
         end
 

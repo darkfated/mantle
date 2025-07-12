@@ -111,7 +111,9 @@ function PANEL:Paint(w, h)
     local activeW = math.Clamp(barW * progress, 0, barW)
 
     -- Фон линии
-    RNDX.DrawShadows(16, barStart, barY, barW, barH, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    if Mantle.ui.convar.depth_ui then
+        RNDX.DrawShadows(16, barStart, barY, barW, barH, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    end
     RNDX.Draw(16, barStart, barY, barW, barH, Mantle.color.focus_panel)
     RNDX.Draw(16, barStart, barY, barW, barH, Mantle.color.button_shadow)
 

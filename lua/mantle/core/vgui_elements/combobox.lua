@@ -21,7 +21,9 @@ function PANEL:Init()
             self.hoverAnim = math.Clamp(self.hoverAnim - FrameTime() * 8, 0, 1)
         end
 
-        RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+        if Mantle.ui.convar.depth_ui then
+            RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+        end
         RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
         if self.hoverAnim > 0 then
             RNDX.Draw(16, 0, 0, w, h, Color(
