@@ -18,11 +18,10 @@ function PANEL:Init()
 
     self.scrollPanel = vgui.Create('MantleScrollPanel', self)
     self.scrollPanel:Dock(FILL)
-    self.scrollPanel:DockMargin(0, 2, 0, 0)
+    self.scrollPanel:DockMargin(0, 0, 0, 0)
 
     self.content = vgui.Create('Panel', self.scrollPanel)
     self.content:Dock(FILL)
-    self.content:DockPadding(0, 0, 0, 0)
     self.content.Paint = nil
 
     self.OnAction = function() end
@@ -103,7 +102,7 @@ function PANEL:CreateHeader()
     self.header:Clear()
     
     self.header.Paint = function(_, w, h)
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
+        RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS + RNDX.NO_BL + RNDX.NO_BR)
     end
     
     local xPos = 0
@@ -118,7 +117,7 @@ function PANEL:CreateHeader()
             local isActive = self.sortColumn == i
             
             if isHovered then
-                RNDX.Draw(16, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
+                RNDX.Draw(0, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
             end
             
             local textColor = isActive and Mantle.color.theme or color_white
@@ -139,14 +138,14 @@ end
 function PANEL:CreateRow(rowIndex, rowData)
     local row = vgui.Create('DButton', self.content)
     row:Dock(TOP)
-    row:DockMargin(0, 1, 0, 0)
+    row:DockMargin(0, 0, 0, 1)
     row:SetTall(self.rowHeight)
     row:SetText('')
     
     row.Paint = function(s, w, h)
         local bgColor = self.selectedRow == rowIndex and Mantle.color.theme or 
                        (s:IsHovered() and Mantle.color.hover or Mantle.color.panel_alpha[1])
-        RNDX.Draw(16, 0, 0, w, h, bgColor, RNDX.SHAPE_IOS)
+        RNDX.Draw(0, 0, 0, w, h, bgColor, RNDX.SHAPE_IOS)
     end
     
     row.DoClick = function()
@@ -169,7 +168,7 @@ function PANEL:CreateRow(rowIndex, rowData)
         menu:AddSpacer()
         menu:AddOption('Удалить строку', function()
             self:RemoveRow(rowIndex)
-        end)
+        end, 'icon16/delete.png')
     end
     
     local xPos = 0
