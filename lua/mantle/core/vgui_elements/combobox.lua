@@ -39,7 +39,7 @@ function PANEL:Init()
             self.font, 
             12, 
             h * 0.5, 
-            color_white, 
+            Mantle.color.text, 
             TEXT_ALIGN_LEFT, 
             TEXT_ALIGN_CENTER
         )
@@ -47,7 +47,7 @@ function PANEL:Init()
         local arrowSize = 6
         local arrowX = w - 16
         local arrowY = h / 2
-        local arrowColor = Color(255, 255, 255, 180 + self.hoverAnim * 75)
+        local arrowColor = ColorAlpha(Mantle.color.text, 180 + self.hoverAnim * 75)
 
         surface.SetDrawColor(arrowColor)
         draw.NoTexture()
@@ -128,7 +128,7 @@ function PANEL:OpenMenu()
                 'Fated.18', 
                 14, 
                 h * 0.5, 
-                color_white, 
+                Mantle.color.text, 
                 TEXT_ALIGN_LEFT, 
                 TEXT_ALIGN_CENTER
             )

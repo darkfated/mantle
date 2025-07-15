@@ -20,10 +20,10 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
         BShadows.BeginShadow()
             draw.RoundedBoxEx(6, x, y, w, 24, Mantle.color.header, true, true)
             draw.RoundedBoxEx(6, x, y + 24, w, h - 24, s.background_alpha and Mantle.color.background_alpha or Mantle.color.background, false, false, true, true)
-            draw.SimpleText(self.f_title, 'Fated.16', x + 6, y + 4, color_white)
+            draw.SimpleText(self.f_title, 'Fated.16', x + 6, y + 4, Mantle.color.text)
             
             if self.center_title then
-                draw.SimpleText(s.center_title, 'Fated.20b', x + w * 0.5, y + 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(s.center_title, 'Fated.20b', x + w * 0.5, y + 11, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         BShadows.EndShadow(1, 2, 2, 255, 0, 0)
     end
@@ -99,7 +99,7 @@ function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool,
             Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
         end
 
-        draw.SimpleText(self.btn_text, self.btn_font, w * 0.5 + (icon and icon_size * 0.5 - 2 or 0), h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.btn_text, self.btn_font, w * 0.5 + (icon and icon_size * 0.5 - 2 or 0), h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
         if icon then
             surface.SetDrawColor(color_white)
@@ -139,8 +139,8 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, d
         
         draw.RoundedBox(16, smoothPos, 18, 16, 16, Mantle.color.theme)
 
-        draw.SimpleText(label, 'Fated.18', 4, 0, color_white)
-        draw.SimpleText(math.Round(value, decimals), 'Fated.18', w - 4, 0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+        draw.SimpleText(label, 'Fated.18', 4, 0, Mantle.color.text)
+        draw.SimpleText(math.Round(value, decimals), 'Fated.18', w - 4, 0, Mantle.color.text, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
     end
 
     local function UpdateSliderByCursorPos(x)
@@ -203,7 +203,7 @@ function Mantle.ui.checkbox(parent, text, convar)
     panel:SetTall(28)
     panel.Paint = function(_, w, h)
         draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
-        draw.SimpleText(text, 'Fated.18', 8, h * 0.5 - 1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, 'Fated.18', 8, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     local option = vgui.Create('DButton', panel)
@@ -213,7 +213,7 @@ function Mantle.ui.checkbox(parent, text, convar)
     option.enabled = convar and GetConVar(convar):GetBool() or false
     option.Paint = function(self, w, h)
         draw.RoundedBoxEx(6, 0, 0, w, h, Mantle.color.panel_alpha[1], false, true, false, true)
-        draw.SimpleText(self.enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.19', w * 0.5 - 1, h * 0.5 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.19', w * 0.5 - 1, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
     option.DoClick = function()
         if convar then
@@ -243,7 +243,7 @@ function Mantle.ui.panel_tabs(parent)
     panel_tabs.panel_content:Dock(FILL)
     panel_tabs.panel_content.Paint = function(_, w, h)
         if panel_tabs.active_tab == '' then
-            draw.SimpleText('Выберете вкладку', 'Fated.16', w * 0.5, h * 0.5 - panel_tabs.sp:GetTall() - 7, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText('Выберете вкладку', 'Fated.16', w * 0.5, h * 0.5 - panel_tabs.sp:GetTall() - 7, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
 
@@ -270,7 +270,7 @@ function Mantle.ui.panel_tabs(parent)
                 draw.RoundedBox(6, 0, 0, w, h, Mantle.color.button_shadow)
             end
 
-            draw.SimpleText(title, 'Fated.20', w * 0.5 + (self.icon and 9 or 0), 11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(title, 'Fated.20', w * 0.5 + (self.icon and 9 or 0), 11, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
             if self.icon then
                 surface.SetDrawColor(color_white)

@@ -120,7 +120,7 @@ function PANEL:CreateHeader()
                 RNDX.Draw(0, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
             end
             
-            local textColor = isActive and Mantle.color.theme or color_white
+            local textColor = isActive and Mantle.color.theme or Mantle.color.text
             draw.SimpleText(column.name, self.font, w/2, h/2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         
@@ -176,7 +176,7 @@ function PANEL:CreateRow(rowIndex, rowData)
         local label = vgui.Create('DLabel', row)
         label:SetText(tostring(rowData[i]))
         label:SetFont(self.rowFont)
-        label:SetTextColor(color_white)
+        label:SetTextColor(Mantle.color.text)
         label:SetContentAlignment(column.align)
         label:SetSize(column.width, self.rowHeight)
         label:SetPos(xPos, 0)

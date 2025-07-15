@@ -101,7 +101,7 @@ function PANEL:Paint(w, h)
     local minmaxPadY = 12
 
     -- Текст сверху
-    draw.SimpleText(self.text, textFont, padX, padTop, color_white)
+    draw.SimpleText(self.text, textFont, padX, padTop, Mantle.color.text)
 
     -- Линия
     local barStart = padX + handleW/2
@@ -129,10 +129,10 @@ function PANEL:Paint(w, h)
     RNDX.DrawShadows(handleR, handleX - handleW/2, handleY - handleH/2, handleW, handleH, Mantle.color.window_shadow, 3, 10)
 
     -- Ручка
-    RNDX.Draw(handleR, handleX - handleW/2, handleY - handleH/2, handleW, handleH, color_white)
+    RNDX.Draw(handleR, handleX - handleW/2, handleY - handleH/2, handleW, handleH, Mantle.color.text)
 
     -- Значение справа от линии
-    draw.SimpleText(self.value, valueFont, barEnd + handleW/2 + 4, barY + barH/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.value, valueFont, barEnd + handleW/2 + 4, barY + barH/2, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- min/max под линией
     draw.SimpleText(self.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, Mantle.color.gray, TEXT_ALIGN_LEFT)

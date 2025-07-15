@@ -35,7 +35,7 @@ function PANEL:Init()
             text = value
         end
 
-        draw.SimpleText(text, 'Fated.18', 6, h * 0.5, value != '' and color_white or Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, 'Fated.18', 6, h * 0.5, value != '' and Mantle.color.text or Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 end
 
@@ -48,7 +48,7 @@ function PANEL:SetTitle(title)
     self.titlePanel:DockMargin(0, 0, 0, 6)
     self.titlePanel:SetTall(18)
     self.titlePanel.Paint = function(_, w, h)
-        draw.SimpleText(self.title, 'Fated.18', 0, 0, color_white)
+        draw.SimpleText(self.title, 'Fated.18', 0, 0, Mantle.color.text)
     end
 end
 

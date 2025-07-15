@@ -89,7 +89,7 @@ function PANEL:AddOption(text, func, icon, optData)
             RNDX.DrawMaterial(0, 10, (h - iconSize) / 2, iconSize, iconSize, color_white, iconMat)
         end
 
-        draw.SimpleText(pnl.Text, 'Fated.18', pnl.Icon and 32 or 14, h * 0.5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(pnl.Text, 'Fated.18', pnl.Icon and 32 or 14, h * 0.5, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     table.insert(self.Items, option)

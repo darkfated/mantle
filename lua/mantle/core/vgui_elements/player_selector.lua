@@ -60,7 +60,7 @@ function Mantle.ui.player_selector(do_click, func_check)
                 return
             end
 
-            draw.SimpleText(pl:Name(), 'Fated.18', infoX, 6, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText(pl:Name(), 'Fated.18', infoX, 6, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             local group = pl:GetUserGroup() or 'user'
             group = string.upper(string.sub(group, 1, 1)) .. string.sub(group, 2)
             draw.SimpleText(group, 'Fated.14', infoX, h - 6, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)

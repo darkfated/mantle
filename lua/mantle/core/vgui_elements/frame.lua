@@ -103,10 +103,10 @@ function PANEL:Paint(w, h)
     RNDX.Draw(6, 0, 24, w, h - 24, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, flagsBackground)
 
     if self.center_title != '' then
-        draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    draw.SimpleText(self.title, 'Fated.16', 6, 4, color_white)
+    draw.SimpleText(self.title, 'Fated.16', 6, 4, Mantle.color.text)
 end
 
 function PANEL:PerformLayout(w, h)

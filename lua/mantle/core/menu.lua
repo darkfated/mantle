@@ -24,8 +24,8 @@ local function CreateMenu()
         panelInfo.Paint = function(_, w, h)
             RNDX.Draw(0, 4, 0, w - 4, h, Mantle.color.panel_alpha[2])
             RNDX.Draw(16, 0, 0, infoWide, 30, Mantle.color.panel[1], RNDX.SHAPE_IOS)
-            draw.SimpleText(info[1], 'Fated.20', 8, 4, color_white)
-            draw.SimpleText(info[2], 'Fated.16', 12, 34, color_white)
+            draw.SimpleText(info[1], 'Fated.20', 8, 4, Mantle.color.text)
+            draw.SimpleText(info[2], 'Fated.16', 12, 34, Mantle.color.text)
         end
 
         pan:AddItem(panelInfo)
@@ -543,6 +543,12 @@ local function CreateMenu()
         checkboxDepth:Dock(TOP)
         checkboxDepth:SetTxt('Глубины элементов')
         checkboxDepth:SetConvar('mantle_depth_ui')
+
+        local checkboxLight = vgui.Create('MantleCheckBox', panel)
+        checkboxLight:Dock(TOP)
+        checkboxLight:DockMargin(0, 6, 0, 0)
+        checkboxLight:SetTxt('Светлая тема')
+        checkboxLight:SetConvar('mantle_light_theme')
 
         return panel
     end

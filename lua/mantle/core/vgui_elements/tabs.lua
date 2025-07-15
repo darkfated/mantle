@@ -108,7 +108,7 @@ function PANEL:Rebuild()
                     'Fated.18',
                     textX,
                     h * 0.5,
-                    isActive and Mantle.color.theme or color_white,
+                    isActive and Mantle.color.theme or Mantle.color.text,
                     TEXT_ALIGN_LEFT,
                     TEXT_ALIGN_CENTER
                 )

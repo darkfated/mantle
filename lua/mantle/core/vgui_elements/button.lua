@@ -139,7 +139,7 @@ function PANEL:Paint(w, h)
         self.font, 
         w * 0.5 + (self.icon != '' and self.icon_size * 0.5 + 2 or 0), 
         h * 0.5, 
-        color_white, 
+        Mantle.color.text, 
         TEXT_ALIGN_CENTER, 
         TEXT_ALIGN_CENTER
     )

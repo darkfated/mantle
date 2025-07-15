@@ -158,7 +158,11 @@ function PANEL:Paint(w, h)
     local alpha = self.currentAlpha/255
 
     if not self.disable_background then
-        RNDX.Draw(0, 0, 0, w, h, Color(0, 0, 0, 100 * alpha), RNDX.SHAPE_RECT)
+        local bgCol = Color(0, 0, 0, 100 * alpha)
+        if Mantle.ui.convar.light_theme then
+            bgCol = Color(200, 200, 200, 80 * alpha)
+        end
+        RNDX.Draw(0, 0, 0, w, h, bgCol, RNDX.SHAPE_RECT)
     end
     
     local outerSize = self.radius * 2 + Mantle.func.w(20) * self.scale
@@ -167,21 +171,22 @@ function PANEL:Paint(w, h)
     
     BShadows.BeginShadow()
     RNDX.Draw(outerSize / 2 * self.scaleAnim, centerX - (outerSize / 2 * self.scaleAnim), centerY - (outerSize / 2 * self.scaleAnim), 
-        outerSize * self.scaleAnim, outerSize * self.scaleAnim, ColorAlpha(Mantle.color.background, 160 * alpha), RNDX.SHAPE_CIRCLE)
+        outerSize * self.scaleAnim, outerSize * self.scaleAnim, ColorAlpha(Mantle.color.background, 220 * alpha), RNDX.SHAPE_CIRCLE)
     BShadows.EndShadow(1, 2, 2, 255 * alpha, 0, 0)
     
     BShadows.BeginShadow()
     RNDX.Draw(currentRadius, centerX - currentRadius, centerY - currentRadius, 
-        currentRadius * 2, currentRadius * 2, ColorAlpha(Mantle.color.background, 200 * alpha), RNDX.SHAPE_CIRCLE)
+        currentRadius * 2, currentRadius * 2, ColorAlpha(Mantle.color.background, 240 * alpha), RNDX.SHAPE_CIRCLE)
     BShadows.EndShadow(1, 2, 2, 255 * alpha, 0, 0)
     
     BShadows.BeginShadow()
     RNDX.Draw(currentInnerRadius, centerX - currentInnerRadius, centerY - currentInnerRadius, 
         currentInnerRadius * 2, currentInnerRadius * 2, ColorAlpha(Mantle.color.background_panelpopup, self.currentAlpha), RNDX.SHAPE_CIRCLE)
-    BShadows.EndShadow(1, 1, 1, 200 * alpha, 0, 0)
+    BShadows.EndShadow(1, 1, 1, (Mantle.ui.convar.light_theme and 150 or 200) * alpha, 0, 0)
     
-    draw.SimpleText(self.centerText, self.titleFont, centerX, centerY - Mantle.func.h(13) * self.scale, Color(255, 255, 255, self.currentAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    draw.SimpleText(self.centerDesc, self.descFont, centerX, centerY + Mantle.func.h(13) * self.scale, Color(255, 255, 255, 180 * alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    local textColor = Mantle.ui.convar.light_theme and Color(30, 30, 30) or Color(255, 255, 255)
+    draw.SimpleText(self.centerText, self.titleFont, centerX, centerY - Mantle.func.h(13) * self.scale, ColorAlpha(textColor, self.currentAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.centerDesc, self.descFont, centerX, centerY + Mantle.func.h(13) * self.scale, ColorAlpha(textColor, 180 * alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     
     local optionCount = #self:GetCurrentOptions()
     if optionCount > 0 then
@@ -195,18 +200,22 @@ function PANEL:Paint(w, h)
             
             local textX = centerX + (currentInnerRadius + (currentRadius - currentInnerRadius) / 2) * math_cos(midAngle)
             local textY = centerY + (currentInnerRadius + (currentRadius - currentInnerRadius) / 2) * math_sin(midAngle)
-            local textColor = Color(255, 255, 255, (isHovered and 255 or 200) * alpha)
+            
+            local baseColor = Mantle.ui.convar.light_theme and Color(30, 30, 30) or Color(255, 255, 255)
+            local textColor = ColorAlpha(baseColor, (isHovered and 255 or 200) * alpha)
             
             if option.icon and option.icon != false and option.icon != nil then
                 local iconMat = Material(option.icon)
                 local iconSize = Mantle.func.w(32) * self.scale * self.scaleAnim
-                RNDX.DrawMaterial(0, textX - iconSize/2, textY - iconSize - Mantle.func.h(8) * self.scale * self.paddingScale, iconSize, iconSize, Color(255, 255, 255, self.currentAlpha), iconMat)
+                local iconColor = ColorAlpha(color_white, self.currentAlpha)
+                RNDX.DrawMaterial(0, textX - iconSize/2, textY - iconSize - Mantle.func.h(8) * self.scale * self.paddingScale, 
+                    iconSize, iconSize, iconColor, iconMat)
                 
                 draw.SimpleText(option.text, self.font, textX, textY + Mantle.func.h(4) * self.scale * self.paddingScale, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 
                 if option.desc and isHovered then
                     draw.SimpleText(option.desc, self.descFont, textX, textY + Mantle.func.h(20) * self.scale * self.paddingScale, 
-                        Color(255, 255, 255, 180 * self.hoverAnim * alpha), 
+                        ColorAlpha(baseColor, 180 * self.hoverAnim * alpha),
                         TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 end
             else
@@ -214,7 +223,7 @@ function PANEL:Paint(w, h)
                 
                 if option.desc and isHovered then
                     draw.SimpleText(option.desc, self.descFont, textX, textY + Mantle.func.h(8) * self.scale * self.paddingScale, 
-                        Color(255, 255, 255, 180 * self.hoverAnim * alpha), 
+                        ColorAlpha(baseColor, 180 * self.hoverAnim * alpha),
                         TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 end
             end
@@ -222,7 +231,7 @@ function PANEL:Paint(w, h)
     end
     
     if optionCount > 0 then
-        local lineHighlightColor = ColorAlpha(Mantle.color.theme, 60 * alpha)
+        local lineHighlightColor = ColorAlpha(Mantle.color.theme, (Mantle.ui.convar.light_theme and 100 or 60) * alpha)
         self:DrawCircleOutline(centerX, centerY, currentRadius, lineHighlightColor, 1)
         self:DrawCircleOutline(centerX, centerY, currentInnerRadius, lineHighlightColor, 1)
     end

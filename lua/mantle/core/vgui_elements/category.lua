@@ -17,8 +17,10 @@ function PANEL:Init()
         RNDX.Draw(16, 0, 0, w, h, self.header_color, RNDX.SHAPE_IOS)
         local posX = self.bool_header_centered and w * 0.5 or 8
         local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
-        draw.SimpleText(self.name, 'Fated.20', posX, 5, color_black, alignX)
-        draw.SimpleText(self.name, 'Fated.20', posX, 4, color_white, alignX)
+        if !Mantle.ui.convar.light_theme then
+            draw.SimpleText(self.name, 'Fated.20', posX, 5, color_black, alignX)
+        end
+        draw.SimpleText(self.name, 'Fated.20', posX, 4, Mantle.color.text, alignX)
 
         self.header_color = Mantle.func.LerpColor(8, self.header_color, self.bool_opened and self.header_color_opened or self.header_color_standard)
     end
