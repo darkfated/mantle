@@ -53,12 +53,25 @@ local function CreateMenu()
         local menuWide = menuMantle:GetWide()
 
         -- Кнопка
-        local btn = vgui.Create('MantleBtn')
-        btn:SetTxt('Click')
-        btn:SetTall(40)
-        btn:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
-        btn:Dock(TOP)
-        btn:SetRipple(true)
+        local panelBtns = vgui.Create('Panel')
+        panelBtns:Dock(TOP)
+        panelBtns:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        panelBtns:SetTall(86)
+
+        local btn1 = vgui.Create('MantleBtn', panelBtns)
+        btn1:Dock(TOP)
+        btn1:SetTall(40)
+        btn1:SetTxt('Дефолт с эффектом волны')
+        btn1:SetRipple(true)
+
+        local btn2 = vgui.Create('MantleBtn', panelBtns)
+        btn2:Dock(TOP)
+        btn2:DockMargin(0, 6, 0, 0)
+        btn2:SetTall(40)
+        btn2:SetTxt('Кастомный цвет')
+        btn2:SetColor(Color(182, 65, 65))
+        btn2:SetColorHover(Color(143, 57, 57))
+
         CreateCategory('Кнопка (MantleBtn)', {
             {':SetHover(bool is_hover)', 'Включить/выключить цвет наведения (дефолт - true)'},
             {':SetFont(string font)', 'Установить шрифт'},
@@ -69,7 +82,7 @@ local function CreateMenu()
             {':SetColorHover(color col)', 'Установить цвет наведения'},
             {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'},
             {':SetRipple(bool is_ripple)', 'Включить/выключить эффект волн (дефолт - false)'}
-        }, panel, btn)
+        }, panel, panelBtns)
 
         -- Чекбокс
         local checkbox = vgui.Create('MantleCheckBox')
@@ -179,56 +192,7 @@ local function CreateMenu()
             {':SetIndicatorHeight(int height)', 'Установить высоту индикатора вкладок'},
             {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'}
         }, panel, panelTabs)
-
-        -- Категория
-        local panelCat = vgui.Create('Panel')
-        panelCat:Dock(TOP)
-        panelCat:DockMargin(0, 6, 0, 0)
-        panelCat:SetTall(142)
-        panelCat.Paint = nil
-
-        local cat = vgui.Create('MantleCategory', panelCat)
-        cat:Dock(TOP)
-        cat:SetCenterText(true)
-        cat:SetActive(true)
-        local panGreen = vgui.Create('DPanel')
-        panGreen:Dock(TOP)
-        panGreen:SetTall(50)
-        panGreen.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(93, 179, 101), RNDX.SHAPE_IOS)
-        end
-        cat:AddItem(panGreen)
-        local panRed = vgui.Create('DPanel')
-        panRed:Dock(TOP)
-        panRed:DockMargin(0, 6, 0, 0)
-        panRed:SetTall(50)
-        panRed.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(179, 110, 93), RNDX.SHAPE_IOS)
-        end
-        cat:AddItem(panRed)
-        CreateCategory('Категория (MantleCategory)', {
-            {':SetText(string name)', 'Установить название'},
-            {':AddItem(object panel)', 'Добавить в категорию элемент'},
-            {':SetColor(color col)', 'Установить кастомный цвет категории'},
-            {':SetCenterText(bool is_centered)', 'Установить центрирование названия'},
-            {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'}
-        }, panel, panelCat)
-
-        -- Слайдер
-        local slider = vgui.Create('MantleSlideBox')
-        slider:SetRange(0, 4)
-        slider:SetConvar('net_graph')
-        slider:SetText('График')
-        slider:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
-        slider:Dock(TOP)
-        CreateCategory('Слайдер (MantleSlideBox)', {
-            {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
-            {':SetConvar(string convar)', 'Установить ConVar'},
-            {':SetText(string text)', 'Установить текстовое обозначение'},
-            {':SetValue(string val)', 'Установить значение'},
-            {':GetValue()', 'Получить выбранное значение (число)'},
-        }, panel, slider)
-
+        
         -- Выбор варианта
         local combo = vgui.Create('MantleComboBox')
         combo:SetPlaceholder('Выберите вариант')
@@ -305,6 +269,55 @@ local function CreateMenu()
             {':GetRowCount()', 'Получить количество строк в таблице'},
             {':RemoveRow(number index)', 'Удалить строку по индексу (начиная с 1)'}
         }, panel, tableExample)
+
+        -- Категория
+        local panelCat = vgui.Create('Panel')
+        panelCat:Dock(TOP)
+        panelCat:DockMargin(0, 6, 0, 0)
+        panelCat:SetTall(142)
+        panelCat.Paint = nil
+
+        local cat = vgui.Create('MantleCategory', panelCat)
+        cat:Dock(TOP)
+        cat:SetCenterText(true)
+        cat:SetActive(true)
+        local panGreen = vgui.Create('DPanel')
+        panGreen:Dock(TOP)
+        panGreen:SetTall(50)
+        panGreen.Paint = function(_, w, h)
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(93, 179, 101), RNDX.SHAPE_IOS)
+        end
+        cat:AddItem(panGreen)
+        local panRed = vgui.Create('DPanel')
+        panRed:Dock(TOP)
+        panRed:DockMargin(0, 6, 0, 0)
+        panRed:SetTall(50)
+        panRed.Paint = function(_, w, h)
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(179, 110, 93), RNDX.SHAPE_IOS)
+        end
+        cat:AddItem(panRed)
+        CreateCategory('Категория (MantleCategory)', {
+            {':SetText(string name)', 'Установить название'},
+            {':AddItem(object panel)', 'Добавить в категорию элемент'},
+            {':SetColor(color col)', 'Установить кастомный цвет категории'},
+            {':SetCenterText(bool is_centered)', 'Установить центрирование названия'},
+            {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'}
+        }, panel, panelCat)
+
+        -- Слайдер
+        local slider = vgui.Create('MantleSlideBox')
+        slider:SetRange(0, 4)
+        slider:SetConvar('net_graph')
+        slider:SetText('График')
+        slider:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        slider:Dock(TOP)
+        CreateCategory('Слайдер (MantleSlideBox)', {
+            {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
+            {':SetConvar(string convar)', 'Установить ConVar'},
+            {':SetText(string text)', 'Установить текстовое обозначение'},
+            {':SetValue(string val)', 'Установить значение'},
+            {':GetValue()', 'Получить выбранное значение (число)'},
+        }, panel, slider)
 
         return panel
     end
