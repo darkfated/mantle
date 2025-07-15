@@ -1,6 +1,10 @@
 local PANEL = {}
 
 function PANEL:Init()
+    self._activeShadowTimer = 0
+    self._activeShadowMinTime = 0.03 -- минимальная длительность (сек)
+    self._shadowLerp = 5
+    self._activeShadowLerp = 0
     self.hover_status = 0
     self.bool_hover = true
     self.font = 'Fated.18'
@@ -60,7 +64,7 @@ end
 
 function PANEL:OnMousePressed(mousecode)
     self.BaseClass.OnMousePressed(self, mousecode)
-    
+
     if self.enable_ripple and mousecode == MOUSE_LEFT then
         self.click_alpha = 1
         self.click_x, self.click_y = self:CursorPos()
@@ -77,9 +81,35 @@ function PANEL:Paint(w, h)
         self.hover_status = math_clamp(self.hover_status - 8 * FrameTime(), 0, 1)
     end
 
-    if Mantle.ui.convar.depth_ui then
-        RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    if !self._shadowLerp then
+        self._shadowLerp = 5
     end
+
+    self._shadowLerp = Lerp(FrameTime() * 4, self._shadowLerp, 5)
+
+    -- Минимальный порог длительности для активной тени
+    local isActive = (self:IsDown() or self.Depressed) and self.hover_status > 0.8
+    if isActive then
+        self._activeShadowTimer = SysTime() + self._activeShadowMinTime
+    end
+    local showActiveShadow = isActive or (self._activeShadowTimer > SysTime())
+
+    -- Плавная анимация дополнительной тени при зажатии
+    local activeTarget = showActiveShadow and 10 or 0
+    local activeSpeed = (activeTarget > 0) and 7 or 3 -- скорость появления/затухания
+    self._activeShadowLerp = Lerp(FrameTime() * activeSpeed, self._activeShadowLerp, activeTarget)
+
+    -- Обычная тень
+    if Mantle.ui.convar.depth_ui then
+        RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, self._shadowLerp, 20, RNDX.SHAPE_IOS)
+    end
+
+    -- Дополнительная тень при зажатии
+    if self._activeShadowLerp > 0 and Mantle.ui.convar.depth_ui then
+        local col = Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math.Clamp(self.col_hov.a * 1.5, 0, 255))
+        RNDX.DrawShadows(self.radius, 0, 0, w, h, col, self._activeShadowLerp * 1.5, 24, RNDX.SHAPE_IOS)
+    end
+
     RNDX.Draw(self.radius, 0, 0, w, h, self.col, btnFlags)
 
     if self.bool_gradient then
