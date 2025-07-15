@@ -16,9 +16,15 @@ function PANEL:Init()
         self.action(self:GetValue())
     end
     self.textEntry.Paint = nil
-    self.textEntry.PaintOver = function(_, w, h)
+    self.textEntry.PaintOver = function(s, w, h)
         if Mantle.ui.convar.depth_ui then
-            RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+            if !s._shadowLerp then
+                s._shadowLerp = s:IsEditing() and 10 or 5
+            end
+
+            local target = s:IsEditing() and 10 or 5
+            s._shadowLerp = Lerp(FrameTime() * 10, s._shadowLerp, target)
+            RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, s._shadowLerp, 20, RNDX.SHAPE_IOS)
         end
         RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
 
