@@ -19,7 +19,7 @@ function PANEL:Init()
     self.textEntry.PaintOver = function(s, w, h)
         if Mantle.ui.convar.depth_ui then
             if !s._shadowLerp then
-                s._shadowLerp = s:IsEditing() and 10 or 5
+                s._shadowLerp = 5
             end
 
             local target = s:IsEditing() and 10 or 5
