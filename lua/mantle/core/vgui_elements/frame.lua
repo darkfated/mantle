@@ -4,6 +4,7 @@ local mat_close = Material('mantle/close_btn.png')
 
 function PANEL:Init()
     self.bool_alpha = true
+    self.bool_lite = false
     self.title = 'Заголовок'
     self.center_title = ''
 
@@ -90,23 +91,35 @@ function PANEL:SetDraggable(is_draggable)
     self.top_panel:SetVisible(is_draggable)
 end
 
+function PANEL:LiteMode()
+    self.bool_lite = true
+    self:DockPadding(6, 6, 6, 6)
+
+    self.cls:SetZPos(2)
+end
+
 local flagsHeader = RNDX.NO_BL + RNDX.NO_BR
 local flagsBackground = RNDX.NO_TL + RNDX.NO_TR
 
 function PANEL:Paint(w, h)
     RNDX.DrawShadows(6, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
-    RNDX.Draw(6, 0, 0, w, 24, Mantle.color.header, flagsHeader)
+    if !self.bool_lite then
+        RNDX.Draw(6, 0, 0, w, 24, Mantle.color.header, flagsHeader)
+    end
 
+    local headerTall = self.bool_lite and 0 or 24
     if self.bool_alpha then
-        RNDX.Draw(6, 0, 24, w, h - 24, Mantle.color.window_blur, flagsBackground + RNDX.BLUR)
+        RNDX.Draw(6, 0, headerTall, w, h - headerTall, Mantle.color.window_blur, (self.bool_lite and 0 or flagsBackground) + RNDX.BLUR)
     end
-    RNDX.Draw(6, 0, 24, w, h - 24, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, flagsBackground)
+    RNDX.Draw(6, 0, headerTall, w, h - headerTall, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, self.bool_lite and 0 or flagsBackground)
 
-    if self.center_title != '' then
-        draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    if !self.bool_lite then
+        if self.center_title != '' then
+            draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        draw.SimpleText(self.title, 'Fated.16', 6, 4, Mantle.color.text)
     end
-
-    draw.SimpleText(self.title, 'Fated.16', 6, 4, Mantle.color.text)
 end
 
 function PANEL:PerformLayout(w, h)
