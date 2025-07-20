@@ -78,6 +78,16 @@ function PANEL:Rebuild()
 
             Mantle.func.sound()
         end
+        btnTab.DoRightClick = function()
+            local dm = Mantle.ui.derma_menu()
+            for k, tab in pairs(self.tabs) do
+                dm:AddOption(tab.name, function()
+                    self.tabs[self.active_id].pan:SetVisible(false)
+                    tab.pan:SetVisible(true)
+                    self.active_id = k
+                end, tab.icon)
+            end
+        end
 
         local color_draw = Color(255, 255, 255)
 

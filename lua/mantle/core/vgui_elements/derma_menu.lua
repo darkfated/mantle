@@ -70,7 +70,7 @@ function PANEL:AddOption(text, func, icon, optData)
     local iconMat
 
     if option.Icon then
-        iconMat = Material(option.Icon)
+        iconMat = type(option.Icon) == 'IMaterial' and option.Icon or Material(option.Icon)
     end
 
     option.Paint = function(pnl, w, h)
