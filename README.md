@@ -20,6 +20,9 @@
 ### Документация
 <img width="813" height="608" alt="VGUI элементы" src="https://github.com/user-attachments/assets/a95430cb-75a1-4ea8-acf7-bd8228e3914e" />
 
+### Lite-режим окна
+<img width="775" height="576" alt="{ED43C1DB-8110-4695-97D3-ED9918502C21}" src="https://github.com/user-attachments/assets/628b5870-8229-408e-9794-7ab119681eba" />
+
 ### ComboBox
 <img width="837" height="610" alt="ComboBox" src="https://github.com/user-attachments/assets/35033dc4-6fbb-4154-8905-01b80d8158ad" />
 
