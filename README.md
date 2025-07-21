@@ -68,5 +68,18 @@ http.DownloadMaterial('https://i.imgur.com/eEnGbcp.jpeg', 'dog.png', function(yo
 end)
 ```
 
+### Преобразование символов кириллицы
+```lua
+hook.Add('HUDPaint', 'test', function()
+    local txt = 'ПриВЕТ МИР Hello World'
+    -- default
+    draw.SimpleText(string.lower(txt), 'Fated.20', 15, 15, color_black)
+    -- mantle
+    draw.SimpleText(utf8.lower(txt), 'Fated.20', 15, 35, color_black)
+end)
+```
+<img width="247" height="75" alt="Сравнение default и mantle функции" src="https://github.com/user-attachments/assets/77e0b791-e970-45da-90b3-1b4960b945fd" />
+
+
 ## Steam Workshop
 Для автообновления – [подпишитесь и добавьте аддон в серверную коллекцию](https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993). Таким образом сможете всегда получать актуальную версию библиотеки ✅
