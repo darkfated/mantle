@@ -1,6 +1,8 @@
 local PANEL = {}
 
 local mat_close = Material('mantle/close_btn.png')
+local color_cls = Color(109, 109, 109)
+local color_cls_light = Color(150, 150, 150)
 
 function PANEL:Init()
     self.bool_alpha = true
@@ -40,7 +42,7 @@ function PANEL:Init()
     self.cls = vgui.Create('Button', self)
     self.cls:SetText('')
     self.cls.Paint = function(_, w, h)
-        RNDX.DrawMaterial(0, 0, 0, w, h, color_white, mat_close)
+        RNDX.DrawMaterial(0, 2, 2, w - 4, h - 4, Mantle.ui.convar.light_theme and color_cls_light or color_cls, mat_close)
     end
     self.cls.DoClick = function()
         self:AlphaTo(0, 0.1, 0, function()
@@ -114,11 +116,13 @@ function PANEL:Paint(w, h)
     RNDX.Draw(6, 0, headerTall, w, h - headerTall, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, self.bool_lite and 0 or flagsBackground)
 
     if !self.bool_lite then
+        local textColor = Mantle.ui.convar.light_theme and color_cls_light or color_cls
+
         if self.center_title != '' then
-            draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
-        draw.SimpleText(self.title, 'Fated.16', 6, 4, Mantle.color.text)
+        draw.SimpleText(self.title, 'Fated.16', 6, 4, textColor)
     end
 end
 
