@@ -130,7 +130,8 @@ local function CreateMenu()
             {':SetCenterTitle(string title)', 'Установить центральный заголовок'},
             {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
             {':DisableCloseBtn()', 'Скрыть кнопку закрытия'},
-            {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'}
+            {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'},
+            {':LiteMode()', 'Активировать режим Lite (без верхней панели)'}
         }, panel, btnFrame)
 
         -- ScrollPanel
