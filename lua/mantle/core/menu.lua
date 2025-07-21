@@ -153,7 +153,7 @@ local function CreateMenu()
         -- Вкладки
         local panelTabs = vgui.Create('DPanel')
         panelTabs:Dock(TOP)
-        panelTabs:SetTall(200)
+        panelTabs:SetTall(220)
         panelTabs.Paint = nil
 
         local testTabs = vgui.Create('MantleTabs', panelTabs) -- modern стиль
@@ -172,9 +172,8 @@ local function CreateMenu()
         testTabs:AddTab('Test2', testTab2)
 
         local testTabs2 = vgui.Create('MantleTabs', panelTabs) -- classic стиль
-        testTabs2:SetTall(90)
         testTabs2:DockMargin(menuWide * 0.05, 10, menuWide * 0.05, 0)
-        testTabs2:Dock(TOP)
+        testTabs2:Dock(FILL)
         testTabs2:SetTabStyle('classic')
         local testTab3 = vgui.Create('DPanel')
         testTab3.Paint = function(_, w, h)
@@ -186,6 +185,11 @@ local function CreateMenu()
             RNDX.Draw(16, 0, 0, w - 12, h, Color(138, 89, 43), RNDX.SHAPE_IOS)
         end
         testTabs2:AddTab('Test4', testTab4)
+        local testTab5 = vgui.Create('DPanel')
+        testTab5.Paint = function(_, w, h)
+            RNDX.Draw(16, 0, 0, w - 12, h, Color(43, 138, 133), RNDX.SHAPE_IOS)
+        end
+        testTabs2:AddTab('С иконкой', testTab5, Material('icon16/folder.png'))
 
         CreateCategory('Вкладки (MantleTabs)', {
             {':SetTabStyle(string style)', 'Установить стиль вкладок (modern или classic)'},

@@ -89,13 +89,13 @@ function PANEL:Rebuild()
             end
         end
 
-        local color_draw = Color(255, 255, 255)
-
         btnTab.Paint = function(s, w, h)
+            local isActive = self.active_id == id
+            local colorText = isActive and Mantle.color.theme or Mantle.color.text
+            local colorIcon = isActive and Mantle.color.theme or color_white
+
             if self.tab_style == 'modern' then
                 -- Современный стиль с индикатором внизу
-                local isActive = self.active_id == id
-
                 if s:IsHovered() then
                     RNDX.Draw(16, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS + (isActive and RNDX.NO_BL + RNDX.NO_BR or 0))
                 end
@@ -110,41 +110,21 @@ function PANEL:Rebuild()
                 local textX = padding + (iconW > 0 and (iconW + iconTextGap) or 0)
 
                 if tab.icon then
-                    RNDX.DrawMaterial(0, padding, (h - 16) * 0.5, 16, 16, isActive and Mantle.color.theme or color_white, tab.icon)
+                    RNDX.DrawMaterial(0, padding, (h - 16) * 0.5, 16, 16, colorIcon, tab.icon)
                 end
 
-                draw.SimpleText(
-                    tab.name,
-                    'Fated.18',
-                    textX,
-                    h * 0.5,
-                    isActive and Mantle.color.theme or Mantle.color.text,
-                    TEXT_ALIGN_LEFT,
-                    TEXT_ALIGN_CENTER
-                )
+                draw.SimpleText(tab.name, 'Fated.18', textX, h * 0.5, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             else
                 if s:IsHovered() then
                     RNDX.Draw(24, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS)
                 end
 
-                local color_target = Color(255, 255, 255)
-
-                if self.active_id == id then
-                    color_target = Color(Mantle.color.theme.r, Mantle.color.theme.g, Mantle.color.theme.b)
-                end
-
-                local r = Lerp(FrameTime() * self.animation_speed, color_draw.r, color_target.r)
-                local g = Lerp(FrameTime() * self.animation_speed, color_draw.g, color_target.g)
-                local b = Lerp(FrameTime() * self.animation_speed, color_draw.b, color_target.b)
-                color_draw = Color(r, g, b)
-
-                draw.SimpleText(tab.name, 'Fated.20', 39, h * 0.5, color_black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                draw.SimpleText(tab.name, 'Fated.20', 38, h * 0.5 - 1, color_draw, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(tab.name, 'Fated.18', 34, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
                 if tab.icon then
-                    RNDX.DrawMaterial(0, 5, 5, 24, 24, color_draw, tab.icon)
+                    RNDX.DrawMaterial(0, 9, 9, 16, 16, colorIcon, tab.icon)
                 else
-                    RNDX.Draw(24, 5, 5, 24, 24, color_draw, RNDX.SHAPE_IOS)
+                    RNDX.Draw(24, 9, 9, 16, 16, colorIcon, RNDX.SHAPE_IOS)
                 end
             end
         end
