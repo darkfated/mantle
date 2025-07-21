@@ -31,6 +31,7 @@ local function RunScripts()
     Mantle.run_cl('modules/shadows.lua')
     Mantle.run_cl('modules/material_url.lua')
     Mantle.run_sh('modules/notify.lua')
+    Mantle.run_sh('modules/utf8.lua')
 end
 
 local function RunAddons()
