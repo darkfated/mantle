@@ -36,7 +36,7 @@
 <img width="809" height="601" alt="Поле ввода" src="https://github.com/user-attachments/assets/b37cbaed-b3b2-474a-9e70-91ff08f5ec99" />
 
 ### Множественные всплывающие меню
-<img width="835" height="687" alt="Множественные всплывающие меню" src="https://github.com/user-attachments/assets/ceaa4b14-5713-4fd4-90c1-e8b6949022c8" />
+<img width="815" height="614" alt="Множественные всплывающие меню" src="https://github.com/user-attachments/assets/3bfe5206-9813-421c-93f2-597ca6746983" />
 
 ### Круговое меню
 <img width="943" height="760" alt="Круговое меню" src="https://github.com/user-attachments/assets/d4472c3b-03ca-4140-a0a5-d1e9c0161e63" />
