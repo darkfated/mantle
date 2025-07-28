@@ -129,6 +129,10 @@ function PANEL:UpdateSize()
     self:SetSize(maxWidth, math.min(height, ScrH() * 0.8))
 end
 
+function PANEL:Open()
+    -- Clear
+end
+
 function PANEL:CloseMenu()
     self:Remove()
 end
