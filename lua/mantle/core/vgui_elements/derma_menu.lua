@@ -20,17 +20,15 @@ function PANEL:Init()
     self:SetDrawOnTop(true)
     self.MaxTextWidth = 0
 
-    self._mouseWasDown = false
-    self.Think = function(panel)
-        local mouseDown = input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)
-        if mouseDown and not self._mouseWasDown then
-            local mx, my = gui.MousePos()
-            local x, y = self:LocalToScreen(0, 0)
-            if not (mx >= x and mx <= x + self:GetWide() and my >= y and my <= y + self:GetTall()) then
+    self._openTime = CurTime()
+    self.Think = function()
+        if CurTime() - self._openTime < 0.1 then return end
+
+        if input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT) then
+            if not self:IsChildHovered() then
                 self:Remove()
             end
         end
-        self._mouseWasDown = mouseDown
     end
 end
 
@@ -43,7 +41,7 @@ function PANEL:AddOption(text, func, icon, optData)
     surface.SetFont('Fated.18')
     local textW = select(1, surface.GetTextSize(text))
     self.MaxTextWidth = math.max(self.MaxTextWidth or 0, textW)
-    
+
     local option = vgui.Create('DButton', self)
     option:SetText('')
     option:Dock(TOP)
@@ -52,6 +50,7 @@ function PANEL:AddOption(text, func, icon, optData)
     option.sumTall = 28
     option.Icon = icon
     option.Text = text
+
     option.DoClick = function()
         if func then func() end
         Mantle.func.sound()
@@ -66,7 +65,7 @@ function PANEL:AddOption(text, func, icon, optData)
             option[k] = v
         end
     end
-    
+
     local iconMat
 
     if option.Icon then
