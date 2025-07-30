@@ -557,6 +557,7 @@ local function CreateMenu()
         themeCombo:AddChoice('Светлая', 'light')
         themeCombo:AddChoice('Синяя', 'blue')
         themeCombo:AddChoice('Красная', 'red')
+        themeCombo:AddChoice('Зелёная', 'green')
         themeCombo.OnSelect = function(idx, text, data)
             RunConsoleCommand('mantle_theme', data)
         end
