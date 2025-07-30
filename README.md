@@ -7,7 +7,7 @@
 - Использование кастомного VGUI
 - Оптимизация засчёт быстрого рендеринга RNDX
 - Использование материала через ссылку
-- Тёмная и светлая тема
+- Множество цветовых тем
 - Создание уведомлений
 - Модульная система
 - И многое другое!
@@ -18,7 +18,7 @@
 *Ниже можете увидеть некоторые возможности*
 
 ### Документация
-<img width="813" height="608" alt="VGUI элементы" src="https://github.com/user-attachments/assets/a95430cb-75a1-4ea8-acf7-bd8228e3914e" />
+<img width="837" height="645" alt="VGUI элементы" src="https://github.com/user-attachments/assets/efec0471-92e5-4d6c-972a-dad80d8adc77" />
 
 ### Lite-режим окна
 <img width="775" height="576" alt="{ED43C1DB-8110-4695-97D3-ED9918502C21}" src="https://github.com/user-attachments/assets/628b5870-8229-408e-9794-7ab119681eba" />
@@ -39,14 +39,15 @@
 <img width="815" height="614" alt="Множественные всплывающие меню" src="https://github.com/user-attachments/assets/3bfe5206-9813-421c-93f2-597ca6746983" />
 
 ### Круговое меню
-<img width="943" height="760" alt="Круговое меню" src="https://github.com/user-attachments/assets/d4472c3b-03ca-4140-a0a5-d1e9c0161e63" />
+<img width="930" height="764" alt="Круговое меню" src="https://github.com/user-attachments/assets/fd6a310e-702f-40a6-a26a-51baf709169d" />
 
 ### Опциональное меню
 <img width="830" height="612" alt="Опциональное меню" src="https://github.com/user-attachments/assets/f1977385-7de9-4bae-b8cd-408efe21d816" />
 
-### Светлая тема
+### Цветовые темы
 <img width="830" height="613" alt="Светлая тема документация" src="https://github.com/user-attachments/assets/db6dc9f4-d6cd-4918-ba2e-203d0ad071f7" />
 <img width="864" height="732" alt="Светлая тема круговое меню" src="https://github.com/user-attachments/assets/17fbb74e-1ca4-4be3-93ae-df88134a2469" />
+<img width="914" height="679" alt="Зелёная тема документация" src="https://github.com/user-attachments/assets/1572fddf-7321-40e5-8fd8-e94fca823f0d" />
 
 ## Примеры использования
 ### Отправка серверных уведомлений
