@@ -159,9 +159,6 @@ function PANEL:Paint(w, h)
 
     if not self.disable_background then
         local bgCol = Color(0, 0, 0, 100 * alpha)
-        if Mantle.ui.convar.light_theme then
-            bgCol = Color(200, 200, 200, 80 * alpha)
-        end
         RNDX.Draw(0, 0, 0, w, h, bgCol, RNDX.SHAPE_RECT)
     end
     
@@ -182,9 +179,9 @@ function PANEL:Paint(w, h)
     BShadows.BeginShadow()
     RNDX.Draw(currentInnerRadius, centerX - currentInnerRadius, centerY - currentInnerRadius, 
         currentInnerRadius * 2, currentInnerRadius * 2, ColorAlpha(Mantle.color.background_panelpopup, self.currentAlpha), RNDX.SHAPE_CIRCLE)
-    BShadows.EndShadow(1, 1, 1, (Mantle.ui.convar.light_theme and 150 or 200) * alpha, 0, 0)
+    BShadows.EndShadow(1, 1, 1, (Mantle.ui.convar.theme == 'light' and 150 or 200) * alpha, 0, 0)
     
-    local textColor = Mantle.ui.convar.light_theme and Color(30, 30, 30) or Color(255, 255, 255)
+    local textColor = Mantle.ui.convar.theme == 'light' and Color(30, 30, 30) or Color(255, 255, 255)
     draw.SimpleText(self.centerText, self.titleFont, centerX, centerY - Mantle.func.h(13) * self.scale, ColorAlpha(textColor, self.currentAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(self.centerDesc, self.descFont, centerX, centerY + Mantle.func.h(13) * self.scale, ColorAlpha(textColor, 180 * alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     
@@ -201,7 +198,7 @@ function PANEL:Paint(w, h)
             local textX = centerX + (currentInnerRadius + (currentRadius - currentInnerRadius) / 2) * math_cos(midAngle)
             local textY = centerY + (currentInnerRadius + (currentRadius - currentInnerRadius) / 2) * math_sin(midAngle)
             
-            local baseColor = Mantle.ui.convar.light_theme and Color(30, 30, 30) or Color(255, 255, 255)
+            local baseColor = Mantle.ui.convar.theme == 'light' and Color(30, 30, 30) or Color(255, 255, 255)
             local textColor = ColorAlpha(baseColor, (isHovered and 255 or 200) * alpha)
             
             if option.icon and option.icon != false and option.icon != nil then
@@ -231,7 +228,7 @@ function PANEL:Paint(w, h)
     end
     
     if optionCount > 0 then
-        local lineHighlightColor = ColorAlpha(Mantle.color.theme, (Mantle.ui.convar.light_theme and 100 or 60) * alpha)
+        local lineHighlightColor = ColorAlpha(Mantle.color.theme, (Mantle.ui.convar.theme == 'light' and 100 or 60) * alpha)
         self:DrawCircleOutline(centerX, centerY, currentRadius, lineHighlightColor, 1)
         self:DrawCircleOutline(centerX, centerY, currentInnerRadius, lineHighlightColor, 1)
     end

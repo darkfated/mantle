@@ -549,11 +549,17 @@ local function CreateMenu()
         checkboxDepth:SetTxt('Глубины элементов')
         checkboxDepth:SetConvar('mantle_depth_ui')
 
-        local checkboxLight = vgui.Create('MantleCheckBox', panel)
-        checkboxLight:Dock(TOP)
-        checkboxLight:DockMargin(0, 6, 0, 0)
-        checkboxLight:SetTxt('Светлая тема')
-        checkboxLight:SetConvar('mantle_light_theme')
+        local themeCombo = vgui.Create('MantleComboBox', panel)
+        themeCombo:Dock(TOP)
+        themeCombo:DockMargin(0, 6, 0, 0)
+        themeCombo:SetPlaceholder('Выберите тему интерфейса')
+        themeCombo:AddChoice('Тёмная', 'dark')
+        themeCombo:AddChoice('Светлая', 'light')
+        themeCombo:AddChoice('Синяя', 'blue')
+        themeCombo:AddChoice('Красная', 'red')
+        themeCombo.OnSelect = function(idx, text, data)
+            RunConsoleCommand('mantle_theme', data)
+        end
 
         return panel
     end
