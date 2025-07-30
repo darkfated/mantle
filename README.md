@@ -24,16 +24,16 @@
 <img width="775" height="576" alt="{ED43C1DB-8110-4695-97D3-ED9918502C21}" src="https://github.com/user-attachments/assets/628b5870-8229-408e-9794-7ab119681eba" />
 
 ### ComboBox
-<img width="837" height="610" alt="ComboBox" src="https://github.com/user-attachments/assets/35033dc4-6fbb-4154-8905-01b80d8158ad" />
+<img width="833" height="647" alt="ComboBox" src="https://github.com/user-attachments/assets/8607d470-4fc4-4b13-a029-5ec8394ea4bd" />
 
 ### SlideBox
-<img width="808" height="605" alt="SlideBox" src="https://github.com/user-attachments/assets/df4bf805-5a1c-4c60-a38f-7b81d996d5b4" />
+<img width="843" height="651" alt="SlideBox" src="https://github.com/user-attachments/assets/b3063187-0199-4c0e-b798-deb7fdb103ae" />
 
 ### Таблицы
-<img width="802" height="602" alt="Таблицы" src="https://github.com/user-attachments/assets/3629a261-37dd-4cbd-8d75-765c91e6b8c9" />
+<img width="825" height="649" alt="Таблицы" src="https://github.com/user-attachments/assets/a438a1bb-30dc-4bb1-a6d0-bc60146cdfe2" />
 
 ### Поле ввода
-<img width="809" height="601" alt="Поле ввода" src="https://github.com/user-attachments/assets/b37cbaed-b3b2-474a-9e70-91ff08f5ec99" />
+<img width="834" height="641" alt="Поле ввода" src="https://github.com/user-attachments/assets/56785e7c-7ccc-4bab-bab9-8c21778bf5fb" />
 
 ### Множественные всплывающие меню
 <img width="815" height="614" alt="Множественные всплывающие меню" src="https://github.com/user-attachments/assets/3bfe5206-9813-421c-93f2-597ca6746983" />
