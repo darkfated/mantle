@@ -38,7 +38,7 @@ function PANEL:SetRadius(rad)
 end
 
 function PANEL:SetIcon(icon, icon_size)
-    self.icon = icon
+    self.icon = type(icon) == 'IMaterial' and icon or Material(icon)
     self.icon_size = icon_size
 end
 
@@ -134,20 +134,24 @@ function PANEL:Paint(w, h)
         RNDX.Draw(w, self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size, ripple_color, btnFlags)
     end
 
-    draw.SimpleText(
-        self.text, 
-        self.font, 
-        w * 0.5 + (self.icon != '' and self.icon_size * 0.5 + 2 or 0), 
-        h * 0.5, 
-        Mantle.color.text, 
-        TEXT_ALIGN_CENTER, 
-        TEXT_ALIGN_CENTER
-    )
-
-    if self.icon != '' then
-        surface.SetFont(self.font)
-        
-        local posX = (w - surface.GetTextSize(self.text) - self.icon_size) * 0.5 - 2
+    if self.text != '' then
+        draw.SimpleText(
+            self.text, 
+            self.font, 
+            w * 0.5 + (self.icon ~= '' and self.icon_size * 0.5 + 2 or 0), 
+            h * 0.5, 
+            Mantle.color.text, 
+            TEXT_ALIGN_CENTER, 
+            TEXT_ALIGN_CENTER
+        )
+        if self.icon != '' then
+            surface.SetFont(self.font)
+            local posX = (w - surface.GetTextSize(self.text) - self.icon_size) * 0.5 - 2
+            local posY = (h - self.icon_size) * 0.5
+            RNDX.DrawMaterial(0, posX, posY, self.icon_size, self.icon_size, color_white, self.icon)
+        end
+    elseif self.icon != '' then
+        local posX = (w - self.icon_size) * 0.5
         local posY = (h - self.icon_size) * 0.5
         RNDX.DrawMaterial(0, posX, posY, self.icon_size, self.icon_size, color_white, self.icon)
     end
