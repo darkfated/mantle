@@ -1,5 +1,6 @@
 local color_disconnect = Color(210, 65, 65)
-local color_card_bg = Color(45, 45, 55)
+local color_bot = Color(70, 150, 220)
+local color_online = Color(120, 180, 70)
 
 function Mantle.ui.player_selector(do_click, func_check)
     if IsValid(Mantle.ui.menu_player_selector) then
@@ -7,7 +8,7 @@ function Mantle.ui.player_selector(do_click, func_check)
     end
 
     Mantle.ui.menu_player_selector = vgui.Create('MantleFrame')
-    Mantle.ui.menu_player_selector:SetSize(340, 400)
+    Mantle.ui.menu_player_selector:SetSize(340, 398)
     Mantle.ui.menu_player_selector:Center()
     Mantle.ui.menu_player_selector:MakePopup()
     Mantle.ui.menu_player_selector:SetTitle('')
@@ -30,27 +31,31 @@ function Mantle.ui.player_selector(do_click, func_check)
         card:DockMargin(0, 5, 0, 0)
         card:SetTall(CARD_HEIGHT)
         card:SetText('')
+        card.hover_status = 0
         card.OnCursorEntered = function(self)
-            self.Hovered = true
             self:SetCursor('hand')
         end
         card.OnCursorExited = function(self)
-            self.Hovered = false
             self:SetCursor('arrow')
+        end
+        card.Think = function(self)
+            if self:IsHovered() then
+                self.hover_status = math.Clamp(self.hover_status + 4 * FrameTime(), 0, 1)
+            else
+                self.hover_status = math.Clamp(self.hover_status - 8 * FrameTime(), 0, 1)
+            end
         end
         card.DoClick = function()
             if IsValid(pl) then
                 Mantle.func.sound()
                 do_click(pl)
             end
-
             Mantle.ui.menu_player_selector:Remove()
         end
         card.Paint = function(self, w, h)
-            RNDX.Draw(10, 0, 0, w, h, self.Hovered and Mantle.color.hover or color_card_bg, RNDX.SHAPE_IOS)
-
-            if self.Hovered then
-                RNDX.DrawShadows(10, 0, 0, w, h, Color(0, 0, 0, 40), 3, 1, RNDX.SHAPE_IOS)
+            RNDX.Draw(10, 0, 0, w, h, Mantle.color.panel[1], RNDX.SHAPE_IOS)
+            if self.hover_status > 0 then
+                RNDX.Draw(10, 0, 0, w, h, Color(0, 0, 0, 40 * self.hover_status), RNDX.SHAPE_IOS)
             end
 
             local infoX = AVATAR_X + AVATAR_SIZE + 10
@@ -68,9 +73,9 @@ function Mantle.ui.player_selector(do_click, func_check)
 
             local statusColor = color_disconnect
             if pl:IsBot() then
-                statusColor = Color(70, 150, 220)
+                statusColor = color_bot
             else
-                statusColor = Color(120, 180, 70)
+                statusColor = color_online
             end
 
             RNDX.DrawCircle(w - 24, 14, 12, statusColor)
