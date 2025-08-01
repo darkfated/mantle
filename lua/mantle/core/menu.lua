@@ -340,17 +340,36 @@ local function CreateMenu()
             end},
             {'Опциональное меню (Derma Menu)', function()
                 local DM = Mantle.ui.derma_menu()
-        
                 for i = 1, 5 do
                     DM:AddOption('Опция ' .. i, function()
                         chat.AddText('Привет всем! ' .. i)
                     end)
                 end
-        
                 DM:AddSpacer()
                 DM:AddOption('Узнать свою привилегию', function()
                     chat.AddText(LocalPlayer():GetUserGroup())
                 end, 'icon16/status_online.png')
+            end},
+            {'Опциональное с подменю (Derma Menu)', function()
+                local DM = Mantle.ui.derma_menu()
+                
+                local clothes = DM:AddOption('Одежда')
+                local subClothes = clothes:AddSubMenu()
+                subClothes:AddOption('Шапка', function()
+                    chat.AddText('Вы выбрали: Шапка')
+                end)
+                subClothes:AddOption('Свитер', function()
+                    chat.AddText('Вы выбрали: Свитер')
+                end)
+
+                local food = DM:AddOption('Еда')
+                local subFood = food:AddSubMenu()
+                subFood:AddOption('Морковь', function()
+                    chat.AddText('Вы выбрали: Морковь')
+                end)
+                subFood:AddOption('Яблоко', function()
+                    chat.AddText('Вы выбрали: Яблоко')
+                end)
             end},
             {'Выбор игрока', function()
                 Mantle.ui.player_selector(function(pl)

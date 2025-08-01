@@ -51,14 +51,103 @@ function PANEL:AddOption(text, func, icon, optData)
     option.Icon = icon
     option.Text = text
 
+
+    option._submenu = nil
+    option._submenu_open = false
+
     option.DoClick = function()
+        if option._submenu then
+            if option._submenu_open then
+                option:CloseSubMenu()
+            else
+                option:OpenSubMenu()
+            end
+            return
+        end
         if func then func() end
         Mantle.func.sound()
-
-        if IsValid(self) then
-            self:Remove()
+        local function closeAllMenus(panel)
+            while IsValid(panel) do
+                if panel:GetName() == 'MantleDermaMenu' then
+                    local parent = panel:GetParent()
+                    panel:Remove()
+                    panel = parent
+                else
+                    panel = panel:GetParent()
+                end
+            end
         end
+        closeAllMenus(option)
     end
+
+    function option:AddSubMenu()
+        if IsValid(option._submenu) then option._submenu:Remove() end
+        local submenu = vgui.Create('MantleDermaMenu')
+        submenu:SetDrawOnTop(true)
+        submenu:SetParent(self:GetParent())
+        submenu:SetVisible(false)
+        option._submenu = submenu
+        option._submenu_open = false
+
+        option.OnRemove = function()
+            if IsValid(submenu) then submenu:Remove() end
+        end
+
+        function option:OpenSubMenu()
+            if not IsValid(submenu) then return end
+            for _, sibling in ipairs(self:GetParent().Items or {}) do
+                if sibling ~= self and sibling.CloseSubMenu then sibling:CloseSubMenu() end
+            end
+            local x, y = self:LocalToScreen(self:GetWide(), 0)
+            submenu:SetPos(x, y)
+            submenu:SetVisible(true)
+            submenu:MakePopup()
+            submenu:SetKeyboardInputEnabled(false)
+            option._submenu_open = true
+        end
+
+        function option:CloseSubMenu()
+            if IsValid(submenu) then submenu:SetVisible(false) end
+            option._submenu_open = false
+            if submenu.Items then
+                for _, item in ipairs(submenu.Items) do
+                    if item.CloseSubMenu then item:CloseSubMenu() end
+                end
+            end
+        end
+
+        local function isAnySubmenuHovered(opt)
+            if not IsValid(opt) then return false end
+            if opt:IsHovered() then return true end
+            if opt._submenu and IsValid(opt._submenu) and opt._submenu:IsVisible() then
+                if isAnySubmenuHovered(opt._submenu) then return true end
+                for _, item in ipairs(opt._submenu.Items or {}) do
+                    if isAnySubmenuHovered(item) then return true end
+                end
+            end
+            return false
+        end
+
+        option.OnCursorExited = function(pnl)
+            timer.Simple(0.15, function()
+                if not isAnySubmenuHovered(pnl) then
+                    pnl:CloseSubMenu()
+                end
+            end)
+        end
+        submenu.OnCursorExited = function(pnl)
+            timer.Simple(0.15, function()
+                if not isAnySubmenuHovered(option) then
+                    option:CloseSubMenu()
+                end
+            end)
+        end
+
+        return submenu
+    end
+
+
+    option.AddSubMenu = option.AddSubMenu
 
     if optData then
         for k, v in pairs(optData) do
@@ -81,6 +170,10 @@ function PANEL:AddOption(text, func, icon, optData)
                 RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
             end
             RNDX.Draw(16, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
+
+            if pnl._submenu and not pnl._submenu_open then
+                pnl:OpenSubMenu()
+            end
         end
 
         if iconMat then
