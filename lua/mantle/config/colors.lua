@@ -366,7 +366,7 @@ Mantle.color_ice = {
 
     window_shadow = Color(60, 100, 140, 80),
 
-    gray = Color(67, 90, 114, 200),
+    gray = Color(114, 139, 165, 200),
     text = Color(20, 35, 50)
 }
 Mantle.color_ice.panel_alpha = {
