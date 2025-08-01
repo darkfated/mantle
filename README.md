@@ -18,7 +18,7 @@
 *Ниже можете увидеть некоторые возможности*
 
 ### Документация
-<img width="837" height="645" alt="VGUI элементы" src="https://github.com/user-attachments/assets/efec0471-92e5-4d6c-972a-dad80d8adc77" />
+<img width="911" height="696" alt="VGUI элементы" src="https://github.com/user-attachments/assets/2a52ee52-ac21-47fe-8031-eb11164bd2e6" />
 
 ### Lite-режим окна
 <img width="775" height="576" alt="{ED43C1DB-8110-4695-97D3-ED9918502C21}" src="https://github.com/user-attachments/assets/628b5870-8229-408e-9794-7ab119681eba" />
