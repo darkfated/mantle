@@ -13,9 +13,9 @@ function PANEL:Init()
     self.hover = false
     self:SetTall(60)
     self.OnValueChanged = function() end
-
     self._convar_last = nil
     self._convar_timer = self:CreateConVarSyncTimer()
+    self._dragAlpha = 255
 end
 
 function PANEL:CreateConVarSyncTimer()
@@ -128,11 +128,15 @@ function PANEL:Paint(w, h)
     -- Тень под ручкой
     RNDX.DrawShadows(handleR, handleX - handleW/2, handleY - handleH/2, handleW, handleH, Mantle.color.window_shadow, 3, 10)
 
+    local targetAlpha = self.dragging and 100 or 255
+    self._dragAlpha = Lerp(FrameTime() * 10, self._dragAlpha, targetAlpha)
+    local colorText = Color(Mantle.color.theme.r, Mantle.color.theme.g, Mantle.color.theme.b, self._dragAlpha)
+
     -- Ручка
-    RNDX.Draw(handleR, handleX - handleW/2, handleY - handleH/2, handleW, handleH, Mantle.color.text)
+    RNDX.Draw(handleR, handleX - handleW/2, handleY - handleH/2, handleW, handleH, colorText)
 
     -- Значение справа от линии
-    draw.SimpleText(self.value, valueFont, barEnd + handleW/2 + 4, barY + barH/2, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.value, valueFont, barEnd + handleW/2 + 4, barY + barH/2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- min/max под линией
     draw.SimpleText(self.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, Mantle.color.gray, TEXT_ALIGN_LEFT)
