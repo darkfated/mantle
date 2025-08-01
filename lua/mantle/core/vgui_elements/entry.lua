@@ -9,6 +9,8 @@ function PANEL:Init()
         // что-то
     end
 
+    local font = 'Fated.18'
+
     self.textEntry = vgui.Create('DTextEntry', self)
     self.textEntry:Dock(FILL)
     self.textEntry:SetText('')
@@ -29,12 +31,11 @@ function PANEL:Init()
         RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
 
         local value = self:GetValue()
-        local font = 'Fated.18'
         surface.SetFont(font)
         local padding = 6
         local available_w = w - padding * 2
 
-        local caret = s.GetCaretPos and s:GetCaretPos() or #value
+        local caret = #value
         local before_caret = string.sub(value, 1, caret)
         local caret_x = surface.GetTextSize(before_caret)
         local text_w = surface.GetTextSize(value)
@@ -45,7 +46,6 @@ function PANEL:Init()
         end
         if text_w - desired_offset < available_w then
             desired_offset = math.max(0, text_w - available_w)
-            local caret = (s.GetCaretPos and s:GetCaretPos()) or #value
         end
 
         self._text_offset = Lerp(FrameTime() * 15, self._text_offset or 0, desired_offset)
