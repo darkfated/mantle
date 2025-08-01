@@ -154,10 +154,14 @@ local function CreateFunc()
         local startTime = SysTime()
         local initialW = target_w * scaleFactor
         local initialH = target_h * scaleFactor
+        
+        local targetX, targetY = panel:GetPos()
+        local initialX = targetX + (target_w - initialW) / 2
+        local initialY = targetY + (target_h - initialH) / 2
 
         panel:SetSize(initialW, initialH)
+        panel:SetPos(initialX, initialY)
         panel:SetAlpha(0)
-        panel:Center()
     
         panel.Think = function()
             local elapsed = SysTime() - startTime
@@ -166,8 +170,11 @@ local function CreateFunc()
     
             local currentW = Lerp(sizeProgress, initialW, target_w)
             local currentH = Lerp(sizeProgress, initialH, target_h)
+            local currentX = Lerp(sizeProgress, initialX, targetX)
+            local currentY = Lerp(sizeProgress, initialY, targetY)
+
             panel:SetSize(currentW, currentH)
-            panel:Center()
+            panel:SetPos(currentX, currentY)
     
             local alpha = Lerp(alphaProgress, 0, 255)
             panel:SetAlpha(alpha)
@@ -212,4 +219,12 @@ hook.Add('OnScreenSizeChanged', 'Mantle', function()
         CreateFunc()
         -- CreateFonts()
     end
+end)
+
+concommand.Add('m1', function()
+    local menu = vgui.Create('MantleFrame')
+    menu:SetSize(Mantle.func.w(800), Mantle.func.h(600))
+    menu:SetPos(200, 300)
+    menu:MakePopup()
+    menu:ShowAnimation()
 end)
