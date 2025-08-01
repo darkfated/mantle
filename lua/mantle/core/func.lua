@@ -154,7 +154,7 @@ local function CreateFunc()
         local startTime = SysTime()
         local initialW = target_w * scaleFactor
         local initialH = target_h * scaleFactor
-        
+
         local targetX, targetY = panel:GetPos()
         local initialX = targetX + (target_w - initialW) / 2
         local initialY = targetY + (target_h - initialH) / 2
@@ -219,12 +219,4 @@ hook.Add('OnScreenSizeChanged', 'Mantle', function()
         CreateFunc()
         -- CreateFonts()
     end
-end)
-
-concommand.Add('m1', function()
-    local menu = vgui.Create('MantleFrame')
-    menu:SetSize(Mantle.func.w(800), Mantle.func.h(600))
-    menu:SetPos(200, 300)
-    menu:MakePopup()
-    menu:ShowAnimation()
 end)
