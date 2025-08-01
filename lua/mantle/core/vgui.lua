@@ -12,10 +12,15 @@ Mantle.ui = {
 local themeMap = {
     dark = Mantle.color_dark,
     dark_mono = Mantle.color_dark_mono,
+    graphite = Mantle.color_graphite,
     light = Mantle.color_light,
     blue = Mantle.color_blue,
     red = Mantle.color_red,
-    green = Mantle.color_green
+    green = Mantle.color_green,
+    orange = Mantle.color_orange,
+    purple = Mantle.color_purple,
+    coffee = Mantle.color_coffee,
+    ice = Mantle.color_ice,
 }
 
 local function UpdateTheme()
