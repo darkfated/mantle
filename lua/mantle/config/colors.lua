@@ -37,6 +37,11 @@ Mantle.color_dark.panel_alpha = { -- прозрачные панели
 
 Mantle.color = Mantle.color_dark
 
+-- Тёмная палитра (монотонная)
+
+Mantle.color_dark_mono = table.Copy(Mantle.color_dark)
+Mantle.color_dark_mono.theme = Color(121, 121, 121)
+
 -- Светлая палитра
 Mantle.color_light = {
     header = Color(240, 240, 240),

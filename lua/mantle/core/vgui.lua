@@ -11,6 +11,7 @@ Mantle.ui = {
 
 local themeMap = {
     dark = Mantle.color_dark,
+    dark_mono = Mantle.color_dark_mono,
     light = Mantle.color_light,
     blue = Mantle.color_blue,
     red = Mantle.color_red,
