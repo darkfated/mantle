@@ -1,5 +1,4 @@
 local PANEL = {}
-local color_shadow = Color(0, 0, 0, 120)
 
 local function ClampMenuPosition(panel)
     if not IsValid(panel) then return end
