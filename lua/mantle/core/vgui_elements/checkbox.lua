@@ -47,6 +47,8 @@ function PANEL:Init()
             LocalPlayer():ConCommand(self.convar .. ' ' .. (self.value and 0 or 1))
         end
         self.value = not self.value
+        self:OnChange(self.value)
+
         Mantle.func.sound()
     end
 end
@@ -72,6 +74,10 @@ function PANEL:SetDescription(desc)
     self.description = desc
     self:SetTooltip(desc)
     self:SetTooltipDelay(1.5)
+end
+
+function PANEL:OnChange(new_value)
+    -- Clear
 end
 
 function PANEL:Paint(w, h)
