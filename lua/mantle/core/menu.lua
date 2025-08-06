@@ -323,6 +323,7 @@ local function CreateMenu()
             {':SetText(string text)', 'Установить текстовое обозначение'},
             {':SetValue(string val)', 'Установить значение'},
             {':GetValue()', 'Получить выбранное значение (число)'},
+            {':OnValueChanged(string new_value)', 'Вызывается при изменении значения слайдера'}
         }, panel, slider)
 
         return panel
