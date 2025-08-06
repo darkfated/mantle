@@ -96,7 +96,8 @@ local function CreateMenu()
             {':SetValue(bool value)', 'Установить bool-значение тумблера'},
             {':GetBool()', 'Получить bool-значение тумблера'},
             {':SetConvar(string convar)', 'Установить ConVar'},
-            {':SetDescription(string desc)', 'Установить описание для тумблера'}
+            {':SetDescription(string desc)', 'Установить описание для тумблера'},
+            {':OnChange(bool new_value)', 'Вызывается при изменении значения тумблера'}
         }, panel, checkbox)
 
         -- Ввод текста
