@@ -3,7 +3,6 @@ local PANEL = {}
 function PANEL:Init()
     self._activeShadowTimer = 0
     self._activeShadowMinTime = 0.03 -- минимальная длительность (сек)
-    self._shadowLerp = 5
     self._activeShadowLerp = 0
     self.hover_status = 0
     self.bool_hover = true
@@ -81,12 +80,6 @@ function PANEL:Paint(w, h)
         self.hover_status = math_clamp(self.hover_status - 8 * FrameTime(), 0, 1)
     end
 
-    if !self._shadowLerp then
-        self._shadowLerp = 5
-    end
-
-    self._shadowLerp = Lerp(FrameTime() * 4, self._shadowLerp, 5)
-
     -- Минимальный порог длительности для активной тени
     local isActive = (self:IsDown() or self.Depressed) and self.hover_status > 0.8
     if isActive then
@@ -101,7 +94,7 @@ function PANEL:Paint(w, h)
 
     -- Обычная тень
     if Mantle.ui.convar.depth_ui then
-        RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, self._shadowLerp, 20, RNDX.SHAPE_IOS)
+        RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
     end
 
     -- Дополнительная тень при зажатии
