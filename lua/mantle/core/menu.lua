@@ -429,6 +429,9 @@ local function CreateMenu()
                 Mantle.ui.text_box('Заголовок', 'Описание того, что вводиться', function(s)
                     chat.AddText('Вы ввели: ', color_white, s)
                 end)
+            end},
+            {'Вызов сообщения в Окне', function()
+                menuMantle:Notify('Тестовое сообщение!')
             end}
         }
 

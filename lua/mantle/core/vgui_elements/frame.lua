@@ -98,6 +98,42 @@ function PANEL:LiteMode()
     self.cls:SetZPos(2)
 end
 
+function PANEL:Notify(text, duration, col)
+    if IsValid(self.messagePanel) then self.messagePanel:Remove() end
+    duration = duration or 2
+    col = col or Mantle.color.theme
+
+    surface.SetFont('Fated.20')
+    local tw, th = surface.GetTextSize(text)
+
+    local mp = vgui.Create('DPanel', self)
+    mp:SetSize(tw + 16, th + 8)
+    mp:SetMouseInputEnabled(false)
+    local startY = self:GetTall() + mp:GetTall()
+    local endY = self:GetTall() - mp:GetTall() - 16
+    mp:SetPos((self:GetWide() - mp:GetWide()) * 0.5, startY)
+    mp:SetAlpha(0)
+    mp.Paint = function(_, w, h)
+        RNDX.DrawShadowsOutlined(16, 0, 0, w, h, col, 3, 7, 20)
+        RNDX.Draw(16, 0, 0, w, h, col)
+        draw.SimpleText(text, 'Fated.20', w * 0.5, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    mp:MoveTo(mp.x, endY, 0.3, 0, 0.7)
+    mp:AlphaTo(255, 0.3, 0, function()
+        timer.Simple(duration, function()
+            if !IsValid(mp) then return end
+            mp:AlphaTo(0, 0.25, 0, function()
+                if IsValid(mp) then
+                    mp:Remove()
+                end
+            end)
+        end)
+    end)
+
+    self.messagePanel = mp
+end
+
 local flagsHeader = RNDX.NO_BL + RNDX.NO_BR
 local flagsBackground = RNDX.NO_TL + RNDX.NO_TR
 
