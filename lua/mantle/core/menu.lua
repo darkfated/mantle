@@ -132,7 +132,8 @@ local function CreateMenu()
             {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
             {':DisableCloseBtn()', 'Скрыть кнопку закрытия'},
             {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'},
-            {':LiteMode()', 'Активировать режим Lite (без верхней панели)'}
+            {':LiteMode()', 'Активировать режим Lite (без верхней панели)'},
+            {':Notify(string text, number duration, color col)', 'Показать уведомление внизу окна (дефолт времени - 2 сек., цвета - Mantle.color.theme)'}
         }, panel, btnFrame)
 
         -- ScrollPanel
