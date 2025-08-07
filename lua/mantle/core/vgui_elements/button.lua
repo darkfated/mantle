@@ -93,9 +93,9 @@ function PANEL:Paint(w, h)
     self._activeShadowLerp = Lerp(FrameTime() * activeSpeed, self._activeShadowLerp, activeTarget)
 
     -- Обычная тень
-    if Mantle.ui.convar.depth_ui then
-        RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
-    end
+    -- if Mantle.ui.convar.depth_ui then
+    --     RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    -- end
 
     -- Дополнительная тень при зажатии
     if self._activeShadowLerp > 0 and Mantle.ui.convar.depth_ui then
