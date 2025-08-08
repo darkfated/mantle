@@ -49,7 +49,7 @@
 
 ### Цветовые темы
 
-<img width="830" height="613" alt="Светлая тема документация" src="https://github.com/user-attachments/assets/db6dc9f4-d6cd-4918-ba2e-203d0ad071f7" />
+<img width="830" height="613" alt="Светлая тема документация" src="https://github.com/user-attachments/assets/dc096e4c-880e-4782-a688-1f124a10bcac" />
 <img width="864" height="732" alt="Светлая тема круговое меню" src="https://github.com/user-attachments/assets/17fbb74e-1ca4-4be3-93ae-df88134a2469" />
 <img width="914" height="679" alt="Зелёная тема документация" src="https://github.com/user-attachments/assets/1572fddf-7321-40e5-8fd8-e94fca823f0d" />
 
