@@ -572,46 +572,46 @@ local function CreateMenu()
 
         local menuWide = menuMantle:GetWide()
 
-        CreateCategory('blur(panel)', {
-            {'Mantle.func.blur(panel)', 'Отрисовка размытия панели в Paint'}
+        CreateCategory('Размытие панели', {
+            {'Mantle.func.blur(object panel)', 'Отрисовка размытия панели в Paint'}
         }, panel)
 
-        CreateCategory('gradient(x, y, w, h, direction, color, radius, flags)', {
-            {'Mantle.func.gradient(x, y, w, h, dir, color, radius, flags)', 'Отрисовка градиента (dir: 1-вверх, 2-вниз, 3-влево, 4-вправо)'}
+        CreateCategory('Градиент', {
+            {'Mantle.func.gradient(int x, int y, int w, int h, int dir, color color_shadow, int radius, flags)', 'Отрисовка градиента (dir: 1 - вверх, 2 - вниз, 3 - влево, 4 - вправо)'}
         }, panel)
 
-        CreateCategory('sound(snd)', {
-            {'Mantle.func.sound("path")', 'Проигрывает звук (по умолчанию mantle/btn_click.ogg)'}
+        CreateCategory('Создание звука', {
+            {'Mantle.func.sound(string path)', 'Проигрывает звук (дефолт - mantle/btn_click.ogg)'}
         }, panel)
 
-        CreateCategory('w(px) / h(px)', {
-            {'Mantle.func.w(px)', 'Относительная ширина (от 1920)'},
-            {'Mantle.func.h(px)', 'Относительная высота (от 1080)'}
+        CreateCategory('Относительные единицы для адаптивного интерфейса', {
+            {'Mantle.func.w(int px)', 'Относительная ширина (от 1920)'},
+            {'Mantle.func.h(int px)', 'Относительная высота (от 1080)'}
         }, panel)
 
-        CreateCategory('draw_ent_text(ent, txt, posY)', {
-            {'Mantle.func.draw_ent_text(ent, txt, posY)', 'Рисует текст над энтити с плавным появлением (3D2D)'}
+        CreateCategory('Отрисовка текста над энтити', {
+            {'Mantle.func.draw_ent_text(object ent, string text, int posY)', 'Рисует текст над энтити с плавным появлением (3D2D)'}
         }, panel)
 
-        CreateCategory('animate_appearance(panel, w, h, duration, alpha_duration, callback)', {
-            {'Mantle.func.animate_appearance(panel, w, h, d1, d2, cb)', 'Анимация плавного появления панели'}
+        CreateCategory('Анимация размера панели', {
+            {'Mantle.func.animate_appearance(object panel, int w, int h, int duration, int alpha_dur, func callback)', 'Плавное изменение панели до нужного размера'}
         }, panel)
 
-        CreateCategory('LerpColor(frac, from, to)', {
-            {'Mantle.func.LerpColor(frac, col1, col2)', 'Плавный переход цвета col1 → col2'}
+        CreateCategory('Плавное изменение цвета', {
+            {'Mantle.func.LerpColor(int frac, color col1, color col2)', 'Плавный переход цвета от col1 → col2'}
         }, panel)
 
-        CreateCategory('http.DownloadMaterial(url, path, callback, retry_count)', {
-            {'http.DownloadMaterial(url, path, callback, retry_count)', 'Скачивает материал по URL и кэширует его, повторяет попытку при ошибке, возвращает через callback'}
+        CreateCategory('Загрузка картинки', {
+            {'http.DownloadMaterial(string url, string path, func callback, int retry_count)', 'Скачивает материал по URL и кэширует его. Повторяет попытку при ошибке, возвращает через callback материал'}
         }, panel)
 
-        CreateCategory('Mantle.notify(pl, header_color, header_text, txt)', {
-            {'Mantle.notify(pl, color, header, txt)', 'Отправка сообщений в чат игроку или всем (pl == true - всем)'}
+        CreateCategory('Серверное уведомление', {
+            {'Mantle.notify(object pl, color header_color, string header, string text)', 'Отправка сообщений в чат игроку или всем (вместо pl указать true - тогда всем)'}
         }, panel)
 
-        CreateCategory('utf8.lower(str) / utf8.upper(str)', {
-            {'utf8.lower(str)', 'Преобразует строку в нижний регистр с поддержкой русских букв'},
-            {'utf8.upper(str)', 'Преобразует строку в верхний регистр с поддержкой русских букв'}
+        CreateCategory('Изменение регистра букв', {
+            {'utf8.lower(string text)', 'Преобразует строку в нижний регистр с поддержкой русских букв'},
+            {'utf8.upper(string text)', 'Преобразует строку в верхний регистр с поддержкой русских букв'}
         }, panel)
 
         return panel
@@ -718,13 +718,13 @@ local function CreateMenu()
             tabs:ActiveTab('Вкладка 1')
         end
         CreateCategory('Legacy Frame (не стоит использовать)', {
-            {'Mantle.ui.frame(frame, title, width, height, close_bool, anim_bool)', 'Создание окна с кастомным стилем'},
-            {'Mantle.ui.sp(scroll)', 'Стилизация скролл панели'},
-            {'Mantle.ui.btn(btn, icon, icon_size, btn_color, btn_radius, off_grad_bool, btn_color_hov, off_hov_bool)', 'Стилизация кнопки'},
-            {'Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, decimals)', 'Создание слайдера'},
-            {'Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)', 'Создание поля ввода'},
-            {'Mantle.ui.checkbox(parent, text, convar)', 'Создание чекбокса'},
-            {'Mantle.ui.panel_tabs(parent)', 'Создание панели с вкладками'}
+            {'Mantle.ui.frame(object frame, string title, int w, int h, bool cls_btn, bool open_anim)', 'Оформление стандартное окна стилем Mantle'},
+            {'Mantle.ui.sp(object scroll)', 'Оформление панели прокрутки элементов'},
+            {'Mantle.ui.btn(object btn, mat icon, int icon_size, color col, int rad, bool off_grad, color hov, bool off_hov)', 'Оформление кнопки'},
+            {'Mantle.ui.slidebox(object parent, string label, int min_value, int max_value, string convar, int decimals)', 'Создание слайдера на родительном элементе'},
+            {'Mantle.ui.desc_entry(object parent, string title, string placeholder, bool off_title)', 'Создание поля ввода'},
+            {'Mantle.ui.checkbox(object parent, string text, string convar)', 'Создание чекбокса'},
+            {'Mantle.ui.panel_tabs(object parent)', 'Создание панели с вкладками. В дальнейшем использовать :AddTab() и :ActiveTab() для настройки'}
         }, panel, btnFrame, true)
 
         return panel
@@ -749,23 +749,50 @@ local function CreateMenu()
         checkboxBlur:SetTxt('Размытие фона')
         checkboxBlur:SetConvar('mantle_blur')
 
-        local themeCombo = vgui.Create('MantleComboBox', panel)
-        themeCombo:Dock(TOP)
-        themeCombo:DockMargin(0, 6, 0, 0)
-        themeCombo:SetPlaceholder('Выберите тему интерфейса')
-        themeCombo:AddChoice('Тёмная (dark)', 'dark')
-        themeCombo:AddChoice('Тёмная монотонная (dark_mono)', 'dark_mono')
-        themeCombo:AddChoice('Графитная (graphite)', 'graphite')
-        themeCombo:AddChoice('Светлая (light)', 'light')
-        themeCombo:AddChoice('Синяя (blue)', 'blue')
-        themeCombo:AddChoice('Красная (red)', 'red')
-        themeCombo:AddChoice('Зелёная (green)', 'green')
-        themeCombo:AddChoice('Оранжевая (orange)', 'orange')
-        themeCombo:AddChoice('Фиолетовый (purple)', 'purple')
-        themeCombo:AddChoice('Кофейная (coffee)', 'coffee')
-        themeCombo:AddChoice('Ледяная (ice)', 'ice')
-        themeCombo.OnSelect = function(_, _, data)
+        local categoryTheme = vgui.Create('MantleCategory', panel)
+        categoryTheme:Dock(TOP)
+        categoryTheme:DockMargin(0, 6, 0, 0)
+        categoryTheme:SetText('Изменение цветовой темы')
+        categoryTheme:SetActive(true)
+
+        local comboboxTheme = vgui.Create('MantleComboBox')
+        comboboxTheme:Dock(TOP)
+        comboboxTheme:SetPlaceholder('Выберите тему интерфейса')
+        comboboxTheme:AddChoice('Тёмная (dark)', 'dark')
+        comboboxTheme:AddChoice('Тёмная монотонная (dark_mono)', 'dark_mono')
+        comboboxTheme:AddChoice('Графитная (graphite)', 'graphite')
+        comboboxTheme:AddChoice('Светлая (light)', 'light')
+        comboboxTheme:AddChoice('Синяя (blue)', 'blue')
+        comboboxTheme:AddChoice('Красная (red)', 'red')
+        comboboxTheme:AddChoice('Зелёная (green)', 'green')
+        comboboxTheme:AddChoice('Оранжевая (orange)', 'orange')
+        comboboxTheme:AddChoice('Фиолетовый (purple)', 'purple')
+        comboboxTheme:AddChoice('Кофейная (coffee)', 'coffee')
+        comboboxTheme:AddChoice('Ледяная (ice)', 'ice')
+        comboboxTheme.OnSelect = function(_, _, data)
             RunConsoleCommand('mantle_theme', data)
+        end
+        categoryTheme:AddItem(comboboxTheme)
+
+        local listThemeColors = vgui.Create('DIconLayout')
+        listThemeColors:Dock(TOP)
+        listThemeColors:DockMargin(6, 8, 6, 0)
+        listThemeColors:SetTall(164)
+        listThemeColors:SetSpaceX(8)
+        listThemeColors:SetSpaceY(8)
+        categoryTheme:AddItem(listThemeColors)
+
+        for colId, _ in pairs(Mantle.color) do
+            local panCol = vgui.Create('DPanel', listThemeColors)
+            panCol:SetSize(80, 80)
+            panCol.Paint = function(_, w, h)
+                RNDX().Rect(0, 0, w, h)
+                    :Rad(16)
+                    :Color(Mantle.color[colId])
+                    :Shape(RNDX.SHAPE_IOS)
+                :Draw()
+                draw.SimpleText(colId, 'Fated.12', w * 0.5, h * 0.5, color_black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
         end
 
         return panel

@@ -88,8 +88,8 @@ local function CreateFunc()
         RNDX.DrawMaterial(radius, _x, _y, _w, _h, color_shadow, listGradients[direction], flags)
     end
 
-    function Mantle.func.sound(snd)
-        surface.PlaySound(snd or 'mantle/btn_click.ogg')
+    function Mantle.func.sound(path)
+        surface.PlaySound(path or 'mantle/btn_click.ogg')
     end
 
     Mantle.func.w_save = {}
@@ -99,23 +99,23 @@ local function CreateFunc()
         Получение относительной ширины (на основе 1920)
         При указании Mantle.func.w(20), 20 будет менять в меньшую сторону или большую в зависимости от ширины экрана
     ]]--
-    function Mantle.func.w(w)
-        if !Mantle.func.w_save[w] then
-            Mantle.func.w_save[w] = w / 1920 * Mantle.func.sw
+    function Mantle.func.w(px)
+        if !Mantle.func.w_save[px] then
+            Mantle.func.w_save[px] = px / 1920 * Mantle.func.sw
         end
 
-        return Mantle.func.w_save[w]
+        return Mantle.func.w_save[px]
     end
 
     --[[
         Получение относительной высоты (на основе 1080)
     ]]--
-    function Mantle.func.h(h)
-        if !Mantle.func.h_save[h] then
-            Mantle.func.h_save[h] = h / 1080 * Mantle.func.sh
+    function Mantle.func.h(px)
+        if !Mantle.func.h_save[px] then
+            Mantle.func.h_save[px] = px / 1080 * Mantle.func.sh
         end
 
-        return Mantle.func.h_save[h]
+        return Mantle.func.h_save[px]
     end
 
     local function EntText(text, y)
@@ -146,7 +146,7 @@ local function CreateFunc()
         Отрисовка текста на Entity.
         Применяется в функциях отрисовки (например ENT:Draw)
     ]]--
-    function Mantle.func.draw_ent_text(ent, txt, posY)
+    function Mantle.func.draw_ent_text(ent, text, posY)
         local dist = EyePos():DistToSqr(ent:GetPos())
         if dist > 60000 then return end
 
@@ -179,14 +179,14 @@ local function CreateFunc()
 
         surface.SetAlphaMultiplier(alpha)
         cam.Start3D2D(center + Vector(0, 0, math_abs(max.z / 2) + 12 + sin), Angle(0, rot, 90), camScale)
-            EntText(txt, posY)
+            EntText(text, posY)
         cam.End3D2D()
         surface.SetAlphaMultiplier(1)
     end
 
     local scaleFactor = 0.9
 
-    function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_duration, func_callback)
+    function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_dur, callback)
         local startTime = SysTime()
         local initialW = target_w * scaleFactor
         local initialH = target_h * scaleFactor
@@ -202,7 +202,7 @@ local function CreateFunc()
         panel.Think = function()
             local elapsed = SysTime() - startTime
             local sizeProgress = math_clamp(elapsed / duration, 0, 1)
-            local alphaProgress = math_clamp(elapsed / alpha_duration, 0, 1)
+            local alphaProgress = math_clamp(elapsed / alpha_dur, 0, 1)
 
             local currentW = Lerp(sizeProgress, initialW, target_w)
             local currentH = Lerp(sizeProgress, initialH, target_h)
@@ -218,8 +218,8 @@ local function CreateFunc()
             if sizeProgress == 1 and alphaProgress == 1 then
                 panel.Think = nil
 
-                if func_callback then
-                    func_callback(panel)
+                if callback then
+                    callback(panel)
                 end
             end
         end
@@ -228,14 +228,14 @@ local function CreateFunc()
     --[[
         Плавное изменение цвета с одного на другой
     ]]--
-    function Mantle.func.LerpColor(frac, from, to)
+    function Mantle.func.LerpColor(frac, col1, col2)
         local ft = FrameTime() * frac
 
         return Color(
-            Lerp(ft, from.r, to.r),
-            Lerp(ft, from.g, to.g),
-            Lerp(ft, from.b, to.b),
-            Lerp(ft, from.a, to.a)
+            Lerp(ft, col1.r, col2.r),
+            Lerp(ft, col1.g, col2.g),
+            Lerp(ft, col1.b, col2.b),
+            Lerp(ft, col1.a, col2.a)
         )
     end
 end

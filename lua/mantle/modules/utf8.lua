@@ -14,10 +14,10 @@ end
 setmetatable(uc_lc, {__index = function(_, char) return char:lower() end})
 setmetatable(lc_uc, {__index = function(_, char) return char:upper() end})
 
-function utf8.lower(s)
-    return s:gsub(utf8.charpattern, uc_lc)
+function utf8.lower(text)
+    return text:gsub(utf8.charpattern, uc_lc)
 end
 
-function utf8.upper(s)
-    return s:gsub(utf8.charpattern, lc_uc)
+function utf8.upper(text)
+    return text:gsub(utf8.charpattern, lc_uc)
 end

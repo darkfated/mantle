@@ -70,7 +70,7 @@ function Mantle.ui.sp(s)
     end
 end
 
-function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool, btn_color_hov, off_hov_bool)
+function Mantle.ui.btn(s, icon, icon_size, col, rad, off_grad_bool, hov_color, off_hov_bool)
     s:SetTall(32)
     s.hoverStatus = 0
     s.btn_font = 'Fated.18'
@@ -86,13 +86,13 @@ function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool,
             self.hoverStatus = math.Clamp(self.hoverStatus - 8 * FrameTime(), 0, 255)
         end
 
-        draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, btn_color and btn_color or Mantle.color.button)
+        draw.RoundedBox(rad and rad or 6, 0, 0, w, h, col and col or Mantle.color.button)
 
         if !off_hov_bool then
-            local color_hover = btn_color_hov and btn_color_hov or Mantle.color.button_hovered
+            local color_hover = hov_color and hov_color or Mantle.color.button_hovered
             color_hover = Color(color_hover.r, color_hover.g, color_hover.b, 255 * self.hoverStatus)
 
-            draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, color_hover)
+            draw.RoundedBox(rad and rad or 6, 0, 0, w, h, color_hover)
         end
 
         if !off_grad_bool then
@@ -111,14 +111,14 @@ function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool,
     end
 end
 
-function Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, decimals)
+function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimals)
     local slider = vgui.Create('DButton', parent)
     slider:Dock(TOP)
     slider:DockMargin(0, 6, 0, 0)
     slider:SetTall(40)
     slider:SetText('')
 
-    local value = GetConVar(slide_convar):GetFloat()
+    local value = GetConVar(convar):GetFloat()
     local sections = max_value - min_value
     local smoothPos = 0
     local targetPos = 0
@@ -126,7 +126,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, d
     local function UpdateSliderPosition(new_value)
         local progress = (new_value - min_value) / sections
         targetPos = (slider:GetWide() - 16) * progress
-        LocalPlayer():ConCommand(slide_convar .. ' ' .. new_value)
+        LocalPlayer():ConCommand(convar .. ' ' .. new_value)
         value = new_value
     end
 
@@ -171,8 +171,8 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, d
     return slider
 end
 
-function Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)
-    if !bool_title_off and title then
+function Mantle.ui.desc_entry(parent, title, placeholder, off_title_bool)
+    if !off_title_bool and title then
         local label = vgui.Create('DLabel', parent)
         label:Dock(TOP)
         label:DockMargin(4, 0, 4, 0)
