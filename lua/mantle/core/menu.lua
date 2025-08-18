@@ -97,7 +97,9 @@ local function CreateMenu()
             CreateInfo(info, panel)
         end
 
-        panel:AddItem(ui_element)
+        if ui_element then
+            panel:AddItem(ui_element)
+        end
     end
 
     local function CreateTabElements()
@@ -563,6 +565,59 @@ local function CreateMenu()
     end
 
     tabs:AddTab('Всплывающие', CreateShowMenus(), Material('icon16/application_double.png'))
+
+    local function CreateTabFunctions()
+        local panel = vgui.Create('MantleScrollPanel')
+        CreateTabHeader('Функции', 'Полный список утилитарных функций Mantle.func и других вспомогательных функций', Material('icon16/cog.png'), panel)
+
+        local menuWide = menuMantle:GetWide()
+
+        CreateCategory('blur(panel)', {
+            {'Mantle.func.blur(panel)', 'Отрисовка размытия панели в Paint'}
+        }, panel)
+
+        CreateCategory('gradient(x, y, w, h, direction, color, radius, flags)', {
+            {'Mantle.func.gradient(x, y, w, h, dir, color, radius, flags)', 'Отрисовка градиента (dir: 1-вверх, 2-вниз, 3-влево, 4-вправо)'}
+        }, panel)
+
+        CreateCategory('sound(snd)', {
+            {'Mantle.func.sound("path")', 'Проигрывает звук (по умолчанию mantle/btn_click.ogg)'}
+        }, panel)
+
+        CreateCategory('w(px) / h(px)', {
+            {'Mantle.func.w(px)', 'Относительная ширина (от 1920)'},
+            {'Mantle.func.h(px)', 'Относительная высота (от 1080)'}
+        }, panel)
+
+        CreateCategory('draw_ent_text(ent, txt, posY)', {
+            {'Mantle.func.draw_ent_text(ent, txt, posY)', 'Рисует текст над энтити с плавным появлением (3D2D)'}
+        }, panel)
+
+        CreateCategory('animate_appearance(panel, w, h, duration, alpha_duration, callback)', {
+            {'Mantle.func.animate_appearance(panel, w, h, d1, d2, cb)', 'Анимация плавного появления панели'}
+        }, panel)
+
+        CreateCategory('LerpColor(frac, from, to)', {
+            {'Mantle.func.LerpColor(frac, col1, col2)', 'Плавный переход цвета col1 → col2'}
+        }, panel)
+
+        CreateCategory('http.DownloadMaterial(url, path, callback, retry_count)', {
+            {'http.DownloadMaterial(url, path, callback, retry_count)', 'Скачивает материал по URL и кэширует его, повторяет попытку при ошибке, возвращает через callback'}
+        }, panel)
+
+        CreateCategory('Mantle.notify(pl, header_color, header_text, txt)', {
+            {'Mantle.notify(pl, color, header, txt)', 'Отправка сообщений в чат игроку или всем (pl == true - всем)'}
+        }, panel)
+
+        CreateCategory('utf8.lower(str) / utf8.upper(str)', {
+            {'utf8.lower(str)', 'Преобразует строку в нижний регистр с поддержкой русских букв'},
+            {'utf8.upper(str)', 'Преобразует строку в верхний регистр с поддержкой русских букв'}
+        }, panel)
+
+        return panel
+    end
+
+    tabs:AddTab('Функции', CreateTabFunctions(), Material('icon16/error.png'))
 
     local function CreateLegacyTest()
         local panel = vgui.Create('MantleScrollPanel')
