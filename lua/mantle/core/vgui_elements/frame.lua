@@ -150,16 +150,30 @@ local flagsHeader = RNDX.NO_BL + RNDX.NO_BR
 local flagsBackground = RNDX.NO_TL + RNDX.NO_TR
 
 function PANEL:Paint(w, h)
-    RNDX.DrawShadows(6, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
+    RNDX().Rect(0, 0, w, h)
+        :Rad(6)
+        :Color(Mantle.color.window_shadow)
+        :Shadow(10, 16)
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
     if !self.bool_lite then
-        RNDX.Draw(6, 0, 0, w, 24, Mantle.color.header, flagsHeader)
+        RNDX().Rect(0, 0, w, 24)
+            :Radii(6, 6, 0, 0)
+            :Color(Mantle.color.header)
+        :Draw()
     end
 
     local headerTall = self.bool_lite and 0 or 24
-    if self.bool_alpha then
-        RNDX.Draw(6, 0, headerTall, w, h - headerTall, Mantle.color.window_blur, (self.bool_lite and 0 or flagsBackground) + RNDX.BLUR)
+    if self.bool_alpha and Mantle.ui.convar.blur then
+        RNDX().Rect(0, headerTall, w, h - headerTall)
+            :Radii(self.bool_lite and 6 or 0, self.bool_lite and 6 or 0, 6, 6)
+            :Blur()
+        :Draw()
     end
-    RNDX.Draw(6, 0, headerTall, w, h - headerTall, self.bool_alpha and Mantle.color.background_alpha or Mantle.color.background, self.bool_lite and 0 or flagsBackground)
+    RNDX().Rect(0, headerTall, w, h - headerTall)
+        :Radii(self.bool_lite and 6 or 0, self.bool_lite and 6 or 0, 6, 6)
+        :Color((self.bool_alpha and Mantle.ui.convar.blur) and Mantle.color.background_alpha or Mantle.color.background)
+    :Draw()
 
     if !self.bool_lite then
         if self.center_title != '' then

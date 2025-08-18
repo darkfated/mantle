@@ -1,11 +1,13 @@
 
 CreateClientConVar('mantle_depth_ui', 1, true, false)
 CreateClientConVar('mantle_theme', 'dark', true, false) -- dark, light, blue, red
+CreateClientConVar('mantle_blur', 1, true, false)
 
 Mantle.ui = {
     convar = {
         depth_ui = GetConVar('mantle_depth_ui'):GetBool(),
-        theme = GetConVar('mantle_theme'):GetString()
+        theme = GetConVar('mantle_theme'):GetString(),
+        blur = GetConVar('mantle_blur'):GetBool()
     }
 }
 
@@ -37,4 +39,8 @@ end)
 cvars.AddChangeCallback('mantle_theme', function(_, _, newValue)
     Mantle.ui.convar.theme = newValue
     UpdateTheme()
+end)
+
+cvars.AddChangeCallback('mantle_blur', function(_, _, newValue)
+    Mantle.ui.convar.blur = newValue == '1'
 end)

@@ -124,18 +124,36 @@ local function CreateMenu()
         }, panel, entry)
 
         -- Окно
-        local btnFrame = vgui.Create('MantleBtn')
-        btnFrame:SetTxt('Открыть окно')
-        btnFrame:SetTall(40)
-        btnFrame:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
-        btnFrame:Dock(TOP)
-        btnFrame.DoClick = function()
+        local panelFrames = vgui.Create('Panel')
+        panelFrames:Dock(TOP)
+        panelFrames:SetTall(92)
+
+        local btnFrame1 = vgui.Create('MantleBtn', panelFrames)
+        btnFrame1:SetTxt('Обычное окно')
+        btnFrame1:SetTall(40)
+        btnFrame1:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        btnFrame1:Dock(TOP)
+        btnFrame1.DoClick = function()
             local frame = vgui.Create('MantleFrame')
             frame:SetSize(400, 300)
             frame:Center()
             frame:MakePopup()
             frame:SetCenterTitle('Центр')
         end
+
+        local btnFrame2 = vgui.Create('MantleBtn', panelFrames)
+        btnFrame2:SetTxt('Lite-режим')
+        btnFrame2:SetTall(40)
+        btnFrame2:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
+        btnFrame2:Dock(TOP)
+        btnFrame2.DoClick = function()
+            local frame = vgui.Create('MantleFrame')
+            frame:SetSize(400, 300)
+            frame:Center()
+            frame:MakePopup()
+            frame:LiteMode()
+        end
+
         CreateCategory('Окно (MantleFrame)', {
             {':SetAlphaBackground(bool is_alpha)', 'Включить/выключить прозрачность окна (дефолт - false)'},
             {':SetTitle(string title)', 'Установить заголовок'},
@@ -145,7 +163,7 @@ local function CreateMenu()
             {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'},
             {':LiteMode()', 'Активировать режим Lite (без верхней панели)'},
             {':Notify(string text, number duration, color col)', 'Показать уведомление внизу окна (дефолт времени - 2 сек., цвета - Mantle.color.theme)'}
-        }, panel, btnFrame)
+        }, panel, panelFrames)
 
         -- ScrollPanel
         local sp = vgui.Create('MantleScrollPanel')
@@ -168,10 +186,9 @@ local function CreateMenu()
         CreateCategory('Панель прокрутки (MantleScrollPanel)', {}, panel, sp)
 
         -- Вкладки
-        local panelTabs = vgui.Create('DPanel')
+        local panelTabs = vgui.Create('Panel')
         panelTabs:Dock(TOP)
         panelTabs:SetTall(220)
-        panelTabs.Paint = nil
 
         local testTabs = vgui.Create('MantleTabs', panelTabs) -- modern стиль
         testTabs:SetTall(90)
@@ -616,6 +633,12 @@ local function CreateMenu()
         checkboxDepth:Dock(TOP)
         checkboxDepth:SetTxt('Глубины элементов')
         checkboxDepth:SetConvar('mantle_depth_ui')
+
+        local checkboxBlur = vgui.Create('MantleCheckBox', panel)
+        checkboxBlur:Dock(TOP)
+        checkboxBlur:DockMargin(0, 6, 0, 0)
+        checkboxBlur:SetTxt('Размытие фона')
+        checkboxBlur:SetConvar('mantle_blur')
 
         local themeCombo = vgui.Create('MantleComboBox', panel)
         themeCombo:Dock(TOP)
