@@ -32,8 +32,17 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-    RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
-    RNDX.Draw(16, 0, 0, w, h, Mantle.color.background_panelpopup, RNDX.SHAPE_IOS)
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
+        :Color(Mantle.color.window_shadow)
+        :Shape(RNDX.SHAPE_IOS)
+        :Shadow(10, 16)
+    :Draw()
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
+        :Color(Mantle.color.background_panelpopup)
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
 end
 
 function PANEL:AddOption(text, func, icon, optData)
@@ -166,7 +175,12 @@ function PANEL:AddOption(text, func, icon, optData)
 
         if pnl:IsHovered() then
             if Mantle.ui.convar.depth_ui then
-                RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+                RNDX().Rect(0, 0, w, h)
+                    :Rad(16)
+                    :Color(Mantle.color.window_shadow)
+                    :Shape(RNDX.SHAPE_IOS)
+                    :Shadow(5, 20)
+                :Draw()
             end
             RNDX.Draw(16, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
 

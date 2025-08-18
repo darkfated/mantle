@@ -10,7 +10,7 @@ function PANEL:Init()
 
     self.panel_tabs = vgui.Create('Panel', self)
     self.panel_tabs.Paint = nil
-    
+
     self.content = vgui.Create('Panel', self)
     self.content.Paint = nil
 end
@@ -69,7 +69,7 @@ function PANEL:Rebuild()
             btnTab:DockMargin(0, 0, 0, 6)
             btnTab:SetTall(34)
         end
-        
+
         btnTab:SetText('')
         btnTab.DoClick = function()
             self.tabs[self.active_id].pan:SetVisible(false)
@@ -99,7 +99,7 @@ function PANEL:Rebuild()
                 if s:IsHovered() then
                     RNDX.Draw(16, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS + (isActive and RNDX.NO_BL + RNDX.NO_BR or 0))
                 end
-                
+
                 if isActive then
                     RNDX.Draw(0, 0, h - self.indicator_height, w, self.indicator_height, Mantle.color.theme)
                 end

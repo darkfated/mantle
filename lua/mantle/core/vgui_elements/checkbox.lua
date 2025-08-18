@@ -27,10 +27,18 @@ function PANEL:Init()
         self.circleAnim = Lerp(FrameTime() * 12, self.circleAnim, self.value and 1 or 0)
         local trackH = 20
         local trackY = (h - trackH) / 2
-        RNDX.Draw(16, 0, trackY, w, trackH, Mantle.color.button, RNDX.SHAPE_IOS)
-        
+        RNDX().Rect(0, trackY, w, trackH)
+            :Rad(16)
+            :Color(Mantle.color.button)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
+
         if self.hoverAnim > 0 then
-            RNDX.Draw(16, 0, trackY, w, trackH, Color(Mantle.color.button_hovered.r, Mantle.color.button_hovered.g, Mantle.color.button_hovered.b, self.hoverAnim * 80), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, trackY, w, trackH)
+                :Rad(16)
+                :Color(Color(Mantle.color.button_hovered.r, Mantle.color.button_hovered.g, Mantle.color.button_hovered.b, self.hoverAnim * 80))
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
 
         local circleSize = 16
@@ -40,7 +48,9 @@ function PANEL:Init()
         local circleX = Lerp(self.circleAnim, x0, x1)
         local circleCol = self.value and Mantle.color.theme or Mantle.color.gray
 
-        RNDX.DrawCircle(circleX + circleSize/2, h/2, circleSize, circleCol)
+        RNDX().Circle(circleX + circleSize/2, h/2, circleSize)
+            :Color(circleCol)
+        :Draw()
     end
     self.toggle.DoClick = function()
         if self.convar ~= '' then
@@ -82,9 +92,18 @@ end
 
 function PANEL:Paint(w, h)
     if Mantle.ui.convar.depth_ui then
-        RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(Mantle.color.window_shadow)
+            :Shape(RNDX.SHAPE_IOS)
+            :Shadow(5, 20)
+        :Draw()
     end
-    RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
+        :Color(Mantle.color.focus_panel)
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
     draw.SimpleText(self.text, 'Fated.18', 12, h * 0.5, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     if self.description ~= '' and self:GetTall() > 32 then
         draw.SimpleText(self.description, 'Fated.16', 12, h - 6, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)

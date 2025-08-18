@@ -14,8 +14,15 @@ function PANEL:Init()
     vbar.btnGrip.Paint = function(s, w, h)
         s._ShadowLerp = Lerp(FrameTime() * 10, s._ShadowLerp, vbar.Dragging and 7 or 0)
 
-        RNDX.DrawShadows(32, 0, 0, w, h, Mantle.color.theme, s._ShadowLerp, 20)
-        RNDX.Draw(32, 0, 0, w, h, Mantle.color.theme)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(32)
+            :Color(Mantle.color.theme)
+            :Shadow(s._ShadowLerp, 20)
+        :Draw()
+        RNDX().Rect(0, 0, w, h)
+            :Rad(32)
+            :Color(Mantle.color.theme)
+        :Draw()
     end
 end
 

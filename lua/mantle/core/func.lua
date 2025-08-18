@@ -1,6 +1,7 @@
 Mantle.func = {
     sw = ScrW(),
-    sh = ScrH()
+    sh = ScrH(),
+    ents_scales = {},
 }
 
 local function CreateFonts()
@@ -38,7 +39,7 @@ local function CreateFonts()
                 createdFonts[font] = true
             end
         end
-        
+
         old_surface_SetFont(font)
     end
 end
@@ -93,7 +94,7 @@ local function CreateFunc()
 
     Mantle.func.w_save = {}
     Mantle.func.h_save = {}
-    
+
     --[[
         Получение относительной ширины (на основе 1920)
         При указании Mantle.func.w(20), 20 будет менять в меньшую сторону или большую в зависимости от ширины экрана
@@ -102,10 +103,10 @@ local function CreateFunc()
         if !Mantle.func.w_save[w] then
             Mantle.func.w_save[w] = w / 1920 * Mantle.func.sw
         end
-    
+
         return Mantle.func.w_save[w]
     end
-    
+
     --[[
         Получение относительной высоты (на основе 1080)
     ]]--
@@ -113,7 +114,7 @@ local function CreateFunc()
         if !Mantle.func.h_save[h] then
             Mantle.func.h_save[h] = h / 1080 * Mantle.func.sh
         end
-    
+
         return Mantle.func.h_save[h]
     end
 
@@ -123,11 +124,22 @@ local function CreateFunc()
         local bx, by = -tw * 0.5 - 18, y - 12
         local bw, bh = tw + 36, th + 24
 
-        RNDX.Draw(32, bx, by, bw, bh - 6, Mantle.color.background_alpha, RNDX.SHAPE_IOS + RNDX.NO_BL + RNDX.NO_BR + RNDX.BLUR)
-        RNDX.Draw(32, bx, by, bw, bh - 6, Mantle.color.background_alpha, RNDX.SHAPE_IOS + RNDX.NO_BL + RNDX.NO_BR)
-        RNDX.Draw(16, bx, by + bh - 6, bw, 6, color_white, RNDX.SHAPE_IOS + RNDX.NO_TL + RNDX.NO_TR)
+        RNDX().Rect(bx, by, bw, bh - 6)
+            :Radii(16, 16, 0, 0)
+            :Blur()
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
+        RNDX().Rect(bx, by, bw, bh - 6)
+            :Radii(16, 16, 0, 0)
+            :Color(Mantle.color.header)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
+        RNDX().Rect(bx, by + bh - 6, bw, 6)
+            :Radii(0, 0, 16, 16)
+            :Color(Mantle.color.text)
+        :Draw()
 
-        draw.SimpleText(text, 'Fated.40', 0, y - 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        draw.SimpleText(text, 'Fated.40', 0, y - 2, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
     end
 
     --[[
@@ -137,12 +149,36 @@ local function CreateFunc()
     function Mantle.func.draw_ent_text(ent, txt, posY)
         local dist = EyePos():DistToSqr(ent:GetPos())
         if dist > 60000 then return end
-        surface.SetAlphaMultiplier(math_clamp(3 - (dist / 20000), 0, 1))
+
+        local idx = ent:EntIndex()
+        local prev = Mantle.func.ents_scales[idx] or 0
+        local target = math_clamp(3 - (dist / 20000), 0, 1)
+
+        local dt = FrameTime() or 0.016
+        local appearSpeed = 6 -- скорость появления (меньше -> мягче)
+        local disappearSpeed = 12 -- скорость исчезания (больше -> быстрее)
+        local speed = target > prev and appearSpeed or disappearSpeed
+        local t = 1 - math.exp(-speed * dt)
+        local cur = Lerp(t, prev, target)
+        Mantle.func.ents_scales[idx] = cur
+
+        local alpha = cur
+
+        local baseScale = 0.13
+        local camScale = baseScale * cur
+
+        if cur < 0.01 then
+            surface.SetAlphaMultiplier(1)
+            return
+        end
+
         local _, max = ent:GetRotatedAABB(ent:OBBMins(), ent:OBBMaxs())
         local rot = (ent:GetPos() - EyePos()):Angle().yaw - 90
         local sin = math_sin(CurTime() + ent:EntIndex()) / 3 + 0.5
         local center = ent:LocalToWorld(ent:OBBCenter())
-        cam.Start3D2D(center + Vector(0, 0, math_abs(max.z / 2) + 12 + sin), Angle(0, rot, 90), 0.13)
+
+        surface.SetAlphaMultiplier(alpha)
+        cam.Start3D2D(center + Vector(0, 0, math_abs(max.z / 2) + 12 + sin), Angle(0, rot, 90), camScale)
             EntText(txt, posY)
         cam.End3D2D()
         surface.SetAlphaMultiplier(1)
@@ -162,12 +198,12 @@ local function CreateFunc()
         panel:SetSize(initialW, initialH)
         panel:SetPos(initialX, initialY)
         panel:SetAlpha(0)
-    
+
         panel.Think = function()
             local elapsed = SysTime() - startTime
             local sizeProgress = math_clamp(elapsed / duration, 0, 1)
             local alphaProgress = math_clamp(elapsed / alpha_duration, 0, 1)
-    
+
             local currentW = Lerp(sizeProgress, initialW, target_w)
             local currentH = Lerp(sizeProgress, initialH, target_h)
             local currentX = Lerp(sizeProgress, initialX, targetX)
@@ -175,10 +211,10 @@ local function CreateFunc()
 
             panel:SetSize(currentW, currentH)
             panel:SetPos(currentX, currentY)
-    
+
             local alpha = Lerp(alphaProgress, 0, 255)
             panel:SetAlpha(alpha)
-    
+
             if sizeProgress == 1 and alphaProgress == 1 then
                 panel.Think = nil
 

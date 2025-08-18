@@ -6,12 +6,12 @@
 
 local function RunScripts()
     Mantle.run_cl('config/colors.lua')
-    
+
     Mantle.run_cl('core/func.lua')
     Mantle.run_cl('core/vgui.lua')
     Mantle.run_cl('core/legacy_vgui.lua')
     Mantle.run_cl('core/menu.lua')
-    
+
     Mantle.run_cl('core/vgui_elements/button.lua')
     Mantle.run_cl('core/vgui_elements/checkbox.lua')
     Mantle.run_cl('core/vgui_elements/color_picker.lua')
@@ -43,7 +43,7 @@ local function RunAddons()
     end
 
     local _, addonsName = file.Find('mantle_addons/*', 'LUA')
-    
+
     for _, addon in ipairs(addonsName) do
         LoadAddon(addon)
     end

@@ -15,10 +15,10 @@ function PANEL:Init(options)
 
     local baseRadius = options.radius or 280
     local baseInnerRadius = options.inner_radius or 96
-    
+
     local minWidth = 1366
     local minHeight = 768
-    
+
     -- Если разрешение меньше минимального, используем базовый размер
     -- Если больше - масштабируем пропорционально
     local scale = 1
@@ -33,11 +33,11 @@ function PANEL:Init(options)
     if Mantle.func.sw <= 1280 then
         paddingScale = 1.3
     end
-    
+
     self.radius = Mantle.func.w(baseRadius) * scale
     self.innerRadius = Mantle.func.w(baseInnerRadius) * scale
     self.paddingScale = paddingScale
-    
+
     self.selectedOption = nil
     self.hoverOption = nil
     self.hoverAnim = 0
@@ -56,16 +56,16 @@ function PANEL:Init(options)
     self.disable_background = options.disable_background or false
     self.hover_sound = options.hover_sound or 'mantle/ratio_btn.ogg'
     self.scale_animation = options.scale_animation != false
-    
+
     self:SetSize(Mantle.func.sw, Mantle.func.sh)
     self:SetPos(0, 0)
     self:MakePopup()
     self:SetKeyboardInputEnabled(false)
     self:SetDrawOnTop(true)
     self:SetMouseInputEnabled(true)
-    
+
     self._mouseWasDown = false
-    
+
     self.Think = function()
         if self.currentAlpha < 255 then
             self.currentAlpha = math.Clamp(255 * ((SysTime() - self.blurStart) / self.fadeInTime), 0, 255)
@@ -76,22 +76,22 @@ function PANEL:Init(options)
                 self.scaleAnim = 1
             end
         end
-    
+
         local mouseDown = input.IsMouseDown(MOUSE_LEFT)
         if mouseDown and not self._mouseWasDown then
             local mouseX, mouseY = self:CursorPos()
             local centerX, centerY = Mantle.func.sw / 2, Mantle.func.sh / 2
             local dist = math_sqrt((mouseX - centerX)^2 + (mouseY - centerY)^2)
-            
+
             if dist > self.innerRadius and dist < self.radius then
                 local angle = math_atan2(mouseY - centerY, mouseX - centerX)
                 if angle < 0 then angle = angle + math_rad(360) end
-                
+
                 local optionCount = #self:GetCurrentOptions()
                 if optionCount > 0 then
                     local sectorSize = math_rad(360) / optionCount
                     local selectedIndex = math.floor(angle / sectorSize) + 1
-                    
+
                     if selectedIndex <= optionCount then
                         self:SelectOption(selectedIndex)
                         Mantle.func.sound()
@@ -108,16 +108,16 @@ function PANEL:Init(options)
                 self:Remove()
             end
         end
-        
+
         local mouseX, mouseY = self:CursorPos()
         local centerX, centerY = Mantle.func.sw / 2, Mantle.func.sh / 2
         local dist = math_sqrt((mouseX - centerX)^2 + (mouseY - centerY)^2)
         local hovered = nil
-        
+
         if dist > self.innerRadius and dist < self.radius then
             local angle = math_atan2(mouseY - centerY, mouseX - centerX)
             if angle < 0 then angle = angle + math_rad(360) end
-            
+
             local optionCount = #self:GetCurrentOptions()
             if optionCount > 0 then
                 local sectorSize = math_rad(360) / optionCount
@@ -125,11 +125,11 @@ function PANEL:Init(options)
                 if hovered > optionCount then hovered = nil end
             end
         end
-        
+
         if self.hoverOption != hovered and hovered and self.hover_sound then
             surface.PlaySound(self.hover_sound)
         end
-        
+
         self.hoverOption = hovered
         self.hoverAnim = math.Clamp(self.hoverAnim + (self.hoverOption and 4 or -8) * FrameTime(), 0, 1)
         self._mouseWasDown = mouseDown
@@ -140,11 +140,11 @@ function PANEL:OnMousePressed(keyCode)
     local mouseX, mouseY = self:CursorPos()
     local centerX, centerY = Mantle.func.sw / 2, Mantle.func.sh / 2
     local dist = math_sqrt((mouseX - centerX)^2 + (mouseY - centerY)^2)
-    
+
     if dist <= self.radius then
         return self:MouseCapture(true)
     end
-    
+
     self:Remove()
     return true
 end
@@ -161,72 +161,72 @@ function PANEL:Paint(w, h)
         local bgCol = Color(0, 0, 0, 100 * alpha)
         RNDX.Draw(0, 0, 0, w, h, bgCol, RNDX.SHAPE_RECT)
     end
-    
+
     local outerSize = self.radius * 2 + Mantle.func.w(20) * self.scale
     local currentRadius = self.radius * self.scaleAnim
     local currentInnerRadius = self.innerRadius * self.scaleAnim
-    
+
     BShadows.BeginShadow()
-    RNDX.Draw(outerSize / 2 * self.scaleAnim, centerX - (outerSize / 2 * self.scaleAnim), centerY - (outerSize / 2 * self.scaleAnim), 
+    RNDX.Draw(outerSize / 2 * self.scaleAnim, centerX - (outerSize / 2 * self.scaleAnim), centerY - (outerSize / 2 * self.scaleAnim),
         outerSize * self.scaleAnim, outerSize * self.scaleAnim, ColorAlpha(Mantle.color.background, 220 * alpha), RNDX.SHAPE_CIRCLE)
     BShadows.EndShadow(1, 2, 2, 255 * alpha, 0, 0)
-    
+
     BShadows.BeginShadow()
-    RNDX.Draw(currentRadius, centerX - currentRadius, centerY - currentRadius, 
+    RNDX.Draw(currentRadius, centerX - currentRadius, centerY - currentRadius,
         currentRadius * 2, currentRadius * 2, ColorAlpha(Mantle.color.background, 240 * alpha), RNDX.SHAPE_CIRCLE)
     BShadows.EndShadow(1, 2, 2, 255 * alpha, 0, 0)
-    
+
     BShadows.BeginShadow()
-    RNDX.Draw(currentInnerRadius, centerX - currentInnerRadius, centerY - currentInnerRadius, 
+    RNDX.Draw(currentInnerRadius, centerX - currentInnerRadius, centerY - currentInnerRadius,
         currentInnerRadius * 2, currentInnerRadius * 2, ColorAlpha(Mantle.color.background_panelpopup, self.currentAlpha), RNDX.SHAPE_CIRCLE)
     BShadows.EndShadow(1, 1, 1, (Mantle.ui.convar.theme == 'light' and 150 or 200) * alpha, 0, 0)
-    
+
     local textColor = Mantle.ui.convar.theme == 'light' and Color(30, 30, 30) or Color(255, 255, 255)
     draw.SimpleText(self.centerText, self.titleFont, centerX, centerY - Mantle.func.h(13) * self.scale, ColorAlpha(textColor, self.currentAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(self.centerDesc, self.descFont, centerX, centerY + Mantle.func.h(13) * self.scale, ColorAlpha(textColor, 180 * alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    
+
     local optionCount = #self:GetCurrentOptions()
     if optionCount > 0 then
         local sectorSize = math_rad(360) / optionCount
-        
+
         for i, option in ipairs(self:GetCurrentOptions()) do
             local startAngle = (i - 1) * sectorSize
             local endAngle = i * sectorSize
             local midAngle = startAngle + sectorSize / 2
             local isHovered = (self.hoverOption == i)
-            
+
             local textX = centerX + (currentInnerRadius + (currentRadius - currentInnerRadius) / 2) * math_cos(midAngle)
             local textY = centerY + (currentInnerRadius + (currentRadius - currentInnerRadius) / 2) * math_sin(midAngle)
-            
+
             local baseColor = Mantle.ui.convar.theme == 'light' and Color(30, 30, 30) or Color(255, 255, 255)
             local textColor = ColorAlpha(baseColor, (isHovered and 255 or 200) * alpha)
-            
+
             if option.icon and option.icon != false and option.icon != nil then
                 local iconMat = Material(option.icon)
                 local iconSize = Mantle.func.w(32) * self.scale * self.scaleAnim
                 local iconColor = ColorAlpha(color_white, self.currentAlpha)
-                RNDX.DrawMaterial(0, textX - iconSize/2, textY - iconSize - Mantle.func.h(8) * self.scale * self.paddingScale, 
+                RNDX.DrawMaterial(0, textX - iconSize/2, textY - iconSize - Mantle.func.h(8) * self.scale * self.paddingScale,
                     iconSize, iconSize, iconColor, iconMat)
-                
+
                 draw.SimpleText(option.text, self.font, textX, textY + Mantle.func.h(4) * self.scale * self.paddingScale, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                
+
                 if option.desc and isHovered then
-                    draw.SimpleText(option.desc, self.descFont, textX, textY + Mantle.func.h(20) * self.scale * self.paddingScale, 
+                    draw.SimpleText(option.desc, self.descFont, textX, textY + Mantle.func.h(20) * self.scale * self.paddingScale,
                         ColorAlpha(baseColor, 180 * self.hoverAnim * alpha),
                         TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 end
             else
                 draw.SimpleText(option.text, self.font, textX, textY - Mantle.func.h(8) * self.scale * self.paddingScale, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                
+
                 if option.desc and isHovered then
-                    draw.SimpleText(option.desc, self.descFont, textX, textY + Mantle.func.h(8) * self.scale * self.paddingScale, 
+                    draw.SimpleText(option.desc, self.descFont, textX, textY + Mantle.func.h(8) * self.scale * self.paddingScale,
                         ColorAlpha(baseColor, 180 * self.hoverAnim * alpha),
                         TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 end
             end
         end
     end
-    
+
     if optionCount > 0 then
         local lineHighlightColor = ColorAlpha(Mantle.color.theme, (Mantle.ui.convar.theme == 'light' and 100 or 60) * alpha)
         self:DrawCircleOutline(centerX, centerY, currentRadius, lineHighlightColor, 1)
@@ -237,7 +237,7 @@ end
 function PANEL:DrawCircleOutline(cx, cy, radius, color, thickness)
     local segments = 64
     local points = {}
-    
+
     for i = 0, segments do
         local angle = math_rad((i / segments) * 360)
         table.insert(points, {
@@ -245,13 +245,13 @@ function PANEL:DrawCircleOutline(cx, cy, radius, color, thickness)
             y = cy + radius * math_sin(angle)
         })
     end
-    
+
     surface.SetDrawColor(color)
-    
+
     for i = 1, #points - 1 do
         surface.DrawLine(points[i].x, points[i].y, points[i+1].x, points[i+1].y)
     end
-    
+
     surface.DrawLine(points[#points].x, points[#points].y, points[1].x, points[1].y)
 end
 
@@ -270,7 +270,7 @@ function PANEL:SelectOption(index)
     local options = self:GetCurrentOptions()
     if options[index] then
         local option = options[index]
-        
+
         if option.submenu then
             table.insert(self.menuStack, self.currentMenu)
 
@@ -312,7 +312,7 @@ function Mantle.ui.radial_menu(options)
     if IsValid(Mantle.ui.menu_radial) then
         Mantle.ui.menu_radial:Remove()
     end
-    
+
     local m = vgui.Create('MantleRadialPanel')
     m:Init(options)
     Mantle.ui.menu_radial = m

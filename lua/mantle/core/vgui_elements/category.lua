@@ -14,7 +14,11 @@ function PANEL:Init()
     self.header = vgui.Create('Button', self)
     self.header:SetText('')
     self.header.Paint = function(_, w, h)
-        RNDX.Draw(16, 0, 0, w, h, self.header_color, RNDX.SHAPE_IOS)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(self.header_color)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
         local posX = self.bool_header_centered and w * 0.5 or 8
         local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
         draw.SimpleText(self.name, 'Fated.20', posX, 4, Mantle.color.text, alignX)
@@ -56,10 +60,10 @@ end
 
 function PANEL:SetActive(is_active)
     if self.bool_opened == is_active then return end
-    
+
     self.bool_opened = is_active
     self.header_color = is_active and self.header_color_opened or self.header_color_standard
-    
+
     local totalTall = 30 + (is_active and self.content_size + 12 or 0)
     self:SetTall(totalTall)
 end

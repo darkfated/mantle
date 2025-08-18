@@ -22,25 +22,29 @@ function PANEL:Init()
         end
 
         if Mantle.ui.convar.depth_ui then
-            RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(16)
+                :Color(Mantle.color.window_shadow)
+                :Shape(RNDX.SHAPE_IOS)
+                :Shadow(5, 20)
+            :Draw()
         end
         RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
         if self.hoverAnim > 0 then
-            RNDX.Draw(16, 0, 0, w, h, Color(
-                Mantle.color.button_hovered.r,
-                Mantle.color.button_hovered.g, 
-                Mantle.color.button_hovered.b, 
-                self.hoverAnim * 255
-            ), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(16)
+                :Color(Color(Mantle.color.button_hovered.r, Mantle.color.button_hovered.g, Mantle.color.button_hovered.b, self.hoverAnim * 255))
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
 
         draw.SimpleText(
-            self.selected or self.placeholder or 'Выберите...', 
-            self.font, 
-            12, 
-            h * 0.5, 
-            Mantle.color.text, 
-            TEXT_ALIGN_LEFT, 
+            self.selected or self.placeholder or 'Выберите...',
+            self.font,
+            12,
+            h * 0.5,
+            Mantle.color.text,
+            TEXT_ALIGN_LEFT,
             TEXT_ALIGN_CENTER
         )
 
@@ -106,8 +110,17 @@ function PANEL:OpenMenu()
     self.menu:SetKeyboardInputEnabled(false)
     self.menu:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding)
     self.menu.Paint = function(s, w, h)
-        RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, 10, 16, RNDX.SHAPE_IOS)
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.background_panelpopup, RNDX.SHAPE_IOS)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(Mantle.color.window_shadow)
+            :Shape(RNDX.SHAPE_IOS)
+            :Shadow(10, 16)
+        :Draw()
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(Mantle.color.background_panelpopup)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
     end
 
     surface.SetFont(self.font)
@@ -122,14 +135,14 @@ function PANEL:OpenMenu()
             if s:IsHovered() then
                 RNDX.Draw(16, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
             end
-            
+
             draw.SimpleText(
-                choice.text, 
-                'Fated.18', 
-                14, 
-                h * 0.5, 
-                Mantle.color.text, 
-                TEXT_ALIGN_LEFT, 
+                choice.text,
+                'Fated.18',
+                14,
+                h * 0.5,
+                Mantle.color.text,
+                TEXT_ALIGN_LEFT,
                 TEXT_ALIGN_CENTER
             )
 
@@ -140,8 +153,8 @@ function PANEL:OpenMenu()
         option.DoClick = function()
             self.selected = choice.text
             self:CloseMenu()
-            if self.OnSelect then 
-                self.OnSelect(i, choice.text, choice.data) 
+            if self.OnSelect then
+                self.OnSelect(i, choice.text, choice.data)
             end
             Mantle.func.sound()
         end
@@ -155,7 +168,7 @@ function PANEL:OpenMenu()
         if mouseDown and not oldMouseDown then
             local mx, my = gui.MousePos()
             local x, y = self.menu:LocalToScreen(0, 0)
-            if not (mx >= x and mx <= x + self.menu:GetWide() and 
+            if not (mx >= x and mx <= x + self.menu:GetWide() and
                    my >= y and my <= y + self.menu:GetTall()) then
                 self:CloseMenu()
             end
@@ -180,4 +193,4 @@ function PANEL:OnRemove()
     self:CloseMenu()
 end
 
-vgui.Register('MantleComboBox', PANEL, 'Panel') 
+vgui.Register('MantleComboBox', PANEL, 'Panel')

@@ -24,8 +24,8 @@ local math_max = math.max
 local DisableClipping = DisableClipping
 local type = type
 
-local SHADERS_VERSION = "1754382102"
-local SHADERS_GMA = [========[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]========]
+local SHADERS_VERSION = "1754895369"
+local SHADERS_GMA = [========[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]========]
 do
 	local DECODED_SHADERS_GMA = util.Base64Decode(SHADERS_GMA)
 	if not DECODED_SHADERS_GMA or #DECODED_SHADERS_GMA == 0 then
@@ -52,7 +52,7 @@ local BLUR_RT = GetRenderTargetEx("RNDX" .. SHADERS_VERSION .. SysTime(),
 
 -- I know it exists in gmod, but I want to have math.min and math.max localized
 local function math_clamp(val, min, max)
-	return (math_min(math_max(val, min), max))
+	return math_min(math_max(val, min), max)
 end
 
 local NEW_FLAG; do
@@ -175,8 +175,10 @@ local TL, TR, BL, BR
 local TEXTURE
 local USING_BLUR, BLUR_INTENSITY
 local COL_R, COL_G, COL_B, COL_A
-local SHAPE, OUTLINE_THICKNESS, AA
+local SHAPE, OUTLINE_THICKNESS
 local START_ANGLE, END_ANGLE, ROTATION
+local CLIP_PANEL
+local SHADOW_ENABLED, SHADOW_SPREAD, SHADOW_INTENSITY
 local function RESET_PARAMS()
 	MAT = nil
 	X, Y, W, H = 0, 0, 0, 0
@@ -184,8 +186,10 @@ local function RESET_PARAMS()
 	TEXTURE = nil
 	USING_BLUR, BLUR_INTENSITY = false, 1.0
 	COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
-	SHAPE, OUTLINE_THICKNESS, AA = SHAPES[DEFAULT_SHAPE], -1, 0
+	SHAPE, OUTLINE_THICKNESS = SHAPES[DEFAULT_SHAPE], -1
 	START_ANGLE, END_ANGLE, ROTATION = 0, 360, 0
+	CLIP_PANEL = nil
+	SHADOW_ENABLED, SHADOW_SPREAD, SHADOW_INTENSITY = false, 0, 0
 end
 
 local function SetupDraw()
@@ -198,7 +202,7 @@ local function SetupDraw()
 		matrix,
 
 		BL, W, OUTLINE_THICKNESS or -1, END_ANGLE,
-		BR, H, AA, ROTATION,
+		BR, H, SHADOW_INTENSITY, ROTATION,
 		TR, SHAPE, BLUR_INTENSITY or 1.0, 0,
 		TL, TEXTURE and 1 or 0, START_ANGLE, 0
 	)
@@ -295,7 +299,26 @@ function RNDX.DrawCircleMaterial(x, y, r, col, mat, flags)
 end
 
 local USE_SHADOWS_BLUR = false
-local SHADOWS_AA = 0
+
+local function draw_blur()
+	if USE_SHADOWS_BLUR then
+		MAT = SHADOWS_BLUR_MAT
+	else
+		MAT = ROUNDED_BLUR_MAT
+	end
+
+	COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
+	SetupDraw()
+
+	render_CopyRenderTargetToTexture(BLUR_RT)
+	MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 0)
+	surface_DrawTexturedRect(X, Y, W, H)
+
+	render_CopyRenderTargetToTexture(BLUR_RT)
+	MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 1)
+	surface_DrawTexturedRect(X, Y, W, H)
+end
+
 function RNDX.DrawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness)
 	RESET_PARAMS()
 
@@ -303,13 +326,7 @@ function RNDX.DrawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness)
 		flags = DEFAULT_DRAW_FLAGS
 	end
 
-	if USE_SHADOWS_BLUR then
-		MAT = SHADOWS_BLUR_MAT
-		AA = SHADOWS_AA
-	else
-		MAT = ROUNDED_BLUR_MAT
-	end
-
+	X, Y = x, y
 	W, H = w, h
 	TL, TR, BL, BR = bit_band(flags, NO_TL) == 0 and tl or 0,
 		bit_band(flags, NO_TR) == 0 and tr or 0,
@@ -318,17 +335,40 @@ function RNDX.DrawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness)
 	SHAPE = SHAPES[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or SHAPES[DEFAULT_SHAPE]
 	OUTLINE_THICKNESS = thickness
 
-	COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
+	draw_blur()
+end
+
+local function setup_shadows()
+	X = X - SHADOW_SPREAD
+	Y = Y - SHADOW_SPREAD
+	W = W + (SHADOW_SPREAD * 2)
+	H = H + (SHADOW_SPREAD * 2)
+
+	TL = TL + (SHADOW_SPREAD * 2)
+	TR = TR + (SHADOW_SPREAD * 2)
+	BL = BL + (SHADOW_SPREAD * 2)
+	BR = BR + (SHADOW_SPREAD * 2)
+end
+
+local function draw_shadows(r, g, b, a)
+	if USING_BLUR then
+		USE_SHADOWS_BLUR = true
+		draw_blur()
+		USE_SHADOWS_BLUR = false
+	end
+
+	MAT = SHADOWS_MAT
+
+	if r == false then
+		COL_R = nil
+	else
+		COL_R, COL_G, COL_B, COL_A = r, g, b, a
+	end
 
 	SetupDraw()
-
-	render_CopyRenderTargetToTexture(BLUR_RT)
-	MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 0)
-	surface_DrawTexturedRect(x, y, w, h)
-
-	render_CopyRenderTargetToTexture(BLUR_RT)
-	MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 1)
-	return surface_DrawTexturedRect(x, y, w, h)
+	-- https://github.com/Jaffies/rboxes/blob/main/rboxes.lua
+	-- fixes having no $basetexture causing uv to be broken
+	surface_DrawTexturedRectUV(X, Y, W, H, -0.015625, -0.015625, 1.015625, 1.015625)
 end
 
 function RNDX.DrawShadowsEx(x, y, w, h, col, flags, tl, tr, bl, br, spread, intensity, thickness)
@@ -336,64 +376,41 @@ function RNDX.DrawShadowsEx(x, y, w, h, col, flags, tl, tr, bl, br, spread, inte
 		return
 	end
 
-	-- if we are inside a panel, we need to draw outside of it
-	local old_clipping_state = DisableClipping(true)
+	local OLD_CLIPPING_STATE = DisableClipping(true)
+
+	RESET_PARAMS()
 
 	if not flags then
 		flags = DEFAULT_DRAW_FLAGS
 	end
 
-	local using_blur = bit_band(flags, BLUR) ~= 0
-	if using_blur then
-		SHADOWS_AA = intensity
-		USE_SHADOWS_BLUR = true
-		RNDX.DrawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness)
-		USE_SHADOWS_BLUR = false
-	end
-
-	RESET_PARAMS()
-
-	-- Shadows are a bit bigger than the actual box
-	spread = spread or 30
-	intensity = intensity or spread * 1.2
-
-	x = x - spread
-	y = y - spread
-	w = w + (spread * 2)
-	h = h + (spread * 2)
-
-	tl = tl + (spread * 2)
-	tr = tr + (spread * 2)
-	bl = bl + (spread * 2)
-	br = br + (spread * 2)
-	--
-
-	MAT = SHADOWS_MAT
-
+	X, Y = x, y
 	W, H = w, h
+	SHADOW_SPREAD = spread or 30
+	SHADOW_INTENSITY = intensity or SHADOW_SPREAD * 1.2
+
 	TL, TR, BL, BR = bit_band(flags, NO_TL) == 0 and tl or 0,
 		bit_band(flags, NO_TR) == 0 and tr or 0,
 		bit_band(flags, NO_BL) == 0 and bl or 0,
 		bit_band(flags, NO_BR) == 0 and br or 0
+
 	SHAPE = SHAPES[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or SHAPES[DEFAULT_SHAPE]
+
 	OUTLINE_THICKNESS = thickness
 
-	AA = intensity
+	setup_shadows()
+
+	USING_BLUR = bit_band(flags, BLUR) ~= 0
 
 	if bit_band(flags, MANUAL_COLOR) ~= 0 then
-		COL_R = nil
+		draw_shadows(false, nil, nil, nil)
 	elseif col then
-		COL_R, COL_G, COL_B, COL_A = col.r, col.g, col.b, col.a
+		draw_shadows(col.r, col.g, col.b, col.a)
 	else
-		COL_R, COL_G, COL_B, COL_A = 0, 0, 0, 255
+		draw_shadows(0, 0, 0, 255)
 	end
 
-	SetupDraw()
-	-- https://github.com/Jaffies/rboxes/blob/main/rboxes.lua
-	-- fixes having no $basetexture causing uv to be broken
-	surface_DrawTexturedRectUV(x, y, w, h, -0.015625, -0.015625, 1.015625, 1.015625)
-
-	return DisableClipping(old_clipping_state)
+	DisableClipping(OLD_CLIPPING_STATE)
 end
 
 function RNDX.DrawShadows(r, x, y, w, h, col, spread, intensity, flags)
@@ -460,42 +477,81 @@ local BASE_FUNCS = {
 		END_ANGLE = angle or 360
 		return self
 	end,
+	Shadow = function(self, spread, intensity)
+		SHADOW_ENABLED, SHADOW_SPREAD, SHADOW_INTENSITY = true, spread or 30, intensity or (spread or 30) * 1.2
+		return self
+	end,
+	Clip = function(self, pnl)
+		CLIP_PANEL = pnl
+		return self
+	end,
 }
 
 local RECT = {
-	Rad = BASE_FUNCS.Rad,
-	Radii = BASE_FUNCS.Radii,
-	Texture = BASE_FUNCS.Texture,
-	Material = BASE_FUNCS.Material,
-	Outline = BASE_FUNCS.Outline,
-	Shape = BASE_FUNCS.Shape,
-	Color = BASE_FUNCS.Color,
-	Blur = BASE_FUNCS.Blur,
-	Rotation = BASE_FUNCS.Rotation,
-	StartAngle = BASE_FUNCS.StartAngle,
-	EndAngle = BASE_FUNCS.EndAngle,
+	Rad         = BASE_FUNCS.Rad,
+	Radii       = BASE_FUNCS.Radii,
+	Texture     = BASE_FUNCS.Texture,
+	Material    = BASE_FUNCS.Material,
+	Outline     = BASE_FUNCS.Outline,
+	Shape       = BASE_FUNCS.Shape,
+	Color       = BASE_FUNCS.Color,
+	Blur        = BASE_FUNCS.Blur,
+	Rotation    = BASE_FUNCS.Rotation,
+	StartAngle  = BASE_FUNCS.StartAngle,
+	EndAngle    = BASE_FUNCS.EndAngle,
+	Clip        = BASE_FUNCS.Clip,
+	Shadow      = BASE_FUNCS.Shadow,
 
-	Draw = function()
-		if USING_BLUR then
-			MAT = ROUNDED_BLUR_MAT
-			COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
-			SetupDraw()
-
-			render_CopyRenderTargetToTexture(BLUR_RT)
-			MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 0)
-			surface_DrawTexturedRect(X, Y, W, H)
-
-			render_CopyRenderTargetToTexture(BLUR_RT)
-			MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 1)
-			return surface_DrawTexturedRect(X, Y, W, H)
+	Draw        = function(self)
+		local OLD_CLIPPING_STATE
+		if SHADOW_ENABLED or CLIP_PANEL then
+			-- if we are inside a panel, we need to draw outside of it
+			OLD_CLIPPING_STATE = DisableClipping(true)
 		end
+
+		if CLIP_PANEL then
+			local sx, sy = CLIP_PANEL:LocalToScreen(0, 0)
+			local sw, sh = CLIP_PANEL:GetSize()
+			render.SetScissorRect(sx, sy, sx + sw, sy + sh, true)
+		end
+
+		if SHADOW_ENABLED then
+			setup_shadows()
+			draw_shadows(COL_R, COL_G, COL_B, COL_A)
+		elseif USING_BLUR then
+			draw_blur()
+		else
+			if TEXTURE then
+				MAT = ROUNDED_TEXTURE_MAT
+				MATERIAL_SetTexture(MAT, "$basetexture", TEXTURE)
+			end
+
+			SetupDraw()
+			surface_DrawTexturedRectUV(X, Y, W, H, -0.015625, -0.015625, 1.015625, 1.015625)
+		end
+
+		if CLIP_PANEL then
+			render.SetScissorRect(0, 0, 0, 0, false)
+		end
+
+		if SHADOW_ENABLED or CLIP_PANEL then
+			DisableClipping(OLD_CLIPPING_STATE)
+		end
+	end,
+
+	GetMaterial = function(self)
+		if SHADOW_ENABLED or USING_BLUR then
+			error("You can't get the material of a shadowed or blurred rectangle!")
+		end
+
 		if TEXTURE then
 			MAT = ROUNDED_TEXTURE_MAT
 			MATERIAL_SetTexture(MAT, "$basetexture", TEXTURE)
 		end
 		SetupDraw()
-		return surface_DrawTexturedRectUV(X, Y, W, H, -0.015625, -0.015625, 1.015625, 1.015625)
-	end
+
+		return MAT
+	end,
 }
 
 local CIRCLE = {
@@ -507,8 +563,11 @@ local CIRCLE = {
 	Rotation = BASE_FUNCS.Rotation,
 	StartAngle = BASE_FUNCS.StartAngle,
 	EndAngle = BASE_FUNCS.EndAngle,
+	Clip = BASE_FUNCS.Clip,
+	Shadow = BASE_FUNCS.Shadow,
 
-	Draw = RECT.Draw
+	Draw = RECT.Draw,
+	GetMaterial = RECT.GetMaterial,
 }
 
 local TYPES = {

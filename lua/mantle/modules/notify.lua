@@ -18,7 +18,7 @@ else
         local headerColor = net.ReadColor()
         local headerColorDop = Color(headerColor.r + 10, headerColor.g + 10, headerColor.b + 10)
         local txt = net.ReadString()
-    
+
         chat.AddText(headerColorDop, '[', headerColor, headerText, headerColorDop, '] ', color_white, txt)
         chat.PlaySound()
     end)

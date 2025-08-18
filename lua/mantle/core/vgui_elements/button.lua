@@ -100,22 +100,35 @@ function PANEL:Paint(w, h)
     -- Дополнительная тень при зажатии
     if self._activeShadowLerp > 0 and Mantle.ui.convar.depth_ui then
         local col = Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math.Clamp(self.col_hov.a * 1.5, 0, 255))
-        RNDX.DrawShadows(self.radius, 0, 0, w, h, col, self._activeShadowLerp * 1.5, 24, RNDX.SHAPE_IOS)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(self.radius)
+            :Color(col)
+            :Shape(btnFlags)
+            :Shadow(self._activeShadowLerp * 1.5, 24)
+        :Draw()
     end
 
-    RNDX.Draw(self.radius, 0, 0, w, h, self.col, btnFlags)
+    RNDX().Rect(0, 0, w, h)
+        :Rad(self.radius)
+        :Color(self.col)
+        :Shape(btnFlags)
+    :Draw()
 
     if self.bool_gradient then
         Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow, self.radius, btnFlags)
     end
 
     if self.bool_hover then
-        RNDX.Draw(self.radius, 0, 0, w, h, Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255), btnFlags)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(self.radius)
+            :Color(Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255))
+            :Shape(btnFlags)
+        :Draw()
     end
 
     if self.click_alpha > 0 then
         self.click_alpha = math_clamp(self.click_alpha - FrameTime() * self.ripple_speed, 0, 1)
-        
+
         local ripple_size = (1 - self.click_alpha) * math.max(w, h) * 2
         local ripple_color = Color(
             self.ripple_color.r,
@@ -123,30 +136,42 @@ function PANEL:Paint(w, h)
             self.ripple_color.b,
             self.ripple_color.a * self.click_alpha
         )
-        
-        RNDX.Draw(w, self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size, ripple_color, btnFlags)
+
+        RNDX().Rect(self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size)
+            :Rad(100)
+            :Color(ripple_color)
+            :Shape(btnFlags)
+        :Draw()
     end
 
     if self.text != '' then
         draw.SimpleText(
-            self.text, 
-            self.font, 
-            w * 0.5 + (self.icon ~= '' and self.icon_size * 0.5 + 2 or 0), 
-            h * 0.5, 
-            Mantle.color.text, 
-            TEXT_ALIGN_CENTER, 
+            self.text,
+            self.font,
+            w * 0.5 + (self.icon ~= '' and self.icon_size * 0.5 + 2 or 0),
+            h * 0.5,
+            Mantle.color.text,
+            TEXT_ALIGN_CENTER,
             TEXT_ALIGN_CENTER
         )
         if self.icon != '' then
             surface.SetFont(self.font)
             local posX = (w - surface.GetTextSize(self.text) - self.icon_size) * 0.5 - 2
             local posY = (h - self.icon_size) * 0.5
-            RNDX.DrawMaterial(0, posX, posY, self.icon_size, self.icon_size, color_white, self.icon)
+            RNDX().Rect(posX, posY, self.icon_size, self.icon_size)
+                :Material(self.icon)
+                :Color(color_white)
+                :Shape(btnFlags)
+            :Draw()
         end
     elseif self.icon != '' then
         local posX = (w - self.icon_size) * 0.5
         local posY = (h - self.icon_size) * 0.5
-        RNDX.DrawMaterial(0, posX, posY, self.icon_size, self.icon_size, color_white, self.icon)
+        RNDX().Rect(posX, posY, self.icon_size, self.icon_size)
+            :Material(self.icon)
+            :Color(color_white)
+            :Shape(btnFlags)
+        :Draw()
     end
 end
 

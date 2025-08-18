@@ -21,7 +21,7 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
             draw.RoundedBoxEx(6, x, y, w, 24, Mantle.color.header, true, true)
             draw.RoundedBoxEx(6, x, y + 24, w, h - 24, s.background_alpha and Mantle.color.background_alpha or Mantle.color.background, false, false, true, true)
             draw.SimpleText(self.f_title, 'Fated.16', x + 6, y + 4, Mantle.color.text)
-            
+
             if self.center_title then
                 draw.SimpleText(s.center_title, 'Fated.20b', x + w * 0.5, y + 11, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
@@ -79,7 +79,7 @@ function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool,
             self.btn_text = self:GetText()
             self:SetText('')
         end
-        
+
         if self:IsHovered() then
             self.hoverStatus = math.Clamp(self.hoverStatus + 4 * FrameTime(), 0, 255)
         else
@@ -89,7 +89,7 @@ function Mantle.ui.btn(s, icon, icon_size, btn_color, btn_radius, off_grad_bool,
         draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, btn_color and btn_color or Mantle.color.button)
 
         if !off_hov_bool then
-            local color_hover = btn_color_hov and btn_color_hov or Mantle.color.button_hovered 
+            local color_hover = btn_color_hov and btn_color_hov or Mantle.color.button_hovered
             color_hover = Color(color_hover.r, color_hover.g, color_hover.b, 255 * self.hoverStatus)
 
             draw.RoundedBox(btn_radius and btn_radius or 6, 0, 0, w, h, color_hover)
@@ -136,7 +136,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, slide_convar, d
         draw.RoundedBox(4, 0, h - 16, w, 6, Mantle.color.panel_alpha[1])
 
         smoothPos = Lerp(FrameTime() * 10, smoothPos, targetPos)
-        
+
         draw.RoundedBox(16, smoothPos, 18, 16, 16, Mantle.color.theme)
 
         draw.SimpleText(label, 'Fated.18', 4, 0, Mantle.color.text)
@@ -179,12 +179,12 @@ function Mantle.ui.desc_entry(parent, title, placeholder, bool_title_off)
         label:SetText(title)
         label:SetFont('Fated.16')
     end
-    
+
     local entry_background = vgui.Create('DPanel', parent)
     entry_background:Dock(TOP)
     entry_background:DockMargin(4, 4, 4, 0)
     entry_background:SetTall(24)
-    
+
     local entry = vgui.Create('DTextEntry', entry_background)
     entry:Dock(FILL)
     entry:DockMargin(2, 4, 2, 4)

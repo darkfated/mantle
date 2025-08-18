@@ -21,7 +21,7 @@ function http.DownloadMaterial(url, path, callback, retry_count)
             if !img or find(img, '<!DOCTYPE HTML>', 1, true) then
                 return callback(errorMat)
             end
-            
+
             file.Write(path, img)
 
             WebImageCache[url] = Mat(dataPath, 'noclamp mips')

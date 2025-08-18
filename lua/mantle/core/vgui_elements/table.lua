@@ -43,7 +43,7 @@ function PANEL:AddItem(...)
         print('MantleTable Error: Неверное количество аргументов')
         return
     end
-    
+
     table.insert(self.rows, args)
     self:RebuildRows()
     return #self.rows
@@ -52,27 +52,27 @@ end
 function PANEL:SortByColumn(columnIndex)
     local column = self.columns[columnIndex]
     if not column or not column.sortable then return end
-    
+
     self.sortColumn = columnIndex
-    
+
     local function getValueType(value)
         if value == nil then return 'nil' end
         value = tostring(value)
         return tonumber(value) and 'number' or 'string'
     end
-    
+
     local function compareValues(a, b)
         if a == nil and b == nil then return false end
         if a == nil then return true end
         if b == nil then return false end
-        
+
         local typeA = getValueType(a)
         local typeB = getValueType(b)
-        
+
         if typeA != typeB then
             return typeA < typeB
         end
-        
+
         if typeA == 'number' then
             local numA = tonumber(a) or 0
             local numB = tonumber(b) or 0
@@ -83,54 +83,62 @@ function PANEL:SortByColumn(columnIndex)
             return strA < strB
         end
     end
-    
+
     local success, err = pcall(function()
         table.sort(self.rows, function(a, b)
             return compareValues(a[columnIndex], b[columnIndex])
         end)
     end)
-    
+
     if not success then
         print('[MantleTable] Ошибка сортировки:', err)
         return
     end
-    
+
     self:RebuildRows()
 end
 
 function PANEL:CreateHeader()
     self.header:Clear()
-    
+
     self.header.Paint = function(_, w, h)
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS + RNDX.NO_BL + RNDX.NO_BR)
+        RNDX().Rect(0, 0, w, h)
+            :Radii(16, 16, 0, 0)
+            :Color(Mantle.color.focus_panel)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
     end
-    
+
     local xPos = 0
     for i, column in ipairs(self.columns) do
         local label = vgui.Create('DButton', self.header)
         label:SetText('')
         label:SetSize(column.width, self.headerHeight)
         label:SetPos(xPos, 0)
-        
+
         label.Paint = function(s, w, h)
             local isHovered = s:IsHovered() and column.sortable
             local isActive = self.sortColumn == i
-            
+
             if isHovered then
-                RNDX.Draw(0, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
+                RNDX().Rect(0, 0, w, h)
+                    :Radii(16, 16, 0, 0)
+                    :Color(Mantle.color.hover)
+                    :Shape(RNDX.SHAPE_IOS)
+                :Draw()
             end
-            
+
             local textColor = isActive and Mantle.color.theme or Mantle.color.text
             draw.SimpleText(column.name, self.font, w/2, h/2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
-        
+
         if column.sortable then
             label.DoClick = function()
                 self:SortByColumn(i)
                 Mantle.func.sound()
             end
         end
-        
+
         xPos = xPos + column.width
     end
 end
@@ -141,36 +149,39 @@ function PANEL:CreateRow(rowIndex, rowData)
     row:DockMargin(0, 0, 0, 1)
     row:SetTall(self.rowHeight)
     row:SetText('')
-    
+
     row.Paint = function(s, w, h)
-        local bgColor = self.selectedRow == rowIndex and Mantle.color.theme or 
+        local bgColor = self.selectedRow == rowIndex and Mantle.color.theme or
                        (s:IsHovered() and Mantle.color.hover or Mantle.color.panel_alpha[1])
-        RNDX.Draw(0, 0, 0, w, h, bgColor, RNDX.SHAPE_IOS)
+        RNDX().Rect(0, 0, w, h)
+            :Color(bgColor)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
     end
-    
+
     row.DoClick = function()
         self.selectedRow = rowIndex
         self.OnAction(rowData)
         Mantle.func.sound()
     end
-    
+
     row.DoRightClick = function()
         self.selectedRow = rowIndex
         self.OnRightClick(rowData)
-        
+
         local menu = Mantle.ui.derma_menu()
         for i, column in ipairs(self.columns) do
             menu:AddOption('Копировать ' .. column.name, function()
                 SetClipboardText(tostring(rowData[i]))
             end)
         end
-        
+
         menu:AddSpacer()
         menu:AddOption('Удалить строку', function()
             self:RemoveRow(rowIndex)
         end, 'icon16/delete.png')
     end
-    
+
     local xPos = 0
     for i, column in ipairs(self.columns) do
         local label = vgui.Create('DLabel', row)
@@ -188,7 +199,7 @@ function PANEL:CreateRow(rowIndex, rowData)
         end
 
         label:SetContentAlignment(column.align + 4)
-        
+
         xPos = xPos + column.width
     end
 end
@@ -245,7 +256,11 @@ function PANEL:RemoveRow(index)
 end
 
 function PANEL:Paint(w, h)
-    RNDX.Draw(16, 0, 0, w, h, Mantle.color.background, RNDX.SHAPE_IOS)
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
+        :Color(Mantle.color.panel_alpha[2])
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
 end
 
-vgui.Register('MantleTable', PANEL, 'Panel') 
+vgui.Register('MantleTable', PANEL, 'Panel')

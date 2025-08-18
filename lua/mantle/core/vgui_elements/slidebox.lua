@@ -112,7 +112,11 @@ function PANEL:Paint(w, h)
 
     -- Тень под линией
     if Mantle.ui.convar.depth_ui then
-        RNDX.DrawShadows(barR, barStart, barY, barW, barH, Mantle.color.window_shadow, 5, 20)
+        RNDX().Rect(barStart, barY, barW, barH)
+            :Rad(barR)
+            :Color(Mantle.color.window_shadow)
+            :Shadow(5, 20)
+        :Draw()
     end
     -- Фон линии
     RNDX.Draw(barR, barStart, barY, barW, barH, Mantle.color.focus_panel)

@@ -21,7 +21,11 @@ local function CreateMenu()
         panelInfo:SetTall(50)
 
         panelInfo.Paint = function(_, w, h)
-            RNDX.Draw(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
+            RNDX().Rect(0, 0, w, h)
+                :Rad(6)
+                :Color(Mantle.color.panel_alpha[2])
+            :Draw()
+
             Mantle.func.gradient(0, 0, 6, h, 3, Mantle.color.theme, 6)
 
             draw.SimpleText(info[1], 'Fated.20', 16, 7, Mantle.color.text)
@@ -56,21 +60,28 @@ local function CreateMenu()
         local panelBtns = vgui.Create('Panel')
         panelBtns:Dock(TOP)
         panelBtns:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
-        panelBtns:SetTall(86)
+        panelBtns:SetTall(132)
 
         local btn1 = vgui.Create('MantleBtn', panelBtns)
         btn1:Dock(TOP)
         btn1:SetTall(40)
-        btn1:SetTxt('Дефолт с эффектом волны')
-        btn1:SetRipple(true)
+        btn1:SetTxt('Стандартная кнопка')
 
         local btn2 = vgui.Create('MantleBtn', panelBtns)
         btn2:Dock(TOP)
         btn2:DockMargin(0, 6, 0, 0)
         btn2:SetTall(40)
-        btn2:SetTxt('Кастомный цвет')
-        btn2:SetColor(Color(182, 65, 65))
-        btn2:SetColorHover(Color(143, 57, 57))
+        btn2:SetTxt('Эффект волны')
+        btn2:SetRipple(true)
+
+        local btn3 = vgui.Create('MantleBtn', panelBtns)
+        btn3:Dock(TOP)
+        btn3:DockMargin(0, 6, 0, 0)
+        btn3:SetTall(40)
+        btn3:SetTxt('Кастомный цвет')
+        btn3:SetColor(Color(182, 65, 65))
+        btn3:SetColorHover(Color(143, 57, 57))
+        btn3:SetIcon(Material('icon16/delete.png'), 16)
 
         CreateCategory('Кнопка (MantleBtn)', {
             {':SetHover(bool is_hover)', 'Включить/выключить цвет наведения (дефолт - true)'},
@@ -145,7 +156,11 @@ local function CreateMenu()
             spPanel:DockMargin(0, 0, 6, 6)
             spPanel:SetTall(24)
             spPanel.Paint = function(_, w, h)
-                RNDX.Draw(16, 0, 0, w - 12, h, Mantle.color.panel_alpha[1], RNDX.SHAPE_IOS)
+                RNDX().Rect(0, 0, w - 12, h)
+                    :Rad(16)
+                    :Color(Mantle.color.panel_alpha[1])
+                    :Shape(RNDX.SHAPE_IOS)
+                :Draw()
             end
         end
         sp:DockMargin(menuWide * 0.11, 6, menuWide * 0.11, 0)
@@ -164,12 +179,20 @@ local function CreateMenu()
         testTabs:Dock(TOP)
         local testTab1 = vgui.Create('DPanel')
         testTab1.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(53, 98, 40), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w - 12, h)
+                :Rad(16)
+                :Color(53, 98, 40)
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
         testTabs:AddTab('Test1', testTab1)
         local testTab2 = vgui.Create('DPanel')
         testTab2.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(108, 41, 45), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w - 12, h)
+                :Rad(16)
+                :Color(108, 41, 45)
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
         testTabs:AddTab('Test2', testTab2)
 
@@ -179,17 +202,29 @@ local function CreateMenu()
         testTabs2:SetTabStyle('classic')
         local testTab3 = vgui.Create('DPanel')
         testTab3.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(51, 61, 116), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w - 12, h)
+                :Rad(16)
+                :Color(51, 61, 116)
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
         testTabs2:AddTab('Test3', testTab3)
         local testTab4 = vgui.Create('DPanel')
         testTab4.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(138, 89, 43), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w - 12, h)
+                :Rad(16)
+                :Color(138, 89, 43)
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
         testTabs2:AddTab('Test4', testTab4)
         local testTab5 = vgui.Create('DPanel')
         testTab5.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(43, 138, 133), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w - 12, h)
+                :Rad(16)
+                :Color(43, 138, 133)
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
         testTabs2:AddTab('С иконкой', testTab5, Material('icon16/folder.png'))
 
@@ -199,7 +234,7 @@ local function CreateMenu()
             {':SetIndicatorHeight(int height)', 'Установить высоту индикатора вкладок'},
             {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'}
         }, panel, panelTabs)
-        
+
         -- Выбор варианта
         local combo = vgui.Create('MantleComboBox')
         combo:SetPlaceholder('Выберите вариант')
@@ -261,7 +296,7 @@ local function CreateMenu()
         for _, product in ipairs(products) do
             tableExample:AddItem(unpack(product))
         end
-        
+
         tableExample:SetAction(function(row_data)
             chat.AddText(color_white, 'Выбран продукт: ', Mantle.color.theme, row_data[1], color_white, ' (', row_data[2], ')')
         end)
@@ -292,7 +327,11 @@ local function CreateMenu()
         panGreen:Dock(TOP)
         panGreen:SetTall(50)
         panGreen.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(93, 179, 101), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w - 12, h)
+                :Rad(16)
+                :Color(93, 179, 101)
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
         cat:AddItem(panGreen)
         local panRed = vgui.Create('DPanel')
@@ -300,7 +339,11 @@ local function CreateMenu()
         panRed:DockMargin(0, 6, 0, 0)
         panRed:SetTall(50)
         panRed.Paint = function(_, w, h)
-            RNDX.Draw(16, 0, 0, w - 12, h, Color(179, 110, 93), RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w - 12, h)
+                :Rad(16)
+                :Color(179, 110, 93)
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
         end
         cat:AddItem(panRed)
         CreateCategory('Категория (MantleCategory)', {
@@ -334,7 +377,7 @@ local function CreateMenu()
 
     local function CreateShowMenus()
         local panel = vgui.Create('MantleScrollPanel')
-        
+
         local listMenus = {
             {'Выбор цвета через палитру', function()
                 Mantle.ui.color_picker(function(col)
@@ -355,7 +398,7 @@ local function CreateMenu()
             end},
             {'Опциональное с подменю (Derma Menu)', function()
                 local DM = Mantle.ui.derma_menu()
-                
+
                 local clothes = DM:AddOption('Одежда')
                 local subClothes = clothes:AddSubMenu()
                 subClothes:AddOption('Шапка', function()
@@ -398,11 +441,11 @@ local function CreateMenu()
                 rm:SetCenterText('Действия', 'Выберите действие')
 
                 local weaponsMenu = rm:CreateSubMenu('Оружие', 'Выберите оружие')
-                weaponsMenu:AddOption('Пистолет', function() 
-                    chat.AddText(Mantle.color.theme, 'Выбран пистолет') 
+                weaponsMenu:AddOption('Пистолет', function()
+                    chat.AddText(Mantle.color.theme, 'Выбран пистолет')
                 end, 'icon16/gun.png', 'Обычный пистолет')
-                weaponsMenu:AddOption('Винтовка', function() 
-                    chat.AddText(Mantle.color.theme, 'Выбрана винтовка') 
+                weaponsMenu:AddOption('Винтовка', function()
+                    chat.AddText(Mantle.color.theme, 'Выбрана винтовка')
                 end, 'icon16/gun.png', 'Мощная винтовка')
                 rm:AddSubMenuOption('Оружие', weaponsMenu, 'icon16/gun.png', 'Выберите оружие')
 
@@ -469,57 +512,57 @@ local function CreateMenu()
             frame:Center()
             frame:MakePopup()
             Mantle.ui.frame(frame, 'Legacy Frame', 400, 300, true, true)
-            
+
             local scroll = vgui.Create('DScrollPanel', frame)
             scroll:Dock(FILL)
             Mantle.ui.sp(scroll)
-            
+
             -- Тест кнопок с разными параметрами
             local btn1 = vgui.Create('DButton', scroll)
             btn1:Dock(TOP)
             btn1:DockMargin(10, 10, 10, 0)
             btn1:SetText('Обычная кнопка')
             Mantle.ui.btn(btn1)
-            
+
             local btn2 = vgui.Create('DButton', scroll)
             btn2:Dock(TOP)
             btn2:DockMargin(10, 10, 10, 0)
             btn2:SetText('Кнопка с иконкой')
             Mantle.ui.btn(btn2, Material('icon16/accept.png'), 16)
-            
+
             local btn3 = vgui.Create('DButton', scroll)
             btn3:Dock(TOP)
             btn3:DockMargin(10, 10, 10, 0)
             btn3:SetText('Кнопка без градиента')
             Mantle.ui.btn(btn3, nil, nil, nil, nil, true)
-            
+
             local btn4 = vgui.Create('DButton', scroll)
             btn4:Dock(TOP)
             btn4:DockMargin(10, 10, 10, 0)
             btn4:SetText('Кнопка без ховера')
             Mantle.ui.btn(btn4, nil, nil, nil, nil, nil, nil, true)
-            
+
             -- Тест слайдеров
             local slider1 = Mantle.ui.slidebox(scroll, 'Слайдер (0-100)', 0, 100, 'net_graph', 0)
             slider1:DockMargin(10, 20, 10, 0)
-            
+
             local slider2 = Mantle.ui.slidebox(scroll, 'Слайдер (0-1)', 0, 1, 'cl_drawhud', 2)
             slider2:DockMargin(10, 20, 10, 0)
-            
+
             -- Тест полей ввода
             local entry1, entry_bg1 = Mantle.ui.desc_entry(scroll, 'Поле с заголовком', 'Введите текст...')
             entry_bg1:DockMargin(10, 20, 10, 0)
-            
+
             local entry2, entry_bg2 = Mantle.ui.desc_entry(scroll, nil, 'Поле без заголовка')
             entry_bg2:DockMargin(10, 20, 10, 0)
-            
+
             -- Тест чекбоксов
             local checkbox1, checkbox_btn1 = Mantle.ui.checkbox(scroll, 'Чекбокс с ConVar', 'cl_drawhud')
             checkbox1:DockMargin(10, 20, 10, 0)
-            
+
             local checkbox2, checkbox_btn2 = Mantle.ui.checkbox(scroll, 'Чекбокс без ConVar')
             checkbox2:DockMargin(10, 20, 10, 0)
-            
+
             -- Тест вкладок
             local panelTabs = vgui.Create('DPanel', scroll)
             panelTabs:Dock(TOP)
@@ -528,26 +571,26 @@ local function CreateMenu()
 
             local tabs = Mantle.ui.panel_tabs(panelTabs)
             tabs:DockMargin(10, 20, 10, 0)
-            
+
             -- Добавляем вкладки с разными стилями
             local tab1 = vgui.Create('DPanel')
             tab1.Paint = function(_, w, h)
                 draw.SimpleText('Вкладка 1', 'Fated.20', w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             tabs:AddTab('Вкладка 1', tab1, 'icon16/page_white.png')
-            
+
             local tab2 = vgui.Create('DPanel')
             tab2.Paint = function(_, w, h)
                 draw.SimpleText('Вкладка 2', 'Fated.20', w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             tabs:AddTab('Вкладка 2', tab2, 'icon16/page_white_edit.png', Color(100, 200, 100))
-            
+
             local tab3 = vgui.Create('DPanel')
             tab3.Paint = function(_, w, h)
                 draw.SimpleText('Вкладка 3', 'Fated.20', w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             tabs:AddTab('Вкладка 3', tab3, 'icon16/page_white_gear.png', nil, Color(200, 100, 100))
-            
+
             tabs:ActiveTab('Вкладка 1')
         end
         CreateCategory('Legacy Frame (не стоит использовать)', {

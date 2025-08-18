@@ -22,17 +22,17 @@
 
 ### Примеры интерфейса
 
-- Документация и элементы VGUI  
+- Документация и элементы VGUI
   <img width="911" height="696" alt="VGUI элементы" src="https://github.com/user-attachments/assets/2a52ee52-ac21-47fe-8031-eb11164bd2e6" />
-- Лёгкий режим окна  
+- Лёгкий режим окна
   <img width="775" height="576" alt="Lite-режим" src="https://github.com/user-attachments/assets/628b5870-8229-408e-9794-7ab119681eba" />
-- ComboBox  
+- ComboBox
   <img width="833" height="647" alt="ComboBox" src="https://github.com/user-attachments/assets/8607d470-4fc4-4b13-a029-5ec8394ea4bd" />
-- SlideBox  
+- SlideBox
   <img width="843" height="651" alt="SlideBox" src="https://github.com/user-attachments/assets/b3063187-0199-4c0e-b798-deb7fdb103ae" />
-- Таблицы  
+- Таблицы
   <img width="825" height="649" alt="Таблицы" src="https://github.com/user-attachments/assets/a438a1bb-30dc-4bb1-a6d0-bc60146cdfe2" />
-- Поле ввода  
+- Поле ввода
   <img width="834" height="641" alt="Поле ввода" src="https://github.com/user-attachments/assets/56785e7c-7ccc-4bab-bab9-8c21778bf5fb" />
 
 ### Множественные всплывающие меню

@@ -26,9 +26,18 @@ function PANEL:Init()
             end
             local target = s:IsEditing() and 10 or 5
             s._shadowLerp = Lerp(FrameTime() * 10, s._shadowLerp, target)
-            RNDX.DrawShadows(16, 0, 0, w, h, Mantle.color.window_shadow, s._shadowLerp, 20, RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(16)
+                :Color(Mantle.color.window_shadow)
+                :Shape(RNDX.SHAPE_IOS)
+                :Shadow(s._shadowLerp, 20)
+            :Draw()
         end
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(Mantle.color.focus_panel)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
 
         local value = self:GetValue()
         surface.SetFont(font)

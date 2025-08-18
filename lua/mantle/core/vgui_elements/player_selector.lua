@@ -53,9 +53,17 @@ function Mantle.ui.player_selector(do_click, func_check)
             Mantle.ui.menu_player_selector:Remove()
         end
         card.Paint = function(self, w, h)
-            RNDX.Draw(10, 0, 0, w, h, Mantle.color.panel[1], RNDX.SHAPE_IOS)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(10)
+                :Color(Mantle.color.panel[1])
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
             if self.hover_status > 0 then
-                RNDX.Draw(10, 0, 0, w, h, Color(0, 0, 0, 40 * self.hover_status), RNDX.SHAPE_IOS)
+                RNDX().Rect(0, 0, w, h)
+                    :Rad(10)
+                    :Color(Color(0, 0, 0, 40 * self.hover_status))
+                    :Shape(RNDX.SHAPE_IOS)
+                :Draw()
             end
 
             local infoX = AVATAR_X + AVATAR_SIZE + 10
