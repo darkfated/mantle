@@ -13,7 +13,7 @@ end
 function PANEL:Init()
     self.Items = {}
     self:SetSize(160, 0)
-    self:DockPadding(6, 7, 6, 7)
+    self:DockPadding(4, 5, 4, 5)
     self:MakePopup()
     self:SetKeyboardInputEnabled(false)
     self:SetDrawOnTop(true)
@@ -40,8 +40,19 @@ function PANEL:Paint(w, h)
     :Draw()
     RNDX().Rect(0, 0, w, h)
         :Rad(16)
+        :Shape(RNDX.SHAPE_IOS)
+        :Blur()
+    :Draw()
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
         :Color(Mantle.color.background_panelpopup)
         :Shape(RNDX.SHAPE_IOS)
+    :Draw()
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
+        :Color(Mantle.color.background_panelpopup)
+        :Shape(RNDX.SHAPE_IOS)
+        :Outline(1)
     :Draw()
 end
 
@@ -222,7 +233,7 @@ function PANEL:AddSpacer()
 end
 
 function PANEL:UpdateSize()
-    local height = 16
+    local height = 12
 
     for _, item in ipairs(self.Items) do
         if IsValid(item) then
@@ -230,7 +241,7 @@ function PANEL:UpdateSize()
         end
     end
 
-    local maxWidth = math.max(160, self.MaxTextWidth + 60)
+    local maxWidth = math.max(160, self.MaxTextWidth + 56)
 
     self:SetSize(maxWidth, math.min(height, ScrH() * 0.8))
 end

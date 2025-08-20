@@ -3,7 +3,7 @@ Mantle.color_dark = {
     header_text = Color(109, 109, 109), -- цвет элементов в заголовке
     background = Color(34, 34, 34), -- фон
     background_alpha = Color(34, 34, 34, 210), -- фон с прозрачностью
-    background_panelpopup = Color(29, 29, 29), -- фон для DermaMenu
+    background_panelpopup = Color(29, 29, 29, 150), -- фон для DermaMenu
 
     button = Color(56, 56, 56), -- кнопка
     button_shadow = Color(0, 0, 0, 30), -- тень кнопки для градиента
@@ -23,7 +23,7 @@ Mantle.color_dark = {
     focus_panel = Color(46, 46, 46), -- универсальный цвет для элементов
     hover = Color(60, 65, 80), -- универсальное выделение
 
-    window_shadow = Color(0, 0, 0, 150), -- тень окна
+    window_shadow = Color(0, 0, 0, 100), -- тень окна
 
     gray = Color(190, 190, 190, 220),
     text = Color(255, 255, 255)
@@ -47,7 +47,7 @@ Mantle.color_graphite = {
     header_text = Color(100, 100, 100),
     background = Color(25, 25, 25),
     background_alpha = Color(25, 25, 25, 210),
-    background_panelpopup = Color(20, 20, 20),
+    background_panelpopup = Color(20, 20, 20, 150),
 
     button = Color(45, 45, 45),
     button_shadow = Color(0, 0, 0, 25),
@@ -67,7 +67,7 @@ Mantle.color_graphite = {
     focus_panel = Color(55, 55, 55),
     hover = Color(70, 70, 70),
 
-    window_shadow = Color(0, 0, 0, 120),
+    window_shadow = Color(0, 0, 0, 100),
 
     gray = Color(150, 150, 150, 220),
     text = Color(220, 220, 220)
@@ -84,7 +84,7 @@ Mantle.color_light = {
     header_text = Color(150, 150, 150),
     background = Color(255, 255, 255),
     background_alpha = Color(255, 255, 255, 170),
-    background_panelpopup = Color(245, 245, 245),
+    background_panelpopup = Color(245, 245, 245, 150),
 
     button = Color(235, 235, 235),
     button_shadow = Color(0, 0, 0, 15),
@@ -121,7 +121,7 @@ Mantle.color_blue = {
     header_text = Color(109, 129, 159),
     background = Color(24, 28, 38),
     background_alpha = Color(24, 28, 38, 210),
-    background_panelpopup = Color(20, 24, 32),
+    background_panelpopup = Color(20, 24, 32, 150),
 
     button = Color(38, 54, 82),
     button_shadow = Color(18, 22, 32, 35),
@@ -141,7 +141,7 @@ Mantle.color_blue = {
     focus_panel = Color(48, 72, 90),
     hover = Color(80, 160, 220, 90),
 
-    window_shadow = Color(18, 22, 32, 90),
+    window_shadow = Color(18, 22, 32, 100),
 
     gray = Color(150, 170, 190, 200),
     text = Color(210, 220, 235)
@@ -158,7 +158,7 @@ Mantle.color_red = {
     header_text = Color(159, 109, 109),
     background = Color(32, 24, 24),
     background_alpha = Color(32, 24, 24, 210),
-    background_panelpopup = Color(28, 20, 20),
+    background_panelpopup = Color(28, 20, 20, 150),
 
     button = Color(66, 38, 38),
     button_shadow = Color(32, 18, 18, 35),
@@ -178,7 +178,7 @@ Mantle.color_red = {
     focus_panel = Color(72, 48, 48),
     hover = Color(180, 80, 80, 90),
 
-    window_shadow = Color(32, 18, 18, 90),
+    window_shadow = Color(32, 18, 18, 100),
 
     gray = Color(180, 150, 150, 200),
     text = Color(235, 210, 210)
@@ -195,7 +195,7 @@ Mantle.color_green = {
     header_text = Color(109, 159, 109),
     background = Color(24, 32, 26),
     background_alpha = Color(24, 32, 26, 210),
-    background_panelpopup = Color(20, 28, 22),
+    background_panelpopup = Color(20, 28, 22, 150),
 
     button = Color(38, 66, 48),
     button_shadow = Color(18, 32, 22, 35),
@@ -215,7 +215,7 @@ Mantle.color_green = {
     focus_panel = Color(48, 72, 58),
     hover = Color(80, 180, 120, 90),
 
-    window_shadow = Color(18, 32, 22, 90),
+    window_shadow = Color(18, 32, 22, 100),
 
     gray = Color(150, 180, 150, 200),
     text = Color(210, 235, 210)
@@ -232,7 +232,7 @@ Mantle.color_orange = {
     header_text = Color(200, 120, 30),
     background = Color(255, 245, 220),
     background_alpha = Color(255, 245, 220, 210),
-    background_panelpopup = Color(255, 230, 180),
+    background_panelpopup = Color(255, 230, 180, 150),
 
     button = Color(255, 210, 140),
     button_shadow = Color(255, 200, 100, 30),
@@ -252,7 +252,7 @@ Mantle.color_orange = {
     focus_panel = Color(255, 210, 140),
     hover = Color(255, 200, 100, 90),
 
-    window_shadow = Color(255, 200, 100, 90),
+    window_shadow = Color(255, 200, 100, 100),
 
     gray = Color(180, 150, 120, 200),
     text = Color(120, 70, 0)
@@ -269,7 +269,7 @@ Mantle.color_purple = {
     header_text = Color(180, 140, 220),
     background = Color(60, 40, 90),
     background_alpha = Color(60, 40, 90, 210),
-    background_panelpopup = Color(80, 60, 120),
+    background_panelpopup = Color(80, 60, 120, 150),
 
     button = Color(140, 100, 200),
     button_shadow = Color(120, 81, 169, 30),
@@ -289,7 +289,7 @@ Mantle.color_purple = {
     focus_panel = Color(140, 100, 200),
     hover = Color(180, 140, 220, 90),
 
-    window_shadow = Color(120, 81, 169, 90),
+    window_shadow = Color(120, 81, 169, 100),
 
     gray = Color(180, 170, 200, 200),
     text = Color(230, 220, 255)
@@ -307,7 +307,7 @@ Mantle.color_coffee = {
 
     background = Color(45, 32, 25),
     background_alpha = Color(45, 32, 25, 215),
-    background_panelpopup = Color(38, 28, 22),
+    background_panelpopup = Color(38, 28, 22, 150),
 
     button = Color(84, 60, 45),
     button_shadow = Color(20, 10, 5, 40),
@@ -344,7 +344,7 @@ Mantle.color_ice = {
     header_text = Color(68, 104, 139),
     background = Color(235, 245, 255),
     background_alpha = Color(235, 245, 255, 200),
-    background_panelpopup = Color(220, 235, 245),
+    background_panelpopup = Color(220, 235, 245, 150),
 
     button = Color(145, 185, 225),
     button_shadow = Color(80, 110, 140, 40),
@@ -356,17 +356,17 @@ Mantle.color_ice = {
     theme = Color(100, 170, 230),
 
     panel = {
-        Color(210, 235, 250),
-        Color(190, 220, 240),
-        Color(100, 170, 230)
+        Color(146, 186, 211),
+        Color(107, 157, 190),
+        Color(74, 132, 184)
     },
 
     focus_panel = Color(205, 230, 245),
     hover = Color(100, 170, 230, 80),
 
-    window_shadow = Color(60, 100, 140, 80),
+    window_shadow = Color(60, 100, 140, 100),
 
-    gray = Color(114, 139, 165, 200),
+    gray = Color(92, 112, 133, 200),
     text = Color(20, 35, 50)
 }
 Mantle.color_ice.panel_alpha = {
