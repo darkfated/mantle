@@ -18,10 +18,9 @@ function PANEL:Init()
 
     self.scrollPanel = vgui.Create('MantleScrollPanel', self)
     self.scrollPanel:Dock(FILL)
-    self.scrollPanel:DockMargin(0, 0, 0, 0)
 
     self.content = vgui.Create('Panel', self.scrollPanel)
-    self.content:Dock(FILL)
+    self.content:Dock(TOP)
     self.content.Paint = nil
 
     self.OnAction = function() end
