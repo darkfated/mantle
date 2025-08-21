@@ -340,42 +340,77 @@ function PANEL:Think()
     local ratio = (contentH <= 0) and 1 or math.min(1, viewH / contentH)
     local gripH = math.max(self.gripMin, math.floor(trackH * ratio))
     local scroll01 = (maxScrollDF <= 0) and 0 or (clampedOffset / maxScrollDF)
-    local gripY = math.floor((trackH - gripH) * scroll01)
 
-    if extraTop > 0 or extraBottom > 0 then
-        local extra = math.max(extraTop, extraBottom)
-        local shrink = math.Clamp(1 - (extra / self.overscroll) * 0.7, 0.25, 1)
-        local shift = math.floor((extra / self.overscroll) * gripH * 0.9)
-        gripH = math.max(6, math.floor(gripH * shrink))
-        if extraTop > 0 then
-            gripY = math.max(0, gripY - shift)
-        else
-            gripY = math.min(trackH - gripH, gripY + shift)
-        end
+    local topFrac = math.Clamp(extraTop / self.overscroll, 0, 1)
+    local bottomFrac = math.Clamp(extraBottom / self.overscroll, 0, 1)
+    local maxFrac = math.max(topFrac, bottomFrac)
+    local overscrollFrac = math.Clamp(math.max(extraTop, extraBottom) / self.overscroll, 0, 1)
+
+    local gripRatio = gripH / math.max(1, trackH)
+    local weight = math.Clamp((1 - gripRatio) * 1.5, 0, 1)
+
+    local contentToTrack = trackH / math.max(1, contentH)
+    local extraShift = 0
+    if extraTop > 0 then extraShift = -extraTop * contentToTrack
+    elseif extraBottom > 0 then extraShift = extraBottom * contentToTrack end
+
+    local proportionalY = (trackH - gripH) * scroll01
+
+    local desiredY = proportionalY + extraShift * weight * overscrollFrac
+
+    if clampedOffset <= 0.001 then
+        desiredY = 0
+    elseif maxScrollDF > 0 and clampedOffset >= maxScrollDF - 0.001 then
+        desiredY = trackH - gripH
     end
+
+    local maxShrink = 0.7
+    local visualGripH = gripH * (1 - maxShrink * overscrollFrac * weight)
+    visualGripH = math.max(6, visualGripH)
+
+    local heightSpeedNormal = 6
+    local heightSpeedOverscroll = 0.35
+    local heightSpeed = Lerp(maxFrac, heightSpeedNormal, heightSpeedOverscroll)
+    local s_h = math.min(1, ft * self.vbarSmooth * heightSpeed)
+
+    local posSpeed = 3.5
+    local s_y = math.min(1, ft * self.vbarSmooth * posSpeed)
 
     if vb.Dragging then
         local _, my = vb:CursorPos()
-        local newY = math.Clamp(my - vb._press_off, 0, trackH - gripH)
-        local s01 = (trackH - gripH) <= 0 and 0 or (newY / (trackH - gripH))
+        local newY = math.Clamp(my - vb._press_off, 0, trackH - visualGripH)
+        local s01 = (trackH - visualGripH) <= 0 and 0 or (newY / (trackH - visualGripH))
         self.offset = s01 * maxScrollDF
         self.vel = 0
-        gripY = newY
-        self._vb_gripH = gripH
-        self._vb_gripY = gripY
+
+        self._vb_gripH = visualGripH
+        self._vb_gripY = newY
     else
-        if extraTop > 0 or extraBottom > 0 or self._springing then
-            local s = math.min(1, ft * self.vbarSmooth)
-            self._vb_gripH = (self._vb_gripH == nil) and gripH or Lerp(s, self._vb_gripH, gripH)
-            self._vb_gripY = (self._vb_gripY == nil) and gripY or Lerp(s, self._vb_gripY, gripY)
-        else
-            self._vb_gripH = gripH
-            self._vb_gripY = gripY
+        self._vb_gripH = (self._vb_gripH == nil) and visualGripH or Lerp(s_h, self._vb_gripH, visualGripH)
+        self._vb_gripY = (self._vb_gripY == nil) and desiredY or Lerp(s_y, self._vb_gripY, desiredY)
+
+        local maxY = math.max(0, trackH - self._vb_gripH)
+        if self._vb_gripY < 0 then self._vb_gripY = 0 end
+        if self._vb_gripY > maxY then self._vb_gripY = maxY end
+
+        if clampedOffset <= 0.001 then
+            self._vb_gripY = 0
+        elseif maxScrollDF > 0 and clampedOffset >= maxScrollDF - 0.001 then
+            self._vb_gripY = trackH - self._vb_gripH
         end
+
+        if math.abs(self._vb_gripH - visualGripH) < 0.25 then self._vb_gripH = visualGripH end
+        if math.abs((self._vb_gripY or 0) - desiredY) < 0.25 then self._vb_gripY = desiredY end
     end
 
-    vb.btnGrip:SetSize(vb:GetWide(), math.max(1, math.floor(self._vb_gripH)))
-    vb.btnGrip:SetPos(0, math.floor(self._vb_gripY))
+    local finalH = math.max(1, math.floor(self._vb_gripH))
+    local finalY = math.floor(math.Clamp(self._vb_gripY or 0, 0, math.max(0, trackH - finalH)))
+
+    if clampedOffset <= 0.001 then finalY = 0 end
+    if maxScrollDF > 0 and clampedOffset >= maxScrollDF - 0.001 then finalY = trackH - finalH end
+
+    vb.btnGrip:SetSize(vb:GetWide(), finalH)
+    vb.btnGrip:SetPos(0, finalY)
 end
 
 vgui.Register('MantleScrollPanel', PANEL, 'EditablePanel')
