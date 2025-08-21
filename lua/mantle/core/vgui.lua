@@ -23,6 +23,10 @@ local themeMap = {
     purple = Mantle.color_purple,
     coffee = Mantle.color_coffee,
     ice = Mantle.color_ice,
+    wine = Mantle.color_wine,
+    violet = Mantle.color_violet,
+    moss = Mantle.color_moss,
+    coral = Mantle.color_coral
 }
 
 local function UpdateTheme()

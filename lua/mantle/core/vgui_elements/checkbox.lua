@@ -29,7 +29,7 @@ function PANEL:Init()
         local trackY = (h - trackH) / 2
         RNDX().Rect(0, trackY, w, trackH)
             :Rad(16)
-            :Color(Mantle.color.button)
+            :Color(Mantle.color.panel[1])
             :Shape(RNDX.SHAPE_IOS)
         :Draw()
 

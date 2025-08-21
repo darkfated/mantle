@@ -1,23 +1,23 @@
 Mantle.color_dark = {
-    header = Color(51, 51, 51), -- верхняя панель
-    header_text = Color(109, 109, 109), -- цвет элементов в заголовке
-    background = Color(34, 34, 34), -- фон
-    background_alpha = Color(34, 34, 34, 210), -- фон с прозрачностью
-    background_panelpopup = Color(29, 29, 29, 150), -- фон для DermaMenu
+    header = Color(40, 40, 40), -- верхняя панель
+    header_text = Color(100, 100, 100), -- цвет элементов в заголовке
+    background = Color(25, 25, 25), -- фон
+    background_alpha = Color(25, 25, 25, 210), -- фон с прозрачностью
+    background_panelpopup = Color(20, 20, 20, 150), -- фон для DermaMenu
 
-    button = Color(56, 56, 56), -- кнопка
-    button_shadow = Color(0, 0, 0, 30), -- тень кнопки для градиента
-    button_hovered = Color(52, 70, 109), -- кнопка при наведении
+    button = Color(54, 54, 54), -- кнопка
+    button_shadow = Color(0, 0, 0, 25), -- тень кнопки для градиента
+    button_hovered = Color(60, 60, 62), -- кнопка при наведении
 
-    category = Color(54, 54, 56), -- категория
-    category_opened = Color(54, 54, 56, 0), -- категория открыта
+    category = Color(50, 50, 50), -- категория
+    category_opened = Color(50, 50, 50, 0), -- категория открыта
 
     theme = Color(106, 108, 197), -- тема интерфейса
 
     panel = { -- варианты цветов для панели
-        Color(71, 71, 75),
-        Color(60, 60, 64),
-        Color(193, 193, 193)
+        Color(60, 60, 60),
+        Color(50, 50, 50),
+        Color(80, 80, 80)
     },
 
     focus_panel = Color(46, 46, 46), -- универсальный цвет для элементов
@@ -25,7 +25,7 @@ Mantle.color_dark = {
 
     window_shadow = Color(0, 0, 0, 100), -- тень окна
 
-    gray = Color(190, 190, 190, 220),
+    gray = Color(150, 150, 150, 220),
     text = Color(255, 255, 255)
 }
 Mantle.color_dark.panel_alpha = { -- прозрачные панели
@@ -40,43 +40,6 @@ Mantle.color = Mantle.color_dark
 
 Mantle.color_dark_mono = table.Copy(Mantle.color_dark)
 Mantle.color_dark_mono.theme = Color(121, 121, 121)
-
--- Графитная палитра
-Mantle.color_graphite = {
-    header = Color(40, 40, 40),
-    header_text = Color(100, 100, 100),
-    background = Color(25, 25, 25),
-    background_alpha = Color(25, 25, 25, 210),
-    background_panelpopup = Color(20, 20, 20, 150),
-
-    button = Color(45, 45, 45),
-    button_shadow = Color(0, 0, 0, 25),
-    button_hovered = Color(60, 60, 60),
-
-    category = Color(50, 50, 50),
-    category_opened = Color(50, 50, 50, 0),
-
-    theme = Color(130, 130, 130),
-
-    panel = {
-        Color(60, 60, 60),
-        Color(50, 50, 50),
-        Color(80, 80, 80)
-    },
-
-    focus_panel = Color(55, 55, 55),
-    hover = Color(70, 70, 70),
-
-    window_shadow = Color(0, 0, 0, 100),
-
-    gray = Color(150, 150, 150, 220),
-    text = Color(220, 220, 220)
-}
-Mantle.color_graphite.panel_alpha = {
-    ColorAlpha(Mantle.color_graphite.panel[1], 130),
-    ColorAlpha(Mantle.color_graphite.panel[2], 130),
-    ColorAlpha(Mantle.color_graphite.panel[3], 130)
-}
 
 -- Светлая палитра
 Mantle.color_light = {
@@ -228,76 +191,76 @@ Mantle.color_green.panel_alpha = {
 
 -- Оранжевая палитра
 Mantle.color_orange = {
-    header = Color(255, 200, 100),
-    header_text = Color(200, 120, 30),
-    background = Color(255, 245, 220),
-    background_alpha = Color(255, 245, 220, 210),
-    background_panelpopup = Color(255, 230, 180, 150),
+    header = Color(70, 35, 10),
+    header_text = Color(250, 230, 210),
+    background = Color(255, 250, 240),
+    background_alpha = Color(255, 250, 240, 220),
+    background_panelpopup = Color(255, 245, 235, 160),
 
-    button = Color(255, 210, 140),
-    button_shadow = Color(255, 200, 100, 30),
-    button_hovered = Color(255, 170, 60),
+    button = Color(235, 150, 80),
+    button_shadow = Color(20, 10, 0, 30),
+    button_hovered = Color(255, 165, 80),
 
-    category = Color(255, 230, 180),
-    category_opened = Color(255, 230, 180, 0),
+    category = Color(255, 245, 235),
+    category_opened = Color(255, 245, 235, 0),
 
-    theme = Color(255, 170, 60),
+    theme = Color(245, 130, 50),
 
     panel = {
-        Color(255, 230, 180),
-        Color(255, 210, 140),
-        Color(255, 170, 60)
+        Color(255, 250, 240),
+        Color(250, 220, 180),
+        Color(235, 150, 90)
     },
 
-    focus_panel = Color(255, 210, 140),
-    hover = Color(255, 200, 100, 90),
+    focus_panel = Color(255, 240, 225),
+    hover = Color(255, 165, 80, 90),
 
-    window_shadow = Color(255, 200, 100, 100),
-
-    gray = Color(180, 150, 120, 200),
-    text = Color(120, 70, 0)
+    window_shadow = Color(20, 8, 0, 100),
+    gray = Color(180, 140, 120, 200),
+    text = Color(45, 20, 10)
 }
+
 Mantle.color_orange.panel_alpha = {
-    ColorAlpha(Mantle.color_orange.panel[1], 110),
-    ColorAlpha(Mantle.color_orange.panel[2], 110),
-    ColorAlpha(Mantle.color_orange.panel[3], 110)
+    ColorAlpha(Mantle.color_orange.panel[1], 120),
+    ColorAlpha(Mantle.color_orange.panel[2], 120),
+    ColorAlpha(Mantle.color_orange.panel[3], 120)
 }
 
 -- Фиолетовая палитра
 Mantle.color_purple = {
-    header = Color(120, 81, 169),
-    header_text = Color(180, 140, 220),
-    background = Color(60, 40, 90),
-    background_alpha = Color(60, 40, 90, 210),
-    background_panelpopup = Color(80, 60, 120, 150),
+    header = Color(40, 36, 56),
+    header_text = Color(150, 140, 180),
+    background = Color(25, 22, 30),
+    background_alpha = Color(25, 22, 30, 210),
+    background_panelpopup = Color(28, 24, 40, 150),
 
-    button = Color(140, 100, 200),
-    button_shadow = Color(120, 81, 169, 30),
-    button_hovered = Color(180, 140, 220),
+    button = Color(58, 52, 76),
+    button_shadow = Color(8, 6, 20, 30),
+    button_hovered = Color(145, 110, 220),
 
-    category = Color(100, 70, 150),
-    category_opened = Color(100, 70, 150, 0),
+    category = Color(46, 40, 60),
+    category_opened = Color(46, 40, 60, 0),
 
-    theme = Color(180, 140, 220),
+    theme = Color(138, 114, 219),
 
     panel = {
-        Color(100, 70, 150),
-        Color(140, 100, 200),
-        Color(180, 140, 220)
+        Color(56, 48, 76),
+        Color(44, 36, 64),
+        Color(120, 90, 200)
     },
 
-    focus_panel = Color(140, 100, 200),
-    hover = Color(180, 140, 220, 90),
+    focus_panel = Color(48, 42, 62),
+    hover = Color(138, 114, 219, 90),
 
-    window_shadow = Color(120, 81, 169, 100),
+    window_shadow = Color(8, 6, 20, 100),
 
-    gray = Color(180, 170, 200, 200),
-    text = Color(230, 220, 255)
+    gray = Color(150, 150, 150, 220),
+    text = Color(245, 240, 255)
 }
 Mantle.color_purple.panel_alpha = {
-    ColorAlpha(Mantle.color_purple.panel[1], 110),
-    ColorAlpha(Mantle.color_purple.panel[2], 110),
-    ColorAlpha(Mantle.color_purple.panel[3], 110)
+    ColorAlpha(Mantle.color_purple.panel[1], 150),
+    ColorAlpha(Mantle.color_purple.panel[2], 150),
+    ColorAlpha(Mantle.color_purple.panel[3], 150)
 }
 
 -- Кофейная палитра
@@ -373,4 +336,152 @@ Mantle.color_ice.panel_alpha = {
     ColorAlpha(Mantle.color_ice.panel[1], 120),
     ColorAlpha(Mantle.color_ice.panel[2], 120),
     ColorAlpha(Mantle.color_ice.panel[3], 120)
+}
+
+-- Винная палитра
+Mantle.color_wine = {
+    header = Color(59, 42, 53),
+    header_text = Color(246, 242, 246),
+    background = Color(31, 23, 22),
+    background_alpha = Color(31, 23, 22, 210),
+    background_panelpopup = Color(36, 28, 28, 150),
+
+    button = Color(79, 50, 60),
+    button_shadow = Color(10, 6, 18, 30),
+    button_hovered = Color(192, 122, 217),
+
+    category = Color(79, 50, 60),
+    category_opened = Color(79, 50, 60, 0),
+
+    theme = Color(192, 122, 217),
+
+    panel = {
+        Color(79, 50, 60),
+        Color(63, 44, 48),
+        Color(160, 85, 143)
+    },
+
+    focus_panel = Color(70, 48, 58),
+    hover = Color(192, 122, 217, 90),
+
+    window_shadow = Color(10, 6, 20, 100),
+
+    gray = Color(170, 150, 160, 200),
+    text = Color(246, 242, 246)
+}
+Mantle.color_wine.panel_alpha = {
+    ColorAlpha(Mantle.color_wine.panel[1], 150),
+    ColorAlpha(Mantle.color_wine.panel[2], 150),
+    ColorAlpha(Mantle.color_wine.panel[3], 150)
+}
+
+-- Фиалковая палитра
+Mantle.color_violet = {
+    header = Color(49, 50, 68),
+    header_text = Color(238, 244, 255),
+    background = Color(22, 24, 35),
+    background_alpha = Color(22, 24, 35, 210),
+    background_panelpopup = Color(36, 40, 56, 150),
+
+    button = Color(58, 64, 84),
+    button_shadow = Color(8, 6, 18, 30),
+    button_hovered = Color(159, 180, 255),
+
+    category = Color(58, 64, 84),
+    category_opened = Color(58, 64, 84, 0),
+
+    theme = Color(159, 180, 255),
+
+    panel = {
+        Color(58, 64, 84),
+        Color(48, 52, 72),
+        Color(109, 136, 255)
+    },
+
+    focus_panel = Color(56, 62, 86),
+    hover = Color(159, 180, 255, 90),
+
+    window_shadow = Color(8, 6, 20, 100),
+
+    gray = Color(170, 170, 190, 200),
+    text = Color(238, 244, 255)
+}
+Mantle.color_violet.panel_alpha = {
+    ColorAlpha(Mantle.color_violet.panel[1], 150),
+    ColorAlpha(Mantle.color_violet.panel[2], 150),
+    ColorAlpha(Mantle.color_violet.panel[3], 150)
+}
+
+-- Моховая палитра
+Mantle.color_moss = {
+    header = Color(42, 50, 36),
+    header_text = Color(232, 244, 235),
+    background = Color(14, 16, 12),
+    background_alpha = Color(14, 16, 12, 210),
+    background_panelpopup = Color(24, 28, 22, 150),
+
+    button = Color(72, 98, 66),
+    button_shadow = Color(6, 8, 6, 30),
+    button_hovered = Color(124, 190, 110),
+
+    category = Color(46, 64, 44),
+    category_opened = Color(46, 64, 44, 0),
+
+    theme = Color(110, 160, 90),
+
+    panel = {
+        Color(40, 56, 40),
+        Color(66, 86, 66),
+        Color(110, 160, 90)
+    },
+
+    focus_panel = Color(46, 58, 44),
+    hover = Color(110, 160, 90, 90),
+
+    window_shadow = Color(0, 0, 0, 100),
+
+    gray = Color(160, 170, 155, 220),
+    text = Color(232, 244, 235)
+}
+Mantle.color_moss.panel_alpha = {
+    ColorAlpha(Mantle.color_moss.panel[1], 150),
+    ColorAlpha(Mantle.color_moss.panel[2], 150),
+    ColorAlpha(Mantle.color_moss.panel[3], 150)
+}
+
+-- Коралловая палитра
+Mantle.color_coral = {
+    header = Color(52, 32, 36),
+    header_text = Color(255, 243, 242),
+    background = Color(18, 14, 16),
+    background_alpha = Color(18, 14, 16, 210),
+    background_panelpopup = Color(30, 22, 24, 150),
+
+    button = Color(150, 72, 64),
+    button_shadow = Color(8, 4, 6, 30),
+    button_hovered = Color(255, 120, 90),
+
+    category = Color(74, 40, 42),
+    category_opened = Color(74, 40, 42, 0),
+
+    theme = Color(255, 120, 90),
+
+    panel = {
+        Color(66, 38, 40),
+        Color(120, 60, 56),
+        Color(240, 120, 90)
+    },
+
+    focus_panel = Color(72, 42, 44),
+    hover = Color(255, 120, 90, 90),
+
+    window_shadow = Color(0, 0, 0, 100),
+
+    gray = Color(170, 150, 150, 220),
+    text = Color(255, 243, 242)
+}
+Mantle.color_coral.panel_alpha = {
+    ColorAlpha(Mantle.color_coral.panel[1], 150),
+    ColorAlpha(Mantle.color_coral.panel[2], 150),
+    ColorAlpha(Mantle.color_coral.panel[3], 150)
 }
