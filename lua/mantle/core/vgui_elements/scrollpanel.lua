@@ -40,7 +40,6 @@ function PANEL:Init()
         s:GetParent().Dragging = true
         s:GetParent()._press_off = my - s.y
         s:MouseCapture(true)
-
         s:GetParent()._springing = false
     end
 
@@ -52,9 +51,12 @@ function PANEL:Init()
     self.vbar.OnMousePressed = function(pnl)
         local _, my = pnl:CursorPos()
         local gy, gh = pnl.btnGrip.y, pnl.btnGrip:GetTall()
-        if my < gy then self:_nudge(-self:GetTall()) elseif my > gy + gh then self:_nudge(self:GetTall()) end
+        if my < gy then
+            self:_nudge(-self:GetTall())
+        elseif my > gy + gh then
+            self:_nudge(self:GetTall())
+        end
         self.lastInput = CurTime()
-
         self._springing = false
     end
 
@@ -94,7 +96,7 @@ function PANEL:Init()
 end
 
 function PANEL:DockPadding(l,t,r,b)
-    self.padL, self.padT, self.padR, self.padB = l or 0, t or 0, r or 0, b or 0;
+    self.padL, self.padT, self.padR, self.padB = l or 0, t or 0, r or 0, b or 0
     self:_markDirty()
 end
 
@@ -176,7 +178,7 @@ function PANEL:_range()
         local vbw = self.vbar:GetWide()
 
         self.content:DockPadding(0, 0, 0, 0)
-        self.content:SetPos(self.padL, self.padT - math.floor(self.offset))
+        self.content:SetPos(self.padL, self.padT - self.offset)
 
         local contentW = math.max(0, w - self.padL - self.padR - vbw - 6)
         self.content:SetWide(contentW)
@@ -206,7 +208,7 @@ function PANEL:_range()
 end
 
 function PANEL:_nudge(px)
-    self.vel = self.vel + px * 10;
+    self.vel = self.vel + px * 10
     self.lastInput = CurTime()
 end
 
@@ -222,10 +224,10 @@ function PANEL:OnMouseWheeled(delta)
 end
 
 function PANEL:OnMousePressed(mc)
-    if mc ~= MOUSE_LEFT then return end
+    if mc != MOUSE_LEFT then return end
 
     local hovered = vgui.GetHoveredPanel()
-    if IsValid(hovered) and hovered ~= self and hovered:IsDescendantOf(self.content) then return end
+    if IsValid(hovered) and hovered != self and hovered:IsDescendantOf(self.content) then return end
 
     self.drag = true
     self.dragLast = select(2, self:CursorPos())
@@ -237,7 +239,7 @@ function PANEL:OnMousePressed(mc)
 end
 
 function PANEL:OnMouseReleased(mc)
-    if mc ~= MOUSE_LEFT then return end
+    if mc != MOUSE_LEFT then return end
     self.drag = false
     self:MouseCapture(false)
 
@@ -298,9 +300,7 @@ function PANEL:Think()
     if self._springing then
         local t = math.min(1, ft * self.spring)
         self.offset = Lerp(t, self.offset, self._springTarget)
-
         self.vel = 0
-
         if math.abs(self.offset - self._springTarget) < 0.5 then
             self.offset = self._springTarget
             self._springing = false
@@ -320,7 +320,6 @@ function PANEL:Think()
                 if math.abs(self.vel) < 2 then self.vel = 0 end
             end
 
-            -- автоматический возврат по таймаут
             if CurTime() - self.lastInput > 0.09 and self.vel == 0 then
                 if extraTop > self.overscrollThreshold then
                     self:_startSpring(0)
@@ -337,9 +336,10 @@ function PANEL:Think()
     if not vb:IsVisible() then return end
 
     local trackH = vb:GetTall()
+    local clampedOffset = math.Clamp(self.offset, 0, maxScrollDF)
     local ratio = (contentH <= 0) and 1 or math.min(1, viewH / contentH)
     local gripH = math.max(self.gripMin, math.floor(trackH * ratio))
-    local scroll01 = (maxScrollDF <= 0) and 0 or math.Clamp(self.offset / maxScrollDF, 0, 1)
+    local scroll01 = (maxScrollDF <= 0) and 0 or (clampedOffset / maxScrollDF)
     local gripY = math.floor((trackH - gripH) * scroll01)
 
     if extraTop > 0 or extraBottom > 0 then
@@ -361,20 +361,18 @@ function PANEL:Think()
         self.offset = s01 * maxScrollDF
         self.vel = 0
         gripY = newY
-    end
-
-    self._vb_gripH = self._vb_gripH or gripH
-    self._vb_gripY = self._vb_gripY or gripY
-
-    local s
-    if extraTop > 0 or extraBottom > 0 or self._springing then
-        s = math.min(1, ft * self.vbarSmooth)
+        self._vb_gripH = gripH
+        self._vb_gripY = gripY
     else
-        s = 1
+        if extraTop > 0 or extraBottom > 0 or self._springing then
+            local s = math.min(1, ft * self.vbarSmooth)
+            self._vb_gripH = (self._vb_gripH == nil) and gripH or Lerp(s, self._vb_gripH, gripH)
+            self._vb_gripY = (self._vb_gripY == nil) and gripY or Lerp(s, self._vb_gripY, gripY)
+        else
+            self._vb_gripH = gripH
+            self._vb_gripY = gripY
+        end
     end
-
-    self._vb_gripH = Lerp(s, self._vb_gripH, gripH)
-    self._vb_gripY = Lerp(s, self._vb_gripY, gripY)
 
     vb.btnGrip:SetSize(vb:GetWide(), math.max(1, math.floor(self._vb_gripH)))
     vb.btnGrip:SetPos(0, math.floor(self._vb_gripY))
