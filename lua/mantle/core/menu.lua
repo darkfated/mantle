@@ -439,6 +439,103 @@ local function CreateMenu()
             {':OnValueChanged(string new_value)', 'Вызывается при изменении значения слайдера'}
         }, panel, slider)
 
+        local panelTexts = vgui.Create('Panel')
+        panelTexts:Dock(TOP)
+        panelTexts:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
+        panelTexts:DockPadding(8, 8, 8, 8)
+        panelTexts:SetTall(344)
+        panelTexts.Paint = function(_, w, h)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(32)
+                :Color(Mantle.color.panel_alpha[2])
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
+        end
+
+        local panelText1 = vgui.Create('DPanel', panelTexts)
+        panelText1:Dock(TOP)
+        panelText1:DockMargin(0, 0, 0, 6)
+        panelText1:SetTall(74)
+        panelText1.Paint = function(_, w, h)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(32)
+                :Color(Mantle.color.panel_alpha[1])
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
+        end
+
+        local text1 = vgui.Create('MantleText', panelText1)
+        text1:Dock(FILL)
+        text1:SetPadding(10)
+        text1:SetText('MantleText — компонент для аккуратного вывода многострочного текста. Текст автоматически переносится по ширине и сокращается троеточием')
+
+        local panelText2 = vgui.Create('DPanel', panelTexts)
+        panelText2:Dock(TOP)
+        panelText2:DockMargin(0, 0, 0, 6)
+        panelText2:SetTall(100)
+        panelText2.Paint = function(_, w, h)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(32)
+                :Color(Mantle.color.panel_alpha[1])
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
+        end
+
+        local text2 = vgui.Create('MantleText', panelText2)
+        text2:Dock(FILL)
+        text2:SetPadding(12)
+        text2:SetFont('Fated.20')
+        text2:SetText('Центрирование: горизонталь + вертикаль. Текст выровнен по центру блока.')
+        text2:SetAlign(TEXT_ALIGN_CENTER)
+        text2:SetVAlign('center')
+
+        local panelText3 = vgui.Create('DPanel', panelTexts)
+        panelText3:Dock(TOP)
+        panelText3:DockMargin(0, 0, 0, 6)
+        panelText3:SetTall(54)
+        panelText3.Paint = function(_, w, h)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(32)
+                :Color(Mantle.color.panel_alpha[1])
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
+        end
+
+        local text3 = vgui.Create('MantleText', panelText3)
+        text3:Dock(FILL)
+        text3:SetPadding(8)
+        text3:SetText('ОченьДлинноеСловоБезПробеловКотороеНужноОтделитьЧтобыНеПорвалосьОформление')
+
+        local panelText4 = vgui.Create('DPanel', panelTexts)
+        panelText4:Dock(TOP)
+        panelText4:SetTall(82)
+        panelText4.Paint = function(_, w, h)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(32)
+                :Color(Mantle.color.panel_alpha[1])
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
+        end
+
+        local longText = [[
+        Это длинный пример текста, который занимает несколько строк. Если блок небольшой по высоте — последняя видимая строка будет усечена с троеточием, чтобы не порвать верстку и не выходить за пределы панели нашего меню.
+        ]]
+
+        local text4 = vgui.Create('MantleText', panelText4)
+        text4:Dock(FILL)
+        text4:SetPadding(8)
+        text4:SetFont('Fated.16')
+        text4:SetText(longText)
+
+        CreateCategory('Текст (MantleText)', {
+            {':SetText(string text)', 'Установить текст для отображения'},
+            {':SetFont(string font)', 'Установить шрифт'},
+            {':SetColor(color col)', 'Установить цвет текста'},
+            {':SetAlign(number align)', 'Горизонтальное выравнивание (TEXT_ALIGN_*)'},
+            {':SetVAlign(string valign)', 'Вертикальное выравнивание: top, center, bottom'},
+            {':SetPadding(number px)', 'Внутренний отступ от краёв'}
+        }, panel, panelTexts)
+
         return panel
     end
 
