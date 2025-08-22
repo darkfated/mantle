@@ -368,14 +368,7 @@ function PANEL:Think()
     local visualGripH = gripH * (1 - maxShrink * overscrollFrac * weight)
     visualGripH = math.max(6, visualGripH)
 
-    local heightSpeedNormal = 6
-    local heightSpeedOverscroll = 0.35
-    local heightSpeed = Lerp(maxFrac, heightSpeedNormal, heightSpeedOverscroll)
-    local s_h = math.min(1, ft * self.vbarSmooth * heightSpeed)
-
-    local posSpeed = 3.5
-    local s_y = math.min(1, ft * self.vbarSmooth * posSpeed)
-
+    local gripSpeed = 14
     if vb.Dragging then
         local _, my = vb:CursorPos()
         local newY = math.Clamp(my - vb._press_off, 0, trackH - visualGripH)
@@ -386,8 +379,20 @@ function PANEL:Think()
         self._vb_gripH = visualGripH
         self._vb_gripY = newY
     else
-        self._vb_gripH = (self._vb_gripH == nil) and visualGripH or Lerp(s_h, self._vb_gripH, visualGripH)
-        self._vb_gripY = (self._vb_gripY == nil) and desiredY or Lerp(s_y, self._vb_gripY, desiredY)
+        if self._vb_gripH == nil then
+            self._vb_gripH = visualGripH
+        else
+            self._vb_gripH = Mantle.func.approachExp(self._vb_gripH, visualGripH, gripSpeed, ft)
+            if math.abs(self._vb_gripH - visualGripH) < 0.25 then self._vb_gripH = visualGripH end
+        end
+
+        if self._vb_gripY == nil then
+            self._vb_gripY = desiredY
+        else
+            local speedY = gripSpeed * (1 + maxFrac * 0.5)
+            self._vb_gripY = Mantle.func.approachExp(self._vb_gripY, desiredY, speedY, ft)
+            if math.abs(self._vb_gripY - desiredY) < 0.25 then self._vb_gripY = desiredY end
+        end
 
         local maxY = math.max(0, trackH - self._vb_gripH)
         if self._vb_gripY < 0 then self._vb_gripY = 0 end

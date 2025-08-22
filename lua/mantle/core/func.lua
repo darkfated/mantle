@@ -184,14 +184,18 @@ local function CreateFunc()
         surface.SetAlphaMultiplier(1)
     end
 
-    local scaleFactor = 0.9
+    local scaleFactor = 0.8
 
     function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_dur, callback)
+        if not IsValid(panel) then return end
+        duration = (duration and duration > 0) and duration or 0.18
+        alpha_dur = (alpha_dur and alpha_dur > 0) and alpha_dur or duration
+
         local startTime = SysTime()
+        local targetX, targetY = panel:GetPos()
+
         local initialW = target_w * scaleFactor
         local initialH = target_h * scaleFactor
-
-        local targetX, targetY = panel:GetPos()
         local initialX = targetX + (target_w - initialW) / 2
         local initialY = targetY + (target_h - initialH) / 2
 
@@ -199,28 +203,41 @@ local function CreateFunc()
         panel:SetPos(initialX, initialY)
         panel:SetAlpha(0)
 
+        local curW, curH = initialW, initialH
+        local curX, curY = initialX, initialY
+        local curA = 0
+
+        local eps = 0.5
+        local alpha_eps = 1
+
+        local speedSize = 3 / math.max(0.0001, duration)
+        local speedAlpha = 3 / math.max(0.0001, alpha_dur)
+
         panel.Think = function()
-            local elapsed = SysTime() - startTime
-            local sizeProgress = math_clamp(elapsed / duration, 0, 1)
-            local alphaProgress = math_clamp(elapsed / alpha_dur, 0, 1)
+            if not IsValid(panel) then return end
 
-            local currentW = Lerp(sizeProgress, initialW, target_w)
-            local currentH = Lerp(sizeProgress, initialH, target_h)
-            local currentX = Lerp(sizeProgress, initialX, targetX)
-            local currentY = Lerp(sizeProgress, initialY, targetY)
+            local dt = FrameTime()
 
-            panel:SetSize(currentW, currentH)
-            panel:SetPos(currentX, currentY)
+            curW = Mantle.func.approachExp(curW, target_w, speedSize, dt)
+            curH = Mantle.func.approachExp(curH, target_h, speedSize, dt)
+            curX = Mantle.func.approachExp(curX, targetX, speedSize, dt)
+            curY = Mantle.func.approachExp(curY, targetY, speedSize, dt)
+            curA = Mantle.func.approachExp(curA, 255, speedAlpha, dt)
 
-            local alpha = Lerp(alphaProgress, 0, 255)
-            panel:SetAlpha(alpha)
+            panel:SetSize(curW, curH)
+            panel:SetPos(curX, curY)
+            panel:SetAlpha(math.floor(curA + 0.5))
 
-            if sizeProgress == 1 and alphaProgress == 1 then
+            local doneSize = math.abs(curW - target_w) <= eps and math.abs(curH - target_h) <= eps
+            local donePos = math.abs(curX - targetX) <= eps and math.abs(curY - targetY) <= eps
+            local doneAlpha = math.abs(curA - 255) <= alpha_eps
+
+            if doneSize and donePos and doneAlpha then
+                panel:SetSize(target_w, target_h)
+                panel:SetPos(targetX, targetY)
+                panel:SetAlpha(255)
                 panel.Think = nil
-
-                if callback then
-                    callback(panel)
-                end
+                if callback then pcall(callback, panel) end
             end
         end
     end
@@ -249,6 +266,14 @@ local function CreateFunc()
 
     function Mantle.func.easeOutCubic(t)
         return 1 - (1 - t) * (1 - t) * (1 - t)
+    end
+
+    function Mantle.func.easeInOutCubic(t)
+        if t < 0.5 then
+            return 4 * t * t * t
+        else
+            return 1 - math.pow(-2 * t + 2, 3) / 2
+        end
     end
 
     --[[

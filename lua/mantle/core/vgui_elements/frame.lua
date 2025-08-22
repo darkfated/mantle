@@ -83,7 +83,7 @@ function PANEL:SetCenterTitle(center_title)
 end
 
 function PANEL:ShowAnimation()
-    Mantle.func.animate_appearance(self, self:GetWide(), self:GetTall(), 0.1, 0.2)
+    Mantle.func.animate_appearance(self, self:GetWide(), self:GetTall(), 0.3, 0.2)
 end
 
 function PANEL:DisableCloseBtn()

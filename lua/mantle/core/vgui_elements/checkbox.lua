@@ -5,11 +5,15 @@ function PANEL:Init()
     self.description = ''
     self.convar = ''
     self.value = false
-    self.hoverAnim = 0
-    self.circleAnim = 0
+
     self:SetText('')
     self:SetCursor('hand')
     self:SetTall(32)
+
+    self._hover = 0
+    self._circle = 0
+    self._circleEased = 0
+    self._circleColor = table.Copy(Mantle.color.gray)
 
     self.toggle = vgui.Create('DButton', self)
     self.toggle:Dock(RIGHT)
@@ -17,14 +21,20 @@ function PANEL:Init()
     self.toggle:DockMargin(0, 0, 8, 0)
     self.toggle:SetText('')
     self.toggle:SetCursor('hand')
-    self.toggle.Paint = function(_, w, h)
-        if self.toggle:IsHovered() then
-            self.hoverAnim = math.Clamp(self.hoverAnim + FrameTime() * 6, 0, 1)
-        else
-            self.hoverAnim = math.Clamp(self.hoverAnim - FrameTime() * 10, 0, 1)
-        end
 
-        self.circleAnim = Lerp(FrameTime() * 12, self.circleAnim, self.value and 1 or 0)
+    self.toggle.Paint = function(_, w, h)
+        local ft = FrameTime()
+
+        local targetHover = self.toggle:IsHovered() and 1 or 0
+        self._hover = Mantle.func.approachExp(self._hover, targetHover, 6, ft)
+        if math.abs(self._hover - targetHover) < 0.001 then self._hover = targetHover end
+
+        local target = self.value and 1 or 0
+        self._circle = Mantle.func.approachExp(self._circle, target, 8, ft)
+        if math.abs(self._circle - target) < 0.001 then self._circle = target end
+
+        self._circleEased = Mantle.func.easeInOutCubic(self._circle)
+
         local trackH = 20
         local trackY = (h - trackH) / 2
         RNDX().Rect(0, trackY, w, trackH)
@@ -33,10 +43,15 @@ function PANEL:Init()
             :Shape(RNDX.SHAPE_IOS)
         :Draw()
 
-        if self.hoverAnim > 0 then
+        if self._hover > 0 then
             RNDX().Rect(0, trackY, w, trackH)
                 :Rad(16)
-                :Color(Color(Mantle.color.button_hovered.r, Mantle.color.button_hovered.g, Mantle.color.button_hovered.b, self.hoverAnim * 80))
+                :Color(Color(
+                    Mantle.color.button_hovered.r,
+                    Mantle.color.button_hovered.g,
+                    Mantle.color.button_hovered.b,
+                    math.floor(self._hover * 80)
+                ))
                 :Shape(RNDX.SHAPE_IOS)
             :Draw()
         end
@@ -45,11 +60,14 @@ function PANEL:Init()
         local pad = trackY + (trackH - circleSize) / 2
         local x0 = pad
         local x1 = w - circleSize - pad
-        local circleX = Lerp(self.circleAnim, x0, x1)
-        local circleCol = self.value and Mantle.color.theme or Mantle.color.gray
+        local circleX = Lerp(self._circleEased, x0, x1)
+        circleX = math.floor(circleX + 0.5)
+
+        local targetCol = self.value and Mantle.color.theme or Mantle.color.gray
+        self._circleColor = Mantle.func.LerpColor(12, self._circleColor, targetCol)
 
         RNDX().Circle(circleX + circleSize/2, h/2, circleSize)
-            :Color(circleCol)
+            :Color(self._circleColor)
         :Draw()
     end
     self.toggle.DoClick = function()
@@ -112,11 +130,7 @@ end
 
 function PANEL:DoClick()
     if self.description == '' then return end
-    if self:GetTall() == 32 then
-        self:SetTall(48)
-    else
-        self:SetTall(32)
-    end
+    self:SetTall(self:GetTall() == 32 and 48 or 32)
 end
 
 function PANEL:PerformLayout(w, h)
