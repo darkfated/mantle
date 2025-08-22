@@ -1,14 +1,5 @@
 local PANEL = {}
 
-local function easeOutCubic(t)
-    return 1 - (1 - t) * (1 - t) * (1 - t)
-end
-
-local function approachExp(current, target, speed, dt)
-    local t = 1 - math.exp(-speed * dt)
-    return current + (target - current) * t
-end
-
 function PANEL:Init()
     self:SetTall(30)
     self:DockPadding(0, 36, 0, 0)
@@ -117,8 +108,8 @@ end
 function PANEL:Think()
     local ft = FrameTime()
 
-    self._anim = approachExp(self._anim, self._animTarget, self._animSpeed, ft)
-    self._animEased = easeOutCubic(self._anim)
+    self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
+    self._animEased = Mantle.func.easeOutCubic(self._anim)
 
     local currentContentTall = (self.content_size or 0) * self._animEased
 

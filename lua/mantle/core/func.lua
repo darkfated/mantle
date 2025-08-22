@@ -238,6 +238,31 @@ local function CreateFunc()
             Lerp(ft, col1.a, col2.a)
         )
     end
+
+    --[[
+        Функции анимации
+    ]]--
+    function Mantle.func.approachExp(current, target, speed, dt)
+        local t = 1 - math.exp(-speed * dt)
+        return current + (target - current) * t
+    end
+
+    function Mantle.func.easeOutCubic(t)
+        return 1 - (1 - t) * (1 - t) * (1 - t)
+    end
+
+    --[[
+        Умное позиционирование панели относительно экрана
+    ]]--
+    function Mantle.func.ClampMenuPosition(panel)
+        if not IsValid(panel) then return end
+        local x, y = panel:GetPos()
+        local w, h = panel:GetSize()
+        local sw, sh = Mantle.func.sw, Mantle.func.sh
+        if x < 5 then x = 5 elseif x + w > sw - 5 then x = sw - 5 - w end
+        if y < 5 then y = 5 elseif y + h > sh - 5 then y = sh - 5 - h end
+        panel:SetPos(x, y)
+    end
 end
 
 CreateFunc()

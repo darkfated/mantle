@@ -1,15 +1,5 @@
 local PANEL = {}
 
-local function ClampMenuPosition(panel)
-    if not IsValid(panel) then return end
-    local x, y = panel:GetPos()
-    local w, h = panel:GetSize()
-    local sw, sh = Mantle.func.sw, Mantle.func.sh
-    if x < 5 then x = 5 elseif x + w > sw - 5 then x = sw - 5 - w end
-    if y < 5 then y = 5 elseif y + h > sh - 5 then y = sh - 5 - h end
-    panel:SetPos(x, y)
-end
-
 function PANEL:Init()
     self.Items = {}
     self:SetSize(160, 0)
@@ -19,38 +9,90 @@ function PANEL:Init()
     self:SetDrawOnTop(true)
     self.MaxTextWidth = 0
 
-    self._openTime = CurTime()
-    self.Think = function()
-        if CurTime() - self._openTime < 0.1 then return end
+    self._anim = 0
+    self._animTarget = 1
+    self._animSpeed = 18
+    self._animEased = 0
+    self._initPosSet = false
+    self._closing = false
+    self._disableBlur = false
 
-        if input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT) then
-            if not self:IsChildHovered() then
-                self:Remove()
+    self._openTime = CurTime()
+    self:SetAlpha(0)
+
+    self.Think = function()
+        local ft = FrameTime()
+
+        if not self._initPosSet then
+            local tx, ty = self:GetPos()
+            Mantle.func.ClampMenuPosition(self)
+            self._targetX, self._targetY = self:GetPos()
+            self:SetPos(self._targetX, self._targetY + 6)
+            self._initPosSet = true
+        end
+
+        if CurTime() - self._openTime >= 0.08 then
+            if input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT) then
+                if not self:IsChildHovered() then
+                    self:CloseMenu()
+                end
             end
+        end
+
+        self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
+        self._animEased = self._anim
+        local a = math.floor(255 * self._animEased + 0.5)
+        self:SetAlpha(a)
+
+        if self._targetX and self._targetY then
+            local offsetY = 6 * (1 - self._animEased)
+            self:SetPos(self._targetX, self._targetY + offsetY)
+        end
+
+        if self._closing and self._animEased <= 0.005 then
+            return self:Remove()
         end
     end
 end
 
 function PANEL:Paint(w, h)
+    local aMul = (self._animEased ~= nil) and self._animEased or ((self:GetAlpha() or 255) / 255)
+
+    local blurMul
+    if self._closing or self._disableBlur or self._animTarget == 0 then
+        blurMul = 0
+    else
+        local fadeStart = 0.3
+        blurMul = math.Clamp((aMul - fadeStart) / (1 - fadeStart), 0, 1)
+    end
+
+    local shadowSpread = math.max(0, math.floor(10 * blurMul))
+    local shadowIntensity = math.max(0, math.floor(16 * blurMul))
+
     RNDX().Rect(0, 0, w, h)
         :Rad(16)
-        :Color(Mantle.color.window_shadow)
+        :Color(Color(Mantle.color.window_shadow.r, Mantle.color.window_shadow.g, Mantle.color.window_shadow.b, math.floor(100 * aMul)))
         :Shape(RNDX.SHAPE_IOS)
-        :Shadow(10, 16)
+        :Shadow(shadowSpread, shadowIntensity)
     :Draw()
+
+    if not self._disableBlur then
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Shape(RNDX.SHAPE_IOS)
+            :Blur(blurMul)
+        :Draw()
+    end
+
     RNDX().Rect(0, 0, w, h)
         :Rad(16)
+        :Color(Color(Mantle.color.background_panelpopup.r, Mantle.color.background_panelpopup.g, Mantle.color.background_panelpopup.b, math.floor(150 * aMul)))
         :Shape(RNDX.SHAPE_IOS)
-        :Blur()
     :Draw()
+
     RNDX().Rect(0, 0, w, h)
         :Rad(16)
-        :Color(Mantle.color.background_panelpopup)
-        :Shape(RNDX.SHAPE_IOS)
-    :Draw()
-    RNDX().Rect(0, 0, w, h)
-        :Rad(16)
-        :Color(Mantle.color.background_panelpopup)
+        :Color(Color(Mantle.color.background_panelpopup.r, Mantle.color.background_panelpopup.g, Mantle.color.background_panelpopup.b, math.floor(150 * aMul)))
         :Shape(RNDX.SHAPE_IOS)
         :Outline(1)
     :Draw()
@@ -70,7 +112,6 @@ function PANEL:AddOption(text, func, icon, optData)
     option.Icon = icon
     option.Text = text
 
-
     option._submenu = nil
     option._submenu_open = false
 
@@ -87,9 +128,9 @@ function PANEL:AddOption(text, func, icon, optData)
         Mantle.func.sound()
         local function closeAllMenus(panel)
             while IsValid(panel) do
-                if panel:GetName() == 'MantleDermaMenu' then
+                if panel.GetName and panel:GetName() == 'MantleDermaMenu' then
                     local parent = panel:GetParent()
-                    panel:Remove()
+                    panel:CloseMenu()
                     panel = parent
                 else
                     panel = panel:GetParent()
@@ -119,6 +160,8 @@ function PANEL:AddOption(text, func, icon, optData)
             end
             local x, y = self:LocalToScreen(self:GetWide(), 0)
             submenu:SetPos(x, y)
+            Mantle.func.ClampMenuPosition(submenu)
+            submenu._targetX, submenu._targetY = submenu:GetPos()
             submenu:SetVisible(true)
             submenu:MakePopup()
             submenu:SetKeyboardInputEnabled(false)
@@ -164,7 +207,6 @@ function PANEL:AddOption(text, func, icon, optData)
 
         return submenu
     end
-
 
     option.AddSubMenu = option.AddSubMenu
 
@@ -226,7 +268,6 @@ function PANEL:AddSpacer()
     end
 
     table.insert(self.Items, spacer)
-
     self:UpdateSize()
 
     return spacer
@@ -234,16 +275,25 @@ end
 
 function PANEL:UpdateSize()
     local height = 12
-
     for _, item in ipairs(self.Items) do
         if IsValid(item) then
-            height = height + item.sumTall
+            height = height + (item.sumTall or item:GetTall())
         end
     end
 
     local maxWidth = math.max(160, self.MaxTextWidth + 56)
-
     self:SetSize(maxWidth, math.min(height, ScrH() * 0.8))
+
+    if not self._targetX or not self._targetY then
+        Mantle.func.ClampMenuPosition(self)
+        self._targetX, self._targetY = self:GetPos()
+        if not self._initPosSet then
+            self:SetPos(self._targetX, self._targetY + 6)
+        end
+    else
+        Mantle.func.ClampMenuPosition(self)
+        self._targetX, self._targetY = self:GetPos()
+    end
 end
 
 function PANEL:Open()
@@ -251,7 +301,10 @@ function PANEL:Open()
 end
 
 function PANEL:CloseMenu()
-    self:Remove()
+    if self._closing then return end
+    self._closing = true
+    self._animTarget = 0
+    self._disableBlur = true
 end
 
 function PANEL:GetDeleteSelf()
@@ -269,8 +322,9 @@ function Mantle.ui.derma_menu()
     local m = vgui.Create('MantleDermaMenu')
     m:SetPos(mouseX, mouseY)
 
-    ClampMenuPosition(m)
+    Mantle.func.ClampMenuPosition(m)
 
+    m._targetX, m._targetY = m:GetPos()
     Mantle.ui.menu_derma_menu = m
 
     return m
