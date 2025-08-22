@@ -131,7 +131,7 @@ local function CreateFunc()
         :Draw()
         RNDX().Rect(bx, by, bw, bh - 6)
             :Radii(16, 16, 0, 0)
-            :Color(Mantle.color.header)
+            :Color(Mantle.color.background_alpha)
             :Shape(RNDX.SHAPE_IOS)
         :Draw()
         RNDX().Rect(bx, by + bh - 6, bw, 6)
@@ -147,38 +147,56 @@ local function CreateFunc()
         Применяется в функциях отрисовки (например ENT:Draw)
     ]]--
     function Mantle.func.draw_ent_text(ent, text, posY)
-        local dist = EyePos():DistToSqr(ent:GetPos())
-        if dist > 60000 then return end
+        local distSqr = EyePos():DistToSqr(ent:GetPos())
+        local maxDist = 380
+        if distSqr > maxDist * maxDist then return end
+
+        local dist = math.sqrt(distSqr)
+        local minDist = 20
 
         local idx = ent:EntIndex()
         local prev = Mantle.func.ents_scales[idx] or 0
-        local target = math_clamp(3 - (dist / 20000), 0, 1)
+
+        local normalized = math.Clamp((maxDist - dist) / math.max(1, (maxDist - minDist)), 0, 1)
+
+        local appearThreshold = 0.8
+        local disappearThreshold = 0.01
+
+        local target
+        if normalized <= disappearThreshold then
+            target = 0
+        elseif normalized >= appearThreshold then
+            target = 1
+        else
+            target = (normalized - disappearThreshold) / (appearThreshold - disappearThreshold)
+        end
 
         local dt = FrameTime() or 0.016
-        local appearSpeed = 6 -- скорость появления (меньше -> мягче)
-        local disappearSpeed = 12 -- скорость исчезания (больше -> быстрее)
-        local speed = target > prev and appearSpeed or disappearSpeed
-        local t = 1 - math.exp(-speed * dt)
-        local cur = Lerp(t, prev, target)
+        local appearSpeed = 18
+        local disappearSpeed = 12
+        local speed = (target > prev) and appearSpeed or disappearSpeed
+
+        local cur = Mantle.func.approachExp(prev, target, speed, dt)
+        if math.abs(cur - target) < 0.0005 then cur = target end
         Mantle.func.ents_scales[idx] = cur
 
-        local alpha = cur
-
+        local eased = Mantle.func.easeInOutCubic(cur)
+        local alpha = eased
         local baseScale = 0.13
-        local camScale = baseScale * cur
+        local camScale = baseScale * math.max(1e-4, eased)
 
-        if cur < 0.01 then
+        if eased < 0.01 then
             surface.SetAlphaMultiplier(1)
             return
         end
 
         local _, max = ent:GetRotatedAABB(ent:OBBMins(), ent:OBBMaxs())
         local rot = (ent:GetPos() - EyePos()):Angle().yaw - 90
-        local sin = math_sin(CurTime() + ent:EntIndex()) / 3 + 0.5
+        local bob = math.sin(CurTime() + idx) / 3 + 0.5
         local center = ent:LocalToWorld(ent:OBBCenter())
 
         surface.SetAlphaMultiplier(alpha)
-        cam.Start3D2D(center + Vector(0, 0, math_abs(max.z / 2) + 12 + sin), Angle(0, rot, 90), camScale)
+        cam.Start3D2D(center + Vector(0, 0, math.abs(max.z / 2) + 12 + bob), Angle(0, rot, 90), camScale)
             EntText(text, posY)
         cam.End3D2D()
         surface.SetAlphaMultiplier(1)
