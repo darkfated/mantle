@@ -439,6 +439,25 @@ local function CreateMenu()
             {':OnValueChanged(string new_value)', 'Вызывается при изменении значения слайдера'}
         }, panel, slider)
 
+        -- Кнопка предмета
+        local panelItemBtns = vgui.Create('Panel')
+        panelItemBtns:Dock(TOP)
+        panelItemBtns:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
+        panelItemBtns:SetTall(80)
+
+        for k = 1, 5 do
+            local itemButton = vgui.Create('MantleItemBtn', panelItemBtns)
+            itemButton:Dock(LEFT)
+            itemButton:DockMargin(0, 0, 6, 0)
+            itemButton:SetWide(80)
+            itemButton:SetIcon('icon16/contrast_low.png', 64)
+        end
+
+        CreateCategory('Кнопка предмета (MantleItemBtn)', {
+            {':SetIcon(string icon, int icon_size)', 'Установить иконку (или указать Material)'},
+        }, panel, panelItemBtns)
+
+        -- Текст
         local panelTexts = vgui.Create('Panel')
         panelTexts:Dock(TOP)
         panelTexts:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
