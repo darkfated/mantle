@@ -71,6 +71,8 @@ function PANEL:Init(options)
 
     self._hotkeyCooldown = {}
 
+    self.optionHover = {}
+
     self:SetSize(Mantle.func.sw, Mantle.func.sh)
     self:SetPos(0, 0)
     self:MakePopup()
@@ -147,6 +149,13 @@ function PANEL:Init(options)
         self.hoverOption = hovered
         self.hoverAnim = math.Clamp(self.hoverAnim + (self.hoverOption and 10 or -20) * FrameTime(), 0, 1)
         self._mouseWasDown = mouseDown
+
+        local dt = FrameTime()
+        local opts = self:GetCurrentOptions()
+        for i = 1, #opts do
+            local target = (self.hoverOption == i) and 1 or 0
+            self.optionHover[i] = Mantle.func.approachExp(self.optionHover[i] or 0, target, 18, dt)
+        end
 
         for i = 1, math_min(9, #self:GetCurrentOptions()) do
             local k = KEY_1 + (i-1)
@@ -354,7 +363,11 @@ function PANEL:Paint(w,h)
         for i, option in ipairs(opts) do
             local startA = (i - 1) * sectorRad
             local midA = startA + sectorRad * 0.5
-            local labelR = innerR + (outerR - innerR) * 0.5
+
+            local hv = self.optionHover[i] or 0
+            local eased = Mantle.func.easeOutCubic(math.Clamp(hv, 0, 1))
+
+            local labelR = innerR + (outerR - innerR) * (0.5 + 0.06 * eased)
             local numberR = innerR + (labelR - innerR) * 0.35
             local lx = cx + labelR * math_cos(midA)
             local ly = cy + labelR * math_sin(midA)
@@ -365,7 +378,7 @@ function PANEL:Paint(w,h)
             local txtCol = Color(Mantle.color.text.r, Mantle.color.text.g, Mantle.color.text.b, txtAlpha)
 
             if option.icon and option.icon != false and option.icon != nil then
-                local iconSize = Mantle.func.w(28) * self.scale
+                local iconSize = Mantle.func.w(28) * self.scale * (1 + 0.06 * eased)
                 local iconX = lx - iconSize * 0.5
                 local iconY = ly - iconSize * 0.5 - Mantle.func.h(6) * self.scale
                 local mat = Material(option.icon)
