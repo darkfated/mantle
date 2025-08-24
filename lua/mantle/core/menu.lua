@@ -17,8 +17,8 @@ local function CreateMenu()
     local function CreateTabHeader(title, subtitle, icon, pan)
         local header = vgui.Create('Panel', pan)
         header:Dock(TOP)
-        header:SetTall(56)
         header:DockMargin(0, 0, 0, 8)
+        header:SetTall(56)
 
         header.Paint = function(_, w, h)
             RNDX().Rect(0, 0, w, h)
@@ -149,11 +149,11 @@ local function CreateMenu()
 
         -- Чекбокс
         local checkbox = vgui.Create('MantleCheckBox')
+        checkbox:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
+        checkbox:Dock(TOP)
         checkbox:SetTxt('Отображение HUD')
         checkbox:SetConvar('cl_drawhud')
         checkbox:SetDescription('Показать информационный интерфейс')
-        checkbox:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
-        checkbox:Dock(TOP)
         CreateCategory('Тумблер (MantleCheckBox)', {
             {':SetTxt(string text)', 'Установить текст'},
             {':SetValue(bool value)', 'Установить bool-значение тумблера'},
@@ -165,10 +165,10 @@ local function CreateMenu()
 
         -- Ввод текста
         local entry = vgui.Create('MantleEntry')
+        entry:Dock(TOP)
+        entry:DockMargin(menuWide * 0.35, 6, menuWide * 0.35, 0)
         entry:SetTitle('Никнейм')
         entry:SetPlaceholder('darkf')
-        entry:DockMargin(menuWide * 0.35, 6, menuWide * 0.35, 0)
-        entry:Dock(TOP)
         CreateCategory('Ввод текста (MantleEntry)', {
             {':SetTitle(string text)', 'Установить заголовок'},
             {':SetPlaceholder(string text)', 'Установить фоновый текст (появляется при пустом поле)'},
@@ -181,10 +181,10 @@ local function CreateMenu()
         panelFrames:SetTall(92)
 
         local btnFrame1 = vgui.Create('MantleBtn', panelFrames)
+        btnFrame1:Dock(TOP)
+        btnFrame1:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
         btnFrame1:SetTxt('Обычное окно')
         btnFrame1:SetTall(40)
-        btnFrame1:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
-        btnFrame1:Dock(TOP)
         btnFrame1.DoClick = function()
             local frame = vgui.Create('MantleFrame')
             frame:SetSize(400, 300)
@@ -194,10 +194,10 @@ local function CreateMenu()
         end
 
         local btnFrame2 = vgui.Create('MantleBtn', panelFrames)
+        btnFrame2:Dock(TOP)
+        btnFrame2:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
         btnFrame2:SetTxt('Lite-режим')
         btnFrame2:SetTall(40)
-        btnFrame2:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
-        btnFrame2:Dock(TOP)
         btnFrame2.DoClick = function()
             local frame = vgui.Create('MantleFrame')
             frame:SetSize(400, 300)
@@ -219,23 +219,29 @@ local function CreateMenu()
 
         -- ScrollPanel
         local sp = vgui.Create('MantleScrollPanel')
+        sp:Dock(TOP)
+        sp:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
         sp:SetTall(150)
         for spK = 1, 10 do
             local spPanel = vgui.Create('DPanel', sp)
             spPanel:Dock(TOP)
-            spPanel:DockMargin(0, 0, 6, 6)
+            spPanel:DockMargin(0, 0, 0, 6)
             spPanel:SetTall(24)
             spPanel.Paint = function(_, w, h)
-                RNDX().Rect(0, 0, w - 12, h)
+                RNDX().Rect(0, 0, w, h)
                     :Rad(16)
                     :Color(Mantle.color.panel_alpha[1])
                     :Shape(RNDX.SHAPE_IOS)
                 :Draw()
             end
         end
-        sp:DockMargin(menuWide * 0.31, 6, menuWide * 0.31, 0)
-        sp:Dock(TOP)
-        CreateCategory('Панель прокрутки (MantleScrollPanel)', {}, panel, sp)
+        CreateCategory('Панель прокрутки (MantleScrollPanel)', {
+            {':SetScroll(number offset)', 'Установить смещение прокрутки'},
+            {':GetScroll()', 'Получить текущее смещение прокрутки'},
+            {':AddItem(object panel)', 'Добавить элемент в панель'},
+            {':Clear()', 'Очистить панель от всего'},
+            {':DisableVBarPadding()', 'Отключить отступ справа для скроллбара (по умолчанию имеется)'}
+        }, panel, sp)
 
         -- Вкладки
         local panelTabs = vgui.Create('Panel')
@@ -243,9 +249,9 @@ local function CreateMenu()
         panelTabs:SetTall(280)
 
         local testTabs = vgui.Create('MantleTabs', panelTabs) -- modern стиль
-        testTabs:SetTall(150)
-        testTabs:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
         testTabs:Dock(TOP)
+        testTabs:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
+        testTabs:SetTall(150)
         local testTab1 = vgui.Create('DPanel')
         testTab1.Paint = function(_, w, h)
             RNDX().Rect(0, 0, w - 12, h)
@@ -266,8 +272,8 @@ local function CreateMenu()
         testTabs:AddTab('Test2', testTab2)
 
         local testTabs2 = vgui.Create('MantleTabs', panelTabs) -- classic стиль
-        testTabs2:DockMargin(menuWide * 0.3, 10, menuWide * 0.3, 0)
         testTabs2:Dock(FILL)
+        testTabs2:DockMargin(menuWide * 0.3, 10, menuWide * 0.3, 0)
         testTabs2:SetTabStyle('classic')
         local testTab3 = vgui.Create('DPanel')
         testTab3.Paint = function(_, w, h)
@@ -425,11 +431,11 @@ local function CreateMenu()
 
         -- Слайдер
         local slider = vgui.Create('MantleSlideBox')
+        slider:Dock(TOP)
+        slider:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
         slider:SetRange(0, 4)
         slider:SetConvar('net_graph')
         slider:SetText('График')
-        slider:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
-        slider:Dock(TOP)
         CreateCategory('Слайдер (MantleSlideBox)', {
             {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
             {':SetConvar(string convar)', 'Установить ConVar'},

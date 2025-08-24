@@ -1,6 +1,8 @@
 local PANEL = {}
 
 function PANEL:Init()
+    self._vbarPadRight = 6
+
     self.content = vgui.Create('Panel', self)
     self.content:SetMouseInputEnabled(true)
 
@@ -112,6 +114,17 @@ function PANEL:GetVBar()
     return self.vbar
 end
 
+function PANEL:DisableVBarPadding()
+    if !IsValid(self.vbar) then return end
+
+    self._vbarPadRight = 0
+
+    self.vbar:DockMargin(self._vbarPadRight, 0, 0, 0)
+    self:_markDirty()
+    self:InvalidateLayout(true)
+    self.content:InvalidateLayout(true)
+end
+
 function PANEL:AddItem(pnl)
     pnl:SetParent(self.content)
 
@@ -180,7 +193,7 @@ function PANEL:_range()
         self.content:DockPadding(0, 0, 0, 0)
         self.content:SetPos(self.padL, self.padT - self.offset)
 
-        local contentW = math.max(0, w - self.padL - self.padR - vbw - 6)
+        local contentW = math.max(0, w - self.padL - self.padR - vbw - self._vbarPadRight)
         self.content:SetWide(contentW)
         self.content:InvalidateLayout(true)
         self.content:SizeToChildren(false, true)
@@ -272,6 +285,14 @@ function PANEL:OnCursorMoved(_, y)
     end
 
     self.lastInput = CurTime()
+end
+
+function PANEL:SetVBarPaddingRight(enabled)
+    if !IsValid(self.vbar) then return end
+
+    self.vbar:DockMargin(enabled and 6 or 0, 0, 0, 0)
+
+    self:_markDirty()
 end
 
 function PANEL:PerformLayout(w, h)
