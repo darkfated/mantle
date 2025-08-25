@@ -39,11 +39,8 @@ function Mantle.ui.player_selector(do_click, func_check)
             self:SetCursor('arrow')
         end
         card.Think = function(self)
-            if self:IsHovered() then
-                self.hover_status = math.Clamp(self.hover_status + 4 * FrameTime(), 0, 1)
-            else
-                self.hover_status = math.Clamp(self.hover_status - 8 * FrameTime(), 0, 1)
-            end
+            local target = self:IsHovered() and 1 or 0
+            self.hover_status = Mantle.func.approachExp(self.hover_status, target, 8, FrameTime())
         end
         card.DoClick = function()
             if IsValid(pl) then
@@ -52,6 +49,7 @@ function Mantle.ui.player_selector(do_click, func_check)
             end
             Mantle.ui.menu_player_selector:Remove()
         end
+        card.pl_color = team.GetColor(pl:Team()) or color_online
         card.Paint = function(self, w, h)
             RNDX().Rect(0, 0, w, h)
                 :Rad(10)
@@ -83,7 +81,7 @@ function Mantle.ui.player_selector(do_click, func_check)
             if pl:IsBot() then
                 statusColor = color_bot
             else
-                statusColor = color_online
+                statusColor = self.pl_color
             end
 
             RNDX.DrawCircle(w - 24, 14, 12, statusColor)
@@ -92,7 +90,7 @@ function Mantle.ui.player_selector(do_click, func_check)
         local avatarImg = vgui.Create('AvatarImage', card)
         avatarImg:SetSize(AVATAR_SIZE, AVATAR_SIZE)
         avatarImg:SetPos(AVATAR_X, (CARD_HEIGHT - AVATAR_SIZE) * 0.5)
-        avatarImg:SetPlayer(pl, 64)
+        avatarImg:SetSteamID(pl:SteamID64(), 64)
         avatarImg:SetMouseInputEnabled(false)
         avatarImg:SetKeyboardInputEnabled(false)
         avatarImg.PaintOver = function() end
