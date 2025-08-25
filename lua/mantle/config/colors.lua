@@ -51,7 +51,7 @@ Mantle.color_light = {
 
     button = Color(235, 235, 235),
     button_shadow = Color(0, 0, 0, 15),
-    button_hovered = Color(215, 220, 255),
+    button_hovered = Color(196, 199, 218),
 
     category = Color(240, 240, 245),
     category_opened = Color(240, 240, 245, 0),
@@ -90,7 +90,7 @@ Mantle.color_blue = {
 
     button = Color(38, 54, 82),
     button_shadow = Color(18, 22, 32, 35),
-    button_hovered = Color(70, 120, 180),
+    button_hovered = Color(47, 69, 110),
 
     category = Color(34, 48, 72),
     category_opened = Color(34, 48, 72, 0),
@@ -129,7 +129,7 @@ Mantle.color_red = {
 
     button = Color(66, 38, 38),
     button_shadow = Color(32, 18, 18, 35),
-    button_hovered = Color(140, 70, 70),
+    button_hovered = Color(97, 50, 50),
 
     category = Color(62, 34, 34),
     category_opened = Color(62, 34, 34, 0),
@@ -168,7 +168,7 @@ Mantle.color_green = {
 
     button = Color(38, 66, 48),
     button_shadow = Color(18, 32, 22, 35),
-    button_hovered = Color(70, 140, 90),
+    button_hovered = Color(48, 88, 62),
 
     category = Color(34, 62, 44),
     category_opened = Color(34, 62, 44, 0),
@@ -205,9 +205,9 @@ Mantle.color_orange = {
     background_alpha = Color(255, 250, 240, 220),
     background_panelpopup = Color(255, 245, 235, 160),
 
-    button = Color(235, 150, 80),
+    button = Color(184, 122, 64),
     button_shadow = Color(20, 10, 0, 30),
-    button_hovered = Color(255, 165, 80),
+    button_hovered = Color(197, 129, 65),
 
     category = Color(255, 245, 235),
     category_opened = Color(255, 245, 235, 0),
@@ -246,7 +246,7 @@ Mantle.color_purple = {
 
     button = Color(58, 52, 76),
     button_shadow = Color(8, 6, 20, 30),
-    button_hovered = Color(145, 110, 220),
+    button_hovered = Color(74, 64, 105),
 
     category = Color(46, 40, 60),
     category_opened = Color(46, 40, 60, 0),
@@ -364,12 +364,12 @@ Mantle.color_wine = {
 
     button = Color(79, 50, 60),
     button_shadow = Color(10, 6, 18, 30),
-    button_hovered = Color(192, 122, 217),
+    button_hovered = Color(90, 52, 65),
 
     category = Color(79, 50, 60),
     category_opened = Color(79, 50, 60, 0),
 
-    theme = Color(192, 122, 217),
+    theme = Color(148, 61, 91),
 
     panel = {
         Color(79, 50, 60),
@@ -403,7 +403,7 @@ Mantle.color_violet = {
 
     button = Color(58, 64, 84),
     button_shadow = Color(8, 6, 18, 30),
-    button_hovered = Color(159, 180, 255),
+    button_hovered = Color(64, 74, 104),
 
     category = Color(58, 64, 84),
     category_opened = Color(58, 64, 84, 0),
@@ -440,9 +440,9 @@ Mantle.color_moss = {
     background_alpha = Color(14, 16, 12, 210),
     background_panelpopup = Color(24, 28, 22, 150),
 
-    button = Color(72, 98, 66),
+    button = Color(64, 82, 60),
     button_shadow = Color(6, 8, 6, 30),
-    button_hovered = Color(124, 190, 110),
+    button_hovered = Color(74, 99, 68),
 
     category = Color(46, 64, 44),
     category_opened = Color(46, 64, 44, 0),
@@ -479,9 +479,9 @@ Mantle.color_coral = {
     background_alpha = Color(18, 14, 16, 210),
     background_panelpopup = Color(30, 22, 24, 150),
 
-    button = Color(150, 72, 64),
+    button = Color(116, 66, 61),
     button_shadow = Color(8, 4, 6, 30),
-    button_hovered = Color(255, 120, 90),
+    button_hovered = Color(134, 73, 68),
 
     category = Color(74, 40, 42),
     category_opened = Color(74, 40, 42, 0),
