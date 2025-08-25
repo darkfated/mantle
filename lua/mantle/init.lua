@@ -36,18 +36,20 @@ local function RunScripts()
 end
 
 local function RunAddons()
-    local function LoadAddon(addonName)
-        local addonPath = 'mantle_addons/' .. addonName
-        local initPath = addonPath .. '/init.lua'
-
-        Mantle.run_sh(initPath)
-    end
-
     local _, addonsName = file.Find('mantle_addons/*', 'LUA')
 
     for _, addon in ipairs(addonsName) do
-        LoadAddon(addon)
+        if file.Exists('mantle_addons/' .. addon .. '/init.lua', 'LUA') then
+            Mantle.run_sh('mantle_addons/' .. addon .. '/init.lua')
+        end
+
+        if file.Exists('mantle_addons/' .. addon .. '/lang.lua', 'LUA') then
+            local lang = Mantle.run_sh('mantle_addons/' .. addon .. '/lang.lua')
+            Mantle.lang.list[addon] = lang
+        end
     end
+
+    Mantle.run_sh('core/lang.lua')
 end
 
 local function InitLib()
@@ -62,12 +64,15 @@ local function InitLib()
     MsgC(Color(0, 255, 0), '| Mantle LIBRARY |\n')
     MsgC(color_white, '------------------\n')
 
-    Mantle = Mantle or {}
+    Mantle = Mantle or {
+        lang = { list = {}, default = 'en' },
+    }
     Mantle.run_cl = SERVER and AddCSLuaFile or include
     Mantle.run_sv = SERVER and include or function() end
     Mantle.run_sh = function(f)
-        Mantle.run_cl(f)
-        Mantle.run_sv(f)
+        local client = Mantle.run_cl(f)
+        local server = Mantle.run_sv(f)
+        return SERVER and server or client
     end
 
     RunScripts()
