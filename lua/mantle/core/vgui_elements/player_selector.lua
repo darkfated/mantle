@@ -12,7 +12,7 @@ function Mantle.ui.player_selector(do_click, func_check)
     Mantle.ui.menu_player_selector:Center()
     Mantle.ui.menu_player_selector:MakePopup()
     Mantle.ui.menu_player_selector:SetTitle('')
-    Mantle.ui.menu_player_selector:SetCenterTitle('Выбор игрока')
+    Mantle.ui.menu_player_selector:SetCenterTitle(Mantle.lang.get('mantle', 'player_title'))
     Mantle.ui.menu_player_selector:ShowAnimation()
 
     local contentPanel = vgui.Create('Panel', Mantle.ui.menu_player_selector)
@@ -69,7 +69,7 @@ function Mantle.ui.player_selector(do_click, func_check)
             local infoX = AVATAR_X + AVATAR_SIZE + 10
 
             if !IsValid(pl) then
-                draw.SimpleText('Вышел', 'Fated.18', infoX, h * 0.5, color_disconnect, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(Mantle.lang.get('mantle', 'player_offline'), 'Fated.18', infoX, h * 0.5, color_disconnect, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 return
             end
 
@@ -77,7 +77,7 @@ function Mantle.ui.player_selector(do_click, func_check)
             local group = pl:GetUserGroup() or 'user'
             group = string.upper(string.sub(group, 1, 1)) .. string.sub(group, 2)
             draw.SimpleText(group, 'Fated.14', infoX, h - 6, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
-            draw.SimpleText(pl:Ping() .. ' мс', 'Fated.16', w - 20, h - 6, Mantle.color.gray, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+            draw.SimpleText(pl:Ping() .. ' ' .. Mantle.lang.get('mantle', 'player_ping'), 'Fated.16', w - 20, h - 6, Mantle.color.gray, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
 
             local statusColor = color_disconnect
             if pl:IsBot() then
@@ -109,7 +109,7 @@ function Mantle.ui.player_selector(do_click, func_check)
     Mantle.ui.menu_player_selector.btn_close:Dock(BOTTOM)
     Mantle.ui.menu_player_selector.btn_close:DockMargin(16, 8, 16, 12)
     Mantle.ui.menu_player_selector.btn_close:SetTall(36)
-    Mantle.ui.menu_player_selector.btn_close:SetTxt('Закрыть')
+    Mantle.ui.menu_player_selector.btn_close:SetTxt(Mantle.lang.get('mantle', 'player_close'))
     Mantle.ui.menu_player_selector.btn_close:SetColorHover(color_disconnect)
     Mantle.ui.menu_player_selector.btn_close.DoClick = function()
         Mantle.ui.menu_player_selector:Remove()

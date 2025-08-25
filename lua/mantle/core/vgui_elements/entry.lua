@@ -2,7 +2,7 @@ local PANEL = {}
 
 function PANEL:Init()
     self.title = nil
-    self.placeholder = 'Введите текст'
+    self.placeholder = Mantle.lang.get('mantle', 'entry_default_placeholder')
     self:SetTall(26)
     self.action = function() end
 

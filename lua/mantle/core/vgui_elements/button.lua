@@ -10,7 +10,7 @@ function PANEL:Init()
     self.radius = 16
     self.icon = ''
     self.icon_size = 16
-    self.text = 'Кнопка'
+    self.text = Mantle.lang.get('mantle', 'btn_default')
     self.col = Mantle.color.button
     self.col_hov = Mantle.color.button_hovered
     self.bool_gradient = true

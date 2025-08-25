@@ -5,7 +5,7 @@ local mat_close = Material('mantle/close_btn.png')
 function PANEL:Init()
     self.bool_alpha = true
     self.bool_lite = false
-    self.title = 'Заголовок'
+    self.title = Mantle.lang.get('mantle', 'frame_title')
     self.center_title = ''
 
     self:DockPadding(6, 30, 6, 6)
@@ -55,16 +55,16 @@ function PANEL:Init()
     self.cls.DoRightClick = function()
         local DM = Mantle.ui.derma_menu()
 
-        DM:AddOption('Прозрачность', function()
+        DM:AddOption(Mantle.lang.get('mantle', 'frame_alpha'), function()
             self.bool_alpha = !self.bool_alpha
         end, self.bool_alpha and 'icon16/bullet_green.png' or 'icon16/bullet_red.png')
 
         local boolInput = self:IsKeyboardInputEnabled()
-        DM:AddOption('Передвижение из меню', function()
+        DM:AddOption(Mantle.lang.get('mantle', 'frame_move_from_menu'), function()
             self:SetKeyBoardInputEnabled(!boolInput)
         end, !boolInput and 'icon16/bullet_green.png' or 'icon16/bullet_red.png')
 
-        DM:AddOption('Закрыть окно', function()
+        DM:AddOption(Mantle.lang.get('mantle', 'frame_close_window'), function()
             self:Remove()
         end, 'icon16/cross.png')
     end

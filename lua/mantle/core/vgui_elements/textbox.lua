@@ -26,11 +26,10 @@ function Mantle.ui.text_box(title, desc, func)
     local btn_accept = vgui.Create('MantleBtn', Mantle.ui.menu_text_box)
     btn_accept:Dock(BOTTOM)
     btn_accept:SetTall(30)
-    btn_accept:SetTxt('Применить')
+    btn_accept:SetTxt(Mantle.lang.get('mantle', 'apply'))
     btn_accept:SetColorHover(color_accept)
     btn_accept.DoClick = function()
         Mantle.func.sound()
-
         apply_func()
     end
 end

@@ -121,7 +121,7 @@ end
 function PANEL:AddItem(...)
     local args = {...}
     if #args != #self.columns then
-        print('MantleTable Error: Неверное количество аргументов')
+        print(Mantle.lang.get('mantle', 'table_wrong_args'))
         return
     end
 
@@ -189,43 +189,41 @@ function PANEL:SortByColumn(columnIndex)
 
     local desc = self.sortDesc
 
-    local success, err = pcall(function()
-        table.sort(self.rows, function(a, b)
-            local va = a[columnIndex]
-            local vb = b[columnIndex]
+    table.sort(self.rows, function(a, b)
+        local va = a[columnIndex]
+        local vb = b[columnIndex]
 
-            if va == nil and vb == nil then return false end
-            if va == nil then return !desc end
-            if vb == nil then return desc end
+        if va == nil and vb == nil then return false end
+        if va == nil then return !desc end
+        if vb == nil then return desc end
 
-            local sa = tostring(va)
-            local sb = tostring(vb)
+        local sa = tostring(va)
+        local sb = tostring(vb)
 
-            local na = tonumber(sa)
-            local nb = tonumber(sb)
+        local na = tonumber(sa)
+        local nb = tonumber(sb)
 
-            if na and nb then
-                if desc then
-                    return na > nb
-                else
-                    return na < nb
-                end
-            end
-
-            if na and !nb then
-                return desc
-            elseif nb and !na then
-                return !desc
-            end
-
-            local la = string.lower(sa)
-            local lb = string.lower(sb)
+        if na and nb then
             if desc then
-                return la > lb
+                return na > nb
             else
-                return la < lb
+                return na < nb
             end
-        end)
+        end
+
+        if na and !nb then
+            return desc
+        elseif nb and !na then
+            return !desc
+        end
+
+        local la = string.lower(sa)
+        local lb = string.lower(sb)
+        if desc then
+            return la > lb
+        else
+            return la < lb
+        end
     end)
 
     self:RebuildRows()
@@ -385,12 +383,12 @@ function PANEL:CreateRow(rowIndex, rowData)
         self.OnRightClick(rowData)
         local menu = Mantle.ui.derma_menu()
         for i, column in ipairs(self.columns) do
-            menu:AddOption('Копировать ' .. column.name, function()
+            menu:AddOption(Mantle.lang.get('mantle', 'table_copy') .. ' ' .. column.name, function()
                 SetClipboardText(tostring(rowData[i]))
             end)
         end
         menu:AddSpacer()
-        menu:AddOption('Удалить строку', function()
+        menu:AddOption(Mantle.lang.get('mantle', 'table_delete_row'), function()
             self:RemoveRow(rowIndex)
         end, 'icon16/delete.png')
     end

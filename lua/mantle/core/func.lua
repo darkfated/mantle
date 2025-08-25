@@ -255,7 +255,7 @@ local function CreateFunc()
                 panel:SetPos(targetX, targetY)
                 panel:SetAlpha(255)
                 panel.Think = nil
-                if callback then pcall(callback, panel) end
+                if callback then callback(panel) end
             end
         end
     end
