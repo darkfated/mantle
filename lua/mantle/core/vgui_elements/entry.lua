@@ -44,7 +44,7 @@ function PANEL:Init()
         local padding = 6
         local available_w = w - padding * 2
 
-        local caret = s.GetCaretPos and s:GetCaretPos() or #value
+        local caret = #value
         local before_caret = string.sub(value, 1, caret)
         local caret_x = surface.GetTextSize(before_caret)
         local text_w = surface.GetTextSize(value)
@@ -61,7 +61,7 @@ function PANEL:Init()
 
         local text = self.placeholder
         local col = Mantle.color.gray
-        if value ~= '' then
+        if value != '' then
             text = value
             col = Mantle.color.text
         end
