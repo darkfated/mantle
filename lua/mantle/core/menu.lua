@@ -153,7 +153,6 @@ local function CreateMenu()
         checkbox:Dock(TOP)
         checkbox:SetTxt('Отображение HUD')
         checkbox:SetConvar('cl_drawhud')
-        checkbox:SetDescription('Показать информационный интерфейс')
         CreateCategory('Тумблер (MantleCheckBox)', {
             {':SetTxt(string text)', 'Установить текст'},
             {':SetValue(bool value)', 'Установить bool-значение тумблера'},

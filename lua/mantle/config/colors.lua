@@ -20,6 +20,8 @@ Mantle.color_dark = {
         Color(80, 80, 80)
     },
 
+    toggle = Color(56, 56, 56), -- тумблер
+
     focus_panel = Color(46, 46, 46), -- универсальный цвет для элементов
     hover = Color(60, 65, 80), -- универсальное выделение
 
@@ -33,8 +35,6 @@ Mantle.color_dark.panel_alpha = { -- прозрачные панели
     ColorAlpha(Mantle.color_dark.panel[2], 150),
     ColorAlpha(Mantle.color_dark.panel[3], 150)
 }
-
-Mantle.color = Mantle.color_dark
 
 -- Тёмная палитра (монотонная)
 
@@ -63,6 +63,8 @@ Mantle.color_light = {
         Color(240, 240, 245),
         Color(230, 230, 235)
     },
+
+    toggle = Color(220, 220, 230),
 
     focus_panel = Color(245, 245, 255),
     hover = Color(235, 240, 255),
@@ -101,6 +103,8 @@ Mantle.color_blue = {
         Color(70, 120, 180)
     },
 
+    toggle = Color(34, 44, 66),
+
     focus_panel = Color(48, 72, 90),
     hover = Color(80, 160, 220, 90),
 
@@ -137,6 +141,8 @@ Mantle.color_red = {
         Color(66, 38, 38),
         Color(140, 70, 70)
     },
+
+    toggle = Color(60, 34, 34),
 
     focus_panel = Color(72, 48, 48),
     hover = Color(180, 80, 80, 90),
@@ -175,6 +181,8 @@ Mantle.color_green = {
         Color(70, 140, 90)
     },
 
+    toggle = Color(34, 60, 44),
+
     focus_panel = Color(48, 72, 58),
     hover = Color(80, 180, 120, 90),
 
@@ -212,11 +220,13 @@ Mantle.color_orange = {
         Color(235, 150, 90)
     },
 
+    toggle = Color(143, 121, 104),
+
     focus_panel = Color(255, 240, 225),
     hover = Color(255, 165, 80, 90),
 
     window_shadow = Color(20, 8, 0, 100),
-    gray = Color(180, 140, 120, 200),
+    gray = Color(180, 161, 150, 200),
     text = Color(45, 20, 10)
 }
 
@@ -249,12 +259,14 @@ Mantle.color_purple = {
         Color(120, 90, 200)
     },
 
+    toggle = Color(43, 39, 53),
+
     focus_panel = Color(48, 42, 62),
     hover = Color(138, 114, 219, 90),
 
     window_shadow = Color(8, 6, 20, 100),
 
-    gray = Color(150, 150, 150, 220),
+    gray = Color(140, 128, 148, 220),
     text = Color(245, 240, 255)
 }
 Mantle.color_purple.panel_alpha = {
@@ -286,6 +298,8 @@ Mantle.color_coffee = {
         Color(90, 65, 50),
         Color(150, 110, 75)
     },
+
+    toggle = Color(53, 40, 31),
 
     focus_panel = Color(70, 55, 40),
     hover = Color(150, 110, 75, 90),
@@ -324,6 +338,8 @@ Mantle.color_ice = {
         Color(74, 132, 184)
     },
 
+    toggle = Color(168, 194, 219),
+
     focus_panel = Color(205, 230, 245),
     hover = Color(100, 170, 230, 80),
 
@@ -360,6 +376,8 @@ Mantle.color_wine = {
         Color(63, 44, 48),
         Color(160, 85, 143)
     },
+
+    toggle = Color(63, 40, 47),
 
     focus_panel = Color(70, 48, 58),
     hover = Color(192, 122, 217, 90),
@@ -398,12 +416,14 @@ Mantle.color_violet = {
         Color(109, 136, 255)
     },
 
+    toggle = Color(46, 51, 66),
+
     focus_panel = Color(56, 62, 86),
     hover = Color(159, 180, 255, 90),
 
     window_shadow = Color(8, 6, 20, 100),
 
-    gray = Color(170, 170, 190, 200),
+    gray = Color(147, 147, 184, 200),
     text = Color(238, 244, 255)
 }
 Mantle.color_violet.panel_alpha = {
@@ -435,12 +455,14 @@ Mantle.color_moss = {
         Color(110, 160, 90)
     },
 
+    toggle = Color(35, 44, 34),
+
     focus_panel = Color(46, 58, 44),
     hover = Color(110, 160, 90, 90),
 
     window_shadow = Color(0, 0, 0, 100),
 
-    gray = Color(160, 170, 155, 220),
+    gray = Color(148, 165, 140, 220),
     text = Color(232, 244, 235)
 }
 Mantle.color_moss.panel_alpha = {
@@ -472,12 +494,14 @@ Mantle.color_coral = {
         Color(240, 120, 90)
     },
 
+    toggle = Color(58, 39, 37),
+
     focus_panel = Color(72, 42, 44),
     hover = Color(255, 120, 90, 90),
 
     window_shadow = Color(0, 0, 0, 100),
 
-    gray = Color(170, 150, 150, 220),
+    gray = Color(167, 136, 136, 220),
     text = Color(255, 243, 242)
 }
 Mantle.color_coral.panel_alpha = {
