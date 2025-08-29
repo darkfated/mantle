@@ -15,7 +15,6 @@ function PANEL:Init()
     self._animEased = 0
     self._initPosSet = false
     self._closing = false
-    self._disableBlur = false
 
     self._openTime = CurTime()
     self:SetAlpha(0)
@@ -59,7 +58,7 @@ function PANEL:Paint(w, h)
     local aMul = (self._animEased ~= nil) and self._animEased or ((self:GetAlpha() or 255) / 255)
 
     local blurMul
-    if self._closing or self._disableBlur or self._animTarget == 0 then
+    if self._closing or self._animTarget == 0 then
         blurMul = 0
     else
         local fadeStart = 0.3
@@ -76,13 +75,11 @@ function PANEL:Paint(w, h)
         :Shadow(shadowSpread, shadowIntensity)
     :Draw()
 
-    if not self._disableBlur then
-        RNDX().Rect(0, 0, w, h)
-            :Rad(16)
-            :Shape(RNDX.SHAPE_IOS)
-            :Blur(blurMul)
-        :Draw()
-    end
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
+        :Shape(RNDX.SHAPE_IOS)
+        :Blur(blurMul)
+    :Draw()
 
     RNDX().Rect(0, 0, w, h)
         :Rad(16)
@@ -193,14 +190,18 @@ function PANEL:AddOption(text, func, icon, optData)
         option.OnCursorExited = function(pnl)
             timer.Simple(0.15, function()
                 if not isAnySubmenuHovered(pnl) then
-                    pnl:CloseSubMenu()
+                    if IsValid(pnl) then
+                        pnl:CloseSubMenu()
+                    end
                 end
             end)
         end
         submenu.OnCursorExited = function(pnl)
             timer.Simple(0.15, function()
                 if not isAnySubmenuHovered(option) then
-                    option:CloseSubMenu()
+                    if IsValid(pnl) then
+                        option:CloseSubMenu()
+                    end
                 end
             end)
         end
@@ -304,7 +305,6 @@ function PANEL:CloseMenu()
     if self._closing then return end
     self._closing = true
     self._animTarget = 0
-    self._disableBlur = true
 end
 
 function PANEL:GetDeleteSelf()
