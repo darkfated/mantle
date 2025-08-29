@@ -15,6 +15,7 @@ function PANEL:Init()
     self._animEased = 0
     self._initPosSet = false
     self._closing = false
+    self._disableBlur = false
 
     self._openTime = CurTime()
     self:SetAlpha(0)
@@ -56,9 +57,9 @@ end
 
 function PANEL:Paint(w, h)
     local aMul = (self._animEased ~= nil) and self._animEased or ((self:GetAlpha() or 255) / 255)
-
     local blurMul
-    if self._closing or self._animTarget == 0 then
+
+    if self._closing or self._disableBlur or self._animTarget == 0 then
         blurMul = 0
     else
         local fadeStart = 0.3
@@ -75,11 +76,13 @@ function PANEL:Paint(w, h)
         :Shadow(shadowSpread, shadowIntensity)
     :Draw()
 
-    RNDX().Rect(0, 0, w, h)
-        :Rad(16)
-        :Shape(RNDX.SHAPE_IOS)
-        :Blur(blurMul)
-    :Draw()
+    if !self._disableBlur then
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Shape(RNDX.SHAPE_IOS)
+            :Blur(blurMul)
+        :Draw()
+    end
 
     RNDX().Rect(0, 0, w, h)
         :Rad(16)
@@ -304,6 +307,7 @@ end
 function PANEL:CloseMenu()
     if self._closing then return end
     self._closing = true
+    self._disableBlur = true
     self._animTarget = 0
 end
 
