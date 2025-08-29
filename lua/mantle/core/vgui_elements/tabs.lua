@@ -4,15 +4,33 @@ function PANEL:Init()
     self.tabs = {}
     self.active_id = 1
     self.tab_height = 38
-    self.animation_speed = 8
+    self.animation_speed = 12
     self.tab_style = 'modern' -- modern или classic
     self.indicator_height = 2
+
+    self.indicator_x = 0
+    self.indicator_w = 0
+    self.indicator_target_x = 0
+    self.indicator_target_w = 0
 
     self.panel_tabs = vgui.Create('Panel', self)
     self.panel_tabs.Paint = nil
 
     self.content = vgui.Create('Panel', self)
     self.content.Paint = nil
+end
+
+function PANEL:Think()
+    if self.tab_style == 'modern' then
+        self.indicator_x = Mantle.func.approachExp(self.indicator_x, self.indicator_target_x, self.animation_speed, FrameTime())
+        self.indicator_w = Mantle.func.approachExp(self.indicator_w, self.indicator_target_w, self.animation_speed, FrameTime())
+        if math.abs(self.indicator_x - self.indicator_target_x) < 0.5 then
+            self.indicator_x = self.indicator_target_x
+        end
+        if math.abs(self.indicator_w - self.indicator_target_w) < 0.5 then
+            self.indicator_w = self.indicator_target_w
+        end
+    end
 end
 
 function PANEL:SetTabStyle(style)
@@ -53,6 +71,7 @@ function PANEL:Rebuild()
 
     for id, tab in ipairs(self.tabs) do
         local btnTab = vgui.Create('Button', self.panel_tabs)
+        tab._btn = btnTab
         if self.tab_style == 'modern' then
             surface.SetFont('Fated.18')
             local textW = select(1, surface.GetTextSize(tab.name))
@@ -75,7 +94,10 @@ function PANEL:Rebuild()
             self.tabs[self.active_id].pan:SetVisible(false)
             tab.pan:SetVisible(true)
             self.active_id = id
-
+            if self.tab_style == 'modern' and tab._btn then
+                self.indicator_target_x = tab._btn:GetX()
+                self.indicator_target_w = tab._btn:GetWide()
+            end
             Mantle.func.sound()
         end
         btnTab.DoRightClick = function()
@@ -85,6 +107,10 @@ function PANEL:Rebuild()
                     self.tabs[self.active_id].pan:SetVisible(false)
                     tab.pan:SetVisible(true)
                     self.active_id = k
+                    if self.tab_style == 'modern' and tab._btn then
+                        self.indicator_target_x = tab._btn:GetX()
+                        self.indicator_target_w = tab._btn:GetWide()
+                    end
                 end, tab.icon)
             end
         end
@@ -95,13 +121,8 @@ function PANEL:Rebuild()
             local colorIcon = isActive and Mantle.color.theme or color_white
 
             if self.tab_style == 'modern' then
-                -- Современный стиль с индикатором внизу
                 if s:IsHovered() then
                     RNDX.Draw(16, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS + (isActive and RNDX.NO_BL + RNDX.NO_BR or 0))
-                end
-
-                if isActive then
-                    RNDX.Draw(0, 0, h - self.indicator_height, w, self.indicator_height, Mantle.color.theme)
                 end
 
                 local padding = 16
@@ -129,6 +150,12 @@ function PANEL:Rebuild()
             end
         end
     end
+
+    self.panel_tabs.Paint = function(s, w, h)
+        if self.tab_style == 'modern' and self.indicator_w > 0 then
+            RNDX.Draw(0, self.indicator_x, h - self.indicator_height, self.indicator_w, self.indicator_height, Mantle.color.theme)
+        end
+    end
 end
 
 function PANEL:PerformLayout(w, h)
@@ -143,6 +170,27 @@ function PANEL:PerformLayout(w, h)
     end
 
     self.content:Dock(FILL)
+
+    if self.tab_style == 'modern' then
+        local activeBtn = nil
+        if self.tabs[self.active_id] then
+            activeBtn = self.tabs[self.active_id]._btn
+        end
+
+        if IsValid(activeBtn) then
+            local bx, by = activeBtn:GetPos()
+            local bw, bh = activeBtn:GetSize()
+            self.indicator_target_x = bx
+            self.indicator_target_w = bw
+            if self.indicator_w == 0 and self.indicator_x == 0 then
+                self.indicator_x = self.indicator_target_x
+                self.indicator_w = self.indicator_target_w
+            end
+        else
+            self.indicator_target_x = 0
+            self.indicator_target_w = 0
+        end
+    end
 end
 
 vgui.Register('MantleTabs', PANEL, 'Panel')
