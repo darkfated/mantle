@@ -6,7 +6,7 @@ function Mantle.ui.text_box(title, desc, func)
     Mantle.ui.menu_text_box:Center()
     Mantle.ui.menu_text_box:MakePopup()
     Mantle.ui.menu_text_box:SetTitle(title)
-    -- Mantle.ui.menu_text_box:ShowAnimation()
+    Mantle.func.animate_appearance(Mantle.ui.menu_text_box, Mantle.ui.menu_text_box:GetWide(), Mantle.ui.menu_text_box:GetTall(), 0.3, 0.2, nil, 0.9)
     Mantle.ui.menu_text_box:DockPadding(12, 30, 12, 12)
 
     local entry = vgui.Create('MantleEntry', Mantle.ui.menu_text_box)

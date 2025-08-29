@@ -204,7 +204,7 @@ local function CreateFunc()
 
     local scaleFactor = 0.8
 
-    function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_dur, callback)
+    function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alpha_dur, callback, scale_factor)
         if not IsValid(panel) then return end
         duration = (duration and duration > 0) and duration or 0.18
         alpha_dur = (alpha_dur and alpha_dur > 0) and alpha_dur or duration
@@ -212,8 +212,8 @@ local function CreateFunc()
         local startTime = SysTime()
         local targetX, targetY = panel:GetPos()
 
-        local initialW = target_w * scaleFactor
-        local initialH = target_h * scaleFactor
+        local initialW = target_w * (scale_factor and scale_factor or scaleFactor)
+        local initialH = target_h * (scale_factor and scale_factor or scaleFactor)
         local initialX = targetX + (target_w - initialW) / 2
         local initialY = targetY + (target_h - initialH) / 2
 

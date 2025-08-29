@@ -696,7 +696,7 @@ local function CreateMenu()
         }, panel)
 
         CreateCategory('Анимация размера панели', {
-            {'Mantle.func.animate_appearance(object panel, int w, int h, int duration, int alpha_dur, func callback)', 'Плавное изменение панели до нужного размера'}
+            {'Mantle.func.animate_appearance(object panel, int w, int h, int duration, int alpha_dur, func callback, int scale_factor)', 'Плавное изменение панели до нужного размера'}
         }, panel)
 
         CreateCategory('Плавное изменение цвета', {
