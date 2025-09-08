@@ -4,7 +4,7 @@
 
 local color_gray = Color(200, 200, 200)
 local color_red = Color(255, 50, 50)
-local mat_close = Material('mantle/close_btn_l.png')
+local mat_close = Material('mantle/close_btn.png')
 
 function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
     s:SetSize(width, height)

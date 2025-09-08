@@ -1,6 +1,6 @@
 local PANEL = {}
 
-local mat_close = Material('mantle/close_btn.png')
+local mat_close = Material('mantle/close_btn_new.png')
 
 function PANEL:Init()
     self.bool_alpha = true
