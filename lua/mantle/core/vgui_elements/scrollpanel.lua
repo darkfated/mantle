@@ -8,7 +8,13 @@ function PANEL:Init()
 
     self.vbar = vgui.Create('Panel', self)
     self.vbar:SetMouseInputEnabled(true)
-    self.vbar:SetWide(6)
+
+    self.vbarDefaultWidth = 4
+    self.vbarExpandedWidth = 6
+    self.vbarWidthSpeed = 12
+    self.vbarReserveWidth = self.vbarExpandedWidth
+
+    self.vbar:SetWide(self.vbarDefaultWidth)
     self.vbar.Dragging = false
     self.vbar._press_off = 0
     self.vbar:Dock(RIGHT)
@@ -19,6 +25,13 @@ function PANEL:Init()
             :Color(Mantle.color.focus_panel)
         :Draw()
     end
+
+    self.vbarHoverDelay = 1
+    self.vbarUnhoverDelay = 0.5
+
+    self.vbar._hoverEnter = 0
+    self.vbar._hoverExit = 0
+    self.vbar._expanded = false
 
     self.vbar.btnGrip = vgui.Create('MantleBtn', self.vbar)
     self.vbar.btnGrip:SetText('')
@@ -43,11 +56,16 @@ function PANEL:Init()
         s:GetParent()._press_off = my - s.y
         s:MouseCapture(true)
         s:GetParent()._springing = false
+        s:GetParent()._expanded = true
     end
 
     self.vbar.btnGrip.OnMouseReleased = function(s)
         s:GetParent().Dragging = false
         s:MouseCapture(false)
+
+        if !(s:GetParent():IsHovered() or s:IsHovered()) then
+            s:GetParent()._hoverExit = CurTime()
+        end
     end
 
     self.vbar.OnMousePressed = function(pnl)
@@ -88,6 +106,7 @@ function PANEL:Init()
 
     self._vb_gripH = nil
     self._vb_gripY = nil
+    self._vb_width = nil
 
     self._needLayout = true
 
@@ -150,7 +169,7 @@ end
 function PANEL:OnChildAdded(child)
     timer.Simple(0, function()
         if child == self.content or child == self.vbar or child == self.vbar.btnGrip then return end
-        if not IsValid(child) or not IsValid(self) then return end
+        if !IsValid(child) or !IsValid(self) then return end
         if child:GetParent() == self then
             child:SetParent(self.content)
 
@@ -191,9 +210,12 @@ function PANEL:_range()
         local vbw = self.vbar:GetWide()
 
         self.content:DockPadding(0, 0, 0, 0)
+
+        local vbReserve = self.vbarReserveWidth or self.vbarExpandedWidth
+
         self.content:SetPos(self.padL, self.padT - self.offset)
 
-        local contentW = math.max(0, w - self.padL - self.padR - vbw - self._vbarPadRight)
+        local contentW = math.max(0, w - self.padL - self.padR - vbReserve - self._vbarPadRight)
         self.content:SetWide(contentW)
         self.content:InvalidateLayout(true)
         self.content:SizeToChildren(false, true)
@@ -269,7 +291,7 @@ function PANEL:OnMouseReleased(mc)
 end
 
 function PANEL:OnCursorMoved(_, y)
-    if not self.drag then return end
+    if !self.drag then return end
 
     local dy = y - self.dragLast
     self.dragLast = y
@@ -327,7 +349,7 @@ function PANEL:Think()
             self._springing = false
         end
     else
-        if not self.drag then
+        if !self.drag then
             self.offset = self.offset + self.vel * ft
 
             if self.offset < -self.overscroll then
@@ -354,7 +376,41 @@ function PANEL:Think()
     self.content:SetPos(self.padL, self.padT - math.floor(self.offset))
 
     local vb = self.vbar
-    if not vb:IsVisible() then return end
+    if !vb:IsVisible() then return end
+
+    local hoveredNow = vb:IsHovered() or vb.btnGrip:IsHovered()
+    if hoveredNow then
+        if vb._hoverEnter == 0 then vb._hoverEnter = CurTime() end
+        vb._hoverExit = 0
+    else
+        if vb._hoverExit == 0 then vb._hoverExit = CurTime() end
+        vb._hoverEnter = 0
+    end
+
+    if vb.Dragging then vb._expanded = true end
+
+    if vb._hoverEnter > 0 and CurTime() - vb._hoverEnter >= self.vbarHoverDelay then
+        vb._expanded = true
+    end
+    if vb._hoverExit > 0 and CurTime() - vb._hoverExit >= self.vbarUnhoverDelay and !vb.Dragging then
+        vb._expanded = false
+    end
+
+    local targetW = (vb._expanded and self.vbarExpandedWidth) or self.vbarDefaultWidth
+    if vb.Dragging then targetW = self.vbarExpandedWidth end
+
+    if self._vb_width == nil then
+        self._vb_width = targetW
+    else
+        self._vb_width = Mantle.func.approachExp(self._vb_width, targetW, self.vbarWidthSpeed, ft)
+        if math.abs(self._vb_width - targetW) < 0.25 then self._vb_width = targetW end
+    end
+
+    local newW = math.max(1, math.floor(self._vb_width))
+    if vb:GetWide() != newW then
+        vb:SetWide(newW)
+        self:_markDirty()
+    end
 
     local trackH = vb:GetTall()
     local clampedOffset = math.Clamp(self.offset, 0, maxScrollDF)
