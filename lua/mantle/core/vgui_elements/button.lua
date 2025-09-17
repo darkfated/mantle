@@ -21,6 +21,13 @@ function PANEL:Init()
     self.enable_ripple = false
     self.ripple_color = Color(255, 255, 255, 30)
 
+    --[[
+    TODO: тень, которая не вылезает за окно при прокрутке
+    ]]--
+    -- local parent = self:GetParent()
+    -- local grandParent = IsValid(parent:GetParent()) and parent:GetParent() or parent
+    -- self.clipParent = IsValid(parent) and grandParent or nil
+
     self:SetText('')
 end
 
@@ -94,7 +101,13 @@ function PANEL:Paint(w, h)
 
     -- Обычная тень
     -- if Mantle.ui.convar.depth_ui then
-    --     RNDX.DrawShadows(self.radius, 0, 0, w, h, Mantle.color.window_shadow, 5, 20, RNDX.SHAPE_IOS)
+    --     RNDX().Rect(0, 0, w, h)
+    --         :Rad(self.radius)
+    --         :Color(Mantle.color.window_shadow)
+    --         :Shape(RNDX.SHAPE_IOS)
+    --         :Shadow(5, 20)
+    --         :Clip(self.clipParent)
+    --     :Draw()
     -- end
 
     -- Дополнительная тень при зажатии
