@@ -10,50 +10,67 @@
 - Быстрый рендеринг через RNDX
 - Загрузка материалов по ссылке
 - Гибкая система цветовых тем
-- Уведомления для игроков и сервера
+- Уведомления для игроков на сервера
 - Модульная архитектура
 - Поддержка кириллицы и UTF-8
 - Единое меню с документацией и настройками
-- И многое другое!
 
-## Меню и интерфейс
+## Меню библиотеки
 
-В библиотеке есть собственное меню с документацией и настройками. Откройте его командой в консоли: `mantle_menu`.
+Имеется меню с документацией и настройками. Для открытия используйте консольную команду: `mantle_menu`.
 
-### Примеры интерфейса
+## Примеры компонентов
 
-- Документация и элементы VGUI
-  <img width="911" height="696" alt="VGUI элементы" src="https://github.com/user-attachments/assets/2a52ee52-ac21-47fe-8031-eb11164bd2e6" />
-- Лёгкий режим окна
-  <img width="775" height="576" alt="Lite-режим" src="https://github.com/user-attachments/assets/628b5870-8229-408e-9794-7ab119681eba" />
-- ComboBox
-  <img width="833" height="647" alt="ComboBox" src="https://github.com/user-attachments/assets/8607d470-4fc4-4b13-a029-5ec8394ea4bd" />
-- SlideBox
-  <img width="843" height="651" alt="SlideBox" src="https://github.com/user-attachments/assets/b3063187-0199-4c0e-b798-deb7fdb103ae" />
-- Таблицы
-  <img width="825" height="649" alt="Таблицы" src="https://github.com/user-attachments/assets/a438a1bb-30dc-4bb1-a6d0-bc60146cdfe2" />
-- Поле ввода
-  <img width="834" height="641" alt="Поле ввода" src="https://github.com/user-attachments/assets/56785e7c-7ccc-4bab-bab9-8c21778bf5fb" />
+### Документация и элементы VGUI
 
-### Множественные всплывающие меню
+<img width="983" height="720" alt="image" src="https://github.com/user-attachments/assets/892290e4-eb7f-4f65-b306-4ed5cc0c0e5b" />
 
-<img width="815" height="614" alt="Множественные всплывающие меню" src="https://github.com/user-attachments/assets/3bfe5206-9813-421c-93f2-597ca6746983" />
+### Лёгкий режим окна
+
+<img width="406" height="314" alt="image" src="https://github.com/user-attachments/assets/31669a2a-f2d3-4e2d-9e82-63a2188fe96e" />
+
+### ComboBox
+
+<img width="1002" height="728" alt="image" src="https://github.com/user-attachments/assets/8abb781b-b055-4178-9ee1-20046fbcc409" />
+
+### SlideBox
+
+<img width="1021" height="750" alt="image" src="https://github.com/user-attachments/assets/1afae892-4d6c-492b-8ded-38915282c8ee" />
+
+### Таблицы
+
+<img width="994" height="729" alt="image" src="https://github.com/user-attachments/assets/bd87ca15-5c25-41a4-9786-034faf71adc9" />
+
+### Поле ввода
+
+<img width="994" height="722" alt="image" src="https://github.com/user-attachments/assets/864f6206-f5b8-4072-bd8f-808d4f6f69df" />
+
+### Всплывающие элементы
+
+<img width="989" height="720" alt="image" src="https://github.com/user-attachments/assets/a050be2a-727d-450c-84f3-2a04b15a0ceb" />
 
 ### Круговое меню
 
-<img width="930" height="764" alt="Круговое меню" src="https://github.com/user-attachments/assets/fd6a310e-702f-40a6-a26a-51baf709169d" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/268fee97-d54a-4143-8c43-3b9a4e8e272f" />
 
 ### Опциональное меню
 
-<img width="830" height="612" alt="Опциональное меню" src="https://github.com/user-attachments/assets/f1977385-7de9-4bae-b8cd-408efe21d816" />
+<img width="352" height="323" alt="image" src="https://github.com/user-attachments/assets/2bd0f764-8fcd-4f9e-ba7e-1165c6afb10e" />
 
 ### Цветовые темы
 
-<img width="830" height="613" alt="Светлая тема документация" src="https://github.com/user-attachments/assets/dc096e4c-880e-4782-a688-1f124a10bcac" />
-<img width="864" height="732" alt="Светлая тема круговое меню" src="https://github.com/user-attachments/assets/17fbb74e-1ca4-4be3-93ae-df88134a2469" />
-<img width="823" height="633" alt="Красная тема документации" src="https://github.com/user-attachments/assets/e10c5dd4-2e9d-4b47-9231-b851e6d9708d" />
+<img width="996" height="775" alt="image" src="https://github.com/user-attachments/assets/a0b7c168-b773-48f1-b516-f070b76d34f6" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/14eaa457-7475-4fe3-9d4e-177035a75fcc" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b0049430-1c08-4534-8075-3bf03201fd85" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5c1ff333-ea6c-408c-aec6-f5f75921cb5d" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e464c564-b7d1-42f6-bdde-6d5130a31acf" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/658fb731-aebc-4ce9-8d4d-2e9575961030" />
 
-## Примеры использования
+### И главное - плавность и магия анимаций
+
+https://github.com/user-attachments/assets/6a813fd1-6da2-4c59-a84b-f78abfc20900
+
+## Сторонние примеры
 
 ### Отправка серверных уведомлений
 
