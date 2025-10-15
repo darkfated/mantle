@@ -170,6 +170,11 @@ function PANEL:Paint(w, h)
             :Blur()
         :Draw()
     end
+
+    if !self.bool_lite then
+        Mantle.func.gradient(0, 24, w, 6, 2, Mantle.color.window_shadow)
+    end
+
     RNDX().Rect(0, headerTall, w, h - headerTall)
         :Radii(self.bool_lite and 6 or 0, self.bool_lite and 6 or 0, 6, 6)
         :Color((self.bool_alpha and Mantle.ui.convar.blur) and Mantle.color.background_alpha or Mantle.color.background)
