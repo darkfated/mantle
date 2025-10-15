@@ -29,7 +29,11 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
     end
 
     if anim_bool then
-        Mantle.func.animate_appearance(s, width, height, 0.1, 0.2)
+        s:SetVisible(false)
+        timer.Simple(0, function()
+            s:SetVisible(true)
+            Mantle.func.animate_appearance(s, width, height, 0.1, 0.2)
+        end)
     end
 
     if close_bool then
