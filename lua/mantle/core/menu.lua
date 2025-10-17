@@ -171,7 +171,8 @@ local function CreateMenu()
         CreateCategory('Ввод текста (MantleEntry)', {
             {':SetTitle(string text)', 'Установить заголовок'},
             {':SetPlaceholder(string text)', 'Установить фоновый текст (появляется при пустом поле)'},
-            {':GetValue()', 'Получить string-значение поля'}
+            {':GetValue()', 'Получить string-значение поля'},
+            {':SetValue(string value)', 'Установить значение полю'}
         }, panel, entry)
 
         -- Окно

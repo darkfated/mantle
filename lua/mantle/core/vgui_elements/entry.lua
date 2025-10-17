@@ -95,4 +95,8 @@ function PANEL:GetValue()
     return self.textEntry:GetText()
 end
 
+function PANEL:SetValue(value)
+    self.textEntry:SetValue(value)
+end
+
 vgui.Register('MantleEntry', PANEL, 'EditablePanel')
