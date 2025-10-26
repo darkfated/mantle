@@ -168,8 +168,8 @@ end
 
 function PANEL:OnChildAdded(child)
     timer.Simple(0, function()
-        if child == self.content or child == self.vbar or child == self.vbar.btnGrip then return end
         if !IsValid(child) or !IsValid(self) then return end
+        if child == self.content or child == self.vbar or child == self.vbar.btnGrip then return end
         if child:GetParent() == self then
             child:SetParent(self.content)
 
