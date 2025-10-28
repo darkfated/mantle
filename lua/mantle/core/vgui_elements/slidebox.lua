@@ -133,7 +133,9 @@ function PANEL:Paint(w, h)
         RNDX().Rect(barStart, barY, barW, barH)
             :Rad(barR)
             :Color(Mantle.color.window_shadow)
-            :Shadow(5, 20)
+            :Shape(RNDX.SHAPE_IOS)
+            :Shadow(4, 9)
+            :Outline(1)
         :Draw()
     end
 

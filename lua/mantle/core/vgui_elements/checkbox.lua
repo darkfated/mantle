@@ -61,12 +61,13 @@ function PANEL:OnChange(new_value)
 end
 
 function PANEL:Paint(w, h)
-    if Mantle.ui and Mantle.ui.convar and Mantle.ui.convar.depth_ui then
+    if Mantle.ui.convar.depth_ui then
         RNDX().Rect(0, 0, w, h)
             :Rad(12)
             :Color(Mantle.color.window_shadow)
             :Shape(RNDX.SHAPE_IOS)
-            :Shadow(6, 22)
+            :Shadow(4, 9)
+            :Outline(1)
         :Draw()
     end
 
