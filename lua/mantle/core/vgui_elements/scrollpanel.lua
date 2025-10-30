@@ -1,6 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
+    self.MouseReleasedTime = 0
     self._vbarPadRight = 6
 
     self.content = vgui.Create('Panel', self)
@@ -260,6 +261,7 @@ end
 
 function PANEL:OnMousePressed(mc)
     if mc != MOUSE_LEFT then return end
+    if self.MouseReleasedTime + 0.3 > CurTime() then return end
 
     local hovered = vgui.GetHoveredPanel()
     if IsValid(hovered) and hovered != self and hovered:IsDescendantOf(self.content) then return end
@@ -288,6 +290,8 @@ function PANEL:OnMouseReleased(mc)
     elseif extraBottom > self.overscrollThreshold then
         self:_startSpring(maxScrollDF)
     end
+
+    self.MouseReleasedTime = CurTime()
 end
 
 function PANEL:OnCursorMoved(_, y)

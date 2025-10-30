@@ -310,6 +310,29 @@ local function CreateMenu()
             {':AddTab(string name, object panel, string icon)', 'Добавить вкладку'}
         }, panel, panelTabs)
 
+
+        -- Горизонтальная прокрутка
+        local hscroll = vgui.Create('MantleHScroll')
+        hscroll:Dock(TOP)
+        hscroll:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
+        hscroll:SetTall(80)
+
+        for i = 1, 8 do
+            local btn = vgui.Create('MantleBtn')
+            btn:SetSize(120, 60)
+            btn:SetTxt('Элемент ' .. i)
+            btn:Dock(LEFT)
+            btn:DockMargin(0, 0, 5, 0)
+            hscroll:AddItem(btn)
+        end
+
+        CreateCategory('Горизонтальная прокрутка (MantleHScroll)', {
+            {':AddItem(pnl) / :Add(pnl)', 'Добавить элемент в контейнер прокрутки'},
+            {':Clear()', 'Очистить все элементы из контейнера'},
+            {':SetScroll(x)', 'Установить текущее смещение прокрутки'},
+            {':GetScroll()', 'Получить текущее смещение прокрутки'}
+        }, panel, hscroll)
+
         -- Выбор варианта
         local combo = vgui.Create('MantleComboBox')
         combo:SetPlaceholder('Выберите вариант')

@@ -22,6 +22,20 @@ end
 
 function PANEL:Think()
     if self.tab_style == 'modern' then
+        local activeBtn = nil
+        if self.tabs[self.active_id] then
+            activeBtn = self.tabs[self.active_id]._btn
+        end
+        if IsValid(activeBtn) then
+            local bx = activeBtn:GetX()
+            local bw = activeBtn:GetWide()
+            self.indicator_target_x = bx - self.panel_tabs:GetScroll()
+            self.indicator_target_w = bw
+        else
+            self.indicator_target_x = 0
+            self.indicator_target_w = 0
+        end
+
         self.indicator_x = Mantle.func.approachExp(self.indicator_x, self.indicator_target_x, self.animation_speed, FrameTime())
         self.indicator_w = Mantle.func.approachExp(self.indicator_w, self.indicator_target_w, self.animation_speed, FrameTime())
         if math.abs(self.indicator_x - self.indicator_target_x) < 0.5 then
@@ -59,7 +73,11 @@ function PANEL:AddTab(name, pan, icon)
 
     self.tabs[newId].pan:SetParent(self.content)
     self.tabs[newId].pan:Dock(FILL)
-    self.tabs[newId].pan:SetVisible(newId == 1 and true or false)
+
+    local makeVisible = (newId == self.active_id)
+    self.tabs[newId].pan:SetVisible(makeVisible)
+
+    if !self.active_id or self.active_id < 1 then self.active_id = 1 end
 
     self:Rebuild()
 end
@@ -67,6 +85,16 @@ end
 local color_btn_hovered = Color(255, 255, 255, 10)
 
 function PANEL:Rebuild()
+    if self.tab_style == 'modern' then
+        if IsValid(self.panel_tabs) then self.panel_tabs:Remove() end
+        self.panel_tabs = vgui.Create('MantleHScroll', self)
+        self.panel_tabs.Paint = nil
+    else
+        if IsValid(self.panel_tabs) then self.panel_tabs:Remove() end
+        self.panel_tabs = vgui.Create('Panel', self)
+        self.panel_tabs.Paint = nil
+    end
+
     self.panel_tabs:Clear()
 
     for id, tab in ipairs(self.tabs) do
@@ -94,24 +122,46 @@ function PANEL:Rebuild()
             self.tabs[self.active_id].pan:SetVisible(false)
             tab.pan:SetVisible(true)
             self.active_id = id
+
             if self.tab_style == 'modern' and tab._btn then
-                self.indicator_target_x = tab._btn:GetX()
+                local bx = tab._btn:GetX()
+                local scroll = self.panel_tabs:GetScroll()
+                self.indicator_target_x = bx - scroll
                 self.indicator_target_w = tab._btn:GetWide()
+                local viewW = self.panel_tabs:GetWide()
+                local desiredLeft = bx
+                local desiredRight = bx + tab._btn:GetWide()
+                if desiredLeft - scroll < 0 then
+                    self.panel_tabs:SetScroll(desiredLeft)
+                elseif desiredRight - scroll > viewW then
+                    self.panel_tabs:SetScroll(desiredRight - viewW)
+                end
             end
             Mantle.func.sound()
         end
         btnTab.DoRightClick = function()
             local dm = Mantle.ui.derma_menu()
-            for k, tab in pairs(self.tabs) do
-                dm:AddOption(tab.name, function()
+            for k, t in pairs(self.tabs) do
+                dm:AddOption(t.name, function()
                     self.tabs[self.active_id].pan:SetVisible(false)
-                    tab.pan:SetVisible(true)
+                    t.pan:SetVisible(true)
                     self.active_id = k
-                    if self.tab_style == 'modern' and tab._btn then
-                        self.indicator_target_x = tab._btn:GetX()
-                        self.indicator_target_w = tab._btn:GetWide()
+                    if self.tab_style == 'modern' then
+                        local bx = t._btn:GetX()
+                        local scroll = self.panel_tabs:GetScroll()
+                        self.indicator_target_x = bx - scroll
+                        self.indicator_target_w = t._btn:GetWide()
+
+                        local viewW = self.panel_tabs:GetWide()
+                        local desiredLeft = bx
+                        local desiredRight = bx + t._btn:GetWide()
+                        if desiredLeft - scroll < 0 then
+                            self.panel_tabs:SetScroll(desiredLeft)
+                        elseif desiredRight - scroll > viewW then
+                            self.panel_tabs:SetScroll(desiredRight - viewW)
+                        end
                     end
-                end, tab.icon)
+                end, t.icon)
             end
         end
 
@@ -151,6 +201,10 @@ function PANEL:Rebuild()
         end
     end
 
+    for i, t in ipairs(self.tabs) do
+        t.pan:SetVisible(i == self.active_id)
+    end
+
     self.panel_tabs.Paint = function(s, w, h)
         if self.tab_style == 'modern' and self.indicator_w > 0 then
             RNDX.Draw(0, self.indicator_x, h - self.indicator_height, self.indicator_w, self.indicator_height, Mantle.color.theme)
@@ -180,7 +234,7 @@ function PANEL:PerformLayout(w, h)
         if IsValid(activeBtn) then
             local bx, by = activeBtn:GetPos()
             local bw, bh = activeBtn:GetSize()
-            self.indicator_target_x = bx
+            self.indicator_target_x = bx - self.panel_tabs:GetScroll()
             self.indicator_target_w = bw
             if self.indicator_w == 0 and self.indicator_x == 0 then
                 self.indicator_x = self.indicator_target_x
