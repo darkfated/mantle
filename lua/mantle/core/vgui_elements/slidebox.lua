@@ -119,8 +119,8 @@ function PANEL:Paint(w, h)
     draw.SimpleText(self.text, textFont, padX, padTop, Mantle.color.text)
 
     -- Линия
-    local barStart = padX + handleW / 2
-    local barEnd = w - padX - handleW / 2
+    local barStart = padX + handleW / 2 + 10
+    local barEnd = w - padX - handleW / 2 - 20
     local barW = math.max(0, barEnd - barStart)
 
     local denom = (self.max_value - self.min_value)

@@ -4,7 +4,7 @@ function PANEL:Init()
     self.choices = {}
     self.selected = nil
     self.opened = false
-    self:SetTall(26)
+    self:SetTall(32)
     self:SetText('')
     self.font = 'Fated.18'
     self.hoverAnim = 0
@@ -23,19 +23,23 @@ function PANEL:Init()
 
         if Mantle.ui.convar.depth_ui then
             RNDX().Rect(0, 0, w, h)
-                :Rad(16)
+                :Rad(12)
                 :Color(Mantle.color.window_shadow)
-                :Shape(RNDX.SHAPE_IOS)
                 :Shadow(4, 9)
                 :Outline(1)
             :Draw()
         end
-        RNDX.Draw(16, 0, 0, w, h, Mantle.color.focus_panel, RNDX.SHAPE_IOS)
+
+        RNDX().Rect(0, 0, w, h)
+            :Rad(12)
+            :Color(Mantle.color.focus_panel)
+        :Draw()
+
         if self.hoverAnim > 0 then
+            local col = Color(Mantle.color.button_hovered.r, Mantle.color.button_hovered.g, Mantle.color.button_hovered.b, self.hoverAnim * 255)
             RNDX().Rect(0, 0, w, h)
-                :Rad(16)
-                :Color(Color(Mantle.color.button_hovered.r, Mantle.color.button_hovered.g, Mantle.color.button_hovered.b, self.hoverAnim * 255))
-                :Shape(RNDX.SHAPE_IOS)
+                :Rad(12)
+                :Color(col)
             :Draw()
         end
 
@@ -164,7 +168,7 @@ function PANEL:OpenMenu()
 
     surface.SetFont(self.font)
     for i, choice in ipairs(self.choices) do
-        local option = vgui.Create('DButton', self.menu)
+        local option = vgui.Create('Button', self.menu)
         option:SetText('')
         option:Dock(TOP)
         option:DockMargin(2, 2, 2, 0)
