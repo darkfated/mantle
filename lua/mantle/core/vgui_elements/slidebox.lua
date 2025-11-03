@@ -79,7 +79,9 @@ function PANEL:SetValue(val, fromConVar)
     local w = math.max(0, self:GetWide() - 32)
     self.targetPos = math.Clamp(w * progress, 0, w)
     if self.convar and not fromConVar then
-        RunConsoleCommand(self.convar, tostring(val))
+        pcall(function()
+            LocalPlayer():ConCommand(self.convar .. ' ' .. tostring(val)
+        end)
         self._convar_last = val
     end
     if self.OnValueChanged then self:OnValueChanged(val) end
