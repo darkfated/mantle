@@ -80,7 +80,7 @@ function PANEL:SetValue(val, fromConVar)
     self.targetPos = math.Clamp(w * progress, 0, w)
     if self.convar and not fromConVar then
         pcall(function()
-            LocalPlayer():ConCommand(self.convar .. ' ' .. tostring(val)
+            LocalPlayer():ConCommand(self.convar .. ' ' .. tostring(val))
         end)
         self._convar_last = val
     end
