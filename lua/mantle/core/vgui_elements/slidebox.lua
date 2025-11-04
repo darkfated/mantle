@@ -16,6 +16,7 @@ function PANEL:Init()
     self._convar_last = nil
     self._convar_timer = self:CreateConVarSyncTimer()
     self._dragAlpha = 255
+    self._ignore_convar_update = false
 end
 
 function PANEL:CreateConVarSyncTimer()
@@ -24,7 +25,14 @@ function PANEL:CreateConVarSyncTimer()
         if not IsValid(self) or not self.convar then return end
         local cvar = GetConVar(self.convar)
         if not cvar then return end
+
         local val = cvar:GetFloat()
+
+        if self._ignore_convar_update then
+            self._ignore_convar_update = false
+            return
+        end
+
         if self._convar_last ~= val then
             self._convar_last = val
             self:SetValue(val, true)
@@ -44,15 +52,17 @@ function PANEL:SetRange(min_value, max_value, decimals)
     self.min_value = min_value
     self.max_value = max_value
     self.decimals = decimals or 0
-    self:SetValue(self.value or min_value)
 end
 
 function PANEL:SetConvar(convar)
     self.convar = convar
     local cvar = GetConVar(convar)
     if cvar then
-        self:SetValue(cvar:GetFloat(), true)
-        self._convar_last = cvar:GetFloat()
+        local val = cvar:GetFloat()
+
+        self._ignore_convar_update = true
+        self:SetValue(val, true)
+        self._convar_last = val
     end
 end
 
@@ -73,18 +83,25 @@ function PANEL:SetValue(val, fromConVar)
         val = math.Round(val)
     end
 
+    if self.value == val then return end
+
     self.value = val
     local denom = (self.max_value - self.min_value)
     local progress = denom == 0 and 0 or (val - self.min_value) / denom
     local w = math.max(0, self:GetWide() - 32)
     self.targetPos = math.Clamp(w * progress, 0, w)
+
     if self.convar and not fromConVar then
+        self._ignore_convar_update = true
         pcall(function()
             LocalPlayer():ConCommand(self.convar .. ' ' .. tostring(val))
         end)
         self._convar_last = val
     end
-    if self.OnValueChanged then self:OnValueChanged(val) end
+
+    if self.OnValueChanged then
+        self:OnValueChanged(val)
+    end
 end
 
 function PANEL:GetValue()
