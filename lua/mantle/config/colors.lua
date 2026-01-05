@@ -19,10 +19,7 @@ Mantle.color_dark = {
     p_hovered = Color(102, 102, 102), -- при наведении для кнопки
     p_outline = Color(255, 255, 255, 10), -- обводка панели или кнопки
 
--- старое
-
-
-
+    // Cтарое, будет удалено
     background_panelpopup = Color(20, 20, 20, 150), -- фон для DermaMenu
 
     button = Color(54, 54, 54), -- кнопка

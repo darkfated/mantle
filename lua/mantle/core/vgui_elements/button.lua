@@ -1,7 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
-    self.txt = nil
+    self.txt = ''
     self.txtWide = nil
     self.iconMat = nil
     self.iconSize = nil
@@ -17,7 +17,7 @@ function PANEL:SetTxt(text)
 end
 
 function PANEL:SetIcon(mat, size)
-    self.iconMat = mat
+    self.iconMat = type(mat) == 'IMaterial' and mat or Material(mat)
     self.iconSize = size
 end
 
@@ -35,7 +35,7 @@ function PANEL:Paint(w, h)
         :Shape(RNDX.SHAPE_IOS)
     :Draw()
 
-    if self.txt then
+    if self.txt != '' then
         draw.SimpleText(self.txt, 'Fated.Regular', w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
         if self.iconMat then

@@ -102,4 +102,7 @@ end
 function PANEL:LiteMode()
 end
 
+function PANEL:DisableCloseBtn()
+end
+
 vgui.Register('MantleFrame', PANEL, 'EditablePanel')
