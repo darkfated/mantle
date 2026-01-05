@@ -19,6 +19,27 @@ local function CreateFonts()
     }
     CreateFont('Fated.16', 'Montserrat Medium', 16)
 
+    surface.CreateFont('Fated.Small', {
+        font = 'SF Pro Text',
+        size = 14,
+        weight = 400,
+        extended = true
+    })
+
+    surface.CreateFont('Fated.Regular', {
+        font = 'SF Pro Text',
+        size = 16,
+        weight = 400,
+        extended = true
+    })
+
+    surface.CreateFont('Fated.Medium', {
+        font = 'SF Pro Text',
+        size = 18,
+        weight = 500,
+        extended = true
+    })
+
     function surface.SetFont(font)
         if type(font) != 'string' then
             if font == nil then
@@ -31,7 +52,7 @@ local function CreateFonts()
         end
 
         if !createdFonts[font] and font:match('^Fated%.') then
-            local size, isBold = font:match('^Fated%.(%d+)(b?)$')
+            local size, isBold = font:match('^Fated%.(%d+)%.?%d*(b?)$')
             if size then
                 size = tonumber(size)
                 local fontFamily = isBold == 'b' and 'Montserrat Bold' or 'Montserrat Medium'

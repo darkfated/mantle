@@ -9,8 +9,6 @@ local function RunScripts()
 
     Mantle.run_cl('core/func.lua')
     Mantle.run_cl('core/vgui.lua')
-    Mantle.run_cl('core/legacy_vgui.lua')
-    Mantle.run_cl('core/menu.lua')
 
     Mantle.run_cl('core/vgui_elements/button.lua')
     Mantle.run_cl('core/vgui_elements/checkbox.lua')
@@ -29,6 +27,13 @@ local function RunScripts()
     Mantle.run_cl('core/vgui_elements/table.lua')
     Mantle.run_cl('core/vgui_elements/text.lua')
     Mantle.run_cl('core/vgui_elements/hscroll.lua')
+    Mantle.run_cl('core/vgui_elements/panel.lua')
+
+    Mantle.run_cl('core/wiki/menu.lua')
+    Mantle.run_cl('core/wiki/tabs/functions.lua')
+    Mantle.run_cl('core/wiki/tabs/popup.lua')
+    Mantle.run_cl('core/wiki/tabs/settings.lua')
+    Mantle.run_cl('core/wiki/tabs/ui.lua')
 
     Mantle.run_cl('modules/shadows.lua')
     Mantle.run_cl('modules/material_url.lua')
@@ -57,6 +62,9 @@ local function InitLib()
     if SERVER then
         resource.AddWorkshop('2924839375') -- DarkFated font
         resource.AddWorkshop('3126986993') -- Mantle
+        resource.AddWorkshop('3626277245') -- Steam Animated Avatars
+        resource.AddFile('resource/fonts/sf-regular.ttf')
+        resource.AddFile('resource/fonts/sf-medium.ttf')
     end
 
     local color_div = Color(168, 109, 236)

@@ -391,7 +391,7 @@ function PANEL:Paint(w,h)
                 draw.SimpleText(option.text or '', self.font, lx, ly + iconSize*0.5 - Mantle.func.h(4)*self.scale, txtCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
                 if option.desc and isHovered then
-                    draw.SimpleText(option.desc, self.descFont, lx, ly + iconSize*0.5 + Mantle.func.h(16)*self.scale, Color(Mantle.color.header_text.r, Mantle.color.header_text.g, Mantle.color.header_text.b, math_floor(180 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                    draw.SimpleText(option.desc, self.descFont, lx, ly + iconSize*0.5 + Mantle.func.h(16)*self.scale, Color(Mantle.color.text_muted.r, Mantle.color.text_muted.g, Mantle.color.text_muted.b, math_floor(180 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
                 end
 
                 if i <= 9 then
@@ -401,7 +401,7 @@ function PANEL:Paint(w,h)
                 draw.SimpleText(option.text or '', self.font, lx, ly - Mantle.func.h(4) * self.scale, txtCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
                 if option.desc and isHovered then
-                    draw.SimpleText(option.desc, self.descFont, lx, ly + Mantle.func.h(18) * self.scale, Color(Mantle.color.header_text.r, Mantle.color.header_text.g, Mantle.color.header_text.b, math_floor(180 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                    draw.SimpleText(option.desc, self.descFont, lx, ly + Mantle.func.h(18) * self.scale, Color(Mantle.color.text_muted.r, Mantle.color.text_muted.g, Mantle.color.text_muted.b, math_floor(180 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
                 end
 
                 if i <= 9 then
@@ -430,17 +430,17 @@ function PANEL:Paint(w,h)
             end
             draw.SimpleText(opt.text or '', self.titleFont, cx + isz*0.6, cy - Mantle.func.h(6) * self.scale, Color(Mantle.color.text.r, Mantle.color.text.g, Mantle.color.text.b, math_floor(255 * alpha)), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             if opt.desc then
-                draw.SimpleText(opt.desc, self.descFont, cx + isz*0.6, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.header_text.r, Mantle.color.header_text.g, Mantle.color.header_text.b, math_floor(180 * alpha)), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(opt.desc, self.descFont, cx + isz*0.6, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.text_muted.r, Mantle.color.text_muted.g, Mantle.color.text_muted.b, math_floor(180 * alpha)), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
         else
             draw.SimpleText(opt.text or '', self.titleFont, cx, cy - Mantle.func.h(6) * self.scale, Color(Mantle.color.text.r, Mantle.color.text.g, Mantle.color.text.b, math_floor(255 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             if opt.desc then
-                draw.SimpleText(opt.desc, self.descFont, cx, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.header_text.r, Mantle.color.header_text.g, Mantle.color.header_text.b, math_floor(180 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(opt.desc, self.descFont, cx, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.text_muted.r, Mantle.color.text_muted.g, Mantle.color.text_muted.b, math_floor(180 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
     else
         draw.SimpleText(self.centerText or self.rootMenu.title, self.titleFont, cx, cy - Mantle.func.h(8) * self.scale, Color(Mantle.color.text.r, Mantle.color.text.g, Mantle.color.text.b, math_floor(255 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText(self.centerDesc or self.rootMenu.desc, self.descFont, cx, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.header_text.r, Mantle.color.header_text.g, Mantle.color.header_text.b, math_floor(160 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.centerDesc or self.rootMenu.desc, self.descFont, cx, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.text_muted.r, Mantle.color.text_muted.g, Mantle.color.text_muted.b, math_floor(160 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 

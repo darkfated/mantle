@@ -1,85 +1,92 @@
 local PANEL = {}
 
+local HEADER_HEIGHT = 30
+local HEADER_PADDING_LEFT = 8
+local HEADER_FONT_APPROX = 20
+local CONTENT_OFFSET = 6
+local PADDING = 12
+local CONTENT_EXTRA = 16
+
 function PANEL:Init()
-    self:SetTall(30)
-    self:DockPadding(0, 36, 0, 0)
+    self:SetTall(HEADER_HEIGHT)
     self.name = 'Категория'
-    self.bool_opened = false
-    self.bool_header_centered = false
-    self.content_size = 0
-    self.header_color = Mantle.color.category
-    self.header_color_standard = self.header_color
-    self.header_color_opened = Mantle.color.category_opened
+    self.isOpen = false
+    self.isHeaderCentered = false
 
-    self._childHeights = {}
+    self.childHeights = {}
+    self.contentSize = 0
 
-    self._anim = 0
-    self._animTarget = 0
-    self._animSpeed = 12
-    self._animEased = 0
+    self._textColor = Mantle.color.text_muted
+
+    self.anim = 0
+    self.animTarget = 0
+    self.animSpeed = 12
+    self.animEased = 0
 
     self.header = vgui.Create('Button', self)
     self.header:SetText('')
     self.header.Paint = function(_, w, h)
-        RNDX().Rect(0, 0, w, h)
-            :Rad(16)
-            :Color(self.header_color)
-            :Shape(RNDX.SHAPE_IOS)
-        :Draw()
-        local posX = self.bool_header_centered and w * 0.5 or 8
-        local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
-        draw.SimpleText(self.name, 'Fated.20', posX, 4, Mantle.color.text, alignX)
+        local targetColor = self.isOpen and Mantle.color.text or Mantle.color.text_muted
+        self._textColor = Mantle.func.LerpColor(8, self._textColor, targetColor)
 
-        self.header_color = Mantle.func.LerpColor(8, self.header_color, self.bool_opened and self.header_color_opened or self.header_color_standard)
+        local posX = self.isHeaderCentered and w * 0.5 or HEADER_PADDING_LEFT
+        local alignX = self.isHeaderCentered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
+        local textY = math.floor((HEADER_HEIGHT - HEADER_FONT_APPROX) * 0.5)
+
+        draw.SimpleText(self.name, 'Fated.Medium', posX, textY, self._textColor, alignX)
     end
     self.header.DoClick = function()
-        self.bool_opened = !self.bool_opened
-        self._animTarget = self.bool_opened and 1 or 0
+        self.isOpen = not self.isOpen
+        self.animTarget = self.isOpen and 1 or 0
     end
+
+    self.content = vgui.Create('MantlePanel', self)
+    self.content:SetPos(0, HEADER_HEIGHT + CONTENT_OFFSET)
+    self.content:SetTall(0)
+    self.content:SetWide(self:GetWide() or 0)
 end
 
 function PANEL:SetText(name)
-    self.name = name
+    self.name = tostring(name or '')
 end
 
 function PANEL:SetCenterText(is_centered)
-    self.bool_header_centered = is_centered
+    self.isHeaderCentered = tobool(is_centered)
 end
 
 local function getTopBottomMargin(pnl)
-    if !pnl.GetDockMargin then return 0, 0 end
-    local ok, l, t, r, b = pcall(function()
-        return pnl:GetDockMargin()
-    end)
-    if !ok or !l then return 0, 0 end
+    local l, t, r, b = pnl:GetDockMargin()
     return t or 0, b or 0
 end
 
 function PANEL:AddItem(panel)
-    panel:SetParent(self)
+    panel:SetParent(self.content)
+    panel:Dock(TOP)
 
     local top, bottom = getTopBottomMargin(panel)
-    local contribution = (panel.GetTall and panel:GetTall() or 0) + top + bottom
+    local contribution = math.ceil(panel:GetTall() + top + bottom)
 
-    self._childHeights[panel] = contribution
-    self.content_size = (self.content_size or 0) + contribution
+    self.childHeights[panel] = contribution
+    self.contentSize = self.contentSize + contribution
 
-    if self.bool_opened then
-        self:SetTall(30 + self.content_size + 12)
+    if self.isOpen then
+        self:SetTall(HEADER_HEIGHT + CONTENT_OFFSET + self.contentSize + CONTENT_EXTRA + PADDING)
+        self.content:SetTall(self.contentSize + CONTENT_EXTRA)
     end
 
     local old = panel.OnSizeChanged
     panel.OnSizeChanged = function(...)
-        if old then pcall(old, ...) end
-        if !IsValid(self) then return end
+        if old then old(...) end
+        if not IsValid(self) then return end
 
         local nt, nb = getTopBottomMargin(panel)
-        local newContribution = (panel.GetTall and panel:GetTall() or 0) + nt + nb
-        local oldContribution = self._childHeights[panel] or 0
+        local newContribution = math.ceil(panel:GetTall() + nt + nb)
+        local oldContribution = self.childHeights[panel] or 0
         local delta = newContribution - oldContribution
-        if delta != 0 then
-            self._childHeights[panel] = newContribution
-            self.content_size = math.max(0, (self.content_size or 0) + delta)
+
+        if delta ~= 0 then
+            self.childHeights[panel] = newContribution
+            self.contentSize = math.max(0, self.contentSize + delta)
         end
     end
 
@@ -87,44 +94,46 @@ function PANEL:AddItem(panel)
 end
 
 function PANEL:SetColor(col)
-    self.header_color_standard = col
-    if !self.bool_opened then
-        self.header_color = self.header_color_standard
+    if not self.isOpen then
+        self._textColor = col or Mantle.color.text_muted
     end
 end
 
 function PANEL:SetActive(is_active)
     is_active = tobool(is_active)
-    if self.bool_opened == is_active then return end
-    self.bool_opened = is_active
-    self._animTarget = is_active and 1 or 0
-    self.header_color = is_active and self.header_color_opened or self.header_color_standard
+    if self.isOpen == is_active then return end
+
+    self.isOpen = is_active
+    self.animTarget = is_active and 1 or 0
+    self._textColor = is_active and Mantle.color.text or Mantle.color.text_muted
 end
 
 function PANEL:PerformLayout(w, h)
-    self.header:SetSize(w, 30)
+    self.header:SetPos(0, 0)
+    self.header:SetSize(w, HEADER_HEIGHT)
+
+    self.content:SetPos(0, HEADER_HEIGHT + CONTENT_OFFSET)
+    self.content:SetWide(w)
 end
 
 function PANEL:Think()
     local ft = FrameTime()
 
-    self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
-    self._animEased = Mantle.func.easeOutCubic(self._anim)
+    self.anim = Mantle.func.approachExp(self.anim, self.animTarget, self.animSpeed, ft)
+    self.animEased = Mantle.func.easeOutCubic(self.anim)
 
-    local currentContentTall = (self.content_size or 0) * self._animEased
+    local totalContent = (self.contentSize + CONTENT_EXTRA) * self.animEased
+    local padded = PADDING * self.animEased
 
-    local padded = 12 * self._animEased
+    self:SetTall(
+        math.max(
+            HEADER_HEIGHT,
+            math.ceil(HEADER_HEIGHT + CONTENT_OFFSET + totalContent + padded)
+        )
+    )
 
-    local totalTall = 30 + currentContentTall + padded
-    self:SetTall(math.max(30, math.floor(totalTall + 0.5)))
-
-    local alphaVal = math.floor(255 * self._animEased + 0.5)
-
-    for _, c in ipairs(self:GetChildren()) do
-        if IsValid(c) and c != self.header then
-            if c.SetAlpha then c:SetAlpha(alphaVal) end
-        end
-    end
+    self.content:SetTall(math.ceil(totalContent))
+    self.content:SetAlpha(math.floor(255 * self.animEased + 0.5))
 end
 
 vgui.Register('MantleCategory', PANEL, 'Panel')

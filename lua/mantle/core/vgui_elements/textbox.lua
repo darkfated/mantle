@@ -1,35 +1,36 @@
-local color_accept = Color(35, 103, 51)
-
 function Mantle.ui.text_box(title, desc, func)
+    if IsValid(Mantle.ui.menu_text_box) then
+        Mantle.ui.menu_text_box:Remove()
+    end
+
     Mantle.ui.menu_text_box = vgui.Create('MantleFrame')
-    Mantle.ui.menu_text_box:SetSize(300, 134)
+    Mantle.ui.menu_text_box:SetSize(320, 160)
     Mantle.ui.menu_text_box:Center()
     Mantle.ui.menu_text_box:MakePopup()
-    Mantle.ui.menu_text_box:SetTitle(title)
+    Mantle.ui.menu_text_box:OnlyCloseBtn()
+    Mantle.ui.menu_text_box:SetCenterTitle(title)
     Mantle.func.animate_appearance(Mantle.ui.menu_text_box, Mantle.ui.menu_text_box:GetWide(), Mantle.ui.menu_text_box:GetTall(), 0.3, 0.2, nil, 0.9)
-    Mantle.ui.menu_text_box:DockPadding(12, 30, 12, 12)
 
     local entry = vgui.Create('MantleEntry', Mantle.ui.menu_text_box)
     entry:Dock(TOP)
     entry:SetTitle(desc)
 
-    local function apply_func()
+    local function applyFunction()
         func(entry:GetValue())
 
         Mantle.ui.menu_text_box:Remove()
     end
 
     entry.OnEnter = function()
-        apply_func()
+        applyFunction()
     end
 
     local btn_accept = vgui.Create('MantleBtn', Mantle.ui.menu_text_box)
     btn_accept:Dock(BOTTOM)
-    btn_accept:SetTall(30)
+    btn_accept:SetTall(32)
     btn_accept:SetTxt(Mantle.lang.get('mantle', 'apply'))
-    btn_accept:SetColorHover(color_accept)
     btn_accept.DoClick = function()
+        applyFunction()
         Mantle.func.sound()
-        apply_func()
     end
 end
