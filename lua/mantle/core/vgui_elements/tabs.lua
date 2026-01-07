@@ -103,6 +103,7 @@ function PANEL:AddTab(cfg, panel, oldIcon)
     tabBtn:DockMargin(leftMargin, 4, 0, 4)
 
     tabBtn.DoClick = function()
+        Mantle.func.sound()
         self.active_index = idx
 
         for i, t in ipairs(self.tabs) do

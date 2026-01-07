@@ -11,6 +11,13 @@ function PANEL:Paint(w, h)
         :Color(self.color)
         :Shape(RNDX.SHAPE_IOS)
     :Draw()
+
+    RNDX().Rect(0, 0, w, h)
+        :Rad(16)
+        :Color(Mantle.color.p_outline)
+        :Outline(1)
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
 end
 
 vgui.Register('MantlePanel', PANEL, 'Panel')
