@@ -55,6 +55,7 @@ end
 local function createInfo(info, pan)
     local panel = vgui.Create('Panel')
     panel:Dock(TOP)
+    panel:DockMargin(0, 0, 0, 6)
     panel:SetTall(50)
     panel.Paint = function(_, w, h)
         RNDX().Rect(0, 0, w, h)
@@ -63,7 +64,7 @@ local function createInfo(info, pan)
             :Shape(RNDX.SHAPE_IOS)
         :Draw()
 
-        draw.SimpleText(info[1], 'Fated.Medium', 16, 8, Mantle.color.text)
+        draw.SimpleText(info[1], 'Fated.RegularPlus', 16, 8, Mantle.color.text)
         draw.SimpleText(info[2], 'Fated.Regular', 16, h - 8, Mantle.color.text_muted, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
     end
 

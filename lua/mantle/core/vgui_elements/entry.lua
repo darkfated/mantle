@@ -1,103 +1,136 @@
 local PANEL = {}
 
+local HEIGHT = 34
+local PADDING = 10
+local RADIUS = 12
+
 function PANEL:Init()
     self.title = nil
     self.placeholder = Mantle.lang.get('mantle', 'entry_default_placeholder')
-    self:SetTall(26)
+    self:SetTall(HEIGHT)
     self.action = function() end
 
-    local font = 'Fated.18'
+    self._text_offset = 0
+    self._shadowLerp = 5
+    self._editing = false
+
+    local font = 'Fated.Regular'
+    surface.SetFont(font)
+    self._font = font
 
     self.textEntry = vgui.Create('DTextEntry', self)
     self.textEntry:Dock(FILL)
     self.textEntry:SetText('')
-    self.textEntry.OnCloseFocus = function()
+    self.textEntry.Paint = function() end
+
+    self.textEntry.OnGetFocus = function()
+        self._editing = true
+    end
+
+    self.textEntry.OnLoseFocus = function()
+        self._editing = false
         self.action(self:GetValue())
     end
 
-    self._text_offset = 0
-    self._shadowLerp = 5
-
-    self.textEntry.Paint = nil
-    self.textEntry.PaintOver = function(s, w, h)
-        local ft = FrameTime()
-
-        if Mantle.ui.convar.depth_ui then
-            local target = s:IsEditing() and 8 or 4
-            self._shadowLerp = Mantle.func.approachExp(self._shadowLerp, target, 4, ft)
-            RNDX().Rect(0, 0, w, h)
-                :Rad(16)
-                :Color(Mantle.color.window_shadow)
-                :Shape(RNDX.SHAPE_IOS)
-                :Shadow(self._shadowLerp, 9)
-                :Outline(1)
-            :Draw()
-        end
-
-        RNDX().Rect(0, 0, w, h)
-            :Rad(16)
-            :Color(Mantle.color.focus_panel)
-            :Shape(RNDX.SHAPE_IOS)
-        :Draw()
-
-        local value = self:GetValue() or ''
-        surface.SetFont(font)
-        local padding = 6
-        local available_w = w - padding * 2
-
-        local caret = #value
-        local before_caret = string.sub(value, 1, caret)
-        local caret_x = surface.GetTextSize(before_caret)
-        local text_w = surface.GetTextSize(value)
-
-        local desired_offset = 0
-        if caret_x > available_w then
-            desired_offset = caret_x - available_w
-        end
-        if text_w - desired_offset < available_w then
-            desired_offset = math.max(0, text_w - available_w)
-        end
-
-        self._text_offset = Mantle.func.approachExp(self._text_offset or 0, desired_offset, 24, ft)
-
-        local text = self.placeholder
-        local col = Mantle.color.gray
-        if value != '' then
-            text = value
-            col = Mantle.color.text
-        end
-
-        draw.SimpleText(text, font, padding - self._text_offset, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    self.textEntry.OnEnter = function()
+        self.action(self:GetValue())
+        self.textEntry:KillFocus()
     end
 end
 
 function PANEL:SetTitle(title)
     self.title = title
-    self:SetTall(52)
 
     if IsValid(self.titlePanel) then
         self.titlePanel:Remove()
+        self.titlePanel = nil
     end
 
-    self.titlePanel = vgui.Create('DPanel', self)
-    self.titlePanel:Dock(TOP)
-    self.titlePanel:DockMargin(0, 0, 0, 6)
-    self.titlePanel:SetTall(18)
-    self.titlePanel.Paint = function(_, w, h)
-        draw.SimpleText(self.title, 'Fated.18', 0, 0, Mantle.color.text)
+    if title then
+        self:SetTall(HEIGHT + 20)
+        self.titlePanel = vgui.Create('Panel', self)
+        self.titlePanel:Dock(TOP)
+        self.titlePanel:DockMargin(0, 0, 0, 6)
+        self.titlePanel:SetTall(18)
+        self.titlePanel.Paint = function(_, w, h)
+            draw.SimpleText(self.title, 'Fated.RegularPlus', 0, 0, Mantle.color.text)
+        end
+    else
+        self:SetTall(HEIGHT)
     end
 end
 
-function PANEL:SetPlaceholder(placeholder)
-    self.placeholder = placeholder
+function PANEL:SetPlaceholder(text)
+    self.placeholder = text
 end
 
 function PANEL:GetValue()
-    return self.textEntry:GetText()
+    return self.textEntry:GetValue()
 end
 
 function PANEL:SetValue(value)
-    self.textEntry:SetValue(value)
+    self.textEntry:SetValue(tostring(value or ''))
+end
+
+function PANEL:SetAction(fn)
+    if isfunction(fn) then
+        self.action = fn
+    end
+end
+
+function PANEL:Think()
+    local ft = FrameTime()
+    local target = self._editing and 8 or 4
+    self._shadowLerp = Mantle.func.approachExp(self._shadowLerp, target, 4, ft)
+
+    local value = self:GetValue() or ''
+    surface.SetFont(self._font)
+    local w = self:GetWide()
+    local available_w = math.max(0, w - PADDING * 2)
+
+    local caret_pos = self.textEntry:GetCaretPos()
+    local before = string.sub(value, 1, caret_pos)
+    local caret_x = surface.GetTextSize(before)
+    local text_w = surface.GetTextSize(value)
+
+    local desired_offset = 0
+    if caret_x > available_w then
+        desired_offset = caret_x - available_w
+    end
+    if text_w - desired_offset < available_w then
+        desired_offset = math.max(0, text_w - available_w)
+    end
+
+    self._text_offset = Mantle.func.approachExp(self._text_offset, desired_offset, 24, ft)
+end
+
+function PANEL:Paint(w, h)
+    local drawY = 0
+    if IsValid(self.titlePanel) then
+        drawY = self.titlePanel:GetTall() + 6
+    end
+
+    RNDX().Rect(0, drawY, w, h - drawY)
+        :Rad(RADIUS)
+        :Color(Mantle.color.entry_panel)
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
+
+    local value = self:GetValue() or ''
+    local font = self._font
+    surface.SetFont(font)
+
+    local textX = PADDING - self._text_offset
+    local textY = drawY + (h - drawY) * 0.5
+
+    local drawText = self.placeholder
+    local col = Mantle.color.text_muted
+    if value != '' then
+        drawText = value
+        col = Mantle.color.text
+    end
+
+    draw.SimpleText(drawText, font, textX, textY, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register('MantleEntry', PANEL, 'EditablePanel')

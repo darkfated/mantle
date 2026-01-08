@@ -83,7 +83,7 @@ function PANEL:AddTab(cfg, panel, oldIcon)
         panel = panel
     }
 
-    surface.SetFont('Fated.18')
+    surface.SetFont('Fated.Regular')
     local textWide = surface.GetTextSize(cfg.title)
 
     local hasIcon = cfg.icon ~= nil

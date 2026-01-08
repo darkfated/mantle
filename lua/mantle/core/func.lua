@@ -33,6 +33,13 @@ local function CreateFonts()
         extended = true
     })
 
+    surface.CreateFont('Fated.RegularPlus', {
+        font = 'SF Pro Text',
+        size = 17,
+        weight = 400,
+        extended = true
+    })
+
     surface.CreateFont('Fated.Medium', {
         font = 'SF Pro Text',
         size = 18,

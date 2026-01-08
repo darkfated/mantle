@@ -14,6 +14,7 @@ function Mantle.ui.player_selector(do_click, func_check)
     Mantle.ui.menu_player_selector:SetTitle('')
     Mantle.ui.menu_player_selector:SetCenterTitle(Mantle.lang.get('mantle', 'player_title'))
     Mantle.ui.menu_player_selector:ShowAnimation()
+    Mantle.ui.menu_player_selector:OnlyCloseBtn()
 
     Mantle.ui.menu_player_selector.sp = vgui.Create('MantleScrollPanel', Mantle.ui.menu_player_selector)
     Mantle.ui.menu_player_selector.sp:Dock(FILL)
@@ -48,9 +49,8 @@ function Mantle.ui.player_selector(do_click, func_check)
             draw.SimpleText(pl:Name(), 'Fated.Medium', 50, 8, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             local group = pl:GetUserGroup() or 'user'
             group = string.upper(string.sub(group, 1, 1)) .. string.sub(group, 2)
-            draw.SimpleText(group, 'Fated.14', 50, h - 8, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
-            draw.SimpleText(pl:Ping() .. ' ' .. Mantle.lang.get('mantle', 'player_ping'), 'Fated.16', w - 12, h - 8, Mantle.color.gray, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
-
+            draw.SimpleText(group, 'Fated.Small', 50, h - 8, Mantle.color.text_muted, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+            draw.SimpleText(pl:Ping() .. ' ' .. Mantle.lang.get('mantle', 'player_ping'), 'Fated.Regular', w - 12, h - 8, Mantle.color.text_muted, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
             local statusColor = color_disconnect
             if pl:IsBot() then
                 statusColor = color_bot
@@ -58,7 +58,7 @@ function Mantle.ui.player_selector(do_click, func_check)
                 statusColor = self.playerColor
             end
 
-            RNDX().Rect(w - 28, 8, 16, 16)
+            RNDX().Rect(w - 26, 10, 14, 14)
                 :Rad(100)
                 :Color(statusColor)
             :Draw()

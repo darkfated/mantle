@@ -24,6 +24,7 @@ function Mantle.ui.color_picker(func, color_standart)
     Mantle.ui.menu_color_picker:MakePopup()
     Mantle.ui.menu_color_picker:SetTitle('')
     Mantle.ui.menu_color_picker:SetCenterTitle(Mantle.lang.get('mantle', 'color_title'))
+    Mantle.ui.menu_color_picker:OnlyCloseBtn()
 
     local preview = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     preview:Dock(TOP)

@@ -21,8 +21,12 @@ Mantle.color_dark = {
 
     theme = Color(61, 113, 255), -- основная цветовая тема
 
+    checkbox_panel = Color(118, 123, 126), -- панель под кружком тумблера
+    entry_panel = Color(110, 112, 114, 140), -- панель для текстового поля
+
+    background_panelpopup = Color(37, 37, 37, 150), -- фон для выпадающих панелей
+
     // Cтарое, будет удалено
-    background_panelpopup = Color(20, 20, 20, 150), -- фон для DermaMenu
 
     button = Color(54, 54, 54), -- кнопка
     button_shadow = Color(0, 0, 0, 25), -- тень кнопки для градиента
@@ -34,14 +38,10 @@ Mantle.color_dark = {
         Color(80, 80, 80)
     },
 
-    toggle = Color(56, 56, 56), -- тумблер
-
     focus_panel = Color(46, 46, 46, 200), -- универсальный цвет для элементов
     hover = Color(60, 65, 80), -- универсальное выделение
 
-    window_shadow = Color(0, 0, 0, 100), -- тень окна
-
-    gray = Color(150, 150, 150, 220),
+    window_shadow = Color(0, 0, 0, 100) -- тень окна
 }
 Mantle.color_dark.panel_alpha = { -- прозрачные панели
     ColorAlpha(Mantle.color_dark.panel[1], 150),

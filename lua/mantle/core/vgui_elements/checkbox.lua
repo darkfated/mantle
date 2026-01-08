@@ -1,134 +1,145 @@
 local PANEL = {}
 
+local HEIGHT = 30
+local PADDING_LEFT = 12
+local PADDING_RIGHT = 12
+local KNOB_PADDING = 2
+
 function PANEL:Init()
-    self.text = ''
-    self.convar = ''
-    self.value = false
-
+    self:SetTall(HEIGHT)
     self:SetText('')
-    self:SetCursor('hand')
-    self:SetTall(32)
 
-    self._circle = 0
-    self._circleEased = 0
-    self._circleColor = table.Copy(Mantle.color.gray)
+    self.isChecked = false
 
-    self.toggle = vgui.Create('Button', self)
-    self.toggle:Dock(RIGHT)
-    self.toggle:SetWide(36)
-    self.toggle:DockMargin(0, 0, 10, 0)
-    self.toggle:SetText('')
-    self.toggle:SetCursor('hand')
-    self.toggle.Paint = nil
+    self.anim = 0
+    self.animTarget = 0
+    self.animSpeed = 10
+    self.animEased = 0
 
-    self.toggle.DoClick = function()
-        if self.convar != '' then
-            LocalPlayer():ConCommand(self.convar .. ' ' .. (self.value and 0 or 1))
-        end
+    self.txt = ''
+    self.txtWide = 0
 
-        self:SetValue(not self.value)
-        self:OnChange(self.value)
+    self._convarName = nil
+    self._convar = nil
+    self._onChange = nil
 
-        Mantle.func.sound()
-    end
-end
-
-function PANEL:OnMousePressed(mcode)
-    if mcode == MOUSE_LEFT then
-        self.toggle:DoClick()
+    self.DoClick = function()
+        self:SetValue(not self.isChecked, true)
     end
 end
 
 function PANEL:SetTxt(text)
-    self.text = text
+    self.txt = tostring(text or '')
+    surface.SetFont('Fated.Regular')
+    self.txtWide = surface.GetTextSize(self.txt)
 end
 
-function PANEL:SetValue(val)
-    self.value = tobool(val)
+function PANEL:SetConvar(name)
+    if not name then return end
+
+    self._convarName = tostring(name)
+    self._convar = GetConVar(self._convarName)
+
+    if self._convar then
+        local val = tobool(self._convar:GetBool())
+
+        self.isChecked = val
+        self.animTarget = val and 1 or 0
+        self.anim = self.animTarget
+        self.animEased = self.animTarget
+    end
 end
 
-function PANEL:GetBool()
-    return self.value
+function PANEL:OnChange(fn)
+    self._onChange = isfunction(fn) and fn or nil
 end
 
-function PANEL:SetConvar(convar)
-    local c = GetConVar(convar)
-    if c then self.value = c:GetBool() end
-    self.convar = convar
+function PANEL:SetValue(val, userInitiated)
+    val = tobool(val)
+    if self.isChecked == val then return end
+
+    self.isChecked = val
+    self.animTarget = val and 1 or 0
+
+    if userInitiated and self._convarName then
+        RunConsoleCommand(self._convarName, val and '1' or '0')
+    end
+
+    if userInitiated and self._onChange then
+        self._onChange(self, val)
+    end
 end
 
-function PANEL:OnChange(new_value)
+function PANEL:GetValue()
+    return self.isChecked
+end
+
+function PANEL:Think()
+    local ft = FrameTime()
+
+    self.anim = Mantle.func.approachExp(
+        self.anim,
+        self.animTarget,
+        self.animSpeed,
+        ft
+    )
+
+    self.animEased = Mantle.func.easeOutCubic(self.anim)
 end
 
 function PANEL:Paint(w, h)
-    if Mantle.ui.convar.depth_ui then
-        RNDX().Rect(0, 0, w, h)
-            :Rad(12)
-            :Color(Mantle.color.window_shadow)
-            :Shadow(4, 9)
-            :Outline(1)
-        :Draw()
-    end
+    local trackH = 18
+    local trackW = 40
+
+    local trackX = w - PADDING_RIGHT - trackW
+    local trackY = math.floor((h - trackH) * 0.5)
+
+    local knobSize = trackH - KNOB_PADDING * 2
+    local knobY = trackY + KNOB_PADDING
 
     RNDX().Rect(0, 0, w, h)
-        :Rad(12)
-        :Color(Mantle.color.focus_panel)
-    :Draw()
-
-    draw.SimpleText(self.text, 'Fated.16', 10, h * 0.5, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-end
-
-function PANEL:PaintOver(w, h)
-    local tw, th = self.toggle:GetWide(), self.toggle:GetTall()
-    local tx, ty = self.toggle:GetPos()
-    local ft = FrameTime()
-
-    local target = self.value and 1 or 0
-    local circleSpeed = 12
-    self._circle = Mantle.func.approachExp(self._circle, target, circleSpeed, ft)
-    if math.abs(self._circle - target) < 0.001 then self._circle = target end
-    self._circleEased = Mantle.func.easeInOutCubic(self._circle)
-
-    local trackW = tw - 8
-    local trackH = 14
-    local trackX = tx + (tw - trackW) / 2
-    local trackY = ty + (th - trackH) / 2
-
-    RNDX().Rect(trackX, trackY + 1, trackW, trackH - 2)
-        :Rad(trackH / 2)
-        :Color(Mantle.color.toggle)
+        :Rad(10)
+        :Color(Mantle.color.p)
         :Shape(RNDX.SHAPE_IOS)
     :Draw()
 
-    local circleSize = 16
-    local pad = 0
-    local textMargin = 10
-
-    local x0_base = trackX + pad - (circleSize * 0.5) + 0.5
-    local x1 = trackX + trackW - pad - (circleSize * 0.5) - 0.5
-    local x0_align = textMargin - (circleSize * 0.5)
-    local x0 = math.max(x0_base, x0_align)
-
-    local circleXPrec = x0 + (x1 - x0) * self._circleEased
-    local circleCenterX = circleXPrec + circleSize * 0.5
-    local circleCenterY = trackY + trackH * 0.5
-
-    local baseCircle = self.value and Mantle.color.theme or Mantle.color.gray
-    local circleCol = table.Copy(baseCircle)
-    circleCol.a = 255
-    self._circleColor = Mantle.func.LerpColor(14, self._circleColor, circleCol)
-    RNDX().Circle(circleCenterX, circleCenterY, circleSize)
-        :Color(self._circleColor)
+    RNDX().Rect(0, 0, w, h)
+        :Rad(10)
+        :Color(Mantle.color.p_outline)
+        :Outline(1)
+        :Shape(RNDX.SHAPE_IOS)
     :Draw()
 
-    RNDX().Circle(circleCenterX, circleCenterY + 1, circleSize * 1.03)
-        :Color(Color(0, 0, 0, 18))
+    local trackColor = Mantle.func.LerpColor(
+        self.animEased * 8,
+        Mantle.color.checkbox_panel,
+        Mantle.color.theme
+    )
+
+    RNDX().Rect(trackX, trackY, trackW, trackH)
+        :Rad(trackH * 0.5)
+        :Color(trackColor)
+        :Shape(RNDX.SHAPE_IOS)
     :Draw()
+
+    RNDX().Rect(trackX, trackY, trackW, trackH)
+        :Rad(trackH * 0.5)
+        :Color(Mantle.color.p_outline)
+        :Outline(1)
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
+
+    local knobMin = trackX + KNOB_PADDING + 1
+    local knobMax = trackX + trackW - KNOB_PADDING - knobSize - 1
+    local knobX = Lerp(self.animEased, knobMin, knobMax)
+
+    RNDX().Rect(knobX + 1, knobY + 1, knobSize - 2, knobSize - 2)
+        :Rad(knobSize * 0.5)
+        :Color(color_white)
+        :Shape(RNDX.SHAPE_CIRCLE)
+    :Draw()
+
+    draw.SimpleText(self.txt, 'Fated.Regular', PADDING_LEFT, h * 0.5, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
-function PANEL:PerformLayout(w, h)
-    self.toggle:SetWide(38)
-    self.toggle:DockMargin(0, 0, 10, 0)
-end
-
-vgui.Register('MantleCheckBox', PANEL, 'Panel')
+vgui.Register('MantleCheckBox', PANEL, 'Button')

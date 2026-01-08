@@ -85,7 +85,7 @@ local panel = vgui.Create('MantleScrollPanel')
         p.Paint = function(_, w, h)
             RNDX().Rect(0, 0, w, h)
                 :Rad(16)
-                :Color(Color(187, 73, 73))
+                :Color(Mantle.color.p)
                 :Shape(RNDX.SHAPE_IOS)
             :Draw()
         end

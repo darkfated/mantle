@@ -1,8 +1,14 @@
 local PANEL = {}
 
+local MIN_WIDTH = 160
+local PADDING = 6
+local ITEM_HEIGHT = 30
+local ITEM_MARGIN = 2
+local RADIUS = 12
+
 function PANEL:Init()
     self.Items = {}
-    self:SetSize(160, 0)
+    self:SetSize(MIN_WIDTH, 0)
     self:DockPadding(4, 5, 4, 5)
     self:MakePopup()
     self:SetKeyboardInputEnabled(false)
@@ -24,7 +30,6 @@ function PANEL:Init()
         local ft = FrameTime()
 
         if not self._initPosSet then
-            local tx, ty = self:GetPos()
             Mantle.func.ClampMenuPosition(self)
             self._targetX, self._targetY = self:GetPos()
             self:SetPos(self._targetX, self._targetY + 6)
@@ -32,10 +37,8 @@ function PANEL:Init()
         end
 
         if CurTime() - self._openTime >= 0.08 then
-            if input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT) then
-                if not self:IsChildHovered() then
-                    self:CloseMenu()
-                end
+            if (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) and not self:IsChildHovered() then
+                self:CloseMenu()
             end
         end
 
@@ -56,62 +59,57 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-    local aMul = (self._animEased ~= nil) and self._animEased or ((self:GetAlpha() or 255) / 255)
-    local blurMul
+    local aMul = self._animEased or ((self:GetAlpha() or 255) / 255)
 
-    if self._closing or self._disableBlur or self._animTarget == 0 then
-        blurMul = 0
-    else
-        local fadeStart = 0.3
-        blurMul = math.Clamp((aMul - fadeStart) / (1 - fadeStart), 0, 1)
+    local blurMul = 0
+    if not (self._closing or self._disableBlur or self._animTarget == 0) then
+        if self._animTarget == 1 then
+            local appearStart = 0.6
+            blurMul = math.Clamp((aMul - appearStart) / (1 - appearStart), 0, 1)
+        else
+            local disappearEnd = 0.3
+            blurMul = math.Clamp(aMul / disappearEnd, 0, 1)
+        end
     end
 
-    local shadowSpread = math.max(0, math.floor(10 * blurMul))
-    local shadowIntensity = math.max(0, math.floor(16 * blurMul))
-
-    RNDX().Rect(0, 0, w, h)
-        :Rad(16)
-        :Color(Color(Mantle.color.window_shadow.r, Mantle.color.window_shadow.g, Mantle.color.window_shadow.b, math.floor(100 * aMul)))
-        :Shape(RNDX.SHAPE_IOS)
-        :Shadow(shadowSpread, shadowIntensity)
-    :Draw()
-
-    if !self._disableBlur then
+    if not self._disableBlur then
         RNDX().Rect(0, 0, w, h)
-            :Rad(16)
+            :Rad(RADIUS)
             :Shape(RNDX.SHAPE_IOS)
             :Blur(blurMul)
         :Draw()
     end
 
+    local bg = Mantle.color.background_panelpopup
+    local fill = Color(bg.r, bg.g, bg.b, math.floor((bg.a or 150) * aMul))
+
     RNDX().Rect(0, 0, w, h)
-        :Rad(16)
-        :Color(Color(Mantle.color.background_panelpopup.r, Mantle.color.background_panelpopup.g, Mantle.color.background_panelpopup.b, math.floor(150 * aMul)))
+        :Rad(RADIUS)
+        :Color(fill)
         :Shape(RNDX.SHAPE_IOS)
     :Draw()
 
     RNDX().Rect(0, 0, w, h)
-        :Rad(16)
-        :Color(Color(Mantle.color.background_panelpopup.r, Mantle.color.background_panelpopup.g, Mantle.color.background_panelpopup.b, math.floor(150 * aMul)))
-        :Shape(RNDX.SHAPE_IOS)
+        :Rad(RADIUS)
+        :Color(Mantle.color.outline)
         :Outline(1)
+        :Shape(RNDX.SHAPE_IOS)
     :Draw()
 end
 
 function PANEL:AddOption(text, func, icon, optData)
-    surface.SetFont('Fated.18')
-    local textW = select(1, surface.GetTextSize(text))
-    self.MaxTextWidth = math.max(self.MaxTextWidth or 0, textW)
+    surface.SetFont('Fated.Regular')
+    local textW = surface.GetTextSize(text)
+    self.MaxTextWidth = math.max(self.MaxTextWidth, textW)
 
-    local option = vgui.Create('DButton', self)
+    local option = vgui.Create('Button', self)
     option:SetText('')
     option:Dock(TOP)
     option:DockMargin(2, 2, 2, 0)
-    option:SetTall(26)
-    option.sumTall = 28
+    option:SetTall(ITEM_HEIGHT)
+    option.sumTall = ITEM_HEIGHT + ITEM_MARGIN
     option.Icon = icon
     option.Text = text
-
     option._submenu = nil
     option._submenu_open = false
 
@@ -124,20 +122,21 @@ function PANEL:AddOption(text, func, icon, optData)
             end
             return
         end
+
         if func then func() end
+
         Mantle.func.sound()
-        local function closeAllMenus(panel)
-            while IsValid(panel) do
-                if panel.GetName and panel:GetName() == 'MantleDermaMenu' then
-                    local parent = panel:GetParent()
-                    panel:CloseMenu()
-                    panel = parent
-                else
-                    panel = panel:GetParent()
-                end
+
+        local panel = option
+        while IsValid(panel) do
+            if panel.GetName and panel:GetName() == 'MantleDermaMenu' then
+                local parent = panel:GetParent()
+                panel:CloseMenu()
+                panel = parent
+            else
+                panel = panel:GetParent()
             end
         end
-        closeAllMenus(option)
     end
 
     function option:AddSubMenu()
@@ -192,20 +191,12 @@ function PANEL:AddOption(text, func, icon, optData)
 
         option.OnCursorExited = function(pnl)
             timer.Simple(0.15, function()
-                if not isAnySubmenuHovered(pnl) then
-                    if IsValid(pnl) then
-                        pnl:CloseSubMenu()
-                    end
-                end
+                if not isAnySubmenuHovered(pnl) and IsValid(pnl) then pnl:CloseSubMenu() end
             end)
         end
         submenu.OnCursorExited = function(pnl)
             timer.Simple(0.15, function()
-                if not isAnySubmenuHovered(option) then
-                    if IsValid(pnl) then
-                        option:CloseSubMenu()
-                    end
-                end
+                if not isAnySubmenuHovered(option) and IsValid(pnl) then option:CloseSubMenu() end
             end)
         end
 
@@ -221,88 +212,58 @@ function PANEL:AddOption(text, func, icon, optData)
     end
 
     local iconMat
-
-    if option.Icon then
-        iconMat = type(option.Icon) == 'IMaterial' and option.Icon or Material(option.Icon)
-    end
+    if option.Icon then iconMat = type(option.Icon) == 'IMaterial' and option.Icon or Material(option.Icon) end
 
     option.Paint = function(pnl, w, h)
-        w = w or pnl:GetWide()
-        h = h or pnl:GetTall()
-
         if pnl:IsHovered() then
-            if Mantle.ui.convar.depth_ui then
-                RNDX().Rect(0, 0, w, h)
-                    :Rad(16)
-                    :Color(Mantle.color.window_shadow)
-                    :Shape(RNDX.SHAPE_IOS)
-                    :Shadow(4, 9)
-                    :Outline(1)
-                :Draw()
-            end
-            RNDX.Draw(16, 0, 0, w, h, Mantle.color.hover, RNDX.SHAPE_IOS)
-
-            if pnl._submenu and not pnl._submenu_open then
-                pnl:OpenSubMenu()
-            end
+            RNDX.Draw(RADIUS, 0, 0, w, h, Mantle.color.p, RNDX.SHAPE_IOS)
+            if pnl._submenu and not pnl._submenu_open then pnl:OpenSubMenu() end
         end
 
         if iconMat then
             local iconSize = 16
-            RNDX.DrawMaterial(0, 10, (h - iconSize) / 2, iconSize, iconSize, color_white, iconMat)
+            RNDX.DrawMaterial(0, 12, (h - iconSize) / 2, iconSize, iconSize, Mantle.color.text, iconMat)
         end
 
-        draw.SimpleText(pnl.Text, 'Fated.18', pnl.Icon and 32 or 14, h * 0.5, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        local txtCol = pnl:IsHovered() and Mantle.color.text or Mantle.color.text_muted
+        draw.SimpleText(pnl.Text, 'Fated.Regular', pnl.Icon and 36 or 14, h * 0.5, txtCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     table.insert(self.Items, option)
-
     self:UpdateSize()
-
     return option
 end
 
 function PANEL:AddSpacer()
-    local spacer = vgui.Create('DPanel', self)
+    local spacer = vgui.Create('Panel', self)
     spacer:Dock(TOP)
     spacer:DockMargin(8, 6, 8, 6)
     spacer:SetTall(1)
     spacer.sumTall = 13
     spacer.Paint = function(_, w, h)
-        RNDX.Draw(0, 0, 0, w, h, Mantle.color.focus_panel)
+        RNDX.Draw(0, 0, 0, w, h, Mantle.color.outline)
     end
-
     table.insert(self.Items, spacer)
     self:UpdateSize()
-
     return spacer
 end
 
 function PANEL:UpdateSize()
     local height = 12
     for _, item in ipairs(self.Items) do
-        if IsValid(item) then
-            height = height + (item.sumTall or item:GetTall())
-        end
+        if IsValid(item) then height = height + (item.sumTall or item:GetTall()) end
     end
-
-    local maxWidth = math.max(160, self.MaxTextWidth + 56)
+    local maxWidth = math.max(MIN_WIDTH, self.MaxTextWidth + 56)
     self:SetSize(maxWidth, math.min(height, ScrH() * 0.8))
 
     if not self._targetX or not self._targetY then
         Mantle.func.ClampMenuPosition(self)
         self._targetX, self._targetY = self:GetPos()
-        if not self._initPosSet then
-            self:SetPos(self._targetX, self._targetY + 6)
-        end
+        if not self._initPosSet then self:SetPos(self._targetX, self._targetY + 6) end
     else
         Mantle.func.ClampMenuPosition(self)
         self._targetX, self._targetY = self:GetPos()
     end
-end
-
-function PANEL:Open()
-    -- Clear
 end
 
 function PANEL:CloseMenu()
@@ -316,21 +277,15 @@ function PANEL:GetDeleteSelf()
     return true
 end
 
-vgui.Register('MantleDermaMenu', PANEL, 'DPanel')
+vgui.Register('MantleDermaMenu', PANEL, 'Panel')
 
 function Mantle.ui.derma_menu()
-    if IsValid(Mantle.ui.menu_derma_menu) then
-        Mantle.ui.menu_derma_menu:CloseMenu()
-    end
-
+    if IsValid(Mantle.ui.menu_derma_menu) then Mantle.ui.menu_derma_menu:CloseMenu() end
     local mouseX, mouseY = input.GetCursorPos()
     local m = vgui.Create('MantleDermaMenu')
     m:SetPos(mouseX, mouseY)
-
     Mantle.func.ClampMenuPosition(m)
-
     m._targetX, m._targetY = m:GetPos()
     Mantle.ui.menu_derma_menu = m
-
     return m
 end
