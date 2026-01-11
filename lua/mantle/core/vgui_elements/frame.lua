@@ -19,9 +19,7 @@ function PANEL:Init()
         :Draw()
     end
     self.btnClose.DoClick = function()
-        self:AlphaTo(0, 0.1, 0, function()
-            self:Remove()
-        end)
+        self:Close()
 
         Mantle.func.sound()
     end
@@ -62,6 +60,12 @@ end
 
 function PANEL:ShowAnimation()
     Mantle.func.animate_appearance(self, self:GetWide(), self:GetTall(), 0.3, 0.2)
+end
+
+function PANEL:Close()
+    self:AlphaTo(0, 0.1, 0, function()
+        self:Remove()
+    end)
 end
 
 function PANEL:Paint(w, h)
