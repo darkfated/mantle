@@ -31,7 +31,7 @@ function Mantle.ui.player_selector(do_click, func_check)
             end
 
             Mantle.func.sound()
-            Mantle.ui.menu_player_selector:Remove()
+            Mantle.ui.menu_player_selector:Close()
         end
         card.playerColor = team.GetColor(pl:Team()) or color_online
         card.Paint = function(self, w, h)
@@ -84,6 +84,6 @@ function Mantle.ui.player_selector(do_click, func_check)
     Mantle.ui.menu_player_selector.btnClose:SetTall(36)
     Mantle.ui.menu_player_selector.btnClose:SetTxt(Mantle.lang.get('mantle', 'player_close'))
     Mantle.ui.menu_player_selector.btnClose.DoClick = function()
-        Mantle.ui.menu_player_selector:Remove()
+        Mantle.ui.menu_player_selector:Close()
     end
 end

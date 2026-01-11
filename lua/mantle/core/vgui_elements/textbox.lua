@@ -17,8 +17,7 @@ function Mantle.ui.text_box(title, desc, func)
 
     local function applyFunction()
         func(entry:GetValue())
-
-        Mantle.ui.menu_text_box:Remove()
+        Mantle.ui.menu_text_box:Close()
     end
 
     entry.OnEnter = function()
