@@ -116,6 +116,13 @@ function PANEL:Paint(w, h)
         :Shape(RNDX.SHAPE_IOS)
     :Draw()
 
+    RNDX().Rect(0, drawY, w, h - drawY)
+        :Rad(RADIUS)
+        :Color(Mantle.color.p_outline)
+        :Outline(self._editing and 2 or 1)
+        :Shape(RNDX.SHAPE_IOS)
+    :Draw()
+
     local value = self:GetValue() or ''
     local font = self._font
     surface.SetFont(font)
