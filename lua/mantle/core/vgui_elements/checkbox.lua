@@ -24,6 +24,7 @@ function PANEL:Init()
     self._onChange = nil
 
     self.DoClick = function()
+        Mantle.func.sound()
         self:SetValue(not self.isChecked, true)
     end
 end
