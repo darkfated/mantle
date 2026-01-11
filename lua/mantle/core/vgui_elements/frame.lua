@@ -10,7 +10,7 @@ function PANEL:Init()
 
     self:DockPadding(6, 30, 6, 6)
 
-    self.top_panel = vgui.Create('DButton', self)
+    self.top_panel = vgui.Create('Button', self)
     self.top_panel:SetText('')
     self.top_panel:SetCursor('sizeall')
     self.top_panel.Paint = nil
@@ -46,9 +46,7 @@ function PANEL:Init()
         :Draw()
     end
     self.cls.DoClick = function()
-        self:AlphaTo(0, 0.1, 0, function()
-            self:Remove()
-        end)
+        self:Close()
 
         Mantle.func.sound()
     end
@@ -86,6 +84,12 @@ function PANEL:ShowAnimation()
     Mantle.func.animate_appearance(self, self:GetWide(), self:GetTall(), 0.3, 0.2)
 end
 
+function PANEL:Close()
+    self:AlphaTo(0, 0.1, 0, function()
+        self:Remove()
+    end)
+end
+
 function PANEL:DisableCloseBtn()
     self.cls:SetVisible(false)
 end
@@ -109,7 +113,7 @@ function PANEL:Notify(text, duration, col)
     surface.SetFont('Fated.20')
     local tw, th = surface.GetTextSize(text)
 
-    local mp = vgui.Create('DPanel', self)
+    local mp = vgui.Create('Panel', self)
     mp:SetSize(tw + 16, th + 8)
     mp:SetMouseInputEnabled(false)
     local startY = self:GetTall() + mp:GetTall()

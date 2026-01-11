@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script type="module">
+		"%WASM_JS%";
+
+		const wasmBase64 = "%WASM_BASE64%";
+		const wasmBinary = Uint8Array.from(atob(wasmBase64), c => c.charCodeAt(0));
+		__wbg_init(wasmBinary).then(wasmModule => {
+			window.wasmGifToVtf = (gifBase64, avatarUrlHash, steamid64) => {
+				const gif = Uint8Array.from(atob(gifBase64), c => c.charCodeAt(0));
+
+				let vtf;
+				try {
+					vtf = wasm_gif_to_vtf(gif);
+				} catch (e) {
+					window.wasmGifToVtf_Callback(e.toString(), null, avatarUrlHash, steamid64);
+					return;
+				}
+
+				window.wasmGifToVtf_Callback(true, vtf, avatarUrlHash, steamid64);
+			};
+
+            window.wasmGifToVtf_Ready();
+		});
+	</script>
+</head>
+
+</html>

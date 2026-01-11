@@ -57,6 +57,7 @@ local function InitLib()
     if SERVER then
         resource.AddWorkshop('2924839375') -- DarkFated font
         resource.AddWorkshop('3126986993') -- Mantle
+        resource.AddWorkshop('3626277245') -- Steam Animated Avatars
     end
 
     local color_div = Color(168, 109, 236)

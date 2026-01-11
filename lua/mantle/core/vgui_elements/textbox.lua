@@ -1,8 +1,10 @@
-local color_accept = Color(35, 103, 51)
-
 function Mantle.ui.text_box(title, desc, func)
+    if IsValid(Mantle.ui.menu_text_box) then
+        Mantle.ui.menu_text_box:Remove()
+    end
+
     Mantle.ui.menu_text_box = vgui.Create('MantleFrame')
-    Mantle.ui.menu_text_box:SetSize(300, 134)
+    Mantle.ui.menu_text_box:SetSize(320, 134)
     Mantle.ui.menu_text_box:Center()
     Mantle.ui.menu_text_box:MakePopup()
     Mantle.ui.menu_text_box:SetTitle(title)
@@ -13,23 +15,22 @@ function Mantle.ui.text_box(title, desc, func)
     entry:Dock(TOP)
     entry:SetTitle(desc)
 
-    local function apply_func()
+    local function applyFunction()
         func(entry:GetValue())
 
         Mantle.ui.menu_text_box:Remove()
     end
 
     entry.OnEnter = function()
-        apply_func()
+        applyFunction()
     end
 
     local btn_accept = vgui.Create('MantleBtn', Mantle.ui.menu_text_box)
     btn_accept:Dock(BOTTOM)
     btn_accept:SetTall(30)
     btn_accept:SetTxt(Mantle.lang.get('mantle', 'apply'))
-    btn_accept:SetColorHover(color_accept)
     btn_accept.DoClick = function()
+        applyFunction()
         Mantle.func.sound()
-        apply_func()
     end
 end

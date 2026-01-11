@@ -1,0 +1,19 @@
+"UnlitGeneric"
+{
+	"$basetexture" "../data/animated_avatars/%BASETEXTURE%.vtf"
+	"$translucent" 1
+	"$ignorez" 1
+	"$nodecal" 1
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedTextureVar" "$basetexture"
+			"animatedTextureFrameNumVar" "$frame"
+			"animatedTextureFrameRate" "%FRAMERATE%"
+		}
+	}
+}

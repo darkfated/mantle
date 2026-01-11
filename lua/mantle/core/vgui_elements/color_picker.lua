@@ -1,6 +1,3 @@
-local color_close = Color(210, 65, 65)
-local color_accept = Color(44, 124, 62)
-local color_outline = Color(30, 30, 30)
 local color_target = Color(255, 255, 255, 200)
 
 function Mantle.ui.color_picker(func, color_standart)
@@ -8,7 +5,7 @@ function Mantle.ui.color_picker(func, color_standart)
         Mantle.ui.menu_color_picker:Remove()
     end
 
-    local selected_color = color_standart or Color(255, 255, 255)
+    local selectedColor = color_standart or Color(255, 255, 255)
     local hue = 0
     local saturation = 1
     local value = 1
@@ -22,39 +19,41 @@ function Mantle.ui.color_picker(func, color_standart)
     end
 
     Mantle.ui.menu_color_picker = vgui.Create('MantleFrame')
-    Mantle.ui.menu_color_picker:SetSize(300, 378)
+    Mantle.ui.menu_color_picker:SetSize(300, 370)
     Mantle.ui.menu_color_picker:Center()
     Mantle.ui.menu_color_picker:MakePopup()
     Mantle.ui.menu_color_picker:SetTitle('')
     Mantle.ui.menu_color_picker:SetCenterTitle(Mantle.lang.get('mantle', 'color_title'))
+    Mantle.ui.menu_color_picker:DockPadding(12, 36, 12, 12)
 
-    local container = vgui.Create('Panel', Mantle.ui.menu_color_picker)
-    container:Dock(FILL)
-    container:DockMargin(10, 10, 10, 10)
-    container.Paint = nil
-
-    local preview = vgui.Create('Panel', container)
+    local preview = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     preview:Dock(TOP)
     preview:SetTall(40)
     preview:DockMargin(0, 0, 0, 10)
-    preview.Paint = function(self, w, h)
-        if Mantle.ui.convar.depth_ui then
-            RNDX().Rect(2, 2, w - 4, h - 4)
-                :Rad(16)
-                :Color(Mantle.color.window_shadow)
-                :Shape(RNDX.SHAPE_IOS)
-                :Shadow(5, 20)
-            :Draw()
-        end
-        RNDX.Draw(16, 2, 2, w - 4, h - 4, selected_color, RNDX.SHAPE_IOS)
+    preview.Paint = function(_, w, h)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(selectedColor)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
+
+        RNDX().Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(Mantle.color.window_shadow)
+            :Outline(1)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
     end
 
-    local colorField = vgui.Create('Panel', container)
+    local colorField = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     colorField:Dock(TOP)
     colorField:SetTall(200)
     colorField:DockMargin(0, 0, 0, 10)
 
-    local colorCursor = { x = 0, y = 0 }
+    local colorCursor = {
+        x = 0,
+        y = 0
+    }
     local isDraggingColor = false
 
     colorField.OnMousePressed = function(self, keyCode)
@@ -83,21 +82,13 @@ function Mantle.ui.color_picker(func, color_standart)
             saturation = x / w
             value = 1 - (y / h)
 
-            selected_color = HSVToColor(hue, saturation, value)
+            selectedColor = HSVToColor(hue, saturation, value)
         end
     end
 
     colorField.Paint = function(self, w, h)
         local segments = 80
         local segmentSize = w / segments
-
-        if Mantle.ui.convar.depth_ui then
-            RNDX().Rect(0, 0, w, h)
-                :Color(Mantle.color.window_shadow)
-                :Shape(RNDX.SHAPE_IOS)
-                :Shadow(5, 20)
-            :Draw()
-        end
 
         for x = 0, segments do
             for y = 0, segments do
@@ -111,13 +102,19 @@ function Mantle.ui.color_picker(func, color_standart)
             end
         end
 
+        RNDX().Rect(0, 0, w, h)
+            :Color(Mantle.color.window_shadow)
+            :Outline(1)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
+
         RNDX().Circle(colorCursor.x, colorCursor.y, 12)
             :Outline(2)
             :Color(color_target)
         :Draw()
     end
 
-    local hueSlider = vgui.Create('Panel', container)
+    local hueSlider = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     hueSlider:Dock(TOP)
     hueSlider:SetTall(20)
     hueSlider:DockMargin(0, 0, 0, 10)
@@ -147,7 +144,7 @@ function Mantle.ui.color_picker(func, color_standart)
             huePos = x
             hue = (x / w) * 360
 
-            selected_color = HSVToColor(hue, saturation, value)
+            selectedColor = HSVToColor(hue, saturation, value)
         end
     end
 
@@ -155,13 +152,11 @@ function Mantle.ui.color_picker(func, color_standart)
         local segments = 100
         local segmentWidth = w / segments
 
-        if Mantle.ui.convar.depth_ui then
-            RNDX().Rect(0, 0, w, h)
-                :Color(Mantle.color.window_shadow)
-                :Shape(RNDX.SHAPE_IOS)
-                :Shadow(5, 20)
-            :Draw()
-        end
+        RNDX().Rect(0, 0, w, h)
+            :Color(Mantle.color.window_shadow)
+            :Shape(RNDX.SHAPE_IOS)
+            :Shadow(5, 20)
+        :Draw()
 
         for i = 0, segments - 1 do
             local hueVal = (i / segments) * 360
@@ -176,22 +171,19 @@ function Mantle.ui.color_picker(func, color_standart)
         :Draw()
     end
 
-    local rgbContainer = vgui.Create('Panel', container)
+    local rgbContainer = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     rgbContainer:Dock(TOP)
     rgbContainer:SetTall(60)
     rgbContainer:DockMargin(0, 0, 0, 10)
-    rgbContainer.Paint = nil
 
-    local btnContainer = vgui.Create('Panel', container)
+    local btnContainer = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     btnContainer:Dock(BOTTOM)
     btnContainer:SetTall(30)
-    btnContainer.Paint = nil
 
     local btnClose = vgui.Create('MantleBtn', btnContainer)
     btnClose:Dock(LEFT)
     btnClose:SetWide(90)
     btnClose:SetTxt(Mantle.lang.get('mantle', 'color_cancel'))
-    btnClose:SetColorHover(color_close)
     btnClose.DoClick = function()
         Mantle.ui.menu_color_picker:Remove()
         Mantle.func.sound()
@@ -201,11 +193,11 @@ function Mantle.ui.color_picker(func, color_standart)
     btnSelect:Dock(RIGHT)
     btnSelect:SetWide(90)
     btnSelect:SetTxt(Mantle.lang.get('mantle', 'color_select'))
-    btnSelect:SetColorHover(color_accept)
     btnSelect.DoClick = function()
-        Mantle.func.sound()
-        func(selected_color)
         Mantle.ui.menu_color_picker:Remove()
+        Mantle.func.sound()
+
+        func(selectedColor)
     end
 
     timer.Simple(0, function()
