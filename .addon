@@ -4,7 +4,7 @@
   "author": "darkfated",
   "version": "1.5.0",
   "github": {
-    "url": "https://github.com/darkfated/mantle",
+    "url": "darkfated/mantle",
     "branch": "master"
   },
   "dependencies": [],
