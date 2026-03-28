@@ -19,8 +19,8 @@ function PANEL:Init()
     self.btn:SetText('')
     self.btn:SetCursor('hand')
 
-    self.btn.Paint = function(_, w, h)
-        if _.IsHovered(_) then
+    self.btn.Paint = function(button, w, h)
+        if button:IsHovered() then
             self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, 1, 8, FrameTime())
         else
             self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, 0, 12, FrameTime())

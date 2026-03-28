@@ -1,17 +1,17 @@
-local color_target = Color(255, 255, 255, 200)
+local colorTarget = Color(255, 255, 255, 200)
 
-function Mantle.ui.color_picker(func, color_standart)
+function Mantle.ui.color_picker(callback, defaultColor)
     if IsValid(Mantle.ui.menu_color_picker) then
         Mantle.ui.menu_color_picker:Remove()
     end
 
-    local selectedColor = color_standart or Color(255, 255, 255)
+    local selectedColor = defaultColor or Color(255, 255, 255)
     local hue = 0
     local saturation = 1
     local value = 1
 
-    if color_standart then
-        local r, g, b = color_standart.r / 255, color_standart.g / 255, color_standart.b / 255
+    if defaultColor then
+        local r, g, b = defaultColor.r / 255, defaultColor.g / 255, defaultColor.b / 255
         local h, s, v = ColorToHSV(Color(r * 255, g * 255, b * 255))
         hue = h
         saturation = s
@@ -110,7 +110,7 @@ function Mantle.ui.color_picker(func, color_standart)
 
         RNDX().Circle(colorCursor.x, colorCursor.y, 12)
             :Outline(2)
-            :Color(color_target)
+            :Color(colorTarget)
         :Draw()
     end
 
@@ -167,14 +167,9 @@ function Mantle.ui.color_picker(func, color_standart)
         end
 
         RNDX().Rect(huePos - 2, 0, 4, h)
-            :Color(color_target)
+            :Color(colorTarget)
         :Draw()
     end
-
-    local rgbContainer = vgui.Create('Panel', Mantle.ui.menu_color_picker)
-    rgbContainer:Dock(TOP)
-    rgbContainer:SetTall(60)
-    rgbContainer:DockMargin(0, 0, 0, 10)
 
     local btnContainer = vgui.Create('Panel', Mantle.ui.menu_color_picker)
     btnContainer:Dock(BOTTOM)
@@ -197,7 +192,7 @@ function Mantle.ui.color_picker(func, color_standart)
         Mantle.ui.menu_color_picker:Remove()
         Mantle.func.sound()
 
-        func(selectedColor)
+        callback(selectedColor)
     end
 
     timer.Simple(0, function()

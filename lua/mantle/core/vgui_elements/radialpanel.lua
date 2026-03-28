@@ -16,7 +16,7 @@ local Lerp = Lerp
 local EPS = 1e-6
 local EPS_ANGLE = 1e-4
 
-local function GetSectorIndexFromAngle(angle, cnt)
+local function getSectorIndexFromAngle(angle, cnt)
     if !angle or cnt <= 0 then return nil end
     local sector = (2 * pi) / cnt
     local raw = angle / sector
@@ -24,7 +24,7 @@ local function GetSectorIndexFromAngle(angle, cnt)
     return idx
 end
 
-local function ClampEndAngle(a)
+local function clampEndAngle(a)
     if a >= 360 then
         return 360 - EPS_ANGLE
     end
@@ -108,7 +108,7 @@ function PANEL:Init(options)
                 local opts = self:GetCurrentOptions()
                 local cnt = #opts
                 if cnt > 0 then
-                    local idx = GetSectorIndexFromAngle(ang, cnt)
+                    local idx = getSectorIndexFromAngle(ang, cnt)
                     if idx and opts[idx] then
                         self:SelectOption(idx)
                         if self.hover_sound then surface.PlaySound(self.hover_sound) end
@@ -138,7 +138,7 @@ function PANEL:Init(options)
             local opts = self:GetCurrentOptions()
             local cnt = #opts
             if cnt > 0 then
-                hovered = GetSectorIndexFromAngle(ang, cnt)
+                hovered = getSectorIndexFromAngle(ang, cnt)
             end
         end
 
@@ -219,8 +219,7 @@ function PANEL:SelectOption(index)
     end
     self.selectedOption = opt
     if opt.func then
-        local ok, err = pcall(opt.func)
-        if !ok then ErrorNoHalt(tostring(err) .. '\n') end
+        opt.func()
     end
     self:Remove()
 end
@@ -304,7 +303,7 @@ function PANEL:Paint(w,h)
             local startDeg = (i-1) * sectorDeg
             local endDeg = i * sectorDeg
             if startDeg < 0 then startDeg = 0 end
-            endDeg = ClampEndAngle(endDeg)
+                endDeg = clampEndAngle(endDeg)
             if endDeg > startDeg then
                 RNDX().Circle(cx, cy, outerD)
                     :StartAngle(startDeg)
@@ -326,7 +325,7 @@ function PANEL:Paint(w,h)
             local startDeg = (i-1) * sectorDeg
             local endDeg = i * sectorDeg
             if startDeg < 0 then startDeg = 0 end
-            endDeg = ClampEndAngle(endDeg)
+            endDeg = clampEndAngle(endDeg)
             if endDeg > startDeg then
                 local th = Mantle.color.theme
                 local hoverAlpha = math_floor(200 * self.hoverAnim * alpha)

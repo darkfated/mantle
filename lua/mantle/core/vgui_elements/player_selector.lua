@@ -2,36 +2,37 @@ local color_disconnect = Color(210, 65, 65)
 local color_bot = Color(70, 150, 220)
 local color_online = Color(120, 180, 70)
 
-function Mantle.ui.player_selector(do_click, func_check)
+function Mantle.ui.player_selector(onSelect, filterFn)
     if IsValid(Mantle.ui.menu_player_selector) then
         Mantle.ui.menu_player_selector:Remove()
     end
 
-    Mantle.ui.menu_player_selector = vgui.Create('MantleFrame')
-    Mantle.ui.menu_player_selector:SetSize(360, 460)
-    Mantle.ui.menu_player_selector:Center()
-    Mantle.ui.menu_player_selector:MakePopup()
-    Mantle.ui.menu_player_selector:SetTitle('')
-    Mantle.ui.menu_player_selector:SetCenterTitle(Mantle.lang.get('mantle', 'player_title'))
-    Mantle.ui.menu_player_selector:ShowAnimation()
-    Mantle.ui.menu_player_selector:DockPadding(12, 36, 12, 12)
+    local selector = vgui.Create('MantleFrame')
+    Mantle.ui.menu_player_selector = selector
+    selector:SetSize(360, 460)
+    selector:Center()
+    selector:MakePopup()
+    selector:SetTitle('')
+    selector:SetCenterTitle(Mantle.lang.get('mantle', 'player_title'))
+    selector:ShowAnimation()
+    selector:DockPadding(12, 36, 12, 12)
 
-    Mantle.ui.menu_player_selector.sp = vgui.Create('MantleScrollPanel', Mantle.ui.menu_player_selector)
-    Mantle.ui.menu_player_selector.sp:Dock(FILL)
+    selector.sp = vgui.Create('MantleScrollPanel', selector)
+    selector.sp:Dock(FILL)
 
-    local function CreatePlayerCard(pl)
-        local card = vgui.Create('Button', Mantle.ui.menu_player_selector.sp)
+    local function createPlayerCard(pl)
+        local card = vgui.Create('Button', selector.sp)
         card:Dock(TOP)
         card:DockMargin(0, 0, 0, 6)
         card:SetTall(48)
         card:SetText('')
         card.DoClick = function()
             if IsValid(pl) then
-                do_click(pl)
+                onSelect(pl)
             end
 
             Mantle.func.sound()
-            Mantle.ui.menu_player_selector:Close()
+            selector:Close()
         end
         card.playerColor = team.GetColor(pl:Team()) or color_online
         card.Paint = function(self, w, h)
@@ -64,7 +65,7 @@ function Mantle.ui.player_selector(do_click, func_check)
             :Draw()
         end
 
-        local avatarImg = vgui.Create('AnimatedAvatarImage', card)
+        local avatarImg = vgui.Create('AvatarImage', card)
         avatarImg:SetSize(32, 32)
         avatarImg:SetPos(8, 8)
         avatarImg:SetSteamID(pl:SteamID64(), 64)
@@ -75,15 +76,17 @@ function Mantle.ui.player_selector(do_click, func_check)
     end
 
     for _, pl in player.Iterator() do
-        CreatePlayerCard(pl)
+        if !filterFn or filterFn(pl) then
+            createPlayerCard(pl)
+        end
     end
 
-    Mantle.ui.menu_player_selector.btnClose = vgui.Create('MantleBtn', Mantle.ui.menu_player_selector)
-    Mantle.ui.menu_player_selector.btnClose:Dock(BOTTOM)
-    Mantle.ui.menu_player_selector.btnClose:DockMargin(0, 8, 0, 0)
-    Mantle.ui.menu_player_selector.btnClose:SetTall(36)
-    Mantle.ui.menu_player_selector.btnClose:SetTxt(Mantle.lang.get('mantle', 'player_close'))
-    Mantle.ui.menu_player_selector.btnClose.DoClick = function()
-        Mantle.ui.menu_player_selector:Close()
+    selector.btnClose = vgui.Create('MantleBtn', selector)
+    selector.btnClose:Dock(BOTTOM)
+    selector.btnClose:DockMargin(0, 8, 0, 0)
+    selector.btnClose:SetTall(36)
+    selector.btnClose:SetTxt(Mantle.lang.get('mantle', 'player_close'))
+    selector.btnClose.DoClick = function()
+        selector:Close()
     end
 end

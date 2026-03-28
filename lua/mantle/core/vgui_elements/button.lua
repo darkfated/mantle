@@ -21,13 +21,6 @@ function PANEL:Init()
     self.enable_ripple = false
     self.ripple_color = Color(255, 255, 255, 30)
 
-    --[[
-    TODO: тень, которая не вылезает за окно при прокрутке
-    ]]--
-    -- local parent = self:GetParent()
-    -- local grandParent = IsValid(parent:GetParent()) and parent:GetParent() or parent
-    -- self.clipParent = IsValid(parent) and grandParent or nil
-
     self:SetText('')
 end
 
@@ -99,18 +92,6 @@ function PANEL:Paint(w, h)
     local activeSpeed = (activeTarget > 0) and 7 or 3 -- скорость появления/затухания
     self._activeShadowLerp = Lerp(FrameTime() * activeSpeed, self._activeShadowLerp, activeTarget)
 
-    -- Обычная тень
-    -- if Mantle.ui.convar.depth_ui then
-    --     RNDX().Rect(0, 0, w, h)
-    --         :Rad(self.radius)
-    --         :Color(Mantle.color.window_shadow)
-    --         :Shape(RNDX.SHAPE_IOS)
-    --         :Shadow(5, 20)
-    --         :Clip(self.clipParent)
-    --     :Draw()
-    -- end
-
-    -- Дополнительная тень при зажатии
     if self._activeShadowLerp > 0 and Mantle.ui.convar.depth_ui then
         local col = Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math.Clamp(self.col_hov.a * 1.5, 0, 255))
         RNDX().Rect(0, 0, w, h)
@@ -161,7 +142,7 @@ function PANEL:Paint(w, h)
         draw.SimpleText(
             self.text,
             self.font,
-            w * 0.5 + (self.icon ~= '' and self.icon_size * 0.5 + 2 or 0),
+            w * 0.5 + (self.icon != '' and self.icon_size * 0.5 + 2 or 0),
             h * 0.5,
             Mantle.color.text,
             TEXT_ALIGN_CENTER,

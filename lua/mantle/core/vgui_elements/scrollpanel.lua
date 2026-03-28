@@ -150,7 +150,7 @@ function PANEL:AddItem(pnl)
 
     local old = pnl.OnSizeChanged
     pnl.OnSizeChanged = function(...)
-        if old then pcall(old, ...) end
+        if old then old(...) end
         if IsValid(self) then
             self:_markDirty()
             self:InvalidateLayout(true)
@@ -176,7 +176,7 @@ function PANEL:OnChildAdded(child)
 
             local old = child.OnSizeChanged
             child.OnSizeChanged = function(...)
-                if old then pcall(old, ...) end
+                if old then old(...) end
                 if IsValid(self) then
                     self:_markDirty()
                     self:InvalidateLayout(true)

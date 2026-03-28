@@ -1,40 +1,98 @@
-local file, Mat, Fetch, find = file, Material, http.Fetch, string.find
-local errorMat = Mat('error')
-local WebImageCache = {}
+local fileExists = file.Exists
+local fileWrite = file.Write
+local fileCreateDir = file.CreateDir
+local getPathFromFilename = string.GetPathFromFilename
+local find = string.find
+local fetch = http.Fetch
+local getMaterial = Material
+
+local errorMat = getMaterial('error')
+local webImageCache = {}
+local pendingLoads = {}
+
+local function getCacheKey(url, path)
+    return url .. '\0' .. path
+end
+
+local function getCachedMaterial(cacheKey, path)
+    local cached = webImageCache[cacheKey]
+    if cached then
+        return cached
+    end
+
+    if fileExists(path, 'DATA') then
+        local material = getMaterial('data/' .. path, 'noclamp mips')
+        webImageCache[cacheKey] = material
+        return material
+    end
+end
+
+local function flushPending(cacheKey, material)
+    local callbacks = pendingLoads[cacheKey]
+    if !callbacks then return end
+
+    pendingLoads[cacheKey] = nil
+
+    for _, callback in ipairs(callbacks) do
+        callback(material)
+    end
+end
+
+local function ensureDataPath(path)
+    local dir = getPathFromFilename(path)
+    if dir != '' then
+        fileCreateDir(dir)
+    end
+end
 
 --[[
     Функция для скачивания материала по ссылке и его кэшированного использования
 ]]--
-function http.DownloadMaterial(url, path, callback, retry_count)
-    if WebImageCache[url] then
-        return callback(WebImageCache[url])
+function http.DownloadMaterial(url, path, callback, retryCount)
+    local cacheKey = getCacheKey(url, path)
+    local cachedMaterial = getCachedMaterial(cacheKey, path)
+    if cachedMaterial then
+        callback(cachedMaterial)
+        return
     end
 
-    local dataPath = 'data/' .. path
+    if pendingLoads[cacheKey] then
+        pendingLoads[cacheKey][#pendingLoads[cacheKey] + 1] = callback
+        return
+    end
 
-    if file.Exists(path, 'DATA') then
-        WebImageCache[url] = Mat(dataPath, 'noclamp mips')
+    pendingLoads[cacheKey] = {callback}
 
-        callback(WebImageCache[url])
-    else
-        Fetch(url, function(img)
-            if !img or find(img, '<!DOCTYPE HTML>', 1, true) then
-                return callback(errorMat)
+    local attemptsLeft = retryCount or 0
+
+    local function loadMaterial()
+        fetch(url, function(body)
+            if !body or find(body, '<!DOCTYPE HTML>', 1, true) then
+                flushPending(cacheKey, errorMat)
+                return
             end
 
-            file.Write(path, img)
+            ensureDataPath(path)
+            fileWrite(path, body)
 
-            WebImageCache[url] = Mat(dataPath, 'noclamp mips')
+            local material = getMaterial('data/' .. path, 'noclamp mips')
+            if !material or material:IsError() then
+                flushPending(cacheKey, errorMat)
+                return
+            end
 
-            callback(WebImageCache[url])
+            webImageCache[cacheKey] = material
+            flushPending(cacheKey, material)
         end, function()
-            if retry_count and retry_count > 0 then
-                retry_count = retry_count - 1
-
-                http.DownloadMaterial(url, path, callback, retry_count)
-            else
-                callback(errorMat)
+            if attemptsLeft > 0 then
+                attemptsLeft = attemptsLeft - 1
+                loadMaterial()
+                return
             end
+
+            flushPending(cacheKey, errorMat)
         end)
     end
+
+    loadMaterial()
 end

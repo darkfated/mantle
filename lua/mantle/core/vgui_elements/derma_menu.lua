@@ -155,7 +155,7 @@ function PANEL:AddOption(text, func, icon, optData)
         function option:OpenSubMenu()
             if not IsValid(submenu) then return end
             for _, sibling in ipairs(self:GetParent().Items or {}) do
-                if sibling ~= self and sibling.CloseSubMenu then sibling:CloseSubMenu() end
+                if sibling != self and sibling.CloseSubMenu then sibling:CloseSubMenu() end
             end
             local x, y = self:LocalToScreen(self:GetWide(), 0)
             submenu:SetPos(x, y)

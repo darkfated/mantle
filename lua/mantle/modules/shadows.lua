@@ -3,7 +3,7 @@ local math_cos = math.cos
 local math_rad = math.rad
 local math_ceil = math.ceil
 
-local function CreateBShadows()
+local function createShadows()
     BShadows = {}
 
     local resStr = Mantle.func.sw .. Mantle.func.sh
@@ -108,8 +108,8 @@ local function CreateBShadows()
     end
 end
 
-CreateBShadows()
+createShadows()
 
 hook.Add('OnScreenSizeChanged', 'Mantle.Shadows', function()
-    CreateBShadows()
+    createShadows()
 end)

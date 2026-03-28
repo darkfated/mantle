@@ -13,7 +13,7 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
     s:DockPadding(6, 30, 6, 6)
     s.f_title = title
     s.center_title = ''
-    s.background_alpha = true
+    s.background_alpha = false
     s.Paint = function(self, w, h)
         local x, y = self:LocalToScreen()
 
@@ -37,7 +37,7 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
     end
 
     if close_bool then
-        s.cls = vgui.Create('DButton', s)
+        s.cls = vgui.Create('Button', s)
         s.cls:SetSize(20, 20)
         s.cls:SetPos(width - 22, 2)
         s.cls:SetText('')
@@ -116,7 +116,7 @@ function Mantle.ui.btn(s, icon, icon_size, col, rad, off_grad_bool, hov_color, o
 end
 
 function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimals)
-    local slider = vgui.Create('DButton', parent)
+    local slider = vgui.Create('Button', parent)
     slider:Dock(TOP)
     slider:DockMargin(0, 6, 0, 0)
     slider:SetTall(40)
@@ -127,14 +127,14 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
     local smoothPos = 0
     local targetPos = 0
 
-    local function UpdateSliderPosition(new_value)
+    local function updateSliderPosition(new_value)
         local progress = (new_value - min_value) / sections
         targetPos = (slider:GetWide() - 16) * progress
         LocalPlayer():ConCommand(convar .. ' ' .. new_value)
         value = new_value
     end
 
-    UpdateSliderPosition(value)
+    updateSliderPosition(value)
 
     slider.Paint = function(self, w, h)
         draw.RoundedBox(4, 0, h - 16, w, 6, Mantle.color.panel_alpha[1])
@@ -147,15 +147,15 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
         draw.SimpleText(math.Round(value, decimals), 'Fated.18', w - 4, 0, Mantle.color.text, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
     end
 
-    local function UpdateSliderByCursorPos(x)
+    local function updateSliderByCursorPos(x)
         local progress = math.Clamp(x / (slider:GetWide() - 16), 0, 1)
         local new_value = math.Round(min_value + (progress * sections), decimals)
-        UpdateSliderPosition(new_value)
+        updateSliderPosition(new_value)
     end
 
     slider.OnMousePressed = function(_, mcode)
         if mcode == MOUSE_LEFT then
-            UpdateSliderByCursorPos(slider:CursorPos())
+            updateSliderByCursorPos(slider:CursorPos())
             slider:MouseCapture(true)
         end
     end
@@ -168,7 +168,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
 
     slider.OnCursorMoved = function(_, x, _)
         if input.IsMouseDown(MOUSE_LEFT) then
-            UpdateSliderByCursorPos(x)
+            updateSliderByCursorPos(x)
         end
     end
 
@@ -210,7 +210,7 @@ function Mantle.ui.checkbox(parent, text, convar)
         draw.SimpleText(text, 'Fated.18', 8, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
-    local option = vgui.Create('DButton', panel)
+    local option = vgui.Create('Button', panel)
     option:Dock(RIGHT)
     option:SetWide(56)
     option:SetText('')
@@ -257,7 +257,7 @@ function Mantle.ui.panel_tabs(parent)
         panel_tabs.content[title]:Dock(FILL)
         panel_tabs.content[title]:SetVisible(false)
 
-        local btn_tab = vgui.Create('DButton', panel_tabs.sp)
+        local btn_tab = vgui.Create('Button', panel_tabs.sp)
         surface.SetFont('Fated.20')
         btn_tab:SetSize(surface.GetTextSize(title) + 10 + (icon and 18 or 0), 20)
         btn_tab:SetText('')

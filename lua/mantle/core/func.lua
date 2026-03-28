@@ -4,8 +4,8 @@ Mantle.func = {
     ents_scales = {},
 }
 
-local function CreateFonts()
-    local function CreateFont(name, font_name, size)
+local function createFonts()
+    local function createFont(name, font_name, size)
         surface.CreateFont(name, {
             font = font_name,
             size = size,
@@ -17,7 +17,7 @@ local function CreateFonts()
     local createdFonts = {
         ['Fated.16'] = true
     }
-    CreateFont('Fated.16', 'Montserrat Medium', 16)
+    createFont('Fated.16', 'Montserrat Medium', 16)
 
     function surface.SetFont(font)
         if type(font) != 'string' then
@@ -35,7 +35,7 @@ local function CreateFonts()
             if size then
                 size = tonumber(size)
                 local fontFamily = isBold == 'b' and 'Montserrat Bold' or 'Montserrat Medium'
-                CreateFont(font, fontFamily, size)
+                createFont(font, fontFamily, size)
                 createdFonts[font] = true
             end
         end
@@ -48,7 +48,7 @@ local math_sin = math.sin
 local math_clamp = math.Clamp
 local math_abs = math.abs
 
-local function CreateFunc()
+local function createFunc()
     local mat_blur = Material('pp/blurscreen')
 
     --[[
@@ -118,7 +118,7 @@ local function CreateFunc()
         return Mantle.func.h_save[px]
     end
 
-    local function EntText(text, y)
+    local function drawEntText(text, y)
         surface.SetFont('Fated.40')
         local tw, th = surface.GetTextSize(text)
         local bx, by = -tw * 0.5 - 18, y - 12
@@ -197,7 +197,7 @@ local function CreateFunc()
 
         surface.SetAlphaMultiplier(alpha)
         cam.Start3D2D(center + Vector(0, 0, math.abs(max.z / 2) + 12 + bob), Angle(0, rot, 90), camScale)
-            EntText(text, posY)
+            drawEntText(text, posY)
         cam.End3D2D()
         surface.SetAlphaMultiplier(1)
     end
@@ -308,8 +308,8 @@ local function CreateFunc()
     end
 end
 
-CreateFunc()
-CreateFonts()
+createFunc()
+createFonts()
 
 hook.Add('OnScreenSizeChanged', 'Mantle', function()
     local newW, newH = ScrW(), ScrH()
@@ -320,7 +320,7 @@ hook.Add('OnScreenSizeChanged', 'Mantle', function()
         Mantle.func.w_save = {}
         Mantle.func.h_save = {}
 
-        CreateFunc()
-        -- CreateFonts()
+        createFunc()
+        -- createFonts()
     end
 end)

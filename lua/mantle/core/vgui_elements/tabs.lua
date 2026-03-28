@@ -1,5 +1,12 @@
 local PANEL = {}
 
+local color_btn_hovered = Color(255, 255, 255, 10)
+
+local function getTabButton(self, tab_id)
+    local tab = self.tabs[tab_id]
+    return tab and tab._btn or nil
+end
+
 function PANEL:Init()
     self.tabs = {}
     self.active_id = 1
@@ -22,10 +29,7 @@ end
 
 function PANEL:Think()
     if self.tab_style == 'modern' then
-        local activeBtn = nil
-        if self.tabs[self.active_id] then
-            activeBtn = self.tabs[self.active_id]._btn
-        end
+        local activeBtn = getTabButton(self, self.active_id)
         if IsValid(activeBtn) then
             local bx = activeBtn:GetX()
             local bw = activeBtn:GetWide()
@@ -62,11 +66,23 @@ function PANEL:SetIndicatorHeight(height)
     self:Rebuild()
 end
 
-function PANEL:AddTab(name, pan, icon)
+function PANEL:AddTab(data, pan, icon)
+    local title = data
+    local description = ''
+
+    if istable(data) then
+        title = data.title or data.name or ''
+        description = data.description or ''
+        icon = data.icon
+        pan = pan or data.pan or data.panel
+    end
+
     local newId = #self.tabs + 1
 
     self.tabs[newId] = {
-        name = name,
+        name = title,
+        title = title,
+        description = description,
         pan = pan,
         icon = icon
     }
@@ -82,7 +98,52 @@ function PANEL:AddTab(name, pan, icon)
     self:Rebuild()
 end
 
-local color_btn_hovered = Color(255, 255, 255, 10)
+function PANEL:SetActiveTab(tab_id, is_silent)
+    local next_id = tab_id
+
+    if isstring(tab_id) then
+        for id, tab in ipairs(self.tabs) do
+            if tab.title == tab_id or tab.name == tab_id then
+                next_id = id
+                break
+            end
+        end
+    end
+
+    local current = self.tabs[self.active_id]
+    local next_tab = self.tabs[next_id]
+    if !next_tab then return end
+
+    if current and current != next_tab then
+        current.pan:SetVisible(false)
+    end
+
+    next_tab.pan:SetVisible(true)
+    self.active_id = next_id
+
+    if self.tab_style == 'modern' then
+        local btn = next_tab._btn
+        if IsValid(btn) then
+            local bx = btn:GetX()
+            local scroll = self.panel_tabs:GetScroll()
+            self.indicator_target_x = bx - scroll
+            self.indicator_target_w = btn:GetWide()
+
+            local viewW = self.panel_tabs:GetWide()
+            local desiredLeft = bx
+            local desiredRight = bx + btn:GetWide()
+            if desiredLeft - scroll < 0 then
+                self.panel_tabs:SetScroll(desiredLeft)
+            elseif desiredRight - scroll > viewW then
+                self.panel_tabs:SetScroll(desiredRight - viewW)
+            end
+        end
+    end
+
+    if !is_silent then
+        Mantle.func.sound()
+    end
+end
 
 function PANEL:Rebuild()
     if self.tab_style == 'modern' then
@@ -102,7 +163,7 @@ function PANEL:Rebuild()
         tab._btn = btnTab
         if self.tab_style == 'modern' then
             surface.SetFont('Fated.18')
-            local textW = select(1, surface.GetTextSize(tab.name))
+            local textW = select(1, surface.GetTextSize(tab.title))
             local iconW = tab.icon and 16 or 0
             local iconTextGap = tab.icon and 8 or 0
             local padding = 16
@@ -119,48 +180,13 @@ function PANEL:Rebuild()
 
         btnTab:SetText('')
         btnTab.DoClick = function()
-            self.tabs[self.active_id].pan:SetVisible(false)
-            tab.pan:SetVisible(true)
-            self.active_id = id
-
-            if self.tab_style == 'modern' and tab._btn then
-                local bx = tab._btn:GetX()
-                local scroll = self.panel_tabs:GetScroll()
-                self.indicator_target_x = bx - scroll
-                self.indicator_target_w = tab._btn:GetWide()
-                local viewW = self.panel_tabs:GetWide()
-                local desiredLeft = bx
-                local desiredRight = bx + tab._btn:GetWide()
-                if desiredLeft - scroll < 0 then
-                    self.panel_tabs:SetScroll(desiredLeft)
-                elseif desiredRight - scroll > viewW then
-                    self.panel_tabs:SetScroll(desiredRight - viewW)
-                end
-            end
-            Mantle.func.sound()
+            self:SetActiveTab(id)
         end
         btnTab.DoRightClick = function()
             local dm = Mantle.ui.derma_menu()
             for k, t in pairs(self.tabs) do
-                dm:AddOption(t.name, function()
-                    self.tabs[self.active_id].pan:SetVisible(false)
-                    t.pan:SetVisible(true)
-                    self.active_id = k
-                    if self.tab_style == 'modern' then
-                        local bx = t._btn:GetX()
-                        local scroll = self.panel_tabs:GetScroll()
-                        self.indicator_target_x = bx - scroll
-                        self.indicator_target_w = t._btn:GetWide()
-
-                        local viewW = self.panel_tabs:GetWide()
-                        local desiredLeft = bx
-                        local desiredRight = bx + t._btn:GetWide()
-                        if desiredLeft - scroll < 0 then
-                            self.panel_tabs:SetScroll(desiredLeft)
-                        elseif desiredRight - scroll > viewW then
-                            self.panel_tabs:SetScroll(desiredRight - viewW)
-                        end
-                    end
+                dm:AddOption(t.title, function()
+                    self:SetActiveTab(k, true)
                 end, t.icon)
             end
         end
@@ -184,13 +210,13 @@ function PANEL:Rebuild()
                     RNDX.DrawMaterial(0, padding, (h - 16) * 0.5, 16, 16, colorIcon, tab.icon)
                 end
 
-                draw.SimpleText(tab.name, 'Fated.18', textX, h * 0.5, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(tab.title, 'Fated.18', textX, h * 0.5, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             else
                 if s:IsHovered() then
                     RNDX.Draw(24, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS)
                 end
 
-                draw.SimpleText(tab.name, 'Fated.18', 34, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(tab.title, 'Fated.18', 34, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
                 if tab.icon then
                     RNDX.DrawMaterial(0, 9, 9, 16, 16, colorIcon, tab.icon)
@@ -226,10 +252,7 @@ function PANEL:PerformLayout(w, h)
     self.content:Dock(FILL)
 
     if self.tab_style == 'modern' then
-        local activeBtn = nil
-        if self.tabs[self.active_id] then
-            activeBtn = self.tabs[self.active_id]._btn
-        end
+        local activeBtn = getTabButton(self, self.active_id)
 
         if IsValid(activeBtn) then
             local bx, by = activeBtn:GetPos()

@@ -292,7 +292,7 @@ function PANEL:CreateHeader()
     local xPos = self.sidePadding + ((self._lastVBarVis and self.vbarLeftExtra) or 0)
     for i, column in ipairs(self.columns) do
         local w = math_floor(self._colWidthsCurrent[i] or self._colWidthsTarget[i] or column.width)
-        local label = vgui.Create('DButton', self.header)
+        local label = vgui.Create('Button', self.header)
         label:SetText('')
         label:SetSize(w, self.headerHeight)
         label:SetPos(xPos, 0)
@@ -328,7 +328,7 @@ function PANEL:CreateHeader()
 end
 
 function PANEL:CreateRow(rowIndex, rowData)
-    local row = vgui.Create('DButton', self.content)
+    local row = vgui.Create('Button', self.content)
     row:Dock(TOP)
     row:DockMargin(0, 0, 0, 1)
     row:SetTall(self.rowHeight)

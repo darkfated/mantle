@@ -28,6 +28,7 @@ Mantle.color_dark = {
     window_shadow = Color(0, 0, 0, 100), -- тень окна
 
     gray = Color(150, 150, 150, 220),
+    text_muted = Color(150, 150, 150, 180),
     text = Color(255, 255, 255)
 }
 Mantle.color_dark.panel_alpha = { -- прозрачные панели
@@ -40,6 +41,7 @@ Mantle.color_dark.panel_alpha = { -- прозрачные панели
 
 Mantle.color_dark_mono = table.Copy(Mantle.color_dark)
 Mantle.color_dark_mono.theme = Color(121, 121, 121)
+Mantle.color_dark_mono.text_muted = Color(150, 150, 150, 180)
 
 -- Светлая палитра
 Mantle.color_light = {
@@ -72,6 +74,7 @@ Mantle.color_light = {
     window_shadow = Color(0, 0, 0, 50),
 
     gray = Color(130, 130, 130, 220),
+    text_muted = Color(130, 130, 130, 180),
     text = Color(20, 20, 20)
 }
 Mantle.color_light.panel_alpha = {
@@ -111,6 +114,7 @@ Mantle.color_blue = {
     window_shadow = Color(18, 22, 32, 100),
 
     gray = Color(150, 170, 190, 200),
+    text_muted = Color(150, 170, 190, 170),
     text = Color(210, 220, 235)
 }
 Mantle.color_blue.panel_alpha = {
@@ -150,6 +154,7 @@ Mantle.color_red = {
     window_shadow = Color(32, 18, 18, 100),
 
     gray = Color(180, 150, 150, 200),
+    text_muted = Color(180, 150, 150, 170),
     text = Color(235, 210, 210)
 }
 Mantle.color_red.panel_alpha = {
@@ -189,6 +194,7 @@ Mantle.color_green = {
     window_shadow = Color(18, 32, 22, 100),
 
     gray = Color(150, 180, 150, 200),
+    text_muted = Color(150, 180, 150, 170),
     text = Color(210, 235, 210)
 }
 Mantle.color_green.panel_alpha = {
@@ -227,6 +233,7 @@ Mantle.color_orange = {
 
     window_shadow = Color(20, 8, 0, 100),
     gray = Color(180, 161, 150, 200),
+    text_muted = Color(180, 161, 150, 170),
     text = Color(45, 20, 10)
 }
 
@@ -267,6 +274,7 @@ Mantle.color_purple = {
     window_shadow = Color(8, 6, 20, 100),
 
     gray = Color(140, 128, 148, 220),
+    text_muted = Color(140, 128, 148, 180),
     text = Color(245, 240, 255)
 }
 Mantle.color_purple.panel_alpha = {
@@ -307,6 +315,7 @@ Mantle.color_coffee = {
     window_shadow = Color(15, 10, 5, 100),
 
     gray = Color(180, 150, 130, 200),
+    text_muted = Color(180, 150, 130, 170),
     text = Color(235, 225, 210)
 }
 Mantle.color_coffee.panel_alpha = {
@@ -346,6 +355,7 @@ Mantle.color_ice = {
     window_shadow = Color(60, 100, 140, 100),
 
     gray = Color(92, 112, 133, 200),
+    text_muted = Color(92, 112, 133, 170),
     text = Color(20, 35, 50)
 }
 Mantle.color_ice.panel_alpha = {
@@ -385,6 +395,7 @@ Mantle.color_wine = {
     window_shadow = Color(10, 6, 20, 100),
 
     gray = Color(170, 150, 160, 200),
+    text_muted = Color(170, 150, 160, 170),
     text = Color(246, 242, 246)
 }
 Mantle.color_wine.panel_alpha = {
@@ -424,6 +435,7 @@ Mantle.color_violet = {
     window_shadow = Color(8, 6, 20, 100),
 
     gray = Color(147, 147, 184, 200),
+    text_muted = Color(147, 147, 184, 170),
     text = Color(238, 244, 255)
 }
 Mantle.color_violet.panel_alpha = {
@@ -463,6 +475,7 @@ Mantle.color_moss = {
     window_shadow = Color(0, 0, 0, 100),
 
     gray = Color(148, 165, 140, 220),
+    text_muted = Color(148, 165, 140, 180),
     text = Color(232, 244, 235)
 }
 Mantle.color_moss.panel_alpha = {
@@ -502,6 +515,7 @@ Mantle.color_coral = {
     window_shadow = Color(0, 0, 0, 100),
 
     gray = Color(167, 136, 136, 220),
+    text_muted = Color(167, 136, 136, 180),
     text = Color(255, 243, 242)
 }
 Mantle.color_coral.panel_alpha = {

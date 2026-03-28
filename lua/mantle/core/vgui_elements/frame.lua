@@ -150,9 +150,6 @@ function PANEL:Notify(text, duration, col)
     self.messagePanel = mp
 end
 
-local flagsHeader = RNDX.NO_BL + RNDX.NO_BR
-local flagsBackground = RNDX.NO_TL + RNDX.NO_TR
-
 function PANEL:Paint(w, h)
     RNDX().Rect(0, 0, w, h)
         :Rad(6)

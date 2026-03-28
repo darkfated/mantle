@@ -48,10 +48,8 @@ end
 
 local function getTopBottomMargin(pnl)
     if !pnl.GetDockMargin then return 0, 0 end
-    local ok, l, t, r, b = pcall(function()
-        return pnl:GetDockMargin()
-    end)
-    if !ok or !l then return 0, 0 end
+
+    local _, t, _, b = pnl:GetDockMargin()
     return t or 0, b or 0
 end
 
@@ -70,7 +68,7 @@ function PANEL:AddItem(panel)
 
     local old = panel.OnSizeChanged
     panel.OnSizeChanged = function(...)
-        if old then pcall(old, ...) end
+        if old then old(...) end
         if !IsValid(self) then return end
 
         local nt, nb = getTopBottomMargin(panel)

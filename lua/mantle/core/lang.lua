@@ -1,17 +1,19 @@
 function Mantle.lang.get(addon, key)
-    if !Mantle.lang.list[addon] then
+    local addonTable = Mantle.lang.list[addon]
+    if !addonTable then
         print('Mantle.lang.get: addon "' .. addon .. '" not found!')
+        return key
     end
 
     local lang = GetConVar('gmod_language'):GetString()
-    local langTable = Mantle.lang.list[addon][lang]
+    local langTable = addonTable[lang]
 
-    if !Mantle.lang.list[addon][lang] then
-        langTable = Mantle.lang.list[addon][Mantle.lang.default]
+    if !addonTable[lang] then
+        langTable = addonTable[Mantle.lang.default]
     end
 
     if !langTable then
-        for _, v in pairs(Mantle.lang.list[addon]) do
+        for _, v in pairs(addonTable) do
             langTable = v
             break
         end
