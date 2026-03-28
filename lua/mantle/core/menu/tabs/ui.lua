@@ -6,6 +6,9 @@ local function createUITab()
     local panel = menu.createTabPanel('UI Элементы', 'Демонстрация всех компонентов Mantle. Клик по элементу открывает пример.', icon)
     local menuWide = menu.getMenuWide()
 
+    --[[
+        Кнопка
+    ]]--
     local panelBtns = vgui.Create('Panel')
     panelBtns:Dock(TOP)
     panelBtns:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
@@ -44,6 +47,9 @@ local function createUITab()
         {':SetRipple(bool is_ripple)', 'Включить/выключить эффект волн (дефолт - false)'}
     }, panel, panelBtns)
 
+    --[[
+        Ввод текста
+    ]]--
     local checkbox = vgui.Create('MantleCheckBox')
     checkbox:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
     checkbox:Dock(TOP)
@@ -69,6 +75,9 @@ local function createUITab()
         {':SetValue(string value)', 'Установить значение полю'}
     }, panel, entry)
 
+    --[[
+        Окно
+    ]]--
     local panelFrames = vgui.Create('Panel')
     panelFrames:Dock(TOP)
     panelFrames:SetTall(92)
@@ -111,6 +120,9 @@ local function createUITab()
         {':Notify(string text, number duration, color col)', 'Показать уведомление внизу окна (дефолт времени - 2 сек., цвета - Mantle.color.theme)'}
     }, panel, panelFrames)
 
+    --[[
+        Панель прокрутки
+    ]]--
     local sp = vgui.Create('MantleScrollPanel')
     sp:Dock(TOP)
     sp:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
@@ -139,6 +151,9 @@ local function createUITab()
         {':SetVBarPaddingRight(bool enabled)', 'Переключает дополнительный отступ под скроллбар'}
     }, panel, sp)
 
+    --[[
+        Вкладки
+    ]]--
     local panelTabs = vgui.Create('Panel')
     panelTabs:Dock(TOP)
     panelTabs:SetTall(280)
@@ -207,6 +222,9 @@ local function createUITab()
         {':SetActiveTab(number|string tab_id)', 'Активировать вкладку по индексу или названию'}
     }, panel, panelTabs)
 
+    --[[
+        Горизонтальная прокрутка
+    ]]--
     local hscroll = vgui.Create('MantleHScroll')
     hscroll:Dock(TOP)
     hscroll:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
@@ -255,6 +273,9 @@ local function createUITab()
         {':OnSelect(idx, text, data)', 'Вызывается при выборе варианта: idx - индекс, text - текст, data - значение'}
     }, panel, combo)
 
+    --[[
+        Таблица
+    ]]--
     local tableExample = vgui.Create('MantleTable')
     tableExample:Dock(TOP)
     tableExample:DockMargin(menuWide * 0.2, 6, menuWide * 0.2, 0)
@@ -308,6 +329,9 @@ local function createUITab()
         {':RemoveRow(number index)', 'Удалить строку по индексу (начиная с 1)'}
     }, panel, tableExample)
 
+    --[[
+        Категория
+    ]]--
     local panelCat = vgui.Create('Panel')
     panelCat:Dock(TOP)
     panelCat:DockMargin(0, 6, 0, 0)
@@ -349,6 +373,9 @@ local function createUITab()
         {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'}
     }, panel, panelCat)
 
+    --[[
+        Слайдер
+    ]]--
     local slider = vgui.Create('MantleSlideBox')
     slider:Dock(TOP)
     slider:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
@@ -364,6 +391,9 @@ local function createUITab()
         {':OnValueChanged(string new_value)', 'Вызывается при изменении значения слайдера'}
     }, panel, slider)
 
+    --[[
+        Текст
+    ]]--
     local panelTexts = vgui.Create('Panel')
     panelTexts:Dock(TOP)
     panelTexts:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)

@@ -12,16 +12,25 @@ local function createLegacyTab()
     btnFrame:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
     btnFrame:Dock(TOP)
     btnFrame.DoClick = function()
+        --[[
+            Окно
+        ]]--
         local frame = vgui.Create('DFrame')
         frame:SetSize(400, 300)
         frame:Center()
         frame:MakePopup()
         Mantle.ui.frame(frame, 'Legacy Frame', 400, 300, true, true)
 
+        --[[
+            Панель прокрутки
+        ]]--
         local scroll = vgui.Create('DScrollPanel', frame)
         scroll:Dock(FILL)
         Mantle.ui.sp(scroll)
 
+        --[[
+            Кнопка
+        ]]--
         local btn1 = vgui.Create('DButton', scroll)
         btn1:Dock(TOP)
         btn1:DockMargin(10, 10, 10, 0)
@@ -46,24 +55,36 @@ local function createLegacyTab()
         btn4:SetText('Кнопка без ховера')
         Mantle.ui.btn(btn4, nil, nil, nil, nil, nil, nil, true)
 
+        --[[
+            Слайдер
+        ]]--
         local slider1 = Mantle.ui.slidebox(scroll, 'Слайдер (0-100)', 0, 100, 'net_graph', 0)
         slider1:DockMargin(10, 20, 10, 0)
 
         local slider2 = Mantle.ui.slidebox(scroll, 'Слайдер (0-1)', 0, 1, 'cl_drawhud', 2)
         slider2:DockMargin(10, 20, 10, 0)
 
+        --[[
+            Поле ввода
+        ]]--
         local entry1, entry_bg1 = Mantle.ui.desc_entry(scroll, 'Поле с заголовком', 'Введите текст...')
         entry_bg1:DockMargin(10, 20, 10, 0)
 
         local entry2, entry_bg2 = Mantle.ui.desc_entry(scroll, nil, 'Поле без заголовка')
         entry_bg2:DockMargin(10, 20, 10, 0)
 
+        --[[
+            Тумблер
+        ]]--
         local checkbox1, checkbox_btn1 = Mantle.ui.checkbox(scroll, 'Чекбокс с ConVar', 'cl_drawhud')
         checkbox1:DockMargin(10, 20, 10, 0)
 
         local checkbox2, checkbox_btn2 = Mantle.ui.checkbox(scroll, 'Чекбокс без ConVar')
         checkbox2:DockMargin(10, 20, 10, 0)
 
+        --[[
+            Вкладки
+        ]]--
         local panelTabs = vgui.Create('DPanel', scroll)
         panelTabs:Dock(TOP)
         panelTabs:SetTall(250)
