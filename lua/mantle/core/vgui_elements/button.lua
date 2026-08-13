@@ -1,10 +1,12 @@
 local PANEL = {}
 
+local math_clamp = math.Clamp
+local math_max = math.max
+local math_floor = math.floor
+
 function PANEL:Init()
-    self._activeShadowTimer = 0
-    self._activeShadowMinTime = 0.03 -- минимальная длительность (сек)
-    self._activeShadowLerp = 0
     self.hover_status = 0
+    self.press_status = 0
     self.bool_hover = true
     self.font = 'Fated.18'
     self.radius = 16
@@ -14,12 +16,13 @@ function PANEL:Init()
     self.col = Mantle.color.button
     self.col_hov = Mantle.color.button_hovered
     self.bool_gradient = true
-    self.click_alpha = 0
-    self.click_x = 0
-    self.click_y = 0
-    self.ripple_speed = 4
     self.enable_ripple = false
     self.ripple_color = Color(255, 255, 255, 30)
+    self.ripple_alpha = 0
+    self.ripple_x = 0
+    self.ripple_y = 0
+    self.ripple_speed = 4
+    self._activeShadowLerp = 0
 
     self:SetText('')
 end
@@ -38,7 +41,7 @@ end
 
 function PANEL:SetIcon(icon, icon_size)
     self.icon = type(icon) == 'IMaterial' and icon or Material(icon)
-    self.icon_size = icon_size
+    self.icon_size = icon_size or self.icon_size
 end
 
 function PANEL:SetTxt(text)
@@ -65,38 +68,52 @@ function PANEL:OnMousePressed(mousecode)
     self.BaseClass.OnMousePressed(self, mousecode)
 
     if self.enable_ripple and mousecode == MOUSE_LEFT then
-        self.click_alpha = 1
-        self.click_x, self.click_y = self:CursorPos()
+        self.ripple_alpha = 1
+        self.ripple_x, self.ripple_y = self:CursorPos()
     end
 end
 
-local math_clamp = math.Clamp
+function PANEL:_drawContent(w, h)
+    local hasIcon = self.icon != ''
+    local hasText = self.text != ''
+
+    if hasText then
+        surface.SetFont(self.font)
+        local tw = select(1, surface.GetTextSize(self.text))
+        local total = tw + (hasIcon and (self.icon_size + 6) or 0)
+        local startX = (w - total) * 0.5
+        local cy = h * 0.5
+
+        if hasIcon then
+            RNDX.Rect(startX, cy - self.icon_size * 0.5, self.icon_size, self.icon_size)
+                :Material(self.icon)
+                :Color(color_white)
+            :Draw()
+            startX = startX + self.icon_size + 6
+        end
+
+        draw.SimpleText(self.text, self.font, startX + tw * 0.5, cy, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    elseif hasIcon then
+        RNDX.Rect((w - self.icon_size) * 0.5, (h - self.icon_size) * 0.5, self.icon_size, self.icon_size)
+            :Material(self.icon)
+            :Color(color_white)
+        :Draw()
+    end
+end
 
 function PANEL:Paint(w, h)
-    if self:IsHovered() then
-        self.hover_status = math_clamp(self.hover_status + 4 * FrameTime(), 0, 1)
-    else
-        self.hover_status = math_clamp(self.hover_status - 8 * FrameTime(), 0, 1)
-    end
+    local ft = FrameTime()
+    local hovered = self.bool_hover and self:IsHovered()
+    local pressed = self:IsDown()
 
-    -- Минимальный порог длительности для активной тени
-    local isActive = (self:IsDown() or self.Depressed) and self.hover_status > 0.8
-    if isActive then
-        self._activeShadowTimer = SysTime() + self._activeShadowMinTime
-    end
-    local showActiveShadow = isActive or (self._activeShadowTimer > SysTime())
+    self.hover_status = Mantle.func.approachExp(self.hover_status, hovered and 1 or 0, 14, ft)
+    self._activeShadowLerp = Mantle.func.approachExp(self._activeShadowLerp, pressed and 1 or 0, 9, ft)
 
-    -- Плавная анимация дополнительной тени при зажатии
-    local activeTarget = showActiveShadow and 10 or 0
-    local activeSpeed = (activeTarget > 0) and 7 or 3 -- скорость появления/затухания
-    self._activeShadowLerp = Lerp(FrameTime() * activeSpeed, self._activeShadowLerp, activeTarget)
-
-    if self._activeShadowLerp > 0 and Mantle.ui.convar.depth_ui then
-        local col = Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math.Clamp(self.col_hov.a * 1.5, 0, 255))
+    if self._activeShadowLerp > 0.01 and Mantle.ui.convar.depth_ui then
         RNDX.Rect(0, 0, w, h)
             :Rad(self.radius)
-            :Color(col)
-            :Shadow(24, self._activeShadowLerp * 1.5)
+            :Color(self.col_hov)
+            :Shadow(4, self._activeShadowLerp * 2)
         :Draw()
     end
 
@@ -109,57 +126,24 @@ function PANEL:Paint(w, h)
         Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow, self.radius)
     end
 
-    if self.bool_hover then
+    if self.hover_status > 0.01 then
         RNDX.Rect(0, 0, w, h)
             :Rad(self.radius)
-            :Color(Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255))
+            :Color(Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math_floor(self.col_hov.a * self.hover_status)))
         :Draw()
     end
 
-    if self.click_alpha > 0 then
-        self.click_alpha = math_clamp(self.click_alpha - FrameTime() * self.ripple_speed, 0, 1)
+    if self.enable_ripple and self.ripple_alpha > 0.01 then
+        self.ripple_alpha = math_clamp(self.ripple_alpha - ft * self.ripple_speed, 0, 1)
 
-        local ripple_size = (1 - self.click_alpha) * math.max(w, h) * 2
-        local ripple_color = Color(
-            self.ripple_color.r,
-            self.ripple_color.g,
-            self.ripple_color.b,
-            self.ripple_color.a * self.click_alpha
-        )
-
-        RNDX.Rect(self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size)
+        local size = (1 - self.ripple_alpha) * math_max(w, h) * 2
+        RNDX.Rect(self.ripple_x - size * 0.5, self.ripple_y - size * 0.5, size, size)
             :Rad(100)
-            :Color(ripple_color)
+            :Color(Color(self.ripple_color.r, self.ripple_color.g, self.ripple_color.b, math_floor(self.ripple_color.a * self.ripple_alpha)))
         :Draw()
     end
 
-    if self.text != '' then
-        draw.SimpleText(
-            self.text,
-            self.font,
-            w * 0.5 + (self.icon != '' and self.icon_size * 0.5 + 2 or 0),
-            h * 0.5,
-            Mantle.color.text,
-            TEXT_ALIGN_CENTER,
-            TEXT_ALIGN_CENTER
-        )
-        if self.icon != '' then
-            surface.SetFont(self.font)
-            local posX = (w - surface.GetTextSize(self.text) - self.icon_size) * 0.5 - 2
-            local posY = (h - self.icon_size) * 0.5
-            RNDX.Rect(posX, posY, self.icon_size, self.icon_size)
-                :Material(self.icon)
-                :Color(color_white)
-            :Draw()
-        end
-    elseif self.icon != '' then
-        local posX = (w - self.icon_size) * 0.5
-        local posY = (h - self.icon_size) * 0.5
-        RNDX.Rect(posX, posY, self.icon_size, self.icon_size)
-            :Material(self.icon)
-            :Color(color_white)
-        :Draw()
-    end
+    self:_drawContent(w, h)
 end
 
 vgui.Register('MantleBtn', PANEL, 'Button')
