@@ -9,6 +9,7 @@ function Mantle.ui.color_picker(callback, defaultColor)
     local hue = 0
     local saturation = 1
     local value = 1
+    local rgbEntries = {}
 
     if defaultColor then
         local r, g, b = defaultColor.r / 255, defaultColor.g / 255, defaultColor.b / 255
@@ -18,40 +19,33 @@ function Mantle.ui.color_picker(callback, defaultColor)
         value = v
     end
 
-    Mantle.ui.menu_color_picker = vgui.Create('MantleFrame')
-    Mantle.ui.menu_color_picker:SetSize(300, 370)
-    Mantle.ui.menu_color_picker:Center()
-    Mantle.ui.menu_color_picker:MakePopup()
-    Mantle.ui.menu_color_picker:SetTitle('')
-    Mantle.ui.menu_color_picker:SetCenterTitle(Mantle.lang.get('mantle', 'color_title'))
-    Mantle.ui.menu_color_picker:DockPadding(12, 36, 12, 12)
+    local frame = vgui.Create('MantleFrame')
+    Mantle.ui.menu_color_picker = frame
+    frame:SetSize(320, 400)
+    frame:Center()
+    frame:MakePopup()
+    frame:SetTitle('')
+    frame:SetCenterTitle(Mantle.lang.get('mantle', 'color_title'))
+    frame:ShowAnimation()
+    frame:DockPadding(12, 36, 12, 12)
 
-    local preview = vgui.Create('Panel', Mantle.ui.menu_color_picker)
+    local preview = vgui.Create('Panel', frame)
     preview:Dock(TOP)
     preview:SetTall(40)
-    preview:DockMargin(0, 0, 0, 10)
+    preview:DockMargin(0, 0, 0, 8)
     preview.Paint = function(_, w, h)
         RNDX.Rect(0, 0, w, h)
             :Rad(16)
             :Color(selectedColor)
         :Draw()
-
-        RNDX.Rect(0, 0, w, h)
-            :Rad(16)
-            :Color(Mantle.color.window_shadow)
-            :Outline(1)
-        :Draw()
     end
 
-    local colorField = vgui.Create('Panel', Mantle.ui.menu_color_picker)
+    local colorField = vgui.Create('Panel', frame)
     colorField:Dock(TOP)
-    colorField:SetTall(200)
-    colorField:DockMargin(0, 0, 0, 10)
+    colorField:SetTall(190)
+    colorField:DockMargin(0, 0, 0, 8)
 
-    local colorCursor = {
-        x = 0,
-        y = 0
-    }
+    local colorCursor = { x = 0, y = 0 }
     local isDraggingColor = false
 
     colorField.OnMousePressed = function(self, keyCode)
@@ -81,11 +75,23 @@ function Mantle.ui.color_picker(callback, defaultColor)
             value = 1 - (y / h)
 
             selectedColor = HSVToColor(hue, saturation, value)
+
+            for _, ch in ipairs({ 'R', 'G', 'B' }) do
+                if IsValid(rgbEntries[ch]) then
+                    rgbEntries[ch]:SetValue(tostring(ch == 'R' and selectedColor.r or ch == 'G' and selectedColor.g or selectedColor.b))
+                end
+            end
         end
     end
 
     colorField.Paint = function(self, w, h)
-        local segments = 80
+        RNDX.Rect(0, 0, w, h)
+            :Rad(16)
+            :Color(Mantle.color.window_shadow)
+            :Shadow(4, 2)
+        :Draw()
+
+        local segments = 60
         local segmentSize = w / segments
 
         for x = 0, segments do
@@ -101,8 +107,14 @@ function Mantle.ui.color_picker(callback, defaultColor)
         end
 
         RNDX.Rect(0, 0, w, h)
+            :Rad(16)
             :Color(Mantle.color.window_shadow)
             :Outline(1)
+        :Draw()
+
+        RNDX.Circle(colorCursor.x, colorCursor.y, 6)
+            :Color(Mantle.color.window_shadow)
+            :Shadow(2, 1)
         :Draw()
 
         RNDX.Circle(colorCursor.x, colorCursor.y, 6)
@@ -111,10 +123,10 @@ function Mantle.ui.color_picker(callback, defaultColor)
         :Draw()
     end
 
-    local hueSlider = vgui.Create('Panel', Mantle.ui.menu_color_picker)
+    local hueSlider = vgui.Create('Panel', frame)
     hueSlider:Dock(TOP)
-    hueSlider:SetTall(20)
-    hueSlider:DockMargin(0, 0, 0, 10)
+    hueSlider:SetTall(22)
+    hueSlider:DockMargin(0, 0, 0, 8)
 
     local huePos = 0
     local isDraggingHue = false
@@ -142,18 +154,24 @@ function Mantle.ui.color_picker(callback, defaultColor)
             hue = (x / w) * 360
 
             selectedColor = HSVToColor(hue, saturation, value)
+
+            for _, ch in ipairs({ 'R', 'G', 'B' }) do
+                if IsValid(rgbEntries[ch]) then
+                    rgbEntries[ch]:SetValue(tostring(ch == 'R' and selectedColor.r or ch == 'G' and selectedColor.g or selectedColor.b))
+                end
+            end
         end
     end
 
     hueSlider.Paint = function(self, w, h)
-        local segments = 100
-        local segmentWidth = w / segments
-
         RNDX.Rect(0, 0, w, h)
             :Rad(12)
             :Color(Mantle.color.window_shadow)
             :Shadow(4, 2)
         :Draw()
+
+        local segments = 60
+        local segmentWidth = w / segments
 
         for i = 0, segments - 1 do
             local hueVal = (i / segments) * 360
@@ -168,25 +186,72 @@ function Mantle.ui.color_picker(callback, defaultColor)
         :Draw()
     end
 
-    local btnContainer = vgui.Create('Panel', Mantle.ui.menu_color_picker)
+    local rgbContainer = vgui.Create('Panel', frame)
+    rgbContainer:Dock(TOP)
+    rgbContainer:SetTall(32)
+    rgbContainer:DockMargin(0, 0, 0, 8)
+
+    for _, ch in ipairs({ 'R', 'G', 'B' }) do
+        local slot = vgui.Create('Panel', rgbContainer)
+        slot:Dock(LEFT)
+        slot:DockMargin(0, 0, 8, 0)
+        slot:SetWide((frame:GetWide() - 40) / 3)
+
+        local entry = vgui.Create('MantleEntry', slot)
+        entry:Dock(FILL)
+        entry:SetPlaceholder(ch)
+        entry:SetValue(tostring(ch == 'R' and selectedColor.r or ch == 'G' and selectedColor.g or selectedColor.b))
+        entry.textEntry:SetNumeric(true)
+        entry.textEntry.OnTextChanged = function(s)
+            local v = tonumber(s:GetText())
+            if v then
+                v = math.Clamp(math.Round(v), 0, 255)
+                if ch == 'R' then
+                    selectedColor.r = v
+                elseif ch == 'G' then
+                    selectedColor.g = v
+                else
+                    selectedColor.b = v
+                end
+                local r, g, b = selectedColor.r / 255, selectedColor.g / 255, selectedColor.b / 255
+                local h2, s2, v2 = ColorToHSV(Color(r * 255, g * 255, b * 255))
+                hue = h2
+                saturation = s2
+                value = v2
+                timer.Simple(0, function()
+                    if IsValid(colorField) and IsValid(hueSlider) then
+                        colorCursor.x = saturation * colorField:GetWide()
+                        colorCursor.y = (1 - value) * colorField:GetTall()
+                        huePos = (hue / 360) * hueSlider:GetWide()
+                    end
+                end)
+            end
+        end
+
+        rgbEntries[ch] = entry
+    end
+
+    local btnContainer = vgui.Create('Panel', frame)
     btnContainer:Dock(BOTTOM)
-    btnContainer:SetTall(30)
+    btnContainer:SetTall(32)
 
     local btnClose = vgui.Create('MantleBtn', btnContainer)
     btnClose:Dock(LEFT)
-    btnClose:SetWide(90)
+    btnClose:SetWide(92)
+    btnClose:SetRadius(10)
     btnClose:SetTxt(Mantle.lang.get('mantle', 'color_cancel'))
     btnClose.DoClick = function()
-        Mantle.ui.menu_color_picker:Remove()
+        frame:Close()
         Mantle.func.sound()
     end
 
     local btnSelect = vgui.Create('MantleBtn', btnContainer)
     btnSelect:Dock(RIGHT)
-    btnSelect:SetWide(90)
+    btnSelect:SetWide(92)
+    btnSelect:SetRadius(10)
     btnSelect:SetTxt(Mantle.lang.get('mantle', 'color_select'))
     btnSelect.DoClick = function()
-        Mantle.ui.menu_color_picker:Remove()
+        frame:Close()
         Mantle.func.sound()
 
         callback(selectedColor)
@@ -198,9 +263,5 @@ function Mantle.ui.color_picker(callback, defaultColor)
             colorCursor.y = (1 - value) * colorField:GetTall()
             huePos = (hue / 360) * hueSlider:GetWide()
         end
-    end)
-
-    timer.Simple(0.1, function()
-        Mantle.ui.menu_color_picker:SetAlpha(255)
     end)
 end

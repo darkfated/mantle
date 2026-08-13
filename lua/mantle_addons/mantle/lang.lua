@@ -11,6 +11,8 @@ tabl['en'] = {
     player_offline = 'Disconnected',
     player_close = 'Close',
     player_ping = 'ms',
+    player_search = 'Search players...',
+    player_count = 'Players',
 
     frame_title = 'Title',
     frame_alpha = 'Transparency',
@@ -37,6 +39,8 @@ tabl['ru'] = {
     player_offline = 'Вышел',
     player_close = 'Закрыть',
     player_ping = 'мс',
+    player_search = 'Поиск игроков...',
+    player_count = 'Игроков',
 
     frame_title = 'Заголовок',
     frame_alpha = 'Прозрачность',

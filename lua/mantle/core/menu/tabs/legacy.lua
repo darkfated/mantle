@@ -58,7 +58,7 @@ local function createLegacyTab()
         --[[
             Слайдер
         ]]--
-        local slider1 = Mantle.ui.slidebox(scroll, 'Слайдер (0-100)', 0, 100, 'net_graph', 0)
+        local slider1 = Mantle.ui.slidebox(scroll, 'Слайдер (0-5)', 0, 5, 'r_skybox', 0)
         slider1:DockMargin(10, 20, 10, 0)
 
         local slider2 = Mantle.ui.slidebox(scroll, 'Слайдер (0-1)', 0, 1, 'cl_drawhud', 2)
