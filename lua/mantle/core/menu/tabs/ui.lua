@@ -3,7 +3,7 @@ local menu = Mantle.menu
 local icon = Material('icon16/chart_pie.png')
 
 local function createUITab()
-    local panel = menu.createTabPanel('UI Элементы', 'Демонстрация всех компонентов Mantle. Клик по элементу открывает пример.', icon)
+    local panel = menu.createTabPanel('UI Элементы', 'Демонстрация всех графических компонентов.', icon)
     local menuWide = menu.getMenuWide()
 
     --[[
@@ -36,15 +36,15 @@ local function createUITab()
     btn3:SetIcon(Material('icon16/delete.png'), 16)
 
     menu.createCategory('Кнопка (MantleBtn)', {
-        {':SetHover(bool is_hover)', 'Включить/выключить цвет наведения (дефолт - true)'},
+        {':SetHover(bool is_hover)', 'Включить/выключить цвет наведения (стандарт - true)'},
         {':SetFont(string font)', 'Установить шрифт'},
         {':SetRadius(int rad)', 'Установить размер закругления'},
         {':SetIcon(string icon, int icon_size)', 'Установить иконку'},
         {':SetTxt(string text)', 'Установить текст'},
         {':SetColor(color col)', 'Установить цвет кнопки'},
         {':SetColorHover(color col)', 'Установить цвет наведения'},
-        {':SetGradient(bool is_grad)', 'Включить/выключить градиент (дефолт - true)'},
-        {':SetRipple(bool is_ripple)', 'Включить/выключить эффект волн (дефолт - false)'}
+        {':SetGradient(bool is_grad)', 'Включить/выключить градиент (стандарт - true)'},
+        {':SetRipple(bool is_ripple)', 'Включить/выключить эффект волн (стандарт - false)'}
     }, panel, panelBtns)
 
     --[[
@@ -109,7 +109,7 @@ local function createUITab()
     end
 
     menu.createCategory('Окно (MantleFrame)', {
-        {':SetAlphaBackground(bool is_alpha)', 'Включить/выключить прозрачность окна (дефолт - false)'},
+        {':SetAlphaBackground(bool is_alpha)', 'Включить/выключить прозрачность окна (стандарт - false)'},
         {':SetTitle(string title)', 'Установить заголовок'},
         {':SetCenterTitle(string title)', 'Установить центральный заголовок'},
         {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
@@ -117,7 +117,7 @@ local function createUITab()
         {':DisableCloseBtn()', 'Скрыть кнопку закрытия'},
         {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'},
         {':LiteMode()', 'Активировать режим Lite (без верхней панели)'},
-        {':Notify(string text, number duration, color col)', 'Показать уведомление внизу окна (дефолт времени - 2 сек., цвета - Mantle.color.theme)'}
+        {':Notify(string text, number duration, color col)', 'Показать уведомление внизу окна (стандарт времени - 2 сек., цвета - Mantle.color.theme)'}
     }, panel, panelFrames)
 
     --[[
@@ -362,7 +362,7 @@ local function createUITab()
         {':AddItem(object panel)', 'Добавить в категорию элемент'},
         {':SetColor(color col)', 'Установить кастомный цвет категории'},
         {':SetCenterText(bool is_centered)', 'Установить центрирование названия'},
-        {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'},
+        {':SetActive(bool is_active)', 'Установить активность категории (стандарт - false)'},
         {':IsActive()', 'Получить текущее состояние категории (открыта/закрыта)'},
         {':Clear()', 'Очистить категорию от всех элементов и закрыть её'}
     }, panel, panelCat)
@@ -377,7 +377,7 @@ local function createUITab()
     slider:SetConvar('r_skybox')
     slider:SetText('Отключение неба')
     menu.createCategory('Слайдер (MantleSlideBox)', {
-        {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
+        {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (стандарт точность - 0)'},
         {':SetConvar(string convar)', 'Установить ConVar'},
         {':SetText(string text)', 'Установить текстовое обозначение'},
         {':SetValue(string val)', 'Установить значение'},
@@ -487,7 +487,7 @@ end
 menu.registerTab('ui', {
     order = 1,
     title = 'UI Элементы',
-    description = 'Демонстрация компонентов и элементов библиотеки Mantle',
+    description = 'Демонстрация всех графических компонентов.',
     icon = icon,
     create = createUITab
 })

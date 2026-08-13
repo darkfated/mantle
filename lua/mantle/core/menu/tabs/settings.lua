@@ -3,12 +3,12 @@ local menu = Mantle.menu
 local icon = Material('icon16/cog.png')
 
 local function createSettingsTab()
-    local panel = menu.createTabPanel('Настройки', 'Глобальные настройки Mantle: темы, эффекты и глубины элементов.', icon)
+    local panel = menu.createTabPanel('Настройки', 'Конфигурационные настройки библиотеки.', icon)
     local forcedTheme = Mantle.ui.getForcedThemeName()
 
     local checkboxDepth = vgui.Create('MantleCheckBox', panel)
     checkboxDepth:Dock(TOP)
-    checkboxDepth:SetTxt('Глубины элементов')
+    checkboxDepth:SetTxt('Выделение элементов (Тени)')
     checkboxDepth:SetConvar('mantle_depth_ui')
 
     local checkboxBlur = vgui.Create('MantleCheckBox', panel)
@@ -24,18 +24,13 @@ local function createSettingsTab()
     categoryTheme:SetActive(true)
 
     menu.createInfo({
-        'lua/mantle/config/theme.lua',
-        'forced фиксирует одну тему для всех, enabled включает и выключает темы из пользовательского выбора.'
+        'Файл config/theme.lua',
+        'forced = "тема" - включить одну тему для всех, enabled = { "red" = true } - какие темы разрешены.'
     }, categoryTheme)
 
     menu.createInfo({
-        "forced = '' / forced = 'red'",
-        'Пустая строка оставляет выбор игроку. Конкретный id темы принудительно включает только её для всех.'
-    }, categoryTheme)
-
-    menu.createInfo({
-        'enabled = { red = false, blue = true, ... }',
-        'Позволяет скрыть отдельные темы из выбора. Если доступных тем не останется, библиотека откатится на fallback-палитру.'
+        'Файл config/colors.lua',
+        'Здесь можно создать или отредактировать готовые пресеты.'
     }, categoryTheme)
 
     local comboboxTheme = vgui.Create('MantleComboBox')
@@ -58,8 +53,8 @@ local function createSettingsTab()
         categoryTheme:AddItem(comboboxTheme)
     else
         menu.createInfo({
-            'Mantle.config.theme.forced = "' .. forcedTheme .. '"',
-            'Тема зафиксирована в config/theme.lua. Игрок не может переключить её на другую.'
+            'Серверная тема - "' .. forcedTheme .. '"',
+            'Владелец сервера поставил её для всех, сменить на другую не предоставляеться возможности.'
         }, categoryTheme)
     end
 
@@ -91,7 +86,7 @@ end
 menu.registerTab('settings', {
     order = 5,
     title = 'Настройки',
-    description = 'Глобальные настройки Mantle и цветовые темы',
+    description = 'Конфигурационные настройки библиотеки.',
     icon = icon,
     create = createSettingsTab
 })

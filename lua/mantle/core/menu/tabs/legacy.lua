@@ -3,11 +3,11 @@ local menu = Mantle.menu
 local icon = Material('icon16/exclamation.png')
 
 local function createLegacyTab()
-    local panel = menu.createTabPanel('Legacy UI', 'Набор legacy-утилит (Mantle.ui.*). Для совместимости и примеров.', icon)
+    local panel = menu.createTabPanel('Legacy UI', 'Старые функции для поддержания древних скриптов.', icon)
     local menuWide = menu.getMenuWide()
 
     local btnFrame = vgui.Create('MantleBtn')
-    btnFrame:SetTxt('Открыть Legacy Frame')
+    btnFrame:SetTxt('Посмотреть пример')
     btnFrame:SetTall(40)
     btnFrame:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
     btnFrame:Dock(TOP)
@@ -19,7 +19,7 @@ local function createLegacyTab()
         frame:SetSize(400, 300)
         frame:Center()
         frame:MakePopup()
-        Mantle.ui.frame(frame, 'Legacy Frame', 400, 300, true, true)
+        Mantle.ui.frame(frame, 'Окно', 400, 300, true, true)
 
         --[[
             Панель прокрутки
@@ -76,10 +76,10 @@ local function createLegacyTab()
         --[[
             Тумблер
         ]]--
-        local checkbox1, checkbox_btn1 = Mantle.ui.checkbox(scroll, 'Чекбокс с ConVar', 'cl_drawhud')
+        local checkbox1, checkbox_btn1 = Mantle.ui.checkbox(scroll, 'Тумблер с ConVar', 'cl_drawhud')
         checkbox1:DockMargin(10, 20, 10, 0)
 
-        local checkbox2, checkbox_btn2 = Mantle.ui.checkbox(scroll, 'Чекбокс без ConVar')
+        local checkbox2, checkbox_btn2 = Mantle.ui.checkbox(scroll, 'Тумблер без ConVar')
         checkbox2:DockMargin(10, 20, 10, 0)
 
         --[[
@@ -114,14 +114,14 @@ local function createLegacyTab()
         tabs:ActiveTab('Вкладка 1')
     end
 
-    menu.createCategory('Legacy Frame (не стоит использовать)', {
-        {'Mantle.ui.frame(object frame, string title, int w, int h, bool cls_btn, bool open_anim)', 'Оформление стандартное окна стилем Mantle'},
-        {'Mantle.ui.sp(object scroll)', 'Оформление панели прокрутки элементов'},
-        {'Mantle.ui.btn(object btn, mat icon, int icon_size, color col, int rad, bool off_grad, color hov, bool off_hov)', 'Оформление кнопки'},
-        {'Mantle.ui.slidebox(object parent, string label, int min_value, int max_value, string convar, int decimals)', 'Создание слайдера на родительном элементе'},
+    menu.createCategory('Элементы', {
+        {'Mantle.ui.frame(object frame, string title, int w, int h, bool cls_btn, bool open_anim)', 'Оформление для DFrame'},
+        {'Mantle.ui.sp(object scroll)', 'Оформление для DScrollPanel'},
+        {'Mantle.ui.btn(object btn, mat icon, int icon_size, color col, int rad, bool off_grad, color hov, bool off_hov)', 'Оформление для DButton'},
+        {'Mantle.ui.slidebox(object parent, string label, int min_value, int max_value, string convar, int decimals)', 'Создание слайдера на панели'},
         {'Mantle.ui.desc_entry(object parent, string title, string placeholder, bool off_title)', 'Создание поля ввода'},
-        {'Mantle.ui.checkbox(object parent, string text, string convar)', 'Создание чекбокса'},
-        {'Mantle.ui.panel_tabs(object parent)', 'Создание панели с вкладками. В дальнейшем использовать :AddTab() и :ActiveTab() для настройки'}
+        {'Mantle.ui.checkbox(object parent, string text, string convar)', 'Создание тумблера'},
+        {'Mantle.ui.panel_tabs(object parent)', 'Создание панели вкладок. В дальнейшем использовать :AddTab() и :ActiveTab() для настройки'}
     }, panel, btnFrame, true)
 
     return panel
@@ -130,7 +130,7 @@ end
 menu.registerTab('legacy', {
     order = 4,
     title = 'Legacy UI',
-    description = 'Набор legacy-утилит Mantle.ui.* для совместимости',
+    description = 'Старые функции для поддержания древних скриптов.',
     icon = icon,
     create = createLegacyTab
 })
