@@ -1,6 +1,7 @@
 local PANEL = {}
 
 local color_btn_hovered = Color(255, 255, 255, 10)
+local math_floor = math.floor
 
 local function getTabButton(self, tab_id)
     local tab = self.tabs[tab_id]
@@ -18,6 +19,13 @@ function PANEL:Init()
     self.indicator_x = 0
     self.indicator_w = 0
     self._indicator_inited = false
+
+    self._hoverX = 0
+    self._hoverY = 0
+    self._hoverW = 0
+    self._hoverH = 0
+    self._hoverA = 0
+    self._hoverActive = false
 
     self.content = vgui.Create('Panel', self)
     self.content.Paint = nil
@@ -37,11 +45,31 @@ function PANEL:_createTabBar()
         bar = vgui.Create('MantleScrollPanel', self)
     end
 
-    bar.Paint = function(s, w, h)
+    bar.Paint = function() end
+
+    bar.PaintOver = function(s, w, h)
         if self.tab_style == 'modern' and self.indicator_w > 0 then
             local flags = self._indicator_moving and (RNDX.NO_BL + RNDX.NO_BR) or 0
             RNDX.Draw(self.indicator_height, self.indicator_x, h - self.indicator_height, self.indicator_w, self.indicator_height, Mantle.color.theme, flags)
         end
+    end
+
+    self._hoverBar = vgui.Create('Panel', bar)
+    self._hoverBar:SetMouseInputEnabled(false)
+    self._hoverBar.Paint = function(_, w, h)
+        local a = self._hoverA
+        if a <= 0.01 then return end
+
+        local hover = color_btn_hovered
+        local flags = self.tab_style == 'modern' and self._hoverActive and (RNDX.NO_BL + RNDX.NO_BR) or 0
+        local radius = self.tab_style == 'modern' and 16 or 24
+
+        RNDX().Rect(0, 0, w, h)
+            :Rad(radius)
+            :Color(Color(hover.r, hover.g, hover.b, math_floor(10 * a)))
+            :Shape(RNDX.SHAPE_IOS)
+            :Flags(flags)
+        :Draw()
     end
 
     self.panel_tabs = bar
@@ -102,10 +130,6 @@ function PANEL:_createTabButton(tab, id)
         local colorIcon = isActive and Mantle.color.theme or color_white
 
         if self.tab_style == 'modern' then
-            if s:IsHovered() then
-                RNDX.Draw(16, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS + (isActive and RNDX.NO_BL + RNDX.NO_BR or 0))
-            end
-
             local padding = 16
             local iconW = tab.icon and 16 or 0
             local iconTextGap = tab.icon and 8 or 0
@@ -117,10 +141,6 @@ function PANEL:_createTabButton(tab, id)
 
             draw.SimpleText(tab.title, 'Fated.18', textX, h * 0.5, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         else
-            if s:IsHovered() then
-                RNDX.Draw(24, 0, 0, w, h, color_btn_hovered, RNDX.SHAPE_IOS)
-            end
-
             draw.SimpleText(tab.title, 'Fated.18', 34, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
             if tab.icon then
@@ -135,9 +155,36 @@ function PANEL:_createTabButton(tab, id)
 end
 
 function PANEL:Think()
+    local ft = FrameTime()
+    local speed = 30
+
+    local hovered
+    for id, tab in ipairs(self.tabs) do
+        local btn = tab._btn
+        if IsValid(btn) and btn:IsHovered() then
+            hovered = btn
+            self._hoverActive = (id == self.active_id)
+            break
+        end
+    end
+
+    if IsValid(hovered) then
+        self._hoverA = Mantle.func.approachExp(self._hoverA, 1, speed, ft)
+        self._hoverX = Mantle.func.approachExp(self._hoverX, hovered:GetX(), speed, ft)
+        self._hoverY = Mantle.func.approachExp(self._hoverY, hovered:GetY(), speed, ft)
+        self._hoverW = Mantle.func.approachExp(self._hoverW, hovered:GetWide(), speed, ft)
+        self._hoverH = Mantle.func.approachExp(self._hoverH, hovered:GetTall(), speed, ft)
+    else
+        self._hoverA = Mantle.func.approachExp(self._hoverA, 0, 20, ft)
+    end
+
+    if IsValid(self._hoverBar) then
+        self._hoverBar:SetPos(self._hoverX, self._hoverY)
+        self._hoverBar:SetSize(self._hoverW, self._hoverH)
+    end
+
     if self.tab_style != 'modern' then return end
 
-    local ft = FrameTime()
     local activeBtn = getTabButton(self, self.active_id)
 
     local targetX, targetW = 0, 0
