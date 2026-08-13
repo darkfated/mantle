@@ -1,22 +1,25 @@
 local PANEL = {}
 
+local HEADER_HEIGHT = 30
+local CONTENT_OFFSET = 36
+local CONTENT_PADDING = 12
+
 function PANEL:Init()
-    self:SetTall(30)
-    self:DockPadding(0, 36, 0, 0)
+    self:SetTall(HEADER_HEIGHT)
+
     self.name = 'Категория'
     self.bool_opened = false
     self.bool_header_centered = false
-    self.content_size = 0
     self.header_color = Mantle.color.category
     self.header_color_standard = self.header_color
     self.header_color_opened = Mantle.color.category_opened
 
-    self._childHeights = {}
-
     self._anim = 0
     self._animTarget = 0
     self._animSpeed = 12
-    self._animEased = 0
+    self._childrenAlpha = -1
+    self._contentInput = false
+    self._contentTall = -1
 
     self.header = vgui.Create('Button', self)
     self.header:SetText('')
@@ -26,6 +29,7 @@ function PANEL:Init()
             :Color(self.header_color)
             :Shape(RNDX.SHAPE_IOS)
         :Draw()
+
         local posX = self.bool_header_centered and w * 0.5 or 8
         local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
         draw.SimpleText(self.name, 'Fated.20', posX, 4, Mantle.color.text, alignX)
@@ -36,6 +40,9 @@ function PANEL:Init()
         self.bool_opened = !self.bool_opened
         self._animTarget = self.bool_opened and 1 or 0
     end
+
+    self.content = vgui.Create('Panel', self)
+    self.content:SetMouseInputEnabled(false)
 end
 
 function PANEL:SetText(name)
@@ -44,44 +51,6 @@ end
 
 function PANEL:SetCenterText(is_centered)
     self.bool_header_centered = is_centered
-end
-
-local function getTopBottomMargin(pnl)
-    if !pnl.GetDockMargin then return 0, 0 end
-
-    local _, t, _, b = pnl:GetDockMargin()
-    return t or 0, b or 0
-end
-
-function PANEL:AddItem(panel)
-    panel:SetParent(self)
-
-    local top, bottom = getTopBottomMargin(panel)
-    local contribution = (panel.GetTall and panel:GetTall() or 0) + top + bottom
-
-    self._childHeights[panel] = contribution
-    self.content_size = (self.content_size or 0) + contribution
-
-    if self.bool_opened then
-        self:SetTall(30 + self.content_size + 12)
-    end
-
-    local old = panel.OnSizeChanged
-    panel.OnSizeChanged = function(...)
-        if old then old(...) end
-        if !IsValid(self) then return end
-
-        local nt, nb = getTopBottomMargin(panel)
-        local newContribution = (panel.GetTall and panel:GetTall() or 0) + nt + nb
-        local oldContribution = self._childHeights[panel] or 0
-        local delta = newContribution - oldContribution
-        if delta != 0 then
-            self._childHeights[panel] = newContribution
-            self.content_size = math.max(0, (self.content_size or 0) + delta)
-        end
-    end
-
-    return panel
 end
 
 function PANEL:SetColor(col)
@@ -99,29 +68,80 @@ function PANEL:SetActive(is_active)
     self.header_color = is_active and self.header_color_opened or self.header_color_standard
 end
 
+function PANEL:IsActive()
+    return self.bool_opened
+end
+
+function PANEL:AddItem(panel)
+    if panel:GetParent() == self.content then return panel end
+    panel:SetParent(self.content)
+    return panel
+end
+
+function PANEL:Clear()
+    for _, c in ipairs(self.content:GetChildren()) do c:Remove() end
+    self.bool_opened = false
+    self._animTarget = 0
+end
+
+function PANEL:OnChildAdded(child)
+    timer.Simple(0, function()
+        if !IsValid(child) or !IsValid(self) then return end
+        if child == self.header or child == self.content then return end
+        if child:GetParent() == self then
+            child:SetParent(self.content)
+        end
+    end)
+end
+
 function PANEL:PerformLayout(w, h)
-    self.header:SetSize(w, 30)
+    self.header:SetPos(0, 0)
+    self.header:SetSize(w, HEADER_HEIGHT)
+    self.content:SetPos(0, CONTENT_OFFSET)
+    self.content:SetWide(w)
+end
+
+local function measureContent(content)
+    local total = 0
+    for _, c in ipairs(content:GetChildren()) do
+        if IsValid(c) and c.GetTall then
+            total = total + c:GetTall()
+            if c.GetDockMargin then
+                local _, t, _, b = c:GetDockMargin()
+                total = total + (t or 0) + (b or 0)
+            end
+        end
+    end
+    return total
 end
 
 function PANEL:Think()
     local ft = FrameTime()
 
     self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
-    self._animEased = Mantle.func.easeOutCubic(self._anim)
+    local eased = Mantle.func.easeOutCubic(self._anim)
 
-    local currentContentTall = (self.content_size or 0) * self._animEased
+    local contentTall = measureContent(self.content)
+    if contentTall != self._contentTall then
+        self._contentTall = contentTall
+        self.content:SetTall(math.max(0, contentTall))
+    end
 
-    local padded = 12 * self._animEased
+    local targetTall = math.max(HEADER_HEIGHT, math.floor(HEADER_HEIGHT + (contentTall + CONTENT_PADDING) * eased + 0.5))
+    if self:GetTall() != targetTall then
+        self:SetTall(targetTall)
+    end
 
-    local totalTall = 30 + currentContentTall + padded
-    self:SetTall(math.max(30, math.floor(totalTall + 0.5)))
+    local alphaVal = math.floor(255 * eased + 0.5)
+    if alphaVal != self._childrenAlpha then
+        self._childrenAlpha = alphaVal
+        self.content:SetAlpha(alphaVal)
+    end
 
-    local alphaVal = math.floor(255 * self._animEased + 0.5)
-
-    for _, c in ipairs(self:GetChildren()) do
-        if IsValid(c) and c != self.header then
-            if c.SetAlpha then c:SetAlpha(alphaVal) end
-        end
+    local inputEnabled = eased > 0
+    if inputEnabled != self._contentInput then
+        self._contentInput = inputEnabled
+        self.content:SetMouseInputEnabled(inputEnabled)
     end
 end
 
