@@ -1,9 +1,13 @@
 local PANEL = {}
 
+local math_floor = math.floor
+
 function PANEL:Init()
     self.text = ''
     self.convar = ''
     self.value = false
+
+    self._toggleHover = 0
 
     self:SetText('')
     self:SetCursor('hand')
@@ -15,7 +19,7 @@ function PANEL:Init()
 
     self.toggle = vgui.Create('Button', self)
     self.toggle:Dock(RIGHT)
-    self.toggle:SetWide(36)
+    self.toggle:SetWide(38)
     self.toggle:DockMargin(0, 0, 10, 0)
     self.toggle:SetText('')
     self.toggle:SetCursor('hand')
@@ -84,20 +88,28 @@ function PANEL:PaintOver(w, h)
     local ft = FrameTime()
 
     local target = self.value and 1 or 0
-    local circleSpeed = 12
-    self._circle = Mantle.func.approachExp(self._circle, target, circleSpeed, ft)
+    self._circle = Mantle.func.approachExp(self._circle, target, 12, ft)
     if math.abs(self._circle - target) < 0.001 then self._circle = target end
     self._circleEased = Mantle.func.easeInOutCubic(self._circle)
 
+    self._toggleHover = Mantle.func.approachExp(self._toggleHover, self.toggle:IsHovered() and 1 or 0, 14, ft)
+
     local trackW = tw - 8
     local trackH = 14
-    local trackX = tx + (tw - trackW) / 2
-    local trackY = ty + (th - trackH) / 2
+    local trackX = tx + (tw - trackW) * 0.5
+    local trackY = ty + (th - trackH) * 0.5
 
     RNDX.Rect(trackX, trackY + 1, trackW, trackH - 2)
         :Rad(trackH / 2)
         :Color(Mantle.color.toggle)
     :Draw()
+
+    if self._toggleHover > 0.01 then
+        RNDX.Rect(trackX, trackY + 1, trackW, trackH - 2)
+            :Rad(trackH / 2)
+            :Color(Color(255, 255, 255, math_floor(18 * self._toggleHover)))
+        :Draw()
+    end
 
     local circleSize = 16
     local pad = 0
@@ -108,14 +120,14 @@ function PANEL:PaintOver(w, h)
     local x0_align = textMargin - (circleSize * 0.5)
     local x0 = math.max(x0_base, x0_align)
 
-    local circleXPrec = x0 + (x1 - x0) * self._circleEased
-    local circleCenterX = circleXPrec + circleSize * 0.5
+    local circleX = x0 + (x1 - x0) * self._circleEased
+    local circleCenterX = circleX + circleSize * 0.5
     local circleCenterY = trackY + trackH * 0.5
 
     local baseCircle = self.value and Mantle.color.theme or Mantle.color.gray
-    local circleCol = table.Copy(baseCircle)
-    circleCol.a = 255
+    local circleCol = Color(baseCircle.r, baseCircle.g, baseCircle.b, 255)
     self._circleColor = Mantle.func.LerpColor(14, self._circleColor, circleCol)
+
     RNDX.Circle(circleCenterX, circleCenterY, circleSize * 0.5)
         :Color(self._circleColor)
     :Draw()
