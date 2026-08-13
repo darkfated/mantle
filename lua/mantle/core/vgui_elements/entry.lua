@@ -6,7 +6,10 @@ function PANEL:Init()
     self:SetTall(26)
     self.action = function() end
 
-    local font = 'Fated.18'
+    self.font = 'Fated.18'
+    self._focusLerp = 0
+    self._hoverLerp = 0
+    self._textOffset = 0
 
     self.textEntry = vgui.Create('DTextEntry', self)
     self.textEntry:Dock(FILL)
@@ -14,59 +17,80 @@ function PANEL:Init()
     self.textEntry.OnCloseFocus = function()
         self.action(self:GetValue())
     end
-
-    self._text_offset = 0
-    self._shadowLerp = 5
-
     self.textEntry.Paint = nil
     self.textEntry.PaintOver = function(s, w, h)
-        local ft = FrameTime()
+        self:_paintEntry(s, w, h)
+    end
+end
 
-        if Mantle.ui.convar.depth_ui then
-            local target = s:IsEditing() and 8 or 4
-            self._shadowLerp = Mantle.func.approachExp(self._shadowLerp, target, 4, ft)
-            RNDX.Rect(0, 0, w, h)
-                :Rad(12)
-                :Color(Mantle.color.window_shadow)
-                :Shadow(9, self._shadowLerp)
-                :Outline(1)
-            :Draw()
-        end
+function PANEL:_paintEntry(s, w, h)
+    local ft = FrameTime()
 
+    self._focusLerp = Mantle.func.approachExp(self._focusLerp, s:IsEditing() and 1 or 0, 10, ft)
+    self._hoverLerp = Mantle.func.approachExp(self._hoverLerp, s:IsHovered() and 1 or 0, 12, ft)
+
+    if Mantle.ui.convar.depth_ui then
         RNDX.Rect(0, 0, w, h)
             :Rad(12)
-            :Color(Mantle.color.focus_panel)
+            :Color(Mantle.color.window_shadow)
+            :Shadow(4, 2)
         :Draw()
-
-        local value = self:GetValue() or ''
-        surface.SetFont(font)
-        local padding = 6
-        local available_w = w - padding * 2
-
-        local caret = #value
-        local before_caret = string.sub(value, 1, caret)
-        local caret_x = surface.GetTextSize(before_caret)
-        local text_w = surface.GetTextSize(value)
-
-        local desired_offset = 0
-        if caret_x > available_w then
-            desired_offset = caret_x - available_w
-        end
-        if text_w - desired_offset < available_w then
-            desired_offset = math.max(0, text_w - available_w)
-        end
-
-        self._text_offset = Mantle.func.approachExp(self._text_offset or 0, desired_offset, 24, ft)
-
-        local text = self.placeholder
-        local col = Mantle.color.gray
-        if value != '' then
-            text = value
-            col = Mantle.color.text
-        end
-
-        draw.SimpleText(text, font, padding - self._text_offset, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
+
+    RNDX.Rect(0, 0, w, h)
+        :Rad(12)
+        :Color(Mantle.color.focus_panel)
+    :Draw()
+
+    if self._hoverLerp > 0.01 then
+        RNDX.Rect(0, 0, w, h)
+            :Rad(12)
+            :Color(Color(255, 255, 255, math.floor(8 * self._hoverLerp)))
+        :Draw()
+    end
+
+    if self._focusLerp > 0.01 then
+        local theme = Mantle.color.theme
+        RNDX.Rect(0, 0, w, h)
+            :Rad(12)
+            :Color(Color(theme.r, theme.g, theme.b, math.floor(60 * self._focusLerp)))
+            :Shadow(4, self._focusLerp * 2)
+        :Draw()
+        RNDX.Rect(0, 0, w, h)
+            :Rad(12)
+            :Color(Color(theme.r, theme.g, theme.b, math.floor(160 * self._focusLerp)))
+            :Outline(1)
+        :Draw()
+    end
+
+    local value = self:GetValue() or ''
+    surface.SetFont(self.font)
+    local padding = 6
+    local availableW = w - padding * 2
+
+    local caret = #value
+    local beforeCaret = string.sub(value, 1, caret)
+    local caretX = surface.GetTextSize(beforeCaret)
+    local textW = surface.GetTextSize(value)
+
+    local desiredOffset = 0
+    if caretX > availableW then
+        desiredOffset = caretX - availableW
+    end
+    if textW - desiredOffset < availableW then
+        desiredOffset = math.max(0, textW - availableW)
+    end
+
+    self._textOffset = Mantle.func.approachExp(self._textOffset, desiredOffset, 24, ft)
+
+    local text = self.placeholder
+    local col = Mantle.color.gray
+    if value != '' then
+        text = value
+        col = Mantle.color.text
+    end
+
+    draw.SimpleText(text, self.font, padding - self._textOffset, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
 function PANEL:SetTitle(title)

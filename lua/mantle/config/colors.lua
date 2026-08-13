@@ -25,7 +25,7 @@ Mantle.color_dark = {
     focus_panel = Color(46, 46, 46, 200), -- СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ С†РІРµС‚ РґР»СЏ СЌР»РµРјРµРЅС‚РѕРІ
     hover = Color(67, 76, 102), -- СѓРЅРёРІРµСЂСЃР°Р»СЊРЅРѕРµ РІС‹РґРµР»РµРЅРёРµ
 
-    window_shadow = Color(0, 0, 0, 100), -- С‚РµРЅСЊ РѕРєРЅР°
+    window_shadow = Color(0, 0, 0, 50), -- тень окна
 
     gray = Color(150, 150, 150, 220),
     text_muted = Color(150, 150, 150, 180),
@@ -71,7 +71,7 @@ Mantle.color_light = {
     focus_panel = Color(245, 245, 255, 200),
     hover = Color(235, 240, 255),
 
-    window_shadow = Color(0, 0, 0, 50),
+    window_shadow = Color(0, 0, 0, 25), -- тень окна
 
     gray = Color(130, 130, 130, 220),
     text_muted = Color(130, 130, 130, 180),
@@ -111,7 +111,7 @@ Mantle.color_blue = {
     focus_panel = Color(48, 72, 90, 200),
     hover = Color(80, 160, 220, 90),
 
-    window_shadow = Color(18, 22, 32, 100),
+    window_shadow = Color(18, 22, 32, 50), -- тень окна
 
     gray = Color(150, 170, 190, 200),
     text_muted = Color(150, 170, 190, 170),
@@ -151,7 +151,7 @@ Mantle.color_red = {
     focus_panel = Color(72, 48, 48, 200),
     hover = Color(180, 80, 80, 90),
 
-    window_shadow = Color(32, 18, 18, 100),
+    window_shadow = Color(32, 18, 18, 50), -- тень окна
 
     gray = Color(180, 150, 150, 200),
     text_muted = Color(180, 150, 150, 170),
@@ -191,7 +191,7 @@ Mantle.color_green = {
     focus_panel = Color(48, 72, 58, 200),
     hover = Color(80, 180, 120, 90),
 
-    window_shadow = Color(18, 32, 22, 100),
+    window_shadow = Color(18, 32, 22, 50), -- тень окна
 
     gray = Color(150, 180, 150, 200),
     text_muted = Color(150, 180, 150, 170),
@@ -231,7 +231,7 @@ Mantle.color_orange = {
     focus_panel = Color(255, 240, 225, 200),
     hover = Color(255, 165, 80, 90),
 
-    window_shadow = Color(20, 8, 0, 100),
+    window_shadow = Color(20, 8, 0, 50), -- тень окна
     gray = Color(180, 161, 150, 200),
     text_muted = Color(180, 161, 150, 170),
     text = Color(45, 20, 10)
@@ -271,7 +271,7 @@ Mantle.color_purple = {
     focus_panel = Color(48, 42, 62, 200),
     hover = Color(138, 114, 219, 90),
 
-    window_shadow = Color(8, 6, 20, 100),
+    window_shadow = Color(8, 6, 20, 50), -- тень окна
 
     gray = Color(140, 128, 148, 220),
     text_muted = Color(140, 128, 148, 180),
@@ -312,7 +312,7 @@ Mantle.color_coffee = {
     focus_panel = Color(70, 55, 40, 200),
     hover = Color(150, 110, 75, 90),
 
-    window_shadow = Color(15, 10, 5, 100),
+    window_shadow = Color(15, 10, 5, 50), -- тень окна
 
     gray = Color(180, 150, 130, 200),
     text_muted = Color(180, 150, 130, 170),
@@ -352,7 +352,7 @@ Mantle.color_ice = {
     focus_panel = Color(205, 230, 245, 200),
     hover = Color(100, 170, 230, 80),
 
-    window_shadow = Color(60, 100, 140, 100),
+    window_shadow = Color(60, 100, 140, 50), -- тень окна
 
     gray = Color(92, 112, 133, 200),
     text_muted = Color(92, 112, 133, 170),
@@ -392,7 +392,7 @@ Mantle.color_wine = {
     focus_panel = Color(70, 48, 58, 200),
     hover = Color(192, 122, 217, 90),
 
-    window_shadow = Color(10, 6, 20, 100),
+    window_shadow = Color(10, 6, 20, 50), -- тень окна
 
     gray = Color(170, 150, 160, 200),
     text_muted = Color(170, 150, 160, 170),
@@ -432,7 +432,7 @@ Mantle.color_violet = {
     focus_panel = Color(56, 62, 86, 200),
     hover = Color(159, 180, 255, 90),
 
-    window_shadow = Color(8, 6, 20, 100),
+    window_shadow = Color(8, 6, 20, 50), -- тень окна
 
     gray = Color(147, 147, 184, 200),
     text_muted = Color(147, 147, 184, 170),
@@ -472,7 +472,7 @@ Mantle.color_moss = {
     focus_panel = Color(46, 58, 44, 200),
     hover = Color(110, 160, 90, 90),
 
-    window_shadow = Color(0, 0, 0, 100),
+    window_shadow = Color(0, 0, 0, 50), -- тень окна
 
     gray = Color(148, 165, 140, 220),
     text_muted = Color(148, 165, 140, 180),
@@ -512,7 +512,7 @@ Mantle.color_coral = {
     focus_panel = Color(72, 42, 44, 200),
     hover = Color(255, 120, 90, 90),
 
-    window_shadow = Color(0, 0, 0, 100),
+    window_shadow = Color(0, 0, 0, 50), -- тень окна
 
     gray = Color(167, 136, 136, 220),
     text_muted = Color(167, 136, 136, 180),

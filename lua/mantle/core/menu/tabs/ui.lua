@@ -373,9 +373,9 @@ local function createUITab()
     local slider = vgui.Create('MantleSlideBox')
     slider:Dock(TOP)
     slider:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
-    slider:SetRange(0, 4)
-    slider:SetConvar('net_graph')
-    slider:SetText('График')
+    slider:SetRange(0, 1)
+    slider:SetConvar('r_skybox')
+    slider:SetText('Отключение неба')
     menu.createCategory('Слайдер (MantleSlideBox)', {
         {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (дефолт точность - 0)'},
         {':SetConvar(string convar)', 'Установить ConVar'},

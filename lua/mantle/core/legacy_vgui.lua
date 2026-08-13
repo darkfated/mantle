@@ -221,7 +221,7 @@ function Mantle.ui.checkbox(parent, text, convar)
     end
     option.DoClick = function()
         if convar then
-            RunConsoleCommand(convar, option.enabled and 0 or 1)
+            LocalPlayer():ConCommand(convar .. ' ' .. (option.enabled and 0 or 1))
         end
 
         option.enabled = !option.enabled

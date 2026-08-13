@@ -51,7 +51,7 @@ local function createSettingsTab()
     end
 
     comboboxTheme.OnSelect = function(_, _, data)
-        RunConsoleCommand('mantle_theme', data)
+        LocalPlayer():ConCommand('mantle_theme ' .. data)
     end
 
     if forcedTheme == '' then
