@@ -278,10 +278,11 @@ function PANEL:_applyTabLayout()
         local pan = tab.pan
         if IsValid(pan) then
             if self.tab_style == 'modern' then
+                local offset = self.tab_height + 8
                 if pan.GetScroll then
-                    pan:DockPadding(0, self.tab_height, 0, 0)
+                    pan:DockPadding(0, offset, 0, 0)
                 else
-                    pan:DockMargin(0, self.tab_height, 0, 0)
+                    pan:DockMargin(0, offset, 0, 0)
                 end
             else
                 if pan.GetScroll then
