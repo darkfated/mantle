@@ -2,7 +2,7 @@ Mantle.color_dark = {
     header = Color(40, 40, 40), -- верхняя панель
     header_text = Color(100, 100, 100), -- цвет элементов в заголовке
     background = Color(25, 25, 25), -- фон
-    background_alpha = Color(25, 25, 25, 210), -- фон с прозрачностью
+    background_alpha = Color(25, 25, 25, 230), -- фон с прозрачностью
     background_panelpopup = Color(20, 20, 20, 150), -- фон для DermaMenu
 
     button = Color(54, 54, 54), -- кнопка
@@ -12,7 +12,7 @@ Mantle.color_dark = {
     category = Color(50, 50, 50), -- категория
     category_opened = Color(50, 50, 50, 0), -- категория открыта
 
-    theme = Color(106, 108, 197), -- тема интерфейса
+    theme = Color(56, 105, 201), -- тема интерфейса
 
     panel = { -- варианты цветов для панели
         Color(60, 60, 60),
@@ -48,7 +48,7 @@ Mantle.color_light = {
     header = Color(240, 240, 240),
     header_text = Color(150, 150, 150),
     background = Color(255, 255, 255),
-    background_alpha = Color(255, 255, 255, 170),
+    background_alpha = Color(255, 255, 255, 200),
     background_panelpopup = Color(245, 245, 245, 150),
 
     button = Color(235, 235, 235),
@@ -88,7 +88,7 @@ Mantle.color_blue = {
     header = Color(36, 48, 66),
     header_text = Color(109, 129, 159),
     background = Color(24, 28, 38),
-    background_alpha = Color(24, 28, 38, 210),
+    background_alpha = Color(24, 28, 38, 230),
     background_panelpopup = Color(20, 24, 32, 150),
 
     button = Color(38, 54, 82),
@@ -128,7 +128,7 @@ Mantle.color_red = {
     header = Color(54, 36, 36),
     header_text = Color(159, 109, 109),
     background = Color(32, 24, 24),
-    background_alpha = Color(32, 24, 24, 210),
+    background_alpha = Color(32, 24, 24, 230),
     background_panelpopup = Color(28, 20, 20, 150),
 
     button = Color(66, 38, 38),
@@ -168,7 +168,7 @@ Mantle.color_green = {
     header = Color(36, 54, 40),
     header_text = Color(109, 159, 109),
     background = Color(24, 32, 26),
-    background_alpha = Color(24, 32, 26, 210),
+    background_alpha = Color(24, 32, 26, 230),
     background_panelpopup = Color(20, 28, 22, 150),
 
     button = Color(38, 66, 48),
@@ -208,7 +208,7 @@ Mantle.color_orange = {
     header = Color(70, 35, 10),
     header_text = Color(250, 230, 210),
     background = Color(255, 250, 240),
-    background_alpha = Color(255, 250, 240, 220),
+    background_alpha = Color(255, 250, 240, 230),
     background_panelpopup = Color(255, 245, 235, 160),
 
     button = Color(184, 122, 64),
@@ -248,7 +248,7 @@ Mantle.color_purple = {
     header = Color(40, 36, 56),
     header_text = Color(150, 140, 180),
     background = Color(25, 22, 30),
-    background_alpha = Color(25, 22, 30, 210),
+    background_alpha = Color(25, 22, 30, 230),
     background_panelpopup = Color(28, 24, 40, 150),
 
     button = Color(58, 52, 76),
@@ -289,7 +289,7 @@ Mantle.color_coffee = {
     header_text = Color(210, 190, 170),
 
     background = Color(45, 32, 25),
-    background_alpha = Color(45, 32, 25, 215),
+    background_alpha = Color(45, 32, 25, 230),
     background_panelpopup = Color(38, 28, 22, 150),
 
     button = Color(84, 60, 45),
@@ -329,7 +329,7 @@ Mantle.color_ice = {
     header = Color(190, 225, 250),
     header_text = Color(68, 104, 139),
     background = Color(235, 245, 255),
-    background_alpha = Color(235, 245, 255, 200),
+    background_alpha = Color(235, 245, 255, 210),
     background_panelpopup = Color(220, 235, 245, 150),
 
     button = Color(145, 185, 225),
@@ -369,7 +369,7 @@ Mantle.color_wine = {
     header = Color(59, 42, 53),
     header_text = Color(246, 242, 246),
     background = Color(31, 23, 22),
-    background_alpha = Color(31, 23, 22, 210),
+    background_alpha = Color(31, 23, 22, 230),
     background_panelpopup = Color(36, 28, 28, 150),
 
     button = Color(79, 50, 60),
@@ -409,7 +409,7 @@ Mantle.color_violet = {
     header = Color(49, 50, 68),
     header_text = Color(238, 244, 255),
     background = Color(22, 24, 35),
-    background_alpha = Color(22, 24, 35, 210),
+    background_alpha = Color(22, 24, 35, 230),
     background_panelpopup = Color(36, 40, 56, 150),
 
     button = Color(58, 64, 84),
@@ -449,7 +449,7 @@ Mantle.color_moss = {
     header = Color(42, 50, 36),
     header_text = Color(232, 244, 235),
     background = Color(14, 16, 12),
-    background_alpha = Color(14, 16, 12, 210),
+    background_alpha = Color(14, 16, 12, 230),
     background_panelpopup = Color(24, 28, 22, 150),
 
     button = Color(64, 82, 60),
@@ -489,7 +489,7 @@ Mantle.color_coral = {
     header = Color(52, 32, 36),
     header_text = Color(255, 243, 242),
     background = Color(18, 14, 16),
-    background_alpha = Color(18, 14, 16, 210),
+    background_alpha = Color(18, 14, 16, 230),
     background_panelpopup = Color(30, 22, 24, 150),
 
     button = Color(116, 66, 61),
