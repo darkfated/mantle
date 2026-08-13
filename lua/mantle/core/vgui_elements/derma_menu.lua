@@ -8,8 +8,6 @@ local PAD = 6
 local ITEM_HEIGHT = 32
 local RADIUS = 14
 
-local tickMat = Material('icon16/tick.png')
-
 function PANEL:Init()
     self.Items = {}
     self:SetSize(MIN_WIDTH, 0)
@@ -228,8 +226,6 @@ function PANEL:AddOption(text, func, icon, optData)
                 {x = cx + s, y = cy - s * 0.7},
                 {x = cx, y = cy + s * 0.7}
             })
-        elseif pnl.selected then
-            RNDX.DrawMaterial(0, w - 26, (h - 14) / 2, 14, 14, Mantle.color.theme, tickMat)
         end
     end
 
