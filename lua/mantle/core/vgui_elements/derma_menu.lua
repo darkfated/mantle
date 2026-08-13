@@ -40,7 +40,7 @@ function PANEL:Init()
     self._hoverBar.Paint = function(_, w, h)
         local a = self._hoverA
         if a <= 0.01 then return end
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(8)
             :Color(Color(Mantle.color.hover.r, Mantle.color.hover.g, Mantle.color.hover.b, math_floor(255 * a)))
         :Draw()
@@ -126,25 +126,22 @@ function PANEL:Paint(w, h)
     end
 
     if !self._disableBlur then
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(RADIUS)
-            :Shape(RNDX.SHAPE_IOS)
             :Blur(blurMul)
         :Draw()
     end
 
     local bg = Mantle.color.background_panelpopup
-    RNDX().Rect(0, 0, w, h)
+    RNDX.Rect(0, 0, w, h)
         :Rad(RADIUS)
         :Color(Color(bg.r, bg.g, bg.b, math_floor((bg.a or 150) * aMul)))
-        :Shape(RNDX.SHAPE_IOS)
     :Draw()
 
-    RNDX().Rect(0, 0, w, h)
+    RNDX.Rect(0, 0, w, h)
         :Rad(RADIUS)
         :Color(Mantle.color.window_shadow)
         :Outline(1)
-        :Shape(RNDX.SHAPE_IOS)
     :Draw()
 end
 
@@ -204,7 +201,10 @@ function PANEL:AddOption(text, func, icon, optData)
         local iconSize = 16
         local textX = 10
         if pnl._iconMat then
-            RNDX.DrawMaterial(0, 12, (h - iconSize) / 2, iconSize, iconSize, Mantle.color.text, pnl._iconMat)
+            RNDX.Rect(12, (h - iconSize) / 2, iconSize, iconSize)
+                :Material(pnl._iconMat)
+                :Color(Mantle.color.text)
+            :Draw()
             textX = 36
         end
 
@@ -306,7 +306,9 @@ function PANEL:AddSpacer()
     spacer:SetTall(1)
     spacer.sumTall = 9
     spacer.Paint = function(_, w, h)
-        RNDX.Draw(0, 0, 0, w, h, Mantle.color.window_shadow)
+        RNDX.Rect(0, 0, w, h)
+            :Color(Mantle.color.window_shadow)
+        :Draw()
     end
     table.insert(self.Items, spacer)
     self:UpdateSize()

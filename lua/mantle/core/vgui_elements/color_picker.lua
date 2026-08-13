@@ -31,17 +31,15 @@ function Mantle.ui.color_picker(callback, defaultColor)
     preview:SetTall(40)
     preview:DockMargin(0, 0, 0, 10)
     preview.Paint = function(_, w, h)
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(16)
             :Color(selectedColor)
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
 
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(16)
             :Color(Mantle.color.window_shadow)
             :Outline(1)
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
     end
 
@@ -102,13 +100,12 @@ function Mantle.ui.color_picker(callback, defaultColor)
             end
         end
 
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Color(Mantle.color.window_shadow)
             :Outline(1)
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
 
-        RNDX().Circle(colorCursor.x, colorCursor.y, 12)
+        RNDX.Circle(colorCursor.x, colorCursor.y, 6)
             :Outline(2)
             :Color(colorTarget)
         :Draw()
@@ -152,10 +149,9 @@ function Mantle.ui.color_picker(callback, defaultColor)
         local segments = 100
         local segmentWidth = w / segments
 
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Color(Mantle.color.window_shadow)
-            :Shape(RNDX.SHAPE_IOS)
-            :Shadow(5, 20)
+            :Shadow(20, 5)
         :Draw()
 
         for i = 0, segments - 1 do
@@ -166,7 +162,7 @@ function Mantle.ui.color_picker(callback, defaultColor)
             surface.DrawRect(x, 1, segmentWidth + 1, h - 2)
         end
 
-        RNDX().Rect(huePos - 2, 0, 4, h)
+        RNDX.Rect(huePos - 2, 0, 4, h)
             :Color(colorTarget)
         :Draw()
     end

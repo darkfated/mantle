@@ -152,24 +152,28 @@ function PANEL:Paint(w, h)
 
     draw.SimpleText(self.text, 'Fated.16', pad, TOP_PADDING - 6, Mantle.color.text)
 
-    RNDX.Draw(barR, barStart, BAR_Y, barW, BAR_H, Mantle.color.focus_panel)
-    RNDX.Draw(barR, barStart, BAR_Y, barW, BAR_H, Mantle.color.button_shadow)
-    RNDX.Draw(barR, barStart, BAR_Y, self.smoothPos, BAR_H, Mantle.color.theme)
+    RNDX.Rect(barStart, BAR_Y, barW, BAR_H)
+        :Rad(barR)
+        :Color(Mantle.color.focus_panel)
+    :Draw()
+    RNDX.Rect(barStart, BAR_Y, barW, BAR_H)
+        :Rad(barR)
+        :Color(Mantle.color.button_shadow)
+    :Draw()
+    RNDX.Rect(barStart, BAR_Y, self.smoothPos, BAR_H)
+        :Rad(barR)
+        :Color(Mantle.color.theme)
+    :Draw()
 
     local handleX = barStart + self.smoothPos
     local handleY = BAR_Y + BAR_H / 2
     local handleR = HANDLE_H * 0.5
 
-    RNDX.DrawShadows(
-        handleR,
-        handleX - HANDLE_W / 2,
-        handleY - HANDLE_H / 2,
-        HANDLE_W,
-        HANDLE_H,
-        Mantle.color.window_shadow,
-        3,
-        10
-    )
+    RNDX.Rect(handleX - HANDLE_W / 2, handleY - HANDLE_H / 2, HANDLE_W, HANDLE_H)
+        :Rad(handleR)
+        :Shadow(10, 3)
+        :Color(Mantle.color.window_shadow)
+    :Draw()
 
     local targetAlpha = self.dragging and 200 or 255
     self._dragAlpha = Mantle.func.approachExp(self._dragAlpha, targetAlpha, 24, ft)
@@ -181,7 +185,10 @@ function PANEL:Paint(w, h)
         math.floor(self._dragAlpha)
     )
 
-    RNDX.Draw(handleR, handleX - HANDLE_W / 2, handleY - HANDLE_H / 2, HANDLE_W, HANDLE_H, handleColor)
+    RNDX.Rect(handleX - HANDLE_W / 2, handleY - HANDLE_H / 2, HANDLE_W, HANDLE_H)
+        :Rad(handleR)
+        :Color(handleColor)
+    :Draw()
 
     draw.SimpleText(
         formatValue(self.value, self.decimals),

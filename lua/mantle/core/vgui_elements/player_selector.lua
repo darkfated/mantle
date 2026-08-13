@@ -36,10 +36,9 @@ function Mantle.ui.player_selector(onSelect, filterFn)
         end
         card.playerColor = team.GetColor(pl:Team()) or color_online
         card.Paint = function(self, w, h)
-            RNDX().Rect(0, 0, w, h)
+            RNDX.Rect(0, 0, w, h)
                 :Rad(10)
                 :Color(Mantle.color.panel_alpha[1])
-                :Shape(RNDX.SHAPE_IOS)
             :Draw()
 
             if !IsValid(pl) then
@@ -59,7 +58,7 @@ function Mantle.ui.player_selector(onSelect, filterFn)
                 statusColor = self.playerColor
             end
 
-            RNDX().Rect(w - 26, 10, 14, 14)
+            RNDX.Rect(w - 26, 10, 14, 14)
                 :Rad(100)
                 :Color(statusColor)
             :Draw()

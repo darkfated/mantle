@@ -62,15 +62,15 @@ end
 
 function PANEL:Paint(w, h)
     if Mantle.ui.convar.depth_ui then
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(12)
             :Color(Mantle.color.window_shadow)
-            :Shadow(4, 9)
+            :Shadow(9, 4)
             :Outline(1)
         :Draw()
     end
 
-    RNDX().Rect(0, 0, w, h)
+    RNDX.Rect(0, 0, w, h)
         :Rad(12)
         :Color(Mantle.color.focus_panel)
     :Draw()
@@ -94,10 +94,9 @@ function PANEL:PaintOver(w, h)
     local trackX = tx + (tw - trackW) / 2
     local trackY = ty + (th - trackH) / 2
 
-    RNDX().Rect(trackX, trackY + 1, trackW, trackH - 2)
+    RNDX.Rect(trackX, trackY + 1, trackW, trackH - 2)
         :Rad(trackH / 2)
         :Color(Mantle.color.toggle)
-        :Shape(RNDX.SHAPE_IOS)
     :Draw()
 
     local circleSize = 16
@@ -117,11 +116,11 @@ function PANEL:PaintOver(w, h)
     local circleCol = table.Copy(baseCircle)
     circleCol.a = 255
     self._circleColor = Mantle.func.LerpColor(14, self._circleColor, circleCol)
-    RNDX().Circle(circleCenterX, circleCenterY, circleSize)
+    RNDX.Circle(circleCenterX, circleCenterY, circleSize * 0.5)
         :Color(self._circleColor)
     :Draw()
 
-    RNDX().Circle(circleCenterX, circleCenterY + 1, circleSize * 1.03)
+    RNDX.Circle(circleCenterX, circleCenterY + 1, circleSize * 1.03 * 0.5)
         :Color(Color(0, 0, 0, 18))
     :Draw()
 end

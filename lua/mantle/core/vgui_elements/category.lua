@@ -23,10 +23,9 @@ function PANEL:Init()
     self.header = vgui.Create('Button', self)
     self.header:SetText('')
     self.header.Paint = function(_, w, h)
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(16)
             :Color(self.header_color)
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
 
         local posX = self.bool_header_centered and w * 0.5 or 8

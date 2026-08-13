@@ -25,15 +25,15 @@ function PANEL:Init()
         if Mantle.ui.convar.depth_ui then
             local target = s:IsEditing() and 8 or 4
             self._shadowLerp = Mantle.func.approachExp(self._shadowLerp, target, 4, ft)
-            RNDX().Rect(0, 0, w, h)
+            RNDX.Rect(0, 0, w, h)
                 :Rad(12)
                 :Color(Mantle.color.window_shadow)
-                :Shadow(self._shadowLerp, 9)
+                :Shadow(9, self._shadowLerp)
                 :Outline(1)
             :Draw()
         end
 
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(12)
             :Color(Mantle.color.focus_panel)
         :Draw()

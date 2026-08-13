@@ -78,7 +78,11 @@ function PANEL:_createTabBar()
     bar.PaintOver = function(s, w, h)
         if self.tab_style == 'modern' and self.indicator_w > 0 then
             local flags = self._indicator_moving and (RNDX.NO_BL + RNDX.NO_BR) or 0
-            RNDX.Draw(self.indicator_height, self.indicator_x, h - self.indicator_height, self.indicator_w, self.indicator_height, Mantle.color.theme, flags)
+            RNDX.Rect(self.indicator_x, h - self.indicator_height, self.indicator_w, self.indicator_height)
+                :Rad(self.indicator_height)
+                :Color(Mantle.color.theme)
+                :Flags(flags)
+            :Draw()
         end
     end
 
@@ -92,10 +96,9 @@ function PANEL:_createTabBar()
         local flags = self.tab_style == 'modern' and self._hoverActive and (RNDX.NO_BL + RNDX.NO_BR) or 0
         local radius = self.tab_style == 'modern' and 16 or 24
 
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(radius)
             :Color(Color(hover.r, hover.g, hover.b, math_floor(10 * a)))
-            :Shape(RNDX.SHAPE_IOS)
             :Flags(flags)
         :Draw()
     end
@@ -164,7 +167,10 @@ function PANEL:_createTabButton(tab, id)
             local textX = padding + (iconW > 0 and (iconW + iconTextGap) or 0)
 
             if tab.icon then
-                RNDX.DrawMaterial(0, padding, (h - 16) * 0.5, 16, 16, colorIcon, tab.icon)
+                RNDX.Rect(padding, (h - 16) * 0.5, 16, 16)
+                    :Material(tab.icon)
+                    :Color(colorIcon)
+                :Draw()
             end
 
             draw.SimpleText(tab.title, 'Fated.18', textX, h * 0.5, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
@@ -172,9 +178,15 @@ function PANEL:_createTabButton(tab, id)
             draw.SimpleText(tab.title, 'Fated.18', 34, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
             if tab.icon then
-                RNDX.DrawMaterial(0, 9, 9, 16, 16, colorIcon, tab.icon)
+                RNDX.Rect(9, 9, 16, 16)
+                    :Material(tab.icon)
+                    :Color(colorIcon)
+                :Draw()
             else
-                RNDX.Draw(24, 9, 9, 16, 16, colorIcon, RNDX.SHAPE_IOS)
+                RNDX.Rect(9, 9, 16, 16)
+                    :Rad(24)
+                    :Color(colorIcon)
+                :Draw()
             end
         end
     end

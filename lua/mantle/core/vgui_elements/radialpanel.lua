@@ -269,7 +269,7 @@ function PANEL:Paint(w,h)
     local cnt = #opts
 
     if !self.disable_background then
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Radii(0, 0, 0, 0)
             :Color(Color(0, 0, 0, 140 * alpha))
         :Draw()
@@ -277,19 +277,17 @@ function PANEL:Paint(w,h)
 
     local outerR = self.radius * self.scaleAnim
     local innerR = self.innerRadius * self.scaleAnim
-    local outerD = outerR * 2
-    local innerD = innerR * 2
 
-    RNDX().Circle(cx, cy, outerD + 12)
+    RNDX.Circle(cx, cy, outerR + 6)
         :Color(Mantle.color.window_shadow)
-        :Shadow(8, 24)
+        :Shadow(24, 8)
     :Draw()
 
-    RNDX().Circle(cx, cy, outerD)
+    RNDX.Circle(cx, cy, outerR)
         :Color(Color(Mantle.color.background.r, Mantle.color.background.g, Mantle.color.background.b, math_floor(240 * alpha)))
     :Draw()
 
-    RNDX().Circle(cx, cy, outerD)
+    RNDX.Circle(cx, cy, outerR)
         :Outline(2)
         :Color(Color(Mantle.color.theme.r, Mantle.color.theme.g, Mantle.color.theme.b, math_floor(160 * alpha)))
     :Draw()
@@ -305,15 +303,13 @@ function PANEL:Paint(w,h)
             if startDeg < 0 then startDeg = 0 end
                 endDeg = clampEndAngle(endDeg)
             if endDeg > startDeg then
-                RNDX().Circle(cx, cy, outerD)
-                    :StartAngle(startDeg)
-                    :EndAngle(endDeg)
+                RNDX.Circle(cx, cy, outerR)
+                    :Angles(startDeg, endDeg)
                     :Color(baseSectorCol)
                 :Draw()
 
-                RNDX().Circle(cx, cy, outerD)
-                    :StartAngle(startDeg)
-                    :EndAngle(endDeg)
+                RNDX.Circle(cx, cy, outerR)
+                    :Angles(startDeg, endDeg)
                     :Outline(2)
                     :Color(Color(Mantle.color.panel[1].r, Mantle.color.panel[1].g, Mantle.color.panel[1].b, math_floor(160 * alpha)))
                 :Draw()
@@ -329,31 +325,29 @@ function PANEL:Paint(w,h)
             if endDeg > startDeg then
                 local th = Mantle.color.theme
                 local hoverAlpha = math_floor(200 * self.hoverAnim * alpha)
-                RNDX().Circle(cx, cy, outerD)
-                    :StartAngle(startDeg)
-                    :EndAngle(endDeg)
+                RNDX.Circle(cx, cy, outerR)
+                    :Angles(startDeg, endDeg)
                     :Color(Color(th.r, th.g, th.b, math_floor(22 * self.hoverAnim * alpha)))
                 :Draw()
 
-                RNDX().Circle(cx, cy, outerD)
-                    :StartAngle(startDeg)
-                    :EndAngle(endDeg)
+                RNDX.Circle(cx, cy, outerR)
+                    :Angles(startDeg, endDeg)
                     :Outline(2)
                     :Color(Color(th.r, th.g, th.b, hoverAlpha))
                 :Draw()
             end
         end
 
-        RNDX().Circle(cx, cy, innerD)
+        RNDX.Circle(cx, cy, innerR)
             :Color(Color(Mantle.color.background_panelpopup.r, Mantle.color.background_panelpopup.g, Mantle.color.background_panelpopup.b, math_floor(255 * alpha)))
         :Draw()
 
         local tintA = math_floor(36 * alpha)
-        RNDX().Circle(cx, cy, innerD - 8)
+        RNDX.Circle(cx, cy, innerR - 4)
             :Color(Color(Mantle.color.theme.r, Mantle.color.theme.g, Mantle.color.theme.b, tintA))
         :Draw()
 
-        RNDX().Circle(cx, cy, innerD)
+        RNDX.Circle(cx, cy, innerR)
             :Outline(2)
             :Color(Color(Mantle.color.theme.r, Mantle.color.theme.g, Mantle.color.theme.b, math_floor(80 * alpha)))
         :Draw()
@@ -409,10 +403,10 @@ function PANEL:Paint(w,h)
             end
         end
     else
-        RNDX().Circle(cx, cy, outerD)
+        RNDX.Circle(cx, cy, outerR)
             :Color(Color(Mantle.color.background.r, Mantle.color.background.g, Mantle.color.background.b, math_floor(240 * alpha)))
         :Draw()
-        RNDX().Circle(cx, cy, innerD)
+        RNDX.Circle(cx, cy, innerR)
             :Color(Color(Mantle.color.background_panelpopup.r, Mantle.color.background_panelpopup.g, Mantle.color.background_panelpopup.b, math_floor(255 * alpha)))
         :Draw()
     end

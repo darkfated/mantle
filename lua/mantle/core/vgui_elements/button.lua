@@ -71,7 +71,6 @@ function PANEL:OnMousePressed(mousecode)
 end
 
 local math_clamp = math.Clamp
-local btnFlags = RNDX.SHAPE_IOS
 
 function PANEL:Paint(w, h)
     if self:IsHovered() then
@@ -94,29 +93,26 @@ function PANEL:Paint(w, h)
 
     if self._activeShadowLerp > 0 and Mantle.ui.convar.depth_ui then
         local col = Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math.Clamp(self.col_hov.a * 1.5, 0, 255))
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(self.radius)
             :Color(col)
-            :Shape(btnFlags)
-            :Shadow(self._activeShadowLerp * 1.5, 24)
+            :Shadow(24, self._activeShadowLerp * 1.5)
         :Draw()
     end
 
-    RNDX().Rect(0, 0, w, h)
+    RNDX.Rect(0, 0, w, h)
         :Rad(self.radius)
         :Color(self.col)
-        :Shape(btnFlags)
     :Draw()
 
     if self.bool_gradient then
-        Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow, self.radius, btnFlags)
+        Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow, self.radius)
     end
 
     if self.bool_hover then
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(self.radius)
             :Color(Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, self.hover_status * 255))
-            :Shape(btnFlags)
         :Draw()
     end
 
@@ -131,10 +127,9 @@ function PANEL:Paint(w, h)
             self.ripple_color.a * self.click_alpha
         )
 
-        RNDX().Rect(self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size)
+        RNDX.Rect(self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size)
             :Rad(100)
             :Color(ripple_color)
-            :Shape(btnFlags)
         :Draw()
     end
 
@@ -152,19 +147,17 @@ function PANEL:Paint(w, h)
             surface.SetFont(self.font)
             local posX = (w - surface.GetTextSize(self.text) - self.icon_size) * 0.5 - 2
             local posY = (h - self.icon_size) * 0.5
-            RNDX().Rect(posX, posY, self.icon_size, self.icon_size)
+            RNDX.Rect(posX, posY, self.icon_size, self.icon_size)
                 :Material(self.icon)
                 :Color(color_white)
-                :Shape(btnFlags)
             :Draw()
         end
     elseif self.icon != '' then
         local posX = (w - self.icon_size) * 0.5
         local posY = (h - self.icon_size) * 0.5
-        RNDX().Rect(posX, posY, self.icon_size, self.icon_size)
+        RNDX.Rect(posX, posY, self.icon_size, self.icon_size)
             :Material(self.icon)
             :Color(color_white)
-            :Shape(btnFlags)
         :Draw()
     end
 end

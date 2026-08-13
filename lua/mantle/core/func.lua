@@ -85,7 +85,12 @@ local function createFunc()
     ]]--
     function Mantle.func.gradient(_x, _y, _w, _h, direction, color_shadow, radius, flags)
         radius = radius and radius or 0
-        RNDX.DrawMaterial(radius, _x, _y, _w, _h, color_shadow, listGradients[direction], flags)
+        local rect = RNDX.Rect(_x, _y, _w, _h)
+            :Rad(radius)
+            :Material(listGradients[direction])
+            :Color(color_shadow)
+        if flags then rect:Flags(flags) end
+        rect:Draw()
     end
 
     function Mantle.func.sound(path)
@@ -124,17 +129,15 @@ local function createFunc()
         local bx, by = -tw * 0.5 - 18, y - 12
         local bw, bh = tw + 36, th + 24
 
-        RNDX().Rect(bx, by, bw, bh - 6)
+        RNDX.Rect(bx, by, bw, bh - 6)
             :Radii(16, 16, 0, 0)
             :Blur()
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
-        RNDX().Rect(bx, by, bw, bh - 6)
+        RNDX.Rect(bx, by, bw, bh - 6)
             :Radii(16, 16, 0, 0)
             :Color(Mantle.color.background_alpha)
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
-        RNDX().Rect(bx, by + bh - 6, bw, 6)
+        RNDX.Rect(bx, by + bh - 6, bw, 6)
             :Radii(0, 0, 16, 16)
             :Color(Mantle.color.text)
         :Draw()

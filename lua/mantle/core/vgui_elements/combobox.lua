@@ -26,22 +26,22 @@ function PANEL:Init()
         self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, target, 12, ft)
 
         if Mantle.ui.convar.depth_ui then
-            RNDX().Rect(0, 0, w, h)
+            RNDX.Rect(0, 0, w, h)
                 :Rad(RADIUS)
                 :Color(Mantle.color.window_shadow)
-                :Shadow(4, 9)
+                :Shadow(9, 4)
                 :Outline(1)
             :Draw()
         end
 
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(RADIUS)
             :Color(Mantle.color.focus_panel)
         :Draw()
 
         if self.hoverAnim > 0 then
             local hcol = Color(Mantle.color.hover.r, Mantle.color.hover.g, Mantle.color.hover.b, math_floor(255 * self.hoverAnim))
-            RNDX().Rect(0, 0, w, h)
+            RNDX.Rect(0, 0, w, h)
                 :Rad(RADIUS)
                 :Color(hcol)
             :Draw()

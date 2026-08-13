@@ -8,6 +8,8 @@ local math_max = math.max
 function PANEL:Init()
     self.BaseClass.Init(self)
 
+    self.scrollStep = 500
+
     self.columns = {}
     self.rows = {}
     self.headerHeight = 36
@@ -46,11 +48,20 @@ function PANEL:Init()
     self.vbar.grip = vgui.Create('Panel', self.vbar)
     self.vbar.grip:SetMouseInputEnabled(true)
     self.vbar.grip:SetCursor('hand')
-    self.vbar.grip.Paint = function(_, w, h)
-        RNDX().Rect(0, 0, w, h)
+    self.vbar.grip._ShadowLerp = 0
+    self.vbar.grip.Paint = function(s, w, h)
+        s._ShadowLerp = Lerp(FrameTime() * 10, s._ShadowLerp, self._draggingGrip and 1 or 0)
+
+        if s._ShadowLerp > 0.01 then
+            RNDX.Rect(0, 0, w, h)
+                :Rad(2)
+                :Color(Mantle.color.theme)
+                :Shadow(4, s._ShadowLerp)
+            :Draw()
+        end
+        RNDX.Rect(0, 0, w, h)
             :Rad(2)
             :Color(Mantle.color.theme)
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
     end
     self.vbar.grip.OnMousePressed = function(s)
@@ -94,10 +105,9 @@ function PANEL:_createHeaderPanel()
         self.header:DockMargin(0, 0, 0, 0)
         self.header:SetTall(self.headerHeight)
         self.header.Paint = function(_, w, h)
-            RNDX().Rect(0, 0, w, h)
+            RNDX.Rect(0, 0, w, h)
                 :Rad(10)
                 :Color(Mantle.color.panel_alpha[1])
-                :Shape(RNDX.SHAPE_IOS)
             :Draw()
         end
     end
@@ -520,10 +530,9 @@ function PANEL:RebuildRows()
     self._hoverBar.Paint = function(_, w, h)
         local a = self._hoverA
         if a <= 0.01 then return end
-        RNDX().Rect(0, 0, w, h)
+        RNDX.Rect(0, 0, w, h)
             :Rad(10)
             :Color(Color(hoverColor.r, hoverColor.g, hoverColor.b, math.floor(255 * a)))
-            :Shape(RNDX.SHAPE_IOS)
         :Draw()
     end
     self._hoverBar.Think = function()
