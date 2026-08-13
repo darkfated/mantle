@@ -116,7 +116,7 @@ end
 function menu.createCategory(name, infoTable, parent, uiElement, isActive)
     local category = vgui.Create('MantleCategory', parent)
     category:Dock(TOP)
-    category:DockMargin(0, 0, 0, 6)
+    category:DockMargin(0, 0, 0, 8)
     category:SetText(name)
 
     if isActive then

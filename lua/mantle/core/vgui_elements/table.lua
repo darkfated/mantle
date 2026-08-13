@@ -75,6 +75,12 @@ function PANEL:Init()
     self._draggingGrip = false
     self._gripOffset = 0
 
+    self._hoverX = 0
+    self._hoverY = 0
+    self._hoverW = 0
+    self._hoverH = 0
+    self._hoverA = 0
+
     self.OnSizeChanged = function()
         self._needWidths = true
     end
@@ -85,7 +91,7 @@ function PANEL:_createHeaderPanel()
         self.header = vgui.Create('Panel', self.content)
         self.header:SetMouseInputEnabled(false)
         self.header:Dock(TOP)
-        self.header:DockMargin(0, 0, 0, 4)
+        self.header:DockMargin(0, 0, 0, 0)
         self.header:SetTall(self.headerHeight)
         self.header.Paint = function(_, w, h)
             RNDX().Rect(0, 0, w, h)
@@ -421,43 +427,30 @@ end
 function PANEL:CreateRow(rowIndex, rowData)
     local row = vgui.Create('Button', self.content)
     row:Dock(TOP)
-    row:DockMargin(0, 4, 0, 4)
+    row:DockMargin(0, 0, 0, 0)
     row:SetTall(self.rowHeight)
     row:SetText('')
 
     row._index = rowIndex
-    row._hoverAlpha = 0
     row._selectedAlpha = 0
     row._cells = {}
 
     row.Paint = function(s, w, h)
         local dt = FrameTime()
-        s._hoverAlpha = Mantle.func.approachExp(s._hoverAlpha, s:IsHovered() and 1 or 0, 18, dt)
         s._selectedAlpha = Mantle.func.approachExp(s._selectedAlpha, (self.selectedRow == s._index) and 1 or 0, 22, dt)
 
-        local base = Mantle.color.panel_alpha[1]
-        local hoverCol = Mantle.color.hover
+        local base = Mantle.color.focus_panel
         local selCol = Mantle.color.theme
 
-        local blendA = s._selectedAlpha * 0.9 + s._hoverAlpha * (1 - s._selectedAlpha) * 0.35
+        local blendA = s._selectedAlpha
 
         local r = Lerp(blendA, base.r, selCol.r)
         local g = Lerp(blendA, base.g, selCol.g)
         local b = Lerp(blendA, base.b, selCol.b)
         local a = Lerp(blendA, base.a, selCol.a)
 
-        if s._hoverAlpha > 0.01 and s._selectedAlpha < 0.9 then
-            local hb = s._hoverAlpha * 0.6
-            r = Lerp(hb, r, hoverCol.r)
-            g = Lerp(hb, g, hoverCol.g)
-            b = Lerp(hb, b, hoverCol.b)
-        end
-
-        RNDX().Rect(0, 0, w, h)
-            :Rad(10)
-            :Color(Color(math.floor(r), math.floor(g), math.floor(b), math.floor(a)))
-            :Shape(RNDX.SHAPE_IOS)
-        :Draw()
+        surface.SetDrawColor(Color(math.floor(r), math.floor(g), math.floor(b), math.floor(a)))
+        surface.DrawRect(0, h - 1, w, 1)
     end
 
     row.DoClick = function()
@@ -515,6 +508,55 @@ end
 function PANEL:RebuildRows()
     self.content:Clear()
     self._rowPanels = {}
+
+    if IsValid(self._hoverBar) then
+        self._hoverBar:Remove()
+    end
+
+    self._hoverBar = vgui.Create('Panel', self.content)
+    self._hoverBar:SetMouseInputEnabled(false)
+    local base = Mantle.color.panel[1]
+    local hoverColor = Color(math.min(255, base.r + 18), math.min(255, base.g + 18), math.min(255, base.b + 18))
+    self._hoverBar.Paint = function(_, w, h)
+        local a = self._hoverA
+        if a <= 0.01 then return end
+        RNDX().Rect(0, 0, w, h)
+            :Rad(10)
+            :Color(Color(hoverColor.r, hoverColor.g, hoverColor.b, math.floor(255 * a)))
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
+    end
+    self._hoverBar.Think = function()
+        local ft = FrameTime()
+        local speed = 60
+
+        local hovered
+        for _, row in ipairs(self._rowPanels) do
+            if IsValid(row) and row:IsHovered() then
+                hovered = row
+                break
+            end
+        end
+        self._hoverRow = hovered
+
+        if IsValid(hovered) then
+            self._hoverA = Mantle.func.approachExp(self._hoverA, 1, speed, ft)
+            self._hoverX = Mantle.func.approachExp(self._hoverX, hovered:GetX(), speed, ft)
+            self._hoverY = Mantle.func.approachExp(self._hoverY, hovered:GetY(), speed, ft)
+            self._hoverW = Mantle.func.approachExp(self._hoverW, hovered:GetWide(), speed, ft)
+            self._hoverH = Mantle.func.approachExp(self._hoverH, hovered:GetTall(), speed, ft)
+
+            if math.abs(self._hoverX - hovered:GetX()) < 0.5 then self._hoverX = hovered:GetX() end
+            if math.abs(self._hoverY - hovered:GetY()) < 0.5 then self._hoverY = hovered:GetY() end
+            if math.abs(self._hoverW - hovered:GetWide()) < 0.5 then self._hoverW = hovered:GetWide() end
+            if math.abs(self._hoverH - hovered:GetTall()) < 0.5 then self._hoverH = hovered:GetTall() end
+        else
+            self._hoverA = Mantle.func.approachExp(self._hoverA, 0, 20, ft)
+        end
+
+        self._hoverBar:SetPos(self._hoverX, self._hoverY)
+        self._hoverBar:SetSize(self._hoverW, self._hoverH)
+    end
 
     self:CreateHeader()
 
