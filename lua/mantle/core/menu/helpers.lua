@@ -90,7 +90,7 @@ end
 function menu.createInfo(info, parent)
     local panel = vgui.Create('Panel')
     panel:Dock(TOP)
-    panel:DockMargin(0, 0, 0, 6)
+    panel:DockMargin(0, 0, 0, 8)
     panel:SetTall(50)
 
     panel.Paint = function(_, w, h)
@@ -99,7 +99,10 @@ function menu.createInfo(info, parent)
             :Color(Mantle.color.panel_alpha[2])
         :Draw()
 
-        Mantle.func.gradient(0, 0, 6, h, 3, Mantle.color.theme, 6)
+        RNDX().Rect(0, 0, 4, h)
+            :Rad(32)
+            :Color(Mantle.color.theme)
+        :Draw()
 
         draw.SimpleText(info[1], 'Fated.20', 16, 7, Mantle.color.text)
         draw.SimpleText(info[2], 'Fated.16', 16, h - 7, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
