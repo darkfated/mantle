@@ -1,6 +1,7 @@
 local PANEL = {}
 
 local mat_close = Material('mantle/close_btn_new.png')
+local color_notify_outline = Color(255, 255, 255, 40)
 
 function PANEL:Init()
     self.bool_alpha = true
@@ -122,15 +123,15 @@ function PANEL:Notify(text, duration, col)
     mp:SetAlpha(0)
     mp.Paint = function(_, w, h)
         RNDX().Rect(0, 0, w, h)
-            :Rad(16)
-            :Color(col)
-            :Shadow(7, 20)
-            :Outline(3)
-            :Clip(self)
+            :Rad(14)
+            :Color(Mantle.color.background_panelpopup)
+            :Shape(RNDX.SHAPE_IOS)
         :Draw()
         RNDX().Rect(0, 0, w, h)
-            :Rad(16)
-            :Color(col)
+            :Rad(14)
+            :Color(color_notify_outline)
+            :Outline(1)
+            :Shape(RNDX.SHAPE_IOS)
         :Draw()
         draw.SimpleText(text, 'Fated.20', w * 0.5, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
