@@ -1,7 +1,5 @@
 local PANEL = {}
 
-local color_btn_hovered = Color(255, 255, 255, 10)
-local color_shadow = Color(0, 0, 0, 150)
 local math_floor = math.floor
 
 local function getTabButton(self, tab_id)
@@ -42,7 +40,7 @@ function PANEL:Init()
         local a = self._tabShadowA or 0
         if a <= 0.01 then return end
 
-        local sh = color_shadow
+        local sh = Mantle.color.tab_shadow
         Mantle.func.gradient(0, 0, w, h, 2, Color(sh.r, sh.g, sh.b, a))
     end
 
@@ -54,7 +52,7 @@ function PANEL:Init()
         local a = self._tabFootA or 0
         if a <= 0.01 then return end
 
-        local sh = color_shadow
+        local sh = Mantle.color.tab_shadow
         Mantle.func.gradient(0, 0, w, h, 1, Color(sh.r, sh.g, sh.b, a))
     end
 
@@ -92,13 +90,13 @@ function PANEL:_createTabBar()
         local a = self._hoverA
         if a <= 0.01 then return end
 
-        local hover = color_btn_hovered
+        local hover = Mantle.color.tab_hover
         local flags = self.tab_style == 'modern' and self._hoverActive and (RNDX.NO_BL + RNDX.NO_BR) or 0
         local radius = self.tab_style == 'modern' and 16 or 24
 
         RNDX.Rect(0, 0, w, h)
             :Rad(radius)
-            :Color(Color(hover.r, hover.g, hover.b, math_floor(10 * a)))
+            :Color(Color(hover.r, hover.g, hover.b, math_floor(hover.a * a)))
             :Flags(flags)
         :Draw()
     end
@@ -158,7 +156,7 @@ function PANEL:_createTabButton(tab, id)
     btn.Paint = function(s, w, h)
         local isActive = self.active_id == id
         local colorText = isActive and Mantle.color.theme or Mantle.color.text
-        local colorIcon = isActive and Mantle.color.theme or color_white
+        local colorIcon = isActive and Mantle.color.theme or Mantle.color.icon
 
         if self.tab_style == 'modern' then
             local padding = 16
@@ -234,14 +232,14 @@ function PANEL:Think()
     end
 
     self._tabScroll = Mantle.func.approachExp(self._tabScroll, targetScroll, 20, ft)
-    self._tabShadowA = color_shadow.a * math.min(1, math.max(0, self._tabScroll) / self.tab_height) + 20
+    self._tabShadowA = Mantle.color.tab_shadow.a * math.min(1, math.max(0, self._tabScroll) / self.tab_height) + 20
 
     local maxScroll = 0
     if activePan and activePan._range then
         maxScroll = select(1, activePan:_range())
     end
 
-    self._tabFootA = color_shadow.a * math.min(1, math.max(0, maxScroll - self._tabScroll) / self.tab_height)
+    self._tabFootA = Mantle.color.tab_shadow.a * math.min(1, math.max(0, maxScroll - self._tabScroll) / self.tab_height)
 
     local activeBtn = getTabButton(self, self.active_id)
 

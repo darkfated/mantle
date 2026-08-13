@@ -104,9 +104,10 @@ function PANEL:PaintOver(w, h)
     :Draw()
 
     if self._toggleHover > 0.01 then
+        local hv = Mantle.color.hover_overlay_strong
         RNDX.Rect(trackX, trackY + 1, trackW, trackH - 2)
             :Rad(trackH / 2)
-            :Color(Color(255, 255, 255, math_floor(18 * self._toggleHover)))
+            :Color(Color(hv.r, hv.g, hv.b, math_floor(hv.a * self._toggleHover)))
         :Draw()
     end
 
@@ -132,7 +133,7 @@ function PANEL:PaintOver(w, h)
     :Draw()
 
     RNDX.Circle(circleCenterX, circleCenterY + 1, circleSize * 1.03 * 0.5)
-        :Color(Color(0, 0, 0, 18))
+        :Color(Mantle.color.circle_shadow)
     :Draw()
 end
 

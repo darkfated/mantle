@@ -150,8 +150,9 @@ function Mantle.ui.color_picker(callback, defaultColor)
         local segmentWidth = w / segments
 
         RNDX.Rect(0, 0, w, h)
+            :Rad(12)
             :Color(Mantle.color.window_shadow)
-            :Shadow(20, 5)
+            :Shadow(4, 2)
         :Draw()
 
         for i = 0, segments - 1 do

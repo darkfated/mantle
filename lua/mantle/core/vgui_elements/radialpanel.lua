@@ -269,9 +269,10 @@ function PANEL:Paint(w,h)
     local cnt = #opts
 
     if !self.disable_background then
+        local dim = Mantle.color.dim_overlay
         RNDX.Rect(0, 0, w, h)
             :Radii(0, 0, 0, 0)
-            :Color(Color(0, 0, 0, 140 * alpha))
+            :Color(Color(dim.r, dim.g, dim.b, math_floor(dim.a * alpha)))
         :Draw()
     end
 
@@ -376,7 +377,8 @@ function PANEL:Paint(w,h)
                 local iconY = ly - iconSize * 0.5 - Mantle.func.h(6) * self.scale
                 local mat = Material(option.icon)
                 if mat and !mat:IsError() then
-                    surface.SetDrawColor(255,255,255, math_floor(230 * alpha))
+                    local ic = Mantle.color.icon
+                    surface.SetDrawColor(ic.r, ic.g, ic.b, math_floor(230 * alpha))
                     surface.SetMaterial(mat)
                     surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
                 end
@@ -417,7 +419,8 @@ function PANEL:Paint(w,h)
             local isz = Mantle.func.w(48) * self.scale
             local mat = Material(opt.icon)
             if mat and !mat:IsError() then
-                surface.SetDrawColor(255, 255, 255, math_floor(255 * alpha))
+                local ic = Mantle.color.icon
+                surface.SetDrawColor(ic.r, ic.g, ic.b, math_floor(255 * alpha))
                 surface.SetMaterial(mat)
                 surface.DrawTexturedRect(cx - isz/2, cy - isz/2 - Mantle.func.h(6)*self.scale, isz, isz)
             end

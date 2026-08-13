@@ -40,9 +40,10 @@ function PANEL:Init()
     self._hoverBar.Paint = function(_, w, h)
         local a = self._hoverA
         if a <= 0.01 then return end
+        local hv = Mantle.color.hover_overlay_strong
         RNDX.Rect(0, 0, w, h)
             :Rad(8)
-            :Color(Color(Mantle.color.hover.r, Mantle.color.hover.g, Mantle.color.hover.b, math_floor(255 * a)))
+            :Color(Color(hv.r, hv.g, hv.b, math_floor(hv.a * a)))
         :Draw()
     end
 

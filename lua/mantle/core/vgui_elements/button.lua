@@ -17,7 +17,7 @@ function PANEL:Init()
     self.col_hov = Mantle.color.button_hovered
     self.bool_gradient = true
     self.enable_ripple = false
-    self.ripple_color = Color(255, 255, 255, 30)
+    self.ripple_color = Mantle.color.ripple
     self.ripple_alpha = 0
     self.ripple_x = 0
     self.ripple_y = 0
@@ -87,7 +87,7 @@ function PANEL:_drawContent(w, h)
         if hasIcon then
             RNDX.Rect(startX, cy - self.icon_size * 0.5, self.icon_size, self.icon_size)
                 :Material(self.icon)
-                :Color(color_white)
+                :Color(Mantle.color.icon)
             :Draw()
             startX = startX + self.icon_size + 6
         end
@@ -96,7 +96,7 @@ function PANEL:_drawContent(w, h)
     elseif hasIcon then
         RNDX.Rect((w - self.icon_size) * 0.5, (h - self.icon_size) * 0.5, self.icon_size, self.icon_size)
             :Material(self.icon)
-            :Color(color_white)
+            :Color(Mantle.color.icon)
         :Draw()
     end
 end

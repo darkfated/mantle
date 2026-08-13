@@ -3,7 +3,7 @@ local PANEL = {}
 function PANEL:Init()
     self.title = nil
     self.placeholder = Mantle.lang.get('mantle', 'entry_default_placeholder')
-    self:SetTall(26)
+    self:SetTall(32)
     self.action = function() end
 
     self.font = 'Fated.18'
@@ -43,9 +43,10 @@ function PANEL:_paintEntry(s, w, h)
     :Draw()
 
     if self._hoverLerp > 0.01 then
+        local hv = Mantle.color.hover_overlay
         RNDX.Rect(0, 0, w, h)
             :Rad(12)
-            :Color(Color(255, 255, 255, math.floor(8 * self._hoverLerp)))
+            :Color(Color(hv.r, hv.g, hv.b, math.floor(hv.a * self._hoverLerp)))
         :Draw()
     end
 

@@ -54,13 +54,13 @@ function PANEL:Init()
 
         if s._ShadowLerp > 0.01 then
             RNDX.Rect(0, 0, w, h)
-                :Rad(2)
+                :Rad(32)
                 :Color(Mantle.color.theme)
                 :Shadow(4, s._ShadowLerp)
             :Draw()
         end
         RNDX.Rect(0, 0, w, h)
-            :Rad(2)
+            :Rad(32)
             :Color(Mantle.color.theme)
         :Draw()
     end
@@ -106,7 +106,7 @@ function PANEL:_createHeaderPanel()
         self.header:SetTall(self.headerHeight)
         self.header.Paint = function(_, w, h)
             RNDX.Rect(0, 0, w, h)
-                :Rad(10)
+                :Rad(12)
                 :Color(Mantle.color.panel_alpha[1])
             :Draw()
         end
@@ -525,14 +525,13 @@ function PANEL:RebuildRows()
 
     self._hoverBar = vgui.Create('Panel', self.content)
     self._hoverBar:SetMouseInputEnabled(false)
-    local base = Mantle.color.panel[1]
-    local hoverColor = Color(math.min(255, base.r + 18), math.min(255, base.g + 18), math.min(255, base.b + 18))
+    local hoverColor = Mantle.color.hover_overlay
     self._hoverBar.Paint = function(_, w, h)
         local a = self._hoverA
         if a <= 0.01 then return end
         RNDX.Rect(0, 0, w, h)
-            :Rad(10)
-            :Color(Color(hoverColor.r, hoverColor.g, hoverColor.b, math.floor(255 * a)))
+            :Rad(12)
+            :Color(Color(hoverColor.r, hoverColor.g, hoverColor.b, math.floor(hoverColor.a * a)))
         :Draw()
     end
     self._hoverBar.Think = function()

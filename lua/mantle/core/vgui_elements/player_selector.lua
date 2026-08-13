@@ -1,7 +1,3 @@
-local color_disconnect = Color(210, 65, 65)
-local color_bot = Color(70, 150, 220)
-local color_online = Color(120, 180, 70)
-
 function Mantle.ui.player_selector(onSelect, filterFn)
     if IsValid(Mantle.ui.menu_player_selector) then
         Mantle.ui.menu_player_selector:Remove()
@@ -34,15 +30,15 @@ function Mantle.ui.player_selector(onSelect, filterFn)
             Mantle.func.sound()
             selector:Close()
         end
-        card.playerColor = team.GetColor(pl:Team()) or color_online
+        card.playerColor = team.GetColor(pl:Team()) or Mantle.color.status_online
         card.Paint = function(self, w, h)
             RNDX.Rect(0, 0, w, h)
-                :Rad(10)
+                :Rad(12)
                 :Color(Mantle.color.panel_alpha[1])
             :Draw()
 
             if !IsValid(pl) then
-                draw.SimpleText(Mantle.lang.get('mantle', 'player_offline'), 'Fated.16', 44, h * 0.5, color_disconnect, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(Mantle.lang.get('mantle', 'player_offline'), 'Fated.16', 44, h * 0.5, Mantle.color.status_disconnect, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 return
             end
 
@@ -51,9 +47,9 @@ function Mantle.ui.player_selector(onSelect, filterFn)
             group = string.upper(string.sub(group, 1, 1)) .. string.sub(group, 2)
             draw.SimpleText(group, 'Fated.14', 50, h - 8, Mantle.color.text_muted, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
             draw.SimpleText(pl:Ping() .. ' ' .. Mantle.lang.get('mantle', 'player_ping'), 'Fated.16', w - 12, h - 8, Mantle.color.text_muted, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
-            local statusColor = color_disconnect
+            local statusColor = Mantle.color.status_disconnect
             if pl:IsBot() then
-                statusColor = color_bot
+                statusColor = Mantle.color.status_bot
             else
                 statusColor = self.playerColor
             end
