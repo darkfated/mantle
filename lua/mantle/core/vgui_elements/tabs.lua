@@ -232,7 +232,7 @@ function PANEL:Think()
     end
 
     self._tabScroll = Mantle.func.approachExp(self._tabScroll, targetScroll, 20, ft)
-    self._tabShadowA = Mantle.color.tab_shadow.a * math.min(1, math.max(0, self._tabScroll) / self.tab_height) + 20
+    self._tabShadowA = Mantle.color.tab_shadow.a * math.min(1, math.max(0, self._tabScroll) / self.tab_height)
 
     local maxScroll = 0
     if activePan and activePan._range then
