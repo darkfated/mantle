@@ -18,7 +18,6 @@ function PANEL:Init()
     self._animTarget = 0
     self._animSpeed = 12
     self._childrenAlpha = -1
-    self._contentInput = false
     self._contentTall = -1
 
     self.header = vgui.Create('Button', self)
@@ -42,7 +41,8 @@ function PANEL:Init()
     end
 
     self.content = vgui.Create('Panel', self)
-    self.content:SetMouseInputEnabled(false)
+    self.content:SetVisible(false)
+    self._contentVisible = false
 end
 
 function PANEL:SetText(name)
@@ -138,10 +138,10 @@ function PANEL:Think()
         self.content:SetAlpha(alphaVal)
     end
 
-    local inputEnabled = eased > 0
-    if inputEnabled != self._contentInput then
-        self._contentInput = inputEnabled
-        self.content:SetMouseInputEnabled(inputEnabled)
+    local visible = eased >= 0.004
+    if visible != self._contentVisible then
+        self._contentVisible = visible
+        self.content:SetVisible(visible)
     end
 end
 
