@@ -370,7 +370,9 @@ local function createUITab()
         {':AddItem(object panel)', 'Добавить в категорию элемент'},
         {':SetColor(color col)', 'Установить кастомный цвет категории'},
         {':SetCenterText(bool is_centered)', 'Установить центрирование названия'},
-        {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'}
+        {':SetActive(bool is_active)', 'Установить активность категории (дефолт - false)'},
+        {':IsActive()', 'Получить текущее состояние категории (открыта/закрыта)'},
+        {':Clear()', 'Очистить категорию от всех элементов и закрыть её'}
     }, panel, panelCat)
 
     --[[
