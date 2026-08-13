@@ -1,4 +1,5 @@
 local PANEL = {}
+local math_floor = math.floor
 
 local TOP_PADDING = 12
 local SIDE_PADDING = 16
@@ -6,18 +7,18 @@ local BAR_Y = 36
 local BAR_H = 5
 local HANDLE_R = 7
 local TRACK_INSET = 8
-
-local function getTrackBounds(w)
-    local start = SIDE_PADDING + TRACK_INSET
-    local end_ = w - SIDE_PADDING - TRACK_INSET
-    return start, end_, math.max(0, end_ - start)
-end
+local VALUE_GAP = 12
 
 local function formatValue(val, decimals)
     if decimals and decimals > 0 then
         return string.format('%.' .. decimals .. 'f', val)
     end
     return tostring(math.Round(val))
+end
+
+local function getValueWidth(maxValue, decimals)
+    surface.SetFont('Fated.16')
+    return surface.GetTextSize(formatValue(maxValue, decimals)) + VALUE_GAP
 end
 
 function PANEL:Init()
@@ -31,6 +32,7 @@ function PANEL:Init()
     self.smoothProgress = 0
     self.dragging = false
     self._dragLerp = 0
+    self._hoverLerp = 0
 
     self:SetTall(68)
     self:SetCursor('hand')
@@ -118,6 +120,12 @@ local function getProgress(self)
     return math.Clamp((self.value - self.min_value) / denom, 0, 1)
 end
 
+local function getTrackBounds(self, w)
+    local start = SIDE_PADDING + TRACK_INSET
+    local end_ = w - SIDE_PADDING - getValueWidth(self.max_value, self.decimals)
+    return start, end_, math.max(0, end_ - start)
+end
+
 function PANEL:SetFromProgress(progress)
     progress = math.Clamp(progress, 0, 1)
     local val = self.min_value + progress * (self.max_value - self.min_value)
@@ -132,20 +140,22 @@ function PANEL:SetFromProgress(progress)
 end
 
 function PANEL:UpdateFromCursor(absX)
-    local start, _, barW = getTrackBounds(self:GetWide())
+    local _, _, barW = getTrackBounds(self, self:GetWide())
+    local start = SIDE_PADDING + TRACK_INSET
     if barW <= 0 then return end
-    self:SetFromProgress((absX - start) / barW)
+    self:SetFromProgress(math.Clamp((absX - start) / barW, 0, 1))
 end
 
 function PANEL:Paint(w, h)
     local ft = FrameTime()
-    local start, end_, barW = getTrackBounds(w)
+    local start, end_, barW = getTrackBounds(self, w)
 
     local activeW = barW * getProgress(self)
     self.smoothProgress = Mantle.func.approachExp(self.smoothProgress, activeW, 14, ft)
 
-    local target = self.dragging and 1 or 0
-    self._dragLerp = Mantle.func.approachExp(self._dragLerp, target, 14, ft)
+    local dragTarget = self.dragging and 1 or 0
+    self._dragLerp = Mantle.func.approachExp(self._dragLerp, dragTarget, 14, ft)
+    self._hoverLerp = Mantle.func.approachExp(self._hoverLerp, self:IsHovered() and 1 or 0, 16, ft)
 
     draw.SimpleText(self.text, 'Fated.16', SIDE_PADDING, TOP_PADDING - 6, Mantle.color.text)
 
@@ -166,30 +176,24 @@ function PANEL:Paint(w, h)
     local handleR = HANDLE_R
     local dragAlpha = math.floor((1 - self._dragLerp) * 255)
 
-    RNDX.Circle(handleX, handleY, handleR + 2)
+    RNDX.Circle(handleX, handleY, handleR)
         :Color(Mantle.color.window_shadow)
         :Shadow(4, 2)
     :Draw()
+
+    if self._hoverLerp > 0.01 then
+        local hv = Mantle.color.hover_overlay_strong
+        RNDX.Circle(handleX, handleY, handleR + 2)
+            :Color(Color(hv.r, hv.g, hv.b, math_floor(hv.a * self._hoverLerp)))
+        :Draw()
+    end
 
     RNDX.Circle(handleX, handleY, handleR)
         :Color(Color(Mantle.color.theme.r, Mantle.color.theme.g, Mantle.color.theme.b, dragAlpha))
     :Draw()
 
-    if self._dragLerp > 0.01 then
-        RNDX.Circle(handleX, handleY, handleR)
-            :Blur(self._dragLerp)
-        :Draw()
-    end
-
-    draw.SimpleText(
-        formatValue(self.value, self.decimals),
-        'Fated.16',
-        end_ + 6,
-        handleY,
-        Mantle.color.theme,
-        TEXT_ALIGN_LEFT,
-        TEXT_ALIGN_CENTER
-    )
+    local valueStr = formatValue(self.value, self.decimals)
+    draw.SimpleText(valueStr, 'Fated.16', end_ + VALUE_GAP, handleY, Mantle.color.theme, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     draw.SimpleText(tostring(self.min_value), 'Fated.14', start, BAR_Y + BAR_H + 12, Mantle.color.gray)
     draw.SimpleText(tostring(self.max_value), 'Fated.14', end_, BAR_Y + BAR_H + 12, Mantle.color.gray, TEXT_ALIGN_RIGHT)
