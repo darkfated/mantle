@@ -1,6 +1,7 @@
 local PANEL = {}
 
 local color_btn_hovered = Color(255, 255, 255, 10)
+local color_shadow = Color(0, 0, 0, 150)
 local math_floor = math.floor
 
 local function getTabButton(self, tab_id)
@@ -27,8 +28,35 @@ function PANEL:Init()
     self._hoverA = 0
     self._hoverActive = false
 
+    self._tabShadowA = 0
+    self._tabScroll = 0
+    self._tabFootA = 0
+
     self.content = vgui.Create('Panel', self)
     self.content.Paint = nil
+
+    self._tabShadow = vgui.Create('Panel', self)
+    self._tabShadow:SetMouseInputEnabled(false)
+    self._tabShadow.Paint = function(_, w, h)
+        if self.tab_style != 'modern' then return end
+        local a = self._tabShadowA or 0
+        if a <= 0.01 then return end
+
+        local sh = color_shadow
+        Mantle.func.gradient(0, 0, w, h, 2, Color(sh.r, sh.g, sh.b, a))
+    end
+
+    self._tabFoot = vgui.Create('Panel', self)
+    self._tabFoot:SetMouseInputEnabled(false)
+    self._tabFoot:SetTall(self.tab_height)
+    self._tabFoot.Paint = function(_, w, h)
+        if self.tab_style != 'modern' then return end
+        local a = self._tabFootA or 0
+        if a <= 0.01 then return end
+
+        local sh = color_shadow
+        Mantle.func.gradient(0, 0, w, h, 1, Color(sh.r, sh.g, sh.b, a))
+    end
 
     self:_rebuildTabs()
 end
@@ -185,6 +213,24 @@ function PANEL:Think()
 
     if self.tab_style != 'modern' then return end
 
+    local activeTab = self.tabs[self.active_id]
+    local activePan = activeTab and IsValid(activeTab.pan) and activeTab.pan or nil
+
+    local targetScroll = 0
+    if activePan and activePan.GetScroll then
+        targetScroll = activePan:GetScroll() or 0
+    end
+
+    self._tabScroll = Mantle.func.approachExp(self._tabScroll, targetScroll, 20, ft)
+    self._tabShadowA = color_shadow.a * math.min(1, math.max(0, self._tabScroll) / self.tab_height) + 20
+
+    local maxScroll = 0
+    if activePan and activePan._range then
+        maxScroll = select(1, activePan:_range())
+    end
+
+    self._tabFootA = color_shadow.a * math.min(1, math.max(0, maxScroll - self._tabScroll) / self.tab_height)
+
     local activeBtn = getTabButton(self, self.active_id)
 
     local targetX, targetW = 0, 0
@@ -215,16 +261,39 @@ function PANEL:Think()
     self._indicator_moving = math.abs(self.indicator_x - targetX) >= 0.5 or math.abs(self.indicator_w - targetW) >= 0.5
 end
 
+function PANEL:_applyTabLayout()
+    for _, tab in ipairs(self.tabs) do
+        local pan = tab.pan
+        if IsValid(pan) then
+            if self.tab_style == 'modern' then
+                if pan.GetScroll then
+                    pan:DockPadding(0, self.tab_height, 0, 0)
+                else
+                    pan:DockMargin(0, self.tab_height, 0, 0)
+                end
+            else
+                if pan.GetScroll then
+                    pan:DockPadding(0, 0, 0, 0)
+                else
+                    pan:DockMargin(0, 0, 0, 0)
+                end
+            end
+        end
+    end
+end
+
 function PANEL:SetTabStyle(style)
     if style != 'modern' and style != 'classic' then return end
     if self.tab_style == style then return end
 
     self.tab_style = style
     self:_rebuildTabs()
+    self:_applyTabLayout()
 end
 
 function PANEL:SetTabHeight(height)
     self.tab_height = height
+    self:_applyTabLayout()
     self:InvalidateLayout(true)
 end
 
@@ -257,6 +326,7 @@ function PANEL:AddTab(data, pan, icon)
 
     tab.pan:SetParent(self.content)
     tab.pan:Dock(FILL)
+    self:_applyTabLayout()
     self:_createTabButton(tab, newId)
     self:_syncPanels()
 
@@ -286,6 +356,10 @@ function PANEL:SetActiveTab(tab_id, is_silent)
     next_tab.pan:SetVisible(true)
     self.active_id = next_id
 
+    if next_tab.pan and next_tab.pan.GetScroll then
+        next_tab.pan:SetScroll(0)
+    end
+
     if self.tab_style == 'modern' then
         local btn = next_tab._btn
         if IsValid(btn) then
@@ -311,16 +385,23 @@ end
 
 function PANEL:PerformLayout(w, h)
     if self.tab_style == 'modern' then
-        self.panel_tabs:Dock(TOP)
-        self.panel_tabs:DockMargin(0, 0, 0, 4)
-        self.panel_tabs:SetTall(self.tab_height)
+        self.panel_tabs:SetPos(0, 0)
+        self.panel_tabs:SetSize(w, self.tab_height)
+        self._tabShadow:SetPos(0, 0)
+        self._tabShadow:SetSize(w, self.tab_height * 1.5)
+        self._tabShadow:SetVisible(true)
+        self._tabFoot:SetPos(0, h - self.tab_height)
+        self._tabFoot:SetSize(w, self.tab_height)
+        self._tabFoot:SetVisible(true)
+        self.content:Dock(FILL)
     else
         self.panel_tabs:Dock(LEFT)
         self.panel_tabs:DockMargin(0, 0, 4, 0)
         self.panel_tabs:SetWide(190)
+        self._tabShadow:SetVisible(false)
+        self._tabFoot:SetVisible(false)
+        self.content:Dock(FILL)
     end
-
-    self.content:Dock(FILL)
 end
 
 vgui.Register('MantleTabs', PANEL, 'Panel')

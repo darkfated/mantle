@@ -74,7 +74,7 @@ local function createSettingsTab()
     for colId, value in pairs(Mantle.color) do
         if menu.isColor(value) then
             local panCol = vgui.Create('DPanel', listThemeColors)
-            panCol:SetSize(80, 80)
+            panCol:SetSize(78, 78)
             panCol.Paint = function(_, w, h)
                 RNDX().Rect(0, 0, w, h)
                     :Rad(16)
