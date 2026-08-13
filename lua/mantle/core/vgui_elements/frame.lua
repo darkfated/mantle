@@ -9,7 +9,7 @@ function PANEL:Init()
     self.title = Mantle.lang.get('mantle', 'frame_title')
     self.center_title = ''
 
-    self:DockPadding(6, 30, 6, 6)
+    self:DockPadding(8, 32, 8, 8)
 
     self.top_panel = vgui.Create('Button', self)
     self.top_panel:SetText('')
