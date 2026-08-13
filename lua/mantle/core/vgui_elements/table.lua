@@ -1,112 +1,160 @@
 local PANEL = {}
 
-local FrameTime = FrameTime
-local CurTime = CurTime
-local Lerp = Lerp
-local math_max = math.max
+PANEL.IsVertical = true
+
 local math_floor = math.floor
+local math_max = math.max
 
 function PANEL:Init()
+    self.BaseClass.Init(self)
+
     self.columns = {}
     self.rows = {}
     self.headerHeight = 36
-    self.rowHeight = 32
+    self.rowHeight = 38
     self.font = 'Fated.18'
     self.rowFont = 'Fated.16'
     self.selectedRow = nil
     self.sortColumn = nil
     self.sortDesc = true
-    self.sortState = 0
-    self._originalRows = nil
-    self.hoverAnim = 0
-    self.padding = 8
-
-    self.sidePadding = 12
-    self.vbarRightPadding = 6
-    self.vbarLeftExtra = 0
-
-    self.header = vgui.Create('Panel', self)
-    self.header:Dock(TOP)
-    self.header:SetTall(self.headerHeight)
-
-    self.scrollPanel = vgui.Create('MantleScrollPanel', self)
-    self.scrollPanel:Dock(FILL)
-    self.scrollPanel:DisableVBarPadding()
-
-    self.content = vgui.Create('Panel', self.scrollPanel)
-    self.content:Dock(TOP)
-    self.content.Paint = nil
-
-    self._rowPanels = {}
-    self._headerButtons = {}
-    self._colWidthsTarget = {}
-    self._colWidthsCurrent = {}
-    self._lastVBarVis = nil
-    self._headerPrevActive = {}
+    self.padding = 12
+    self.sidePadding = 14
+    self.vbarW = 4
 
     self.OnAction = function() end
     self.OnRightClick = function() end
 
-    self.Think = function()
-        local dt = FrameTime()
+    self:_createHeaderPanel()
 
-        self:UpdateColumnWidthTargets()
-
-        for i = 1, #self.columns do
-            local tgt = self._colWidthsTarget[i] or (self.columns[i] and self.columns[i].width or 100)
-            self._colWidthsCurrent[i] = Mantle.func.approachExp(self._colWidthsCurrent[i] or tgt, tgt, 20, dt)
-        end
-
-        local leftPad = self.sidePadding + ((self._lastVBarVis and self.vbarLeftExtra) or 0)
-        local x = leftPad
-        for i, btn in ipairs(self._headerButtons) do
-            local w = math_floor(self._colWidthsCurrent[i] or (self.columns[i] and self.columns[i].width or 100))
-            if IsValid(btn) then
-                btn:SetSize(w, self.headerHeight)
-                btn:SetPos(x, 0)
-            end
-            x = x + w
-        end
-
-        local total = 0
-        for i = 1, #self.columns do total = total + (self._colWidthsCurrent[i] or self.columns[i].width) end
-
-        local panelW = self:GetWide() or 0
-        if panelW <= 0 then
-            local par = self:GetParent()
-            if IsValid(par) and par.GetWide then panelW = par:GetWide() end
-        end
-        if panelW <= 0 then panelW = ScrW() end
-
-        local rightPad = self.sidePadding + ((self._lastVBarVis and self.vbarRightPadding) or 0)
-        local contentW = math_max(total + leftPad + rightPad, panelW)
-
-        for _, row in ipairs(self._rowPanels) do
-            if IsValid(row) and row._labels then
-                local x2 = leftPad
-                local hv = row._hoverAlpha or 0
-                local eased = Mantle.func.easeOutCubic(math.Clamp(hv, 0, 1))
-                local shift = math_floor(6 * eased)
-                for i, label in ipairs(row._labels) do
-                    local w = math_floor(self._colWidthsCurrent[i] or (self.columns[i] and self.columns[i].width or 100))
-                    if IsValid(label) then
-                        local dx = 0
-                        if i == 1 then
-                            dx = shift
-                        elseif i == #self.columns then
-                            dx = -shift
-                        end
-                        label:SetSize(w, self.rowHeight)
-                        label:SetPos(x2 + dx, 0)
-                    end
-                    x2 = x2 + w
-                end
-                row:SetWide(contentW)
-            end
-        end
-
-        self.content:SetWide(contentW)
+    self.foot = vgui.Create('Panel', self)
+    self.foot:SetMouseInputEnabled(false)
+    self.foot:SetTall(self.headerHeight)
+    self.foot.Paint = function(_, w, h)
+        local maxScroll = select(1, self:_range())
+        local a = Mantle.color.window_shadow.a * math.min(1, math.max(0, maxScroll - self.offset) / self.headerHeight)
+        if a <= 0 then return end
+        Mantle.func.gradient(0, 0, w, h, 1, Color(Mantle.color.window_shadow.r, Mantle.color.window_shadow.g, Mantle.color.window_shadow.b, a))
     end
+
+    self.vbar = vgui.Create('Panel', self)
+    self.vbar:SetMouseInputEnabled(true)
+    self.vbar:SetWide(self.vbarW)
+    self.vbar:Dock(RIGHT)
+    self.vbar:DockMargin(0, 0, 0, 0)
+    self.vbar.Paint = function() end
+
+    self.vbar.grip = vgui.Create('Panel', self.vbar)
+    self.vbar.grip:SetMouseInputEnabled(true)
+    self.vbar.grip:SetCursor('hand')
+    self.vbar.grip.Paint = function(_, w, h)
+        RNDX().Rect(0, 0, w, h)
+            :Rad(2)
+            :Color(Mantle.color.theme)
+            :Shape(RNDX.SHAPE_IOS)
+        :Draw()
+    end
+    self.vbar.grip.OnMousePressed = function(s)
+        local _, my = self.vbar:CursorPos()
+        self._draggingGrip = true
+        self._gripOffset = my - s.y
+        s:MouseCapture(true)
+        self.vel = 0
+    end
+    self.vbar.grip.OnMouseReleased = function(s)
+        self._draggingGrip = false
+        s:MouseCapture(false)
+    end
+
+    self:DockPadding(0, 0, 0, 0)
+
+    self._headerButtons = {}
+    self._colWidthsTarget = {}
+    self._colWidthsCurrent = {}
+    self._lastVBarVis = false
+    self._needWidths = true
+    self._draggingGrip = false
+    self._gripOffset = 0
+
+    self.OnSizeChanged = function()
+        self._needWidths = true
+    end
+end
+
+function PANEL:_createHeaderPanel()
+    if !IsValid(self.header) then
+        self.header = vgui.Create('Panel', self.content)
+        self.header:SetMouseInputEnabled(false)
+        self.header:Dock(TOP)
+        self.header:DockMargin(0, 0, 0, 4)
+        self.header:SetTall(self.headerHeight)
+        self.header.Paint = function(_, w, h)
+            RNDX().Rect(0, 0, w, h)
+                :Rad(10)
+                :Color(Mantle.color.panel_alpha[1])
+                :Shape(RNDX.SHAPE_IOS)
+            :Draw()
+        end
+    end
+
+    if !IsValid(self.headerText) then
+        self.headerText = vgui.Create('Panel', self)
+        self.headerText:SetMouseInputEnabled(true)
+        self.headerText:SetSize(self:GetWide(), self.headerHeight)
+        self.headerText.Paint = function(_, w, h)
+            local a = Mantle.color.window_shadow.a * math.min(1, self.offset / self.headerHeight)
+            if a > 0 then
+                Mantle.func.gradient(0, 0, w, h, 2, Color(Mantle.color.window_shadow.r, Mantle.color.window_shadow.g, Mantle.color.window_shadow.b, a))
+            end
+        end
+        self.headerText.OnMouseWheeled = function(_, delta)
+            self:OnMouseWheeled(delta)
+        end
+    end
+end
+
+function PANEL:_isInternal(child)
+    return child == self.content or child == self.header or child == self.headerText or child == self.foot or child == self.vbar or child == self.vbar.grip
+end
+
+function PANEL:_sizeCanvas()
+    self.content:SizeToChildren(false, true)
+end
+
+function PANEL:_range()
+    if self._needLayout then
+        local w, h = self:GetWide(), self:GetTall()
+
+        local vbReserve = self.vbar:IsVisible() and self.vbarW or 0
+
+        self.content:SetPos(self.padL, self.padT - self.offset)
+        self.content:SetWide(math.max(0, w - self.padL - self.padR - vbReserve))
+        self.content:InvalidateLayout(true)
+        self.content:SizeToChildren(false, true)
+
+        local viewH = math.max(0, h - self.padT - self.padB)
+        local contentH = self.content:GetTall()
+
+        if contentH <= viewH then
+            self.vbar:SetVisible(false)
+            self.content:SetWide(math.max(0, w - self.padL - self.padR))
+            self.content:InvalidateLayout(true)
+            self.content:SizeToChildren(false, true)
+            contentH = self.content:GetTall()
+        else
+            self.vbar:SetVisible(true)
+        end
+
+        self._needLayout = false
+    end
+
+    local viewH = math.max(0, self:GetTall() - self.padT - self.padB)
+    local contentH = self.content:GetTall()
+
+    return math.max(0, contentH - viewH), viewH, contentH
+end
+
+function PANEL:_applyScroll()
+    self.content:SetPos(self.padL, self.padT - math_floor(self.offset))
 end
 
 function PANEL:AddColumn(name, width, align, sortable)
@@ -128,41 +176,6 @@ function PANEL:AddItem(...)
     table.insert(self.rows, args)
     self:RebuildRows()
     return #self.rows
-end
-
-local function getValueType(value)
-    if value == nil then return 'nil' end
-    value = tostring(value)
-    return tonumber(value) and 'number' or 'string'
-end
-
-local function compareValues(a, b)
-    if a == nil and b == nil then return false end
-    if a == nil then return true end
-    if b == nil then return false end
-
-    local typeA = getValueType(a)
-    local typeB = getValueType(b)
-
-    if typeA != typeB then
-        return typeA < typeB
-    end
-
-    if typeA == 'number' then
-        local numA = tonumber(a) or 0
-        local numB = tonumber(b) or 0
-        return numA > numB
-    else
-        local strA = tostring(a)
-        local strB = tostring(b)
-        return strA < strB
-    end
-end
-
-local function cloneRows(tbl)
-    local out = {}
-    for i, v in ipairs(tbl) do out[i] = v end
-    return out
 end
 
 function PANEL:SortByColumn(columnIndex)
@@ -235,23 +248,15 @@ function PANEL:UpdateColumnWidthTargets()
     if n == 0 then return end
 
     local panelW = self:GetWide() or 0
-    if (!panelW) or panelW <= 0 then
-        local parent = self:GetParent()
-        if IsValid(parent) and parent.GetWide then panelW = parent:GetWide() end
-    end
-    if (!panelW) or panelW <= 0 then panelW = ScrW() end
+    if panelW <= 0 then panelW = ScrW() end
 
-    local vbar = (IsValid(self.scrollPanel) and self.scrollPanel.GetVBar) and self.scrollPanel:GetVBar() or nil
-    local vbarVisible = (IsValid(vbar) and vbar:IsVisible())
-    local vbarW = (vbarVisible and vbar:GetWide() or 0)
+    local vbarVisible = IsValid(self.vbar) and self.vbar:IsVisible()
+    local vbarW = vbarVisible and self.vbarW or 0
 
-    local leftPad = self.sidePadding + (vbarVisible and self.vbarLeftExtra or 0)
-    local rightPad = self.sidePadding + (vbarVisible and self.vbarRightPadding or 0)
-
-    local usable = math_max(0, panelW - leftPad - rightPad - vbarW)
+    local usable = math_max(0, panelW - self.sidePadding * 2 - vbarW)
 
     local used = 0
-    for i = 1, math.max(0, n - 1) do
+    for i = 1, math_max(0, n - 1) do
         self._colWidthsTarget[i] = cols[i].width or 100
         used = used + self._colWidthsTarget[i]
     end
@@ -270,88 +275,171 @@ function PANEL:UpdateColumnWidthTargets()
     self._lastVBarVis = vbarVisible
 end
 
-function PANEL:CreateHeader()
-    local prev = {}
+function PANEL:_layout()
+    local w = self:GetWide()
+    local h = self:GetTall()
+    self.foot:SetSize(w, self.headerHeight)
+    self.foot:SetPos(0, h - self.headerHeight)
+    self.headerText:SetSize(w, self.headerHeight)
+    self.headerText:SetPos(0, 0)
+
+    local x = self.sidePadding
     for i, btn in ipairs(self._headerButtons) do
-        if IsValid(btn) then prev[i] = btn._activeAlpha or 0 end
+        local colW = math_floor(self._colWidthsCurrent[i] or self._colWidthsTarget[i] or 100)
+        if IsValid(btn) then
+            btn:SetSize(colW, self.headerHeight)
+            btn:SetPos(x, 0)
+        end
+        x = x + colW
     end
 
-    self.header:Clear()
+    for _, row in ipairs(self._rowPanels) do
+        if IsValid(row) then
+            local x2 = self.sidePadding
+            for i, cell in ipairs(row._cells) do
+                local colW = math_floor(self._colWidthsCurrent[i] or self._colWidthsTarget[i] or 100)
+                if IsValid(cell) then
+                    cell:SetSize(colW, self.rowHeight)
+                    cell:SetPos(x2, 0)
+                end
+                x2 = x2 + colW
+            end
+        end
+    end
+end
+
+function PANEL:OnMousePressed(mc)
+    local hovered = vgui.GetHoveredPanel()
+    if IsValid(hovered) and (hovered == self.headerText or hovered:IsDescendantOf(self.headerText) or hovered == self.vbar or hovered:IsDescendantOf(self.vbar)) then
+        return
+    end
+
+    self.BaseClass.OnMousePressed(self, mc)
+end
+
+function PANEL:OnMouseReleased(mc)
+    self._draggingGrip = false
+    self.BaseClass.OnMouseReleased(self, mc)
+end
+
+function PANEL:_afterScroll(ft, maxScroll, viewH, contentH)
+    local vbarVisible = IsValid(self.vbar) and self.vbar:IsVisible()
+    if vbarVisible != self._lastVBarVis then
+        self._lastVBarVis = vbarVisible
+        self._needWidths = true
+    end
+
+    local needLayout = self._needWidths
+    if self._needWidths then
+        self:UpdateColumnWidthTargets()
+        self._needWidths = false
+    end
+
+    local changed = false
+    for i = 1, #self.columns do
+        local tgt = self._colWidthsTarget[i] or (self.columns[i] and self.columns[i].width or 100)
+        local cur = self._colWidthsCurrent[i]
+        if cur and cur != tgt then
+            cur = Mantle.func.approachExp(cur, tgt, 20, ft)
+            self._colWidthsCurrent[i] = cur
+            if math.abs(cur - tgt) < 0.5 then
+                cur = tgt
+                self._colWidthsCurrent[i] = cur
+            end
+            changed = true
+        end
+    end
+
+    if changed or needLayout then
+        self:_layout()
+    end
+
+    local vb = self.vbar
+    if !vb:IsVisible() then return end
+
+    if self._draggingGrip then
+        local _, my = vb:CursorPos()
+        local trackH = vb:GetTall()
+        local gripH = math.max(24, math.floor(trackH * (viewH / math.max(1, contentH))))
+        local range = trackH - gripH
+        if range > 0 then
+            local y = math.Clamp(my - self._gripOffset, 0, range)
+            self.offset = (y / range) * maxScroll
+            self.vel = 0
+        end
+        self:_applyScroll()
+    end
+
+    local gripH = math.max(24, math.floor(vb:GetTall() * (viewH / math.max(1, contentH))))
+    local scroll01 = maxScroll <= 0 and 0 or (self.offset / maxScroll)
+    local y = math.max(0, vb:GetTall() - gripH) * scroll01
+
+    if self._draggingGrip then
+        local _, my = vb:CursorPos()
+        local trackH = vb:GetTall()
+        local range = trackH - gripH
+        y = math.Clamp(my - self._gripOffset, 0, math.max(0, range))
+    end
+
+    vb.grip:SetSize(vb:GetWide(), gripH)
+    vb.grip:SetPos(0, y)
+end
+
+function PANEL:CreateHeader()
+    self:_createHeaderPanel()
+
+    self.headerText:Clear()
     self._headerButtons = {}
-
-    self.header.Paint = function(_, w, h)
-        RNDX().Rect(0, 0, w, h)
-            :Radii(16, 16, 0, 0)
-            :Color(Mantle.color.focus_panel)
-            :Shape(RNDX.SHAPE_IOS)
-        :Draw()
-    end
 
     self:UpdateColumnWidthTargets()
 
-    local xPos = self.sidePadding + ((self._lastVBarVis and self.vbarLeftExtra) or 0)
     for i, column in ipairs(self.columns) do
-        local w = math_floor(self._colWidthsCurrent[i] or self._colWidthsTarget[i] or column.width)
-        local label = vgui.Create('Button', self.header)
-        label:SetText('')
-        label:SetSize(w, self.headerHeight)
-        label:SetPos(xPos, 0)
-        label._hover = 0
-        label._activeAlpha = prev[i] or ((self.sortColumn == i) and 1 or 0)
+        local btn = vgui.Create('Button', self.headerText)
+        btn:SetText('')
+        btn:SetSize(100, self.headerHeight)
 
-        label.Paint = function(s, bw, bh)
-            local dt = FrameTime()
-            local target = s:IsHovered() and 1 or 0
-            s._hover = Mantle.func.approachExp(s._hover or 0, target, 14, dt)
-            local activeTarget = (self.sortColumn == i) and 1 or 0
-            s._activeAlpha = Mantle.func.approachExp(s._activeAlpha or 0, activeTarget, 12, dt)
+        btn.Paint = function(_, bw, bh)
+            local active = (self.sortColumn == i) or btn:IsHovered()
+            local textColor = active and Mantle.color.theme or Mantle.color.text
 
-            local tr = Lerp(s._activeAlpha, Mantle.color.text.r, Mantle.color.theme.r)
-            local tg = Lerp(s._activeAlpha, Mantle.color.text.g, Mantle.color.theme.g)
-            local tb = Lerp(s._activeAlpha, Mantle.color.text.b, Mantle.color.theme.b)
-            local ta = Lerp(s._activeAlpha, Mantle.color.text.a, Mantle.color.theme.a)
-            local textColor = Color(math_floor(tr), math_floor(tg), math_floor(tb), math_floor(ta))
-
-            draw.SimpleText(column.name, self.font, bw/2, bh/2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(column.name, self.font, bw * 0.5, bh * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
         if column.sortable then
-            label.DoClick = function()
+            btn.DoClick = function()
                 self:SortByColumn(i)
                 Mantle.func.sound()
             end
         end
 
-        table.insert(self._headerButtons, label)
-        xPos = xPos + w
+        self._headerButtons[i] = btn
     end
+
+    self._needWidths = true
 end
 
 function PANEL:CreateRow(rowIndex, rowData)
     local row = vgui.Create('Button', self.content)
     row:Dock(TOP)
-    row:DockMargin(0, 0, 0, 1)
+    row:DockMargin(0, 4, 0, 4)
     row:SetTall(self.rowHeight)
     row:SetText('')
 
     row._index = rowIndex
     row._hoverAlpha = 0
     row._selectedAlpha = 0
-    row._labels = {}
+    row._cells = {}
 
     row.Paint = function(s, w, h)
         local dt = FrameTime()
-        local hoverTarget = s:IsHovered() and 1 or 0
-        s._hoverAlpha = Mantle.func.approachExp(s._hoverAlpha, hoverTarget, 18, dt)
-        local selTarget = (self.selectedRow == s._index) and 1 or 0
-        s._selectedAlpha = Mantle.func.approachExp(s._selectedAlpha, selTarget, 22, dt)
+        s._hoverAlpha = Mantle.func.approachExp(s._hoverAlpha, s:IsHovered() and 1 or 0, 18, dt)
+        s._selectedAlpha = Mantle.func.approachExp(s._selectedAlpha, (self.selectedRow == s._index) and 1 or 0, 22, dt)
 
         local base = Mantle.color.panel_alpha[1]
         local hoverCol = Mantle.color.hover
         local selCol = Mantle.color.theme
 
-        local mixHover = s._hoverAlpha * (1 - s._selectedAlpha)
-        local blendA = s._selectedAlpha * 0.9 + mixHover * 0.35
+        local blendA = s._selectedAlpha * 0.9 + s._hoverAlpha * (1 - s._selectedAlpha) * 0.35
 
         local r = Lerp(blendA, base.r, selCol.r)
         local g = Lerp(blendA, base.g, selCol.g)
@@ -359,13 +447,14 @@ function PANEL:CreateRow(rowIndex, rowData)
         local a = Lerp(blendA, base.a, selCol.a)
 
         if s._hoverAlpha > 0.01 and s._selectedAlpha < 0.9 then
-            local hoverR = Lerp(s._hoverAlpha * 0.6, r, hoverCol.r)
-            local hoverG = Lerp(s._hoverAlpha * 0.6, g, hoverCol.g)
-            local hoverB = Lerp(s._hoverAlpha * 0.6, b, hoverCol.b)
-            r,g,b = hoverR, hoverG, hoverB
+            local hb = s._hoverAlpha * 0.6
+            r = Lerp(hb, r, hoverCol.r)
+            g = Lerp(hb, g, hoverCol.g)
+            b = Lerp(hb, b, hoverCol.b)
         end
 
-        RNDX().Rect(0, 0, w, math.max(0, h - 1))
+        RNDX().Rect(0, 0, w, h)
+            :Rad(10)
             :Color(Color(math.floor(r), math.floor(g), math.floor(b), math.floor(a)))
             :Shape(RNDX.SHAPE_IOS)
         :Draw()
@@ -373,7 +462,6 @@ function PANEL:CreateRow(rowIndex, rowData)
 
     row.DoClick = function()
         self.selectedRow = rowIndex
-        self._keyboardIndex = rowIndex
         self.OnAction(rowData)
         Mantle.func.sound()
     end
@@ -393,84 +481,56 @@ function PANEL:CreateRow(rowIndex, rowData)
         end, 'icon16/delete.png')
     end
 
-    local leftPad = self.sidePadding + ((self._lastVBarVis and self.vbarLeftExtra) or 0)
-    local xPos = leftPad
     for i, column in ipairs(self.columns) do
-        local w = math_floor(self._colWidthsCurrent[i] or self._colWidthsTarget[i] or column.width)
-        local label = vgui.Create('DLabel', row)
-        label:SetText(tostring(rowData[i]))
-        label:SetFont(self.rowFont)
-        label:SetTextColor(Mantle.color.text)
-        label:SetSize(w, self.rowHeight)
-        label:SetPos(xPos, 0)
+        local cell = vgui.Create('Panel', row)
+        cell:SetMouseInputEnabled(false)
+        cell:SetSize(100, self.rowHeight)
+        cell:SetPos(0, 0)
 
-        if column.align == TEXT_ALIGN_LEFT then
-            label:SetTextInset(self.padding, 0)
-            label:SetContentAlignment(4)
-        elseif column.align == TEXT_ALIGN_RIGHT then
-            label:SetTextInset(0, 0)
-            label:SetContentAlignment(6)
-        else
-            label:SetTextInset(0, 0)
-            label:SetContentAlignment(5)
+        local text = tostring(rowData[i])
+        local align = column.align or TEXT_ALIGN_LEFT
+
+        cell.Paint = function(_, w, h)
+            local x
+            local textAlign
+            if align == TEXT_ALIGN_RIGHT then
+                x = w - self.padding - self.sidePadding
+                textAlign = TEXT_ALIGN_RIGHT
+            elseif align == TEXT_ALIGN_CENTER then
+                x = w * 0.5
+                textAlign = TEXT_ALIGN_CENTER
+            else
+                x = self.padding
+                textAlign = TEXT_ALIGN_LEFT
+            end
+            draw.SimpleText(text, self.rowFont, x, h * 0.5, Mantle.color.text, textAlign, TEXT_ALIGN_CENTER)
         end
 
-        table.insert(row._labels, label)
-        xPos = xPos + w
+        row._cells[i] = cell
     end
 
     table.insert(self._rowPanels, row)
 end
 
 function PANEL:RebuildRows()
-    local savedRowHover = {}
-    for idx, oldRow in ipairs(self._rowPanels) do
-        if IsValid(oldRow) then
-            savedRowHover[idx] = oldRow._hoverAlpha or 0
-        end
-    end
-
-    local prevHeader = {}
-    for i, btn in ipairs(self._headerButtons) do
-        if IsValid(btn) then prevHeader[i] = btn._activeAlpha or 0 end
-    end
-
     self.content:Clear()
     self._rowPanels = {}
-    self._headerButtons = {}
-
-    self:UpdateColumnWidthTargets()
 
     self:CreateHeader()
 
     for rowIndex, rowData in ipairs(self.rows) do
         self:CreateRow(rowIndex, rowData)
-        if savedRowHover[rowIndex] and IsValid(self._rowPanels[#self._rowPanels]) then
-            self._rowPanels[#self._rowPanels]._hoverAlpha = savedRowHover[rowIndex]
-        end
     end
 
-    local total = 0
-    for i = 1, #self.columns do total = total + (self._colWidthsTarget[i] or self.columns[i].width) end
-
-    local panelW = self:GetWide() or 0
-    if panelW <= 0 then
-        local parent = self:GetParent()
-        if IsValid(parent) and parent.GetWide then panelW = parent:GetWide() end
-    end
-    if panelW <= 0 then panelW = ScrW() end
-
-    local leftPad = self.sidePadding + ((self._lastVBarVis and self.vbarLeftExtra) or 0)
-    local rightPad = self.sidePadding + ((self._lastVBarVis and self.vbarRightPadding) or 0)
-    local contentW = math_max(total + leftPad + rightPad, panelW)
-
-    self.content:SetSize(contentW, #self.rows * (self.rowHeight + 1))
-    self.scrollPanel:InvalidateLayout(true)
+    self._needWidths = true
+    self:_markDirty()
+    self:InvalidateLayout(true)
 end
 
 function PANEL:SetAction(func)
     self.OnAction = func
 end
+
 function PANEL:SetRightClickAction(func)
     self.OnRightClick = func
 end
@@ -479,6 +539,9 @@ function PANEL:Clear()
     self.rows = {}
     self.selectedRow = nil
     self.content:Clear()
+    self.offset = 0
+    self.vel = 0
+    self:_markDirty()
 end
 
 function PANEL:GetSelectedRow()
@@ -498,16 +561,7 @@ function PANEL:RemoveRow(index)
             self.selectedRow = self.selectedRow - 1
         end
         self:RebuildRows()
-        self.scrollPanel:InvalidateLayout(true)
     end
 end
 
-function PANEL:Paint(w, h)
-    RNDX().Rect(0, 0, w, h)
-        :Rad(16)
-        :Color(Mantle.color.panel_alpha[2])
-        :Shape(RNDX.SHAPE_IOS)
-    :Draw()
-end
-
-vgui.Register('MantleTable', PANEL, 'Panel')
+vgui.Register('MantleTable', PANEL, 'MantleScroll')
