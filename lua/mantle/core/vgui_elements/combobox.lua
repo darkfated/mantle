@@ -1,5 +1,7 @@
 local PANEL = {}
 
+local math_floor = math.floor
+
 local HEIGHT = 32
 local PAD = 12
 local RADIUS = 12
@@ -15,20 +17,17 @@ function PANEL:Init()
 
     self.btn = vgui.Create('Button', self)
     self.btn:Dock(FILL)
-    self.btn:DockMargin(0, 0, 0, 0)
     self.btn:SetText('')
     self.btn:SetCursor('hand')
 
     self.btn.Paint = function(button, w, h)
-        if button:IsHovered() then
-            self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, 1, 8, FrameTime())
-        else
-            self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, 0, 12, FrameTime())
-        end
+        local ft = FrameTime()
+        local target = button:IsHovered() and 1 or 0
+        self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, target, 12, ft)
 
         if Mantle.ui.convar.depth_ui then
             RNDX().Rect(0, 0, w, h)
-                :Rad(12)
+                :Rad(RADIUS)
                 :Color(Mantle.color.window_shadow)
                 :Shadow(4, 9)
                 :Outline(1)
@@ -41,7 +40,7 @@ function PANEL:Init()
         :Draw()
 
         if self.hoverAnim > 0 then
-            local hcol = Color(Mantle.color.hover.r, Mantle.color.hover.g, Mantle.color.hover.b, math.floor(255 * self.hoverAnim))
+            local hcol = Color(Mantle.color.hover.r, Mantle.color.hover.g, Mantle.color.hover.b, math_floor(255 * self.hoverAnim))
             RNDX().Rect(0, 0, w, h)
                 :Rad(RADIUS)
                 :Color(hcol)
@@ -49,20 +48,9 @@ function PANEL:Init()
         end
 
         local text = self.selected or self.placeholder or Mantle.lang.get('mantle', 'color_select') .. '...'
-        local col = Mantle.color.text
+        local col = self.selected and Mantle.color.theme or Mantle.color.gray
 
         draw.SimpleText(text, 'Fated.16', PAD, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-
-        local arrowSize = 6
-        local ax = w - PAD - arrowSize
-        local ay = h * 0.5
-        surface.SetDrawColor(col)
-        draw.NoTexture()
-        surface.DrawPoly({
-            {x = ax - arrowSize, y = ay - arrowSize / 2},
-            {x = ax + arrowSize, y = ay - arrowSize / 2},
-            {x = ax, y = ay + arrowSize / 2}
-        })
     end
 
     self.btn.DoClick = function()
@@ -113,7 +101,9 @@ function PANEL:OpenMenu()
             end
             Mantle.func.sound()
         end
-        menu:AddOption(choice.text, onClick)
+        menu:AddOption(choice.text, onClick, nil, {
+            selected = choice.text == self.selected
+        })
     end
 
     menu:MakePopup()
