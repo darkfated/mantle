@@ -67,17 +67,10 @@ function menu.createTabPanel(title, subtitle, icon)
 end
 
 function menu.createCopyButton(parent, snippet)
-    local button = vgui.Create('Button', parent)
-    button:SetText('')
+    local button = vgui.Create('MantleBtn', parent)
+    button:SetTxt('Скопировать')
     button:SetWide(110)
-    button.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w, h)
-            :Rad(6)
-            :Color(Mantle.color.panel_alpha[1])
-        :Draw()
-
-        draw.SimpleText('Скопировать', 'Fated.16', w * 0.5, h * 0.5, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    button:SetRadius(8)
     button.DoClick = function()
         SetClipboardText(snippet)
         menu.notify(snippet)
