@@ -1,78 +1,113 @@
+--[[
+    Основная тема
+]]
 Mantle.color_dark = {
-    header = Color(40, 40, 40), -- верхняя панель
-    header_text = Color(100, 100, 100), -- цвет элементов в заголовке
-    background = Color(25, 25, 25), -- фон
-    background_alpha = Color(25, 25, 25, 230), -- фон с прозрачностью
-    background_panelpopup = Color(20, 20, 20, 150), -- фон для DermaMenu
+    header = Color(34, 35, 39), -- верхняя панель
+    header_text = Color(165, 170, 180), -- цвет элементов в заголовке
+    background = Color(18, 19, 22), -- фон
+    background_alpha = Color(18, 19, 22, 245), -- фон с прозрачностью
+    background_panelpopup = Color(23, 24, 28, 170), -- фон для DermaMenu
 
-    button = Color(54, 54, 54), -- кнопка
-    button_shadow = Color(0, 0, 0, 25), -- тень кнопки для градиента
-    button_hovered = Color(60, 60, 62), -- кнопка при наведении
+    button = Color(44, 46, 52), -- кнопка
+    button_shadow = Color(0, 0, 0, 30), -- тень кнопки для градиента
+    button_hovered = Color(60, 63, 72), -- кнопка при наведении
 
-    category = Color(50, 50, 50), -- категория
-    category_opened = Color(50, 50, 50, 0), -- категория открыта
+    category = Color(37, 39, 44), -- категория
+    category_opened = Color(37, 39, 44, 0), -- категория открыта
 
-    theme = Color(56, 105, 201), -- тема интерфейса
+    theme = Color(86, 132, 235), -- тема интерфейса
 
     panel = { -- варианты цветов для панели
-        Color(60, 60, 60),
-        Color(50, 50, 50),
-        Color(80, 80, 80)
+        Color(46, 48, 54),
+        Color(38, 40, 46),
+        Color(72, 76, 86)
     },
 
-    toggle = Color(56, 56, 56), -- тумблер
+    toggle = Color(44, 46, 52), -- тумблер
 
-    focus_panel = Color(46, 46, 46, 200), -- универсальный цвет для элементов
+    focus_panel = Color(42, 44, 50, 200), -- универсальный цвет для элементов
     hover = Color(67, 76, 102), -- универсальное выделение
 
-    window_shadow = Color(0, 0, 0, 50), -- тень окна
+    window_shadow = Color(0, 0, 0, 60), -- тень окна
 
-    gray = Color(150, 150, 150, 220),
-    text_muted = Color(150, 150, 150, 180),
-    text = Color(255, 255, 255)
+    hover_overlay = Color(255, 255, 255, 28), -- лёгкое выделение
+    hover_overlay_strong = Color(255, 255, 255, 42), -- сильное выделение
+    notify_outline = Color(255, 255, 255, 45), -- обводка уведомления
+    dim_overlay = Color(0, 0, 0, 150), -- затемнение фона
+    circle_shadow = Color(0, 0, 0, 20), -- тень кружка
+    ripple = Color(255, 255, 255, 40), -- волна кнопки
+    tab_shadow = Color(0, 0, 0, 150), -- тень вкладок
+    tab_hover = Color(255, 255, 255, 14), -- выделение вкладки
+    icon = Color(255, 255, 255), -- иконки
+    status_disconnect = Color(230, 90, 90), -- офлайн
+    status_bot = Color(90, 160, 230), -- бот
+    status_online = Color(110, 200, 120), -- онлайн
+
+    gray = Color(148, 153, 163, 220),
+    text_muted = Color(148, 153, 163, 175),
+    text = Color(236, 238, 244)
 }
 Mantle.color_dark.panel_alpha = { -- прозрачные панели
-    ColorAlpha(Mantle.color_dark.panel[1], 150),
-    ColorAlpha(Mantle.color_dark.panel[2], 150),
-    ColorAlpha(Mantle.color_dark.panel[3], 150)
+    ColorAlpha(Mantle.color_dark.panel[1], 160),
+    ColorAlpha(Mantle.color_dark.panel[2], 160),
+    ColorAlpha(Mantle.color_dark.panel[3], 160)
 }
 
+--[[
+    Монохромная тема
+]]
 Mantle.color_dark_mono = table.Copy(Mantle.color_dark)
-Mantle.color_dark_mono.theme = Color(121, 121, 121)
+Mantle.color_dark_mono.theme = Color(148, 150, 156)
 Mantle.color_dark_mono.text_muted = Color(150, 150, 150, 180)
 
+--[[
+    Светлая тема
+]]
 Mantle.color_light = {
-    header = Color(240, 240, 240),
-    header_text = Color(150, 150, 150),
-    background = Color(255, 255, 255),
-    background_alpha = Color(255, 255, 255, 200),
-    background_panelpopup = Color(245, 245, 245, 150),
+    header = Color(234, 236, 244),
+    header_text = Color(108, 114, 130),
+    background = Color(252, 252, 255),
+    background_alpha = Color(252, 252, 255, 245),
+    background_panelpopup = Color(255, 255, 255, 190),
 
-    button = Color(235, 235, 235),
-    button_shadow = Color(110, 110, 110, 18),
-    button_hovered = Color(196, 199, 218),
+    button = Color(231, 233, 241),
+    button_shadow = Color(95, 100, 115, 22),
+    button_hovered = Color(205, 209, 224),
 
-    category = Color(240, 240, 245),
-    category_opened = Color(240, 240, 245, 0),
+    category = Color(239, 241, 248),
+    category_opened = Color(239, 241, 248, 0),
 
-    theme = Color(106, 108, 197),
+    theme = Color(88, 102, 192),
 
     panel = {
-        Color(250, 250, 255),
-        Color(240, 240, 245),
-        Color(230, 230, 235)
+        Color(255, 255, 255),
+        Color(245, 246, 252),
+        Color(222, 225, 236)
     },
 
-    toggle = Color(220, 220, 230),
+    toggle = Color(216, 218, 229),
 
-    focus_panel = Color(245, 245, 255, 200),
-    hover = Color(235, 240, 255),
+    focus_panel = Color(241, 243, 249, 210),
+    hover = Color(203, 208, 236),
 
-    window_shadow = Color(110, 110, 110, 30),
+    window_shadow = Color(105, 112, 128, 40),
 
-    gray = Color(130, 130, 130, 220),
-    text_muted = Color(130, 130, 130, 180),
-    text = Color(20, 20, 20)
+    hover_overlay = Color(0, 0, 0, 28),
+    hover_overlay_strong = Color(0, 0, 0, 42),
+    notify_outline = Color(0, 0, 0, 45),
+    dim_overlay = Color(0, 0, 0, 140),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(0, 0, 0, 40),
+    tab_shadow = Color(105, 112, 128, 150),
+    tab_hover = Color(0, 0, 0, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(210, 65, 65),
+    status_bot = Color(70, 150, 220),
+    status_online = Color(120, 180, 70),
+
+    gray = Color(120, 124, 136, 220),
+    text_muted = Color(120, 124, 136, 180),
+    text = Color(26, 28, 34)
 }
 Mantle.color_light.panel_alpha = {
     ColorAlpha(Mantle.color_light.panel[1], 120),
@@ -80,273 +115,384 @@ Mantle.color_light.panel_alpha = {
     ColorAlpha(Mantle.color_light.panel[3], 120)
 }
 
+--[[
+    Синяя тема
+]]
 Mantle.color_blue = {
-    header = Color(36, 48, 66),
-    header_text = Color(109, 129, 159),
-    background = Color(24, 28, 38),
-    background_alpha = Color(24, 28, 38, 230),
-    background_panelpopup = Color(20, 24, 32, 150),
+    header = Color(30, 40, 54),
+    header_text = Color(150, 170, 196),
+    background = Color(14, 18, 26),
+    background_alpha = Color(14, 18, 26, 245),
+    background_panelpopup = Color(20, 26, 38, 170),
 
-    button = Color(38, 54, 82),
-    button_shadow = Color(18, 22, 32, 35),
-    button_hovered = Color(47, 69, 110),
+    button = Color(34, 44, 64),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(46, 60, 88),
 
-    category = Color(34, 48, 72),
-    category_opened = Color(34, 48, 72, 0),
+    category = Color(28, 36, 52),
+    category_opened = Color(28, 36, 52, 0),
 
-    theme = Color(80, 160, 220),
+    theme = Color(84, 168, 236),
 
     panel = {
-        Color(34, 48, 72),
-        Color(38, 54, 82),
-        Color(70, 120, 180)
+        Color(34, 44, 64),
+        Color(26, 34, 50),
+        Color(56, 104, 168)
     },
 
-    toggle = Color(34, 44, 66),
+    toggle = Color(32, 42, 60),
 
-    focus_panel = Color(48, 72, 90, 200),
-    hover = Color(80, 160, 220, 90),
+    focus_panel = Color(36, 48, 70, 200),
+    hover = Color(84, 168, 236),
 
-    window_shadow = Color(18, 22, 32, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(150, 170, 190, 200),
-    text_muted = Color(150, 170, 190, 170),
-    text = Color(210, 220, 235)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(140, 160, 186, 220),
+    text_muted = Color(140, 160, 186, 180),
+    text = Color(216, 228, 242)
 }
 Mantle.color_blue.panel_alpha = {
-    ColorAlpha(Mantle.color_blue.panel[1], 110),
-    ColorAlpha(Mantle.color_blue.panel[2], 110),
-    ColorAlpha(Mantle.color_blue.panel[3], 110)
+    ColorAlpha(Mantle.color_blue.panel[1], 160),
+    ColorAlpha(Mantle.color_blue.panel[2], 160),
+    ColorAlpha(Mantle.color_blue.panel[3], 160)
 }
 
+--[[
+    Красная тема
+]]
 Mantle.color_red = {
-    header = Color(54, 36, 36),
-    header_text = Color(159, 109, 109),
-    background = Color(32, 24, 24),
-    background_alpha = Color(32, 24, 24, 230),
-    background_panelpopup = Color(28, 20, 20, 150),
+    header = Color(46, 30, 32),
+    header_text = Color(196, 168, 172),
+    background = Color(20, 14, 16),
+    background_alpha = Color(20, 14, 16, 245),
+    background_panelpopup = Color(30, 20, 22, 170),
 
-    button = Color(66, 38, 38),
-    button_shadow = Color(32, 18, 18, 35),
-    button_hovered = Color(97, 50, 50),
+    button = Color(60, 36, 40),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(82, 48, 54),
 
-    category = Color(62, 34, 34),
-    category_opened = Color(62, 34, 34, 0),
+    category = Color(48, 30, 34),
+    category_opened = Color(48, 30, 34, 0),
 
-    theme = Color(180, 80, 80),
+    theme = Color(232, 92, 92),
 
     panel = {
-        Color(62, 34, 34),
-        Color(66, 38, 38),
-        Color(140, 70, 70)
+        Color(60, 36, 40),
+        Color(48, 28, 32),
+        Color(158, 66, 70)
     },
 
-    toggle = Color(60, 34, 34),
+    toggle = Color(52, 32, 36),
 
-    focus_panel = Color(72, 48, 48, 200),
-    hover = Color(180, 80, 80, 90),
+    focus_panel = Color(62, 38, 44, 200),
+    hover = Color(232, 92, 92),
 
-    window_shadow = Color(32, 18, 18, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(180, 150, 150, 200),
-    text_muted = Color(180, 150, 150, 170),
-    text = Color(235, 210, 210)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(190, 160, 164, 220),
+    text_muted = Color(190, 160, 164, 180),
+    text = Color(240, 226, 228)
 }
 Mantle.color_red.panel_alpha = {
-    ColorAlpha(Mantle.color_red.panel[1], 110),
-    ColorAlpha(Mantle.color_red.panel[2], 110),
-    ColorAlpha(Mantle.color_red.panel[3], 110)
+    ColorAlpha(Mantle.color_red.panel[1], 160),
+    ColorAlpha(Mantle.color_red.panel[2], 160),
+    ColorAlpha(Mantle.color_red.panel[3], 160)
 }
 
+--[[
+    Зелёная тема
+]]
 Mantle.color_green = {
-    header = Color(36, 54, 40),
-    header_text = Color(109, 159, 109),
-    background = Color(24, 32, 26),
-    background_alpha = Color(24, 32, 26, 230),
-    background_panelpopup = Color(20, 28, 22, 150),
+    header = Color(28, 44, 34),
+    header_text = Color(170, 196, 178),
+    background = Color(12, 18, 14),
+    background_alpha = Color(12, 18, 14, 245),
+    background_panelpopup = Color(18, 28, 22, 170),
 
-    button = Color(38, 66, 48),
-    button_shadow = Color(18, 32, 22, 35),
-    button_hovered = Color(48, 88, 62),
+    button = Color(34, 58, 42),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(46, 80, 58),
 
-    category = Color(34, 62, 44),
-    category_opened = Color(34, 62, 44, 0),
+    category = Color(28, 46, 34),
+    category_opened = Color(28, 46, 34, 0),
 
-    theme = Color(80, 180, 120),
+    theme = Color(96, 196, 136),
 
     panel = {
-        Color(34, 62, 44),
-        Color(38, 66, 48),
-        Color(70, 140, 90)
+        Color(36, 60, 44),
+        Color(28, 48, 36),
+        Color(70, 150, 100)
     },
 
-    toggle = Color(34, 60, 44),
+    toggle = Color(32, 54, 40),
 
-    focus_panel = Color(48, 72, 58, 200),
-    hover = Color(80, 180, 120, 90),
+    focus_panel = Color(38, 62, 48, 200),
+    hover = Color(96, 196, 136),
 
-    window_shadow = Color(18, 32, 22, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(150, 180, 150, 200),
-    text_muted = Color(150, 180, 150, 170),
-    text = Color(210, 235, 210)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(156, 182, 166, 220),
+    text_muted = Color(156, 182, 166, 180),
+    text = Color(226, 240, 230)
 }
 Mantle.color_green.panel_alpha = {
-    ColorAlpha(Mantle.color_green.panel[1], 110),
-    ColorAlpha(Mantle.color_green.panel[2], 110),
-    ColorAlpha(Mantle.color_green.panel[3], 110)
+    ColorAlpha(Mantle.color_green.panel[1], 160),
+    ColorAlpha(Mantle.color_green.panel[2], 160),
+    ColorAlpha(Mantle.color_green.panel[3], 160)
 }
 
+--[[
+    Оранжевая тема
+]]
 Mantle.color_orange = {
-    header = Color(70, 35, 10),
-    header_text = Color(250, 230, 210),
-    background = Color(255, 250, 240),
-    background_alpha = Color(255, 250, 240, 230),
-    background_panelpopup = Color(255, 245, 235, 160),
+    header = Color(78, 40, 18),
+    header_text = Color(250, 236, 222),
+    background = Color(250, 244, 235),
+    background_alpha = Color(250, 244, 235, 245),
+    background_panelpopup = Color(255, 250, 243, 180),
 
-    button = Color(184, 122, 64),
-    button_shadow = Color(150, 130, 110, 30),
-    button_hovered = Color(197, 129, 65),
+    button = Color(208, 142, 84),
+    button_shadow = Color(130, 110, 90, 25),
+    button_hovered = Color(218, 158, 102),
 
-    category = Color(255, 245, 235),
-    category_opened = Color(255, 245, 235, 0),
+    category = Color(248, 238, 224),
+    category_opened = Color(248, 238, 224, 0),
 
-    theme = Color(245, 130, 50),
+    theme = Color(246, 132, 54),
 
     panel = {
-        Color(255, 250, 240),
-        Color(250, 220, 180),
-        Color(235, 150, 90)
+        Color(252, 246, 238),
+        Color(244, 230, 208),
+        Color(222, 160, 100)
     },
 
-    toggle = Color(143, 121, 104),
+    toggle = Color(186, 150, 118),
 
-    focus_panel = Color(255, 240, 225, 200),
-    hover = Color(255, 165, 80, 90),
+    focus_panel = Color(250, 240, 228, 200),
+    hover = Color(248, 190, 140),
 
-    window_shadow = Color(150, 135, 120, 50),
-    gray = Color(180, 161, 150, 200),
-    text_muted = Color(180, 161, 150, 170),
-    text = Color(45, 20, 10)
+    window_shadow = Color(130, 116, 102, 45),
+
+    hover_overlay = Color(0, 0, 0, 28),
+    hover_overlay_strong = Color(0, 0, 0, 42),
+    notify_outline = Color(0, 0, 0, 45),
+    dim_overlay = Color(0, 0, 0, 140),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(0, 0, 0, 40),
+    tab_shadow = Color(130, 116, 102, 150),
+    tab_hover = Color(0, 0, 0, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(210, 65, 65),
+    status_bot = Color(70, 150, 220),
+    status_online = Color(120, 180, 70),
+
+    gray = Color(255, 255, 255),
+    text_muted = Color(172, 152, 140, 180),
+    text = Color(52, 30, 16)
 }
-
 Mantle.color_orange.panel_alpha = {
     ColorAlpha(Mantle.color_orange.panel[1], 120),
     ColorAlpha(Mantle.color_orange.panel[2], 120),
     ColorAlpha(Mantle.color_orange.panel[3], 120)
 }
 
+--[[
+    Пурпурная тема
+]]
 Mantle.color_purple = {
-    header = Color(40, 36, 56),
-    header_text = Color(150, 140, 180),
-    background = Color(25, 22, 30),
-    background_alpha = Color(25, 22, 30, 230),
-    background_panelpopup = Color(28, 24, 40, 150),
+    header = Color(34, 28, 50),
+    header_text = Color(186, 178, 216),
+    background = Color(15, 13, 22),
+    background_alpha = Color(15, 13, 22, 245),
+    background_panelpopup = Color(24, 20, 36, 170),
 
-    button = Color(58, 52, 76),
-    button_shadow = Color(8, 6, 20, 30),
-    button_hovered = Color(74, 64, 105),
+    button = Color(48, 42, 68),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(64, 56, 92),
 
-    category = Color(46, 40, 60),
-    category_opened = Color(46, 40, 60, 0),
+    category = Color(38, 32, 56),
+    category_opened = Color(38, 32, 56, 0),
 
-    theme = Color(138, 114, 219),
+    theme = Color(164, 128, 238),
 
     panel = {
-        Color(56, 48, 76),
-        Color(44, 36, 64),
-        Color(120, 90, 200)
+        Color(48, 42, 68),
+        Color(40, 34, 60),
+        Color(118, 86, 210)
     },
 
-    toggle = Color(43, 39, 53),
+    toggle = Color(42, 37, 60),
 
-    focus_panel = Color(48, 42, 62, 200),
-    hover = Color(138, 114, 219, 90),
+    focus_panel = Color(50, 44, 72, 200),
+    hover = Color(164, 128, 238),
 
-    window_shadow = Color(8, 6, 20, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(140, 128, 148, 220),
-    text_muted = Color(140, 128, 148, 180),
-    text = Color(245, 240, 255)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(158, 148, 186, 220),
+    text_muted = Color(158, 148, 186, 180),
+    text = Color(238, 234, 252)
 }
 Mantle.color_purple.panel_alpha = {
-    ColorAlpha(Mantle.color_purple.panel[1], 150),
-    ColorAlpha(Mantle.color_purple.panel[2], 150),
-    ColorAlpha(Mantle.color_purple.panel[3], 150)
+    ColorAlpha(Mantle.color_purple.panel[1], 160),
+    ColorAlpha(Mantle.color_purple.panel[2], 160),
+    ColorAlpha(Mantle.color_purple.panel[3], 160)
 }
 
+--[[
+    Кофейная тема
+]]
 Mantle.color_coffee = {
-    header = Color(67, 48, 36),
-    header_text = Color(210, 190, 170),
+    header = Color(52, 36, 26),
+    header_text = Color(200, 182, 164),
+    background = Color(24, 16, 12),
+    background_alpha = Color(24, 16, 12, 245),
+    background_panelpopup = Color(34, 24, 18, 170),
 
-    background = Color(45, 32, 25),
-    background_alpha = Color(45, 32, 25, 230),
-    background_panelpopup = Color(38, 28, 22, 150),
+    button = Color(60, 44, 32),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(78, 58, 44),
 
-    button = Color(84, 60, 45),
-    button_shadow = Color(20, 10, 5, 40),
-    button_hovered = Color(100, 75, 55),
+    category = Color(50, 36, 26),
+    category_opened = Color(50, 36, 26, 0),
 
-    category = Color(72, 54, 42),
-    category_opened = Color(72, 54, 42, 0),
-
-    theme = Color(150, 110, 75),
+    theme = Color(206, 146, 98),
 
     panel = {
-        Color(68, 50, 40),
-        Color(90, 65, 50),
-        Color(150, 110, 75)
+        Color(62, 46, 34),
+        Color(52, 38, 28),
+        Color(130, 96, 66)
     },
 
-    toggle = Color(53, 40, 31),
+    toggle = Color(52, 38, 28),
 
-    focus_panel = Color(70, 55, 40, 200),
-    hover = Color(150, 110, 75, 90),
+    focus_panel = Color(62, 48, 36, 200),
+    hover = Color(206, 146, 98),
 
-    window_shadow = Color(15, 10, 5, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(180, 150, 130, 200),
-    text_muted = Color(180, 150, 130, 170),
-    text = Color(235, 225, 210)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(178, 156, 140, 220),
+    text_muted = Color(178, 156, 140, 180),
+    text = Color(240, 232, 222)
 }
 Mantle.color_coffee.panel_alpha = {
-    ColorAlpha(Mantle.color_coffee.panel[1], 110),
-    ColorAlpha(Mantle.color_coffee.panel[2], 110),
-    ColorAlpha(Mantle.color_coffee.panel[3], 110)
+    ColorAlpha(Mantle.color_coffee.panel[1], 160),
+    ColorAlpha(Mantle.color_coffee.panel[2], 160),
+    ColorAlpha(Mantle.color_coffee.panel[3], 160)
 }
 
+--[[
+    Ледяная тема
+]]
 Mantle.color_ice = {
-    header = Color(190, 225, 250),
-    header_text = Color(68, 104, 139),
-    background = Color(235, 245, 255),
-    background_alpha = Color(235, 245, 255, 210),
-    background_panelpopup = Color(220, 235, 245, 150),
+    header = Color(218, 232, 246),
+    header_text = Color(92, 120, 148),
+    background = Color(240, 247, 254),
+    background_alpha = Color(240, 247, 254, 245),
+    background_panelpopup = Color(250, 253, 255, 180),
 
-    button = Color(145, 185, 225),
-    button_shadow = Color(110, 125, 140, 40),
-    button_hovered = Color(170, 210, 255),
+    button = Color(186, 210, 232),
+    button_shadow = Color(100, 120, 140, 30),
+    button_hovered = Color(158, 194, 228),
 
-    category = Color(200, 225, 245),
-    category_opened = Color(200, 225, 245, 0),
+    category = Color(232, 240, 250),
+    category_opened = Color(232, 240, 250, 0),
 
-    theme = Color(100, 170, 230),
+    theme = Color(74, 156, 224),
 
     panel = {
-        Color(146, 186, 211),
-        Color(107, 157, 190),
-        Color(74, 132, 184)
+        Color(244, 249, 254),
+        Color(236, 244, 252),
+        Color(200, 222, 244)
     },
 
-    toggle = Color(168, 194, 219),
+    toggle = Color(168, 196, 222),
 
-    focus_panel = Color(205, 230, 245, 200),
-    hover = Color(100, 170, 230, 80),
+    focus_panel = Color(232, 241, 250, 200),
+    hover = Color(180, 214, 240),
 
-    window_shadow = Color(110, 125, 140, 50),
+    window_shadow = Color(105, 125, 145, 40),
 
-    gray = Color(92, 112, 133, 200),
-    text_muted = Color(92, 112, 133, 170),
-    text = Color(20, 35, 50)
+    hover_overlay = Color(0, 0, 0, 28),
+    hover_overlay_strong = Color(0, 0, 0, 42),
+    notify_outline = Color(0, 0, 0, 45),
+    dim_overlay = Color(0, 0, 0, 140),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(0, 0, 0, 40),
+    tab_shadow = Color(105, 125, 145, 150),
+    tab_hover = Color(0, 0, 0, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(210, 65, 65),
+    status_bot = Color(70, 150, 220),
+    status_online = Color(120, 180, 70),
+
+    gray = Color(255, 255, 255),
+    text_muted = Color(110, 128, 148, 180),
+    text = Color(22, 34, 48)
 }
 Mantle.color_ice.panel_alpha = {
     ColorAlpha(Mantle.color_ice.panel[1], 120),
@@ -354,196 +500,222 @@ Mantle.color_ice.panel_alpha = {
     ColorAlpha(Mantle.color_ice.panel[3], 120)
 }
 
+--[[
+    Винная тема
+]]
 Mantle.color_wine = {
-    header = Color(59, 42, 53),
-    header_text = Color(246, 242, 246),
-    background = Color(31, 23, 22),
-    background_alpha = Color(31, 23, 22, 230),
-    background_panelpopup = Color(36, 28, 28, 150),
+    header = Color(44, 30, 40),
+    header_text = Color(226, 210, 220),
+    background = Color(18, 13, 16),
+    background_alpha = Color(18, 13, 16, 245),
+    background_panelpopup = Color(30, 22, 26, 170),
 
-    button = Color(79, 50, 60),
-    button_shadow = Color(10, 6, 18, 30),
-    button_hovered = Color(90, 52, 65),
+    button = Color(60, 40, 50),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(78, 52, 66),
 
-    category = Color(79, 50, 60),
-    category_opened = Color(79, 50, 60, 0),
+    category = Color(52, 36, 46),
+    category_opened = Color(52, 36, 46, 0),
 
-    theme = Color(148, 61, 91),
+    theme = Color(214, 92, 134),
 
     panel = {
-        Color(79, 50, 60),
-        Color(63, 44, 48),
-        Color(160, 85, 143)
+        Color(60, 40, 50),
+        Color(50, 34, 44),
+        Color(148, 78, 110)
     },
 
-    toggle = Color(63, 40, 47),
+    toggle = Color(52, 36, 44),
 
-    focus_panel = Color(70, 48, 58, 200),
-    hover = Color(192, 122, 217, 90),
+    focus_panel = Color(62, 44, 54, 200),
+    hover = Color(214, 92, 134),
 
-    window_shadow = Color(10, 6, 20, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(170, 150, 160, 200),
-    text_muted = Color(170, 150, 160, 170),
-    text = Color(246, 242, 246)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(186, 164, 176, 220),
+    text_muted = Color(186, 164, 176, 180),
+    text = Color(242, 232, 238)
 }
 Mantle.color_wine.panel_alpha = {
-    ColorAlpha(Mantle.color_wine.panel[1], 150),
-    ColorAlpha(Mantle.color_wine.panel[2], 150),
-    ColorAlpha(Mantle.color_wine.panel[3], 150)
+    ColorAlpha(Mantle.color_wine.panel[1], 160),
+    ColorAlpha(Mantle.color_wine.panel[2], 160),
+    ColorAlpha(Mantle.color_wine.panel[3], 160)
 }
 
+--[[
+    Фиолетовая тема
+]]
 Mantle.color_violet = {
-    header = Color(49, 50, 68),
-    header_text = Color(238, 244, 255),
-    background = Color(22, 24, 35),
-    background_alpha = Color(22, 24, 35, 230),
-    background_panelpopup = Color(36, 40, 56, 150),
+    header = Color(36, 38, 54),
+    header_text = Color(208, 214, 240),
+    background = Color(16, 18, 28),
+    background_alpha = Color(16, 18, 28, 245),
+    background_panelpopup = Color(28, 30, 44, 170),
 
-    button = Color(58, 64, 84),
-    button_shadow = Color(8, 6, 18, 30),
-    button_hovered = Color(64, 74, 104),
+    button = Color(50, 56, 78),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(66, 74, 104),
 
-    category = Color(58, 64, 84),
-    category_opened = Color(58, 64, 84, 0),
+    category = Color(44, 48, 68),
+    category_opened = Color(44, 48, 68, 0),
 
-    theme = Color(159, 180, 255),
+    theme = Color(168, 186, 255),
 
     panel = {
-        Color(58, 64, 84),
-        Color(48, 52, 72),
-        Color(109, 136, 255)
+        Color(50, 56, 78),
+        Color(42, 46, 64),
+        Color(120, 140, 240)
     },
 
-    toggle = Color(46, 51, 66),
+    toggle = Color(46, 50, 68),
 
-    focus_panel = Color(56, 62, 86, 200),
-    hover = Color(159, 180, 255, 90),
+    focus_panel = Color(52, 58, 82, 200),
+    hover = Color(168, 186, 255),
 
-    window_shadow = Color(8, 6, 20, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(147, 147, 184, 200),
-    text_muted = Color(147, 147, 184, 170),
-    text = Color(238, 244, 255)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(158, 162, 196, 220),
+    text_muted = Color(158, 162, 196, 180),
+    text = Color(236, 240, 252)
 }
 Mantle.color_violet.panel_alpha = {
-    ColorAlpha(Mantle.color_violet.panel[1], 150),
-    ColorAlpha(Mantle.color_violet.panel[2], 150),
-    ColorAlpha(Mantle.color_violet.panel[3], 150)
+    ColorAlpha(Mantle.color_violet.panel[1], 160),
+    ColorAlpha(Mantle.color_violet.panel[2], 160),
+    ColorAlpha(Mantle.color_violet.panel[3], 160)
 }
 
+--[[
+    Моховая тема
+]]
 Mantle.color_moss = {
-    header = Color(42, 50, 36),
-    header_text = Color(232, 244, 235),
-    background = Color(14, 16, 12),
-    background_alpha = Color(14, 16, 12, 230),
-    background_panelpopup = Color(24, 28, 22, 150),
+    header = Color(36, 44, 30),
+    header_text = Color(196, 208, 190),
+    background = Color(15, 18, 12),
+    background_alpha = Color(15, 18, 12, 245),
+    background_panelpopup = Color(24, 30, 20, 170),
 
-    button = Color(64, 82, 60),
-    button_shadow = Color(6, 8, 6, 30),
-    button_hovered = Color(74, 99, 68),
+    button = Color(50, 62, 46),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(66, 84, 60),
 
-    category = Color(46, 64, 44),
-    category_opened = Color(46, 64, 44, 0),
+    category = Color(40, 50, 34),
+    category_opened = Color(40, 50, 34, 0),
 
-    theme = Color(110, 160, 90),
+    theme = Color(146, 196, 110),
 
     panel = {
-        Color(40, 56, 40),
-        Color(66, 86, 66),
-        Color(110, 160, 90)
+        Color(48, 60, 44),
+        Color(40, 50, 36),
+        Color(112, 156, 88)
     },
 
-    toggle = Color(35, 44, 34),
+    toggle = Color(44, 54, 38),
 
-    focus_panel = Color(46, 58, 44, 200),
-    hover = Color(110, 160, 90, 90),
+    focus_panel = Color(52, 64, 48, 200),
+    hover = Color(146, 196, 110),
 
-    window_shadow = Color(0, 0, 0, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(148, 165, 140, 220),
-    text_muted = Color(148, 165, 140, 180),
-    text = Color(232, 244, 235)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(170, 184, 160, 220),
+    text_muted = Color(170, 184, 160, 180),
+    text = Color(234, 244, 230)
 }
 Mantle.color_moss.panel_alpha = {
-    ColorAlpha(Mantle.color_moss.panel[1], 150),
-    ColorAlpha(Mantle.color_moss.panel[2], 150),
-    ColorAlpha(Mantle.color_moss.panel[3], 150)
+    ColorAlpha(Mantle.color_moss.panel[1], 160),
+    ColorAlpha(Mantle.color_moss.panel[2], 160),
+    ColorAlpha(Mantle.color_moss.panel[3], 160)
 }
 
+--[[
+    Коралловая тема
+]]
 Mantle.color_coral = {
-    header = Color(52, 32, 36),
-    header_text = Color(255, 243, 242),
-    background = Color(18, 14, 16),
-    background_alpha = Color(18, 14, 16, 230),
-    background_panelpopup = Color(30, 22, 24, 150),
+    header = Color(44, 26, 30),
+    header_text = Color(236, 212, 212),
+    background = Color(17, 12, 14),
+    background_alpha = Color(17, 12, 14, 245),
+    background_panelpopup = Color(28, 20, 22, 170),
 
-    button = Color(116, 66, 61),
-    button_shadow = Color(8, 4, 6, 30),
-    button_hovered = Color(134, 73, 68),
+    button = Color(66, 38, 38),
+    button_shadow = Color(0, 0, 0, 30),
+    button_hovered = Color(88, 50, 50),
 
-    category = Color(74, 40, 42),
-    category_opened = Color(74, 40, 42, 0),
+    category = Color(52, 30, 32),
+    category_opened = Color(52, 30, 32, 0),
 
-    theme = Color(255, 120, 90),
+    theme = Color(255, 116, 88),
 
     panel = {
-        Color(66, 38, 40),
-        Color(120, 60, 56),
-        Color(240, 120, 90)
+        Color(66, 38, 38),
+        Color(54, 30, 32),
+        Color(214, 100, 82)
     },
 
-    toggle = Color(58, 39, 37),
+    toggle = Color(56, 34, 34),
 
-    focus_panel = Color(72, 42, 44, 200),
-    hover = Color(255, 120, 90, 90),
+    focus_panel = Color(68, 40, 42, 200),
+    hover = Color(255, 116, 88),
 
-    window_shadow = Color(0, 0, 0, 50),
+    window_shadow = Color(0, 0, 0, 60),
 
-    gray = Color(167, 136, 136, 220),
-    text_muted = Color(167, 136, 136, 180),
-    text = Color(255, 243, 242)
+    hover_overlay = Color(255, 255, 255, 28),
+    hover_overlay_strong = Color(255, 255, 255, 42),
+    notify_outline = Color(255, 255, 255, 45),
+    dim_overlay = Color(0, 0, 0, 150),
+    circle_shadow = Color(0, 0, 0, 20),
+    ripple = Color(255, 255, 255, 40),
+    tab_shadow = Color(0, 0, 0, 150),
+    tab_hover = Color(255, 255, 255, 14),
+    icon = Color(255, 255, 255),
+    status_disconnect = Color(230, 90, 90),
+    status_bot = Color(90, 160, 230),
+    status_online = Color(110, 200, 120),
+
+    gray = Color(190, 160, 160, 220),
+    text_muted = Color(190, 160, 160, 180),
+    text = Color(250, 238, 238)
 }
 Mantle.color_coral.panel_alpha = {
-    ColorAlpha(Mantle.color_coral.panel[1], 150),
-    ColorAlpha(Mantle.color_coral.panel[2], 150),
-    ColorAlpha(Mantle.color_coral.panel[3], 150)
+    ColorAlpha(Mantle.color_coral.panel[1], 160),
+    ColorAlpha(Mantle.color_coral.panel[2], 160),
+    ColorAlpha(Mantle.color_coral.panel[3], 160)
 }
-
-do
-    local palettes = {
-        Mantle.color_dark,
-        Mantle.color_dark_mono,
-        Mantle.color_light,
-        Mantle.color_blue,
-        Mantle.color_red,
-        Mantle.color_green,
-        Mantle.color_orange,
-        Mantle.color_purple,
-        Mantle.color_coffee,
-        Mantle.color_ice,
-        Mantle.color_wine,
-        Mantle.color_violet,
-        Mantle.color_moss,
-        Mantle.color_coral
-    }
-
-    for _, p in ipairs(palettes) do
-        if p and p.background then
-            local isLight = p.background.r + p.background.g + p.background.b >= 384
-
-            p.hover_overlay = p.hover_overlay or (isLight and Color(0, 0, 0, 8) or Color(255, 255, 255, 8))
-            p.hover_overlay_strong = p.hover_overlay_strong or (isLight and Color(0, 0, 0, 12) or Color(255, 255, 255, 10))
-            p.notify_outline = p.notify_outline or (isLight and Color(0, 0, 0, 40) or Color(255, 255, 255, 40))
-            p.dim_overlay = p.dim_overlay or Color(0, 0, 0, 140)
-            p.circle_shadow = p.circle_shadow or Color(0, 0, 0, 18)
-            p.ripple = p.ripple or (isLight and Color(0, 0, 0, 20) or Color(255, 255, 255, 30))
-            p.tab_shadow = p.tab_shadow or (isLight and Color(110, 110, 110, 150) or Color(0, 0, 0, 150))
-            p.tab_hover = p.tab_hover or (isLight and Color(0, 0, 0, 10) or Color(255, 255, 255, 10))
-            p.icon = p.icon or Color(255, 255, 255)
-            p.status_disconnect = p.status_disconnect or Color(210, 65, 65)
-            p.status_bot = p.status_bot or Color(70, 150, 220)
-            p.status_online = p.status_online or Color(120, 180, 70)
-        end
-    end
-end
