@@ -1,0 +1,8 @@
+mantle_vertex_screen_vsxx.hlsl -v-30
+mantle_vertex_gamma_vsxx.hlsl -v-30
+
+mantle_rounded_rect_psxx.hlsl -v-30
+mantle_rounded_blur_psxx.hlsl -v-30
+
+mantle_shadow_psxx.hlsl -v-30
+mantle_shadow_blur_psxx.hlsl -v-30
