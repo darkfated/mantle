@@ -36,15 +36,15 @@ local function createUITab()
     btn3:SetIcon(Material('icon16/delete.png'), 16)
 
     menu.createCategory('Кнопка (MantleBtn)', {
-        {':SetHover(bool is_hover)', 'Включить/выключить цвет наведения (стандарт - true)'},
-        {':SetFont(string font)', 'Установить шрифт'},
-        {':SetRadius(int rad)', 'Установить размер закругления'},
-        {':SetIcon(string icon, int icon_size)', 'Установить иконку'},
-        {':SetTxt(string text)', 'Установить текст'},
-        {':SetColor(color col)', 'Установить цвет кнопки'},
-        {':SetColorHover(color col)', 'Установить цвет наведения'},
-        {':SetGradient(bool is_grad)', 'Включить/выключить градиент (стандарт - true)'},
-        {':SetRipple(bool is_ripple)', 'Включить/выключить эффект волн (стандарт - false)'}
+        {':SetHover(bool is_hover)', 'Цвет выделения при наведении (по умолчанию - true)'},
+        {':SetFont(string font)', 'Шрифт текста'},
+        {':SetRadius(int rad)', 'Скругление углов (по умолчанию - 16)'},
+        {':SetIcon(string|material icon, int icon_size)', 'Иконка: путь к материалу или IMaterial (размер по умолчанию - 16)'},
+        {':SetTxt(string text)', 'Текст кнопки'},
+        {':SetColor(color col)', 'Основной цвет кнопки'},
+        {':SetColorHover(color col)', 'Цвет при наведении'},
+        {':SetGradient(bool is_grad)', 'Градиент внизу кнопки (по умолчанию - true)'},
+        {':SetRipple(bool is_ripple)', 'Эффект волны при клике (по умолчанию - false)'}
     }, panel, panelBtns)
 
     --[[
@@ -56,11 +56,11 @@ local function createUITab()
     checkbox:SetTxt('Отображение HUD')
     checkbox:SetConvar('cl_drawhud')
     menu.createCategory('Тумблер (MantleCheckBox)', {
-        {':SetTxt(string text)', 'Установить текст'},
-        {':SetValue(bool value)', 'Установить bool-значение тумблера'},
-        {':GetBool()', 'Получить bool-значение тумблера'},
-        {':SetConvar(string convar)', 'Установить ConVar'},
-        {':OnChange(bool new_value)', 'Вызывается при изменении значения тумблера'}
+        {':SetTxt(string text)', 'Текст рядом с тумблером'},
+        {':SetValue(bool value)', 'Поставить значение (вкл/выкл)'},
+        {':GetBool()', 'Текущее состояние тумблера'},
+        {':SetConvar(string convar)', 'Привязать к ConVar'},
+        {':OnChange(bool new_value)', 'Срабатывает при переключении'}
     }, panel, checkbox)
 
     local entry = vgui.Create('MantleEntry')
@@ -69,10 +69,10 @@ local function createUITab()
     entry:SetTitle('Никнейм')
     entry:SetPlaceholder('darkf')
     menu.createCategory('Ввод текста (MantleEntry)', {
-        {':SetTitle(string text)', 'Установить заголовок'},
-        {':SetPlaceholder(string text)', 'Установить фоновый текст (появляется при пустом поле)'},
-        {':GetValue()', 'Получить string-значение поля'},
-        {':SetValue(string value)', 'Установить значение полю'}
+        {':SetTitle(string text)', 'Заголовок над полем'},
+        {':SetPlaceholder(string text)', 'Серая подсказка, пока поле пустое'},
+        {':GetValue()', 'Текст из поля (string)'},
+        {':SetValue(string value)', 'Вписать текст в поле'}
     }, panel, entry)
 
     --[[
@@ -109,15 +109,15 @@ local function createUITab()
     end
 
     menu.createCategory('Окно (MantleFrame)', {
-        {':SetAlphaBackground(bool is_alpha)', 'Включить/выключить прозрачность окна (стандарт - false)'},
-        {':SetTitle(string title)', 'Установить заголовок'},
-        {':SetCenterTitle(string title)', 'Установить центральный заголовок'},
-        {':ShowAnimation()', 'Активировать анимацию при появлении меню'},
-        {':Close()', 'Плавно закрывает окно'},
-        {':DisableCloseBtn()', 'Скрыть кнопку закрытия'},
-        {':SetDraggable(bool is_draggable)', 'Включить/выключить перемещение окна'},
-        {':LiteMode()', 'Активировать режим Lite (без верхней панели)'},
-        {':Notify(string text, number duration, color col)', 'Показать уведомление внизу окна (стандарт времени - 2 сек., цвета - Mantle.color.theme)'}
+        {':SetAlphaBackground(bool is_alpha)', 'Прозрачный фон окна (по умолчанию - true)'},
+        {':SetTitle(string title)', 'Заголовок слева в шапке'},
+        {':SetCenterTitle(string title)', 'Заголовок по центру шапки'},
+        {':ShowAnimation()', 'Анимация появления окна'},
+        {':Close()', 'Плавно закрыть окно'},
+        {':DisableCloseBtn()', 'Убрать кнопку закрытия'},
+        {':SetDraggable(bool is_draggable)', 'Перетаскивание окна (по умолчанию - true)'},
+        {':LiteMode()', 'Режим без верхней панели'},
+        {':Notify(string text, number duration, color col)', 'Уведомление внизу окна (длительность по умолчанию - 2 сек., цвет - Mantle.color.theme)'}
     }, panel, panelFrames)
 
     --[[
@@ -140,14 +140,14 @@ local function createUITab()
         end
     end
     menu.createCategory('Панель прокрутки (MantleScrollPanel)', {
-        {':SetScroll(number offset)', 'Установить смещение прокрутки'},
-        {':GetScroll()', 'Получить текущее смещение прокрутки'},
-        {':AddItem(object panel)', 'Добавить элемент в панель'},
-        {':GetCanvas()', 'Получить внутренний контейнер содержимого'},
-        {':GetVBar()', 'Получить вертикальный скроллбар'},
+        {':SetScroll(number offset)', 'Сместить прокрутку на offset'},
+        {':GetScroll()', 'Текущее смещение прокрутки'},
+        {':AddItem(object panel)', 'Добавить элемент внутрь'},
+        {':GetCanvas()', 'Внутренний контейнер, куда падают элементы'},
+        {':GetVBar()', 'Вертикальный скроллбар'},
         {':Clear()', 'Очистить панель от всего'},
-        {':DisableVBarPadding()', 'Отключить отступ справа для скроллбара (по умолчанию имеется)'},
-        {':SetVBarPaddingRight(bool enabled)', 'Переключает дополнительный отступ под скроллбар'}
+        {':DisableVBarPadding()', 'Убрать отступ справа под скроллбар (есть по умолчанию)'},
+        {':SetVBarPaddingRight(bool enabled)', 'Включить/выключить отступ под скроллбар'}
     }, panel, sp)
 
     --[[
@@ -208,12 +208,12 @@ local function createUITab()
     testTabs2:AddTab('С иконкой', testTab5, Material('icon16/folder.png'))
 
     menu.createCategory('Вкладки (MantleTabs)', {
-        {':SetTabStyle(string style)', 'Установить стиль вкладок (modern или classic)'},
-        {':SetTabHeight(int height)', 'Установить высоту вкладок'},
-        {':SetIndicatorHeight(int height)', 'Установить высоту индикатора вкладок'},
-        {':AddTab(string name, object panel, string icon)', 'Добавить вкладку старым сигнатурным API'},
-        {':AddTab(table data, object panel)', 'Добавить вкладку descriptor-форматом {title, description, icon}'},
-        {':SetActiveTab(number|string tab_id)', 'Активировать вкладку по индексу или названию'}
+        {':SetTabStyle(string style)', 'Стиль вкладок: modern или classic'},
+        {':SetTabHeight(int height)', 'Высота панели вкладок'},
+        {':SetIndicatorHeight(int height)', 'Толщина индикатора активной вкладки'},
+        {':AddTab(string name, object panel, string icon)', 'Добавить вкладку (старый формат)'},
+        {':AddTab(table data, object panel)', 'Добавить вкладку через таблицу {title, description, icon}'},
+        {':SetActiveTab(number|string tab_id)', 'Переключиться на вкладку по индексу или названию'}
     }, panel, panelTabs)
 
     --[[
@@ -234,12 +234,12 @@ local function createUITab()
     end
 
     menu.createCategory('Горизонтальная прокрутка (MantleHScroll)', {
-        {':AddItem(pnl) / :Add(pnl)', 'Добавить элемент в контейнер прокрутки'},
-        {':GetCanvas()', 'Получить внутренний контейнер содержимого'},
-        {':DockPadding(number l, number t, number r, number b)', 'Задать внутренние отступы контейнера'},
-        {':Clear()', 'Очистить все элементы из контейнера'},
-        {':SetScroll(x)', 'Установить текущее смещение прокрутки'},
-        {':GetScroll()', 'Получить текущее смещение прокрутки'}
+        {':AddItem(pnl) / :Add(pnl)', 'Добавить элемент в контейнер'},
+        {':GetCanvas()', 'Внутренний контейнер, куда падают элементы'},
+        {':DockPadding(number l, number t, number r, number b)', 'Внутренние отступы контейнера'},
+        {':Clear()', 'Убрать все элементы'},
+        {':SetScroll(x)', 'Сместить прокрутку на x'},
+        {':GetScroll()', 'Текущее смещение прокрутки'}
     }, panel, hscroll)
 
     local combo = vgui.Create('MantleComboBox')
@@ -258,13 +258,13 @@ local function createUITab()
     combo:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
     combo:Dock(TOP)
     menu.createCategory('Выпадающий список (MantleComboBox)', {
-        {':AddChoice(string text, any data)', 'Добавить вариант в список (data - любое значение, связанное с пунктом)'},
-        {':SetValue(string text)', 'Установить выбранное значение по тексту'},
-        {':GetValue()', 'Получить выбранное значение (текст)'},
-        {':SetPlaceholder(string text)', 'Установить текст-заполнитель (placeholder)'},
-        {':OpenMenu()', 'Открыть выпадающее меню программно'},
-        {':CloseMenu()', 'Закрыть выпадающее меню программно'},
-        {':OnSelect(idx, text, data)', 'Вызывается при выборе варианта: idx - индекс, text - текст, data - значение'}
+        {':AddChoice(string text, any data)', 'Добавить вариант (data - любое значение, привязанное к пункту)'},
+        {':SetValue(string text)', 'Выбрать пункт по тексту'},
+        {':GetValue()', 'Текст выбранного пункта'},
+        {':SetPlaceholder(string text)', 'Подсказка, пока ничего не выбрано'},
+        {':OpenMenu()', 'Открыть список из кода'},
+        {':CloseMenu()', 'Закрыть список из кода'},
+        {':OnSelect(idx, text, data)', 'Срабатывает при выборе: idx - индекс, text - текст, data - значение'}
     }, panel, combo)
 
     --[[
@@ -312,15 +312,15 @@ local function createUITab()
     end)
 
     menu.createCategory('Таблица (MantleTable)', {
-        {':AddColumn(string name, number width, number align, bool sortable)', 'Добавить колонку'},
-        {':AddItem(...)', 'Добавить строку. Количество аргументов должно соответствовать количеству колонок'},
-        {':SortByColumn(number index)', 'Отсортировать таблицу по колонке'},
-        {':SetAction(function(table row_data))', 'Установить функцию, вызываемую при клике на строку. row_data - массив значений строки'},
-        {':SetRightClickAction(function(table row_data))', 'Установить функцию, вызываемую при правом клике на строку'},
-        {':Clear()', 'Очистить таблицу от всех строк'},
-        {':GetSelectedRow()', 'Получить данные выбранной строки (массив значений)'},
-        {':GetRowCount()', 'Получить количество строк в таблице'},
-        {':RemoveRow(number index)', 'Удалить строку по индексу (начиная с 1)'}
+        {':AddColumn(string name, number width, number align, bool sortable)', 'Добавить колонку (sortable - сортировка по клику)'},
+        {':AddItem(...)', 'Добавить строку. Аргументов столько же, сколько колонок'},
+        {':SortByColumn(number index)', 'Отсортировать строки по колонке'},
+        {':SetAction(function(table row_data))', 'Что делать при клике на строку (row_data - значения строки)'},
+        {':SetRightClickAction(function(table row_data))', 'Что делать при правом клике на строку'},
+        {':Clear()', 'Очистить таблицу от строк'},
+        {':GetSelectedRow()', 'Значения выбранной строки'},
+        {':GetRowCount()', 'Сколько строк в таблице'},
+        {':RemoveRow(number index)', 'Удалить строку по индексу (счёт с 1)'}
     }, panel, tableExample)
 
     --[[
@@ -358,13 +358,13 @@ local function createUITab()
     end
     cat:AddItem(panRed)
     menu.createCategory('Категория (MantleCategory)', {
-        {':SetText(string name)', 'Установить название'},
-        {':AddItem(object panel)', 'Добавить в категорию элемент'},
-        {':SetColor(color col)', 'Установить кастомный цвет категории'},
-        {':SetCenterText(bool is_centered)', 'Установить центрирование названия'},
-        {':SetActive(bool is_active)', 'Установить активность категории (стандарт - false)'},
-        {':IsActive()', 'Получить текущее состояние категории (открыта/закрыта)'},
-        {':Clear()', 'Очистить категорию от всех элементов и закрыть её'}
+        {':SetText(string name)', 'Название категории'},
+        {':AddItem(object panel)', 'Добавить элемент внутрь'},
+        {':SetColor(color col)', 'Свой цвет шапки категории'},
+        {':SetCenterText(bool is_centered)', 'Название по центру шапки'},
+        {':SetActive(bool is_active)', 'Раскрыта ли категория (по умолчанию - false)'},
+        {':IsActive()', 'Открыта ли категория сейчас'},
+        {':Clear()', 'Убрать все элементы и свернуть категорию'}
     }, panel, panelCat)
 
     --[[
@@ -377,12 +377,12 @@ local function createUITab()
     slider:SetConvar('r_skybox')
     slider:SetText('Отключение неба')
     menu.createCategory('Слайдер (MantleSlideBox)', {
-        {':SetRange(int min_value, int max_value, int decimals)', 'Сделать диапазон слайдера с точностью (стандарт точность - 0)'},
-        {':SetConvar(string convar)', 'Установить ConVar'},
-        {':SetText(string text)', 'Установить текстовое обозначение'},
-        {':SetValue(string val)', 'Установить значение'},
-        {':GetValue()', 'Получить выбранное значение (число)'},
-        {':OnValueChanged(string new_value)', 'Вызывается при изменении значения слайдера'}
+        {':SetRange(int min_value, int max_value, int decimals)', 'Диапазон значений (decimals - знаков после запятой, по умолчанию 0)'},
+        {':SetConvar(string convar)', 'Привязать к ConVar'},
+        {':SetText(string text)', 'Подпись слева от слайдера'},
+        {':SetValue(number val)', 'Поставить значение'},
+        {':GetValue()', 'Текущее значение (число)'},
+        {':OnValueChanged(number new_value)', 'Срабатывает при изменении значения'}
     }, panel, slider)
 
     --[[
@@ -472,13 +472,13 @@ local function createUITab()
     text4:SetText(longText)
 
     menu.createCategory('Текст (MantleText)', {
-        {':SetText(string text)', 'Установить текст для отображения'},
-        {':GetText()', 'Получить исходный текст компонента'},
-        {':SetFont(string font)', 'Установить шрифт'},
-        {':SetColor(color col)', 'Установить цвет текста'},
-        {':SetAlign(number align)', 'Горизонтальное выравнивание (TEXT_ALIGN_*)'},
-        {':SetVAlign(string valign)', 'Вертикальное выравнивание: top, center, bottom'},
-        {':SetPadding(number px)', 'Внутренний отступ от краёв'}
+        {':SetText(string text)', 'Текст для отображения'},
+        {':GetText()', 'Исходный текст компонента'},
+        {':SetFont(string font)', 'Шрифт текста'},
+        {':SetColor(color col)', 'Цвет текста'},
+        {':SetAlign(number align)', 'Выравнивание по горизонтали (TEXT_ALIGN_*)'},
+        {':SetVAlign(string valign)', 'Выравнивание по вертикали: top, center, bottom'},
+        {':SetPadding(number px)', 'Отступ текста от краёв'}
     }, panel, panelTexts)
 
     return panel

@@ -25,12 +25,12 @@ local function createSettingsTab()
 
     menu.createInfo({
         'Файл config/theme.lua',
-        'forced = "тема" - включить одну тему для всех, enabled = { "red" = true } - какие темы разрешены.'
+        'forced = "тема" - принудительная тема для всех игроков, enabled = { red = true } - какие темы разрешены.'
     }, categoryTheme)
 
     menu.createInfo({
         'Файл config/colors.lua',
-        'Здесь можно создать или отредактировать готовые пресеты.'
+        'Здесь создаются и редактируются цветовые пресеты для тем.'
     }, categoryTheme)
 
     local comboboxTheme = vgui.Create('MantleComboBox')
@@ -54,7 +54,7 @@ local function createSettingsTab()
     else
         menu.createInfo({
             'Серверная тема - "' .. forcedTheme .. '"',
-            'Владелец сервера поставил её для всех, сменить на другую не предоставляеться возможности.'
+            'Владелец сервера принудительно выбрал её для всех, сменить на другую нельзя.'
         }, categoryTheme)
     end
 

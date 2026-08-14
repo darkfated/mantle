@@ -8,7 +8,7 @@ local function createLegacyTab()
 
     local btnFrame = vgui.Create('MantleBtn')
     btnFrame:SetTxt('Посмотреть пример')
-    btnFrame:SetTall(40)
+    btnFrame:SetTall(32)
     btnFrame:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
     btnFrame:Dock(TOP)
     btnFrame.DoClick = function()
@@ -115,13 +115,13 @@ local function createLegacyTab()
     end
 
     menu.createCategory('Элементы', {
-        {'Mantle.ui.frame(object frame, string title, int w, int h, bool cls_btn, bool open_anim)', 'Оформление для DFrame'},
-        {'Mantle.ui.sp(object scroll)', 'Оформление для DScrollPanel'},
-        {'Mantle.ui.btn(object btn, mat icon, int icon_size, color col, int rad, bool off_grad, color hov, bool off_hov)', 'Оформление для DButton'},
-        {'Mantle.ui.slidebox(object parent, string label, int min_value, int max_value, string convar, int decimals)', 'Создание слайдера на панели'},
-        {'Mantle.ui.desc_entry(object parent, string title, string placeholder, bool off_title)', 'Создание поля ввода'},
-        {'Mantle.ui.checkbox(object parent, string text, string convar)', 'Создание тумблера'},
-        {'Mantle.ui.panel_tabs(object parent)', 'Создание панели вкладок. В дальнейшем использовать :AddTab() и :ActiveTab() для настройки'}
+        {'Mantle.ui.frame(object frame, string title, int w, int h, bool cls_btn, bool open_anim)', 'Оформление для DFrame: заголовок, анимация появления, кнопка закрытия'},
+        {'Mantle.ui.sp(object scroll)', 'Оформление для DScrollPanel: тематический скроллбар'},
+        {'Mantle.ui.btn(object btn, mat icon, int icon_size, color col, int rad, bool off_grad, color hov, bool off_hov)', 'Оформление для DButton: иконка, цвет, скругление, ховер'},
+        {'Mantle.ui.slidebox(object parent, string label, int min_value, int max_value, string convar, int decimals)', 'Слайдер с подписью и текущим значением, привязанный к ConVar'},
+        {'Mantle.ui.desc_entry(object parent, string title, string placeholder, bool off_title)', 'Поле ввода с заголовком. Возвращает entry и его фон'},
+        {'Mantle.ui.checkbox(object parent, string text, string convar)', 'Тумблер ВКЛ/ВЫКЛ. Возвращает панель и кнопку'},
+        {'Mantle.ui.panel_tabs(object parent)', 'Панель вкладок. Настройка через :AddTab(title, panel, icon, col, col_hov) и :ActiveTab(title)'}
     }, panel, btnFrame, true)
 
     return panel

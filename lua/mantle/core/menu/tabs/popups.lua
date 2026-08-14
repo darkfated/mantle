@@ -20,7 +20,7 @@ local function createPopupTab()
     local panel = menu.createTabPanel('Всплывающие', 'Показ панелей, открывающихся поверх меню.', icon)
 
     menu.createCategory('Палитра цвета', {
-        {'Mantle.ui.color_picker(func callback, color default_color)', 'Открывает окно выбора цвета и передаёт выбранный цвет в callback(col)'}
+        {'Mantle.ui.color_picker(func callback, color default_color)', 'Окно выбора цвета: поле HSB, слайдер тона и ручной ввод RGB. Выбранный цвет приходит в callback(col)'}
     }, panel, createDemoButton('Открыть палитру', function()
         Mantle.ui.color_picker(function(col)
             chat.AddText('Вы выбрали цвет: ', col, col)
@@ -28,11 +28,11 @@ local function createPopupTab()
     end), true)
 
     menu.createCategory('Контекстное меню (MantleDermaMenu)', {
-        {'Mantle.ui.derma_menu()', 'Создаёт контекстное меню в позиции курсора'},
-        {':AddOption(string text, func callback, string|material icon)', 'Добавляет опцию'},
-        {':AddSpacer()', 'Добавляет визуальный разделитель'},
-        {'option:AddSubMenu()', 'Создаёт вложенное подменю для конкретной опции'},
-        {':CloseMenu()', 'Плавно закрывает меню'}
+        {'Mantle.ui.derma_menu()', 'Контекстное меню в позиции курсора'},
+        {':AddOption(string text, func callback, string|material icon)', 'Добавить пункт. Возвращает объект пункта для дальнейших действий'},
+        {':AddSpacer()', 'Визуальный разделитель между пунктами'},
+        {'option:AddSubMenu()', 'Вложенное подменю для конкретного пункта'},
+        {':CloseMenu()', 'Плавно закрыть меню'}
     }, panel, createDemoButton('Открыть контекстное меню', function()
         local dermaMenu = Mantle.ui.derma_menu()
         for i = 1, 5 do
@@ -56,8 +56,8 @@ local function createPopupTab()
     end))
 
     menu.createCategory('Выбор игрока', {
-        {'Mantle.ui.player_selector(func onSelect, func filter)', 'Открывает список игроков и передаёт выбранного игрока в onSelect(ply)'},
-        {'filter(player pl)', 'Можно делать фильтр для показа определённых людей. Если return false - игрок не будет в списке'}
+        {'Mantle.ui.player_selector(func onSelect, func filter)', 'Окно со списком игроков и поиском. Выбранный игрок приходит в onSelect(ply)'},
+        {'filter(player pl)', 'Фильтр показа: если вернуть false - игрок не появится в списке'}
     }, panel, createDemoButton('Открыть список игроков', function()
         Mantle.ui.player_selector(function(pl)
             chat.AddText('Вы выбрали игрока: ', color_white, pl:Name())
@@ -65,14 +65,16 @@ local function createPopupTab()
     end))
 
     menu.createCategory('Круговое меню', {
-        {'Mantle.ui.radial_menu(table options)', 'Создаёт круговое меню'},
-        {':SetCenterText(string title, string desc)', 'Меняет центральный заголовок и описание'},
-        {':AddOption(string text, func callback, string icon, string desc)', 'Добавляет обычную опцию (кнопку)'},
-        {':CreateSubMenu(string title, string desc)', 'Создаёт подменю'},
-        {'submenu:AddOption(string text, func callback, string icon, string desc)', 'Добавляет опцию в подменю'},
-        {':AddSubMenuOption(string text, table submenu, string icon, string desc)', 'Добавляет в круговое меню кнопку для перехода в подменю'},
-        {':GetCurrentOptions()', 'Возвращает текущий список опций'},
-        {':GoBack()', 'Возвращает назад по стеку подменю'}
+        {'Mantle.ui.radial_menu(table options)', 'Круговое меню в центре экрана. В options можно задать radius, inner_radius, title, desc, шрифты и длительность анимаций'},
+        {':SetCenterText(string title, string desc)', 'Заголовок и описание в центре меню'},
+        {':AddOption(string text, func callback, string icon, string desc)', 'Обычный пункт-кнопка'},
+        {':CreateSubMenu(string title, string desc)', 'Создать подменю (таблица с методом :AddOption)'},
+        {'submenu:AddOption(string text, func callback, string icon, string desc)', 'Пункт внутри подменю'},
+        {':AddSubMenuOption(string text, table submenu, string icon, string desc)', 'Кнопка перехода в подменю'},
+        {':GetCurrentOptions()', 'Текущий список опций (активное меню или подменю)'},
+        {':GoBack()', 'Вернуться назад по стеку подменю'},
+        {':CloseMenu(func callback)', 'Закрыть меню (callback вызовется после закрытия)'},
+        {'Управление', '1-9 - выбор пункта, ESC - закрыть, клик в центр - назад, клик вне круга - закрыть'}
     }, panel, createDemoButton('Открыть круговое меню', function()
         local radialMenu = Mantle.ui.radial_menu()
         radialMenu:SetCenterText('Действия', 'Выберите действие')
@@ -107,7 +109,7 @@ local function createPopupTab()
     end))
 
     menu.createCategory('Текстовый ввод', {
-        {'Mantle.ui.text_box(string title, string desc, func callback)', 'Открывает окно ввода текста и возвращает строку в callback'}
+        {'Mantle.ui.text_box(string title, string desc, func callback)', 'Окно ввода: заголовок, описание и поле. Введённая строка приходит в callback(text)'}
     }, panel, createDemoButton('Открыть текстовый ввод', function()
         Mantle.ui.text_box('Заголовок', 'Описание того, что вводиться', function(text)
             chat.AddText('Вы ввели: ', color_white, text)
@@ -115,7 +117,7 @@ local function createPopupTab()
     end))
 
     menu.createCategory('Уведомление в MantleFrame', {
-        {'menu:Notify(string text, number duration, color col)', 'Выводит уведомление снизу окна. menu - ваша переменная от MantleFrame'}
+        {'frame:Notify(string text, number duration, color col)', 'Уведомление снизу окна. frame - ваша переменная от MantleFrame'}
     }, panel, createDemoButton('Показать уведомление', function()
         menu.notify('Тестовое сообщение!')
     end))
