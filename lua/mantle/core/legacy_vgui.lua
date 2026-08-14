@@ -288,6 +288,7 @@ function Mantle.ui.checkbox(parent, text, convar)
     panel:Dock(TOP)
     panel:DockMargin(4, 0, 4, 0)
     panel:SetTall(28)
+    panel:SetCursor('hand')
     panel.Paint = function(_, w, h)
         RNDX.Rect(0, 0, w, h)
             :Rad(6)
@@ -301,7 +302,8 @@ function Mantle.ui.checkbox(parent, text, convar)
     option:Dock(RIGHT)
     option:SetWide(56)
     option:SetText('')
-    option.enabled = convar and GetConVar(convar):GetBool() or false
+    option:SetCursor('hand')
+    option.enabled = convar and GetConVar(convar) and GetConVar(convar):GetBool() or false
     option.Paint = function(self, w, h)
         RNDX.Rect(0, 0, w, h)
             :Radii(0, 6, 0, 6)
@@ -310,12 +312,36 @@ function Mantle.ui.checkbox(parent, text, convar)
         :Draw()
         draw.SimpleText(self.enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.19', w * 0.5 - 1, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-    option.DoClick = function()
+
+    local function toggle()
         if convar then
             LocalPlayer():ConCommand(convar .. ' ' .. (option.enabled and 0 or 1))
         end
 
         option.enabled = !option.enabled
+    end
+
+    option.DoClick = toggle
+    panel.OnMousePressed = function(_, mcode)
+        if mcode == MOUSE_LEFT then
+            toggle()
+        end
+    end
+
+    if convar then
+        local sync_name = 'mantle_checkbox_sync_' .. tostring(panel)
+        timer.Create(sync_name, 0.1, 0, function()
+            if not IsValid(panel) then return end
+
+            local cvar = GetConVar(convar)
+            if not cvar then return end
+
+            option.enabled = cvar:GetBool()
+        end)
+
+        panel.OnRemove = function()
+            timer.Remove(sync_name)
+        end
     end
 
     return panel, option

@@ -15,7 +15,7 @@ function PANEL:Init()
 
     self._circle = 0
     self._circleEased = 0
-    self._circleColor = table.Copy(Mantle.color.gray)
+    self._circleColor = Mantle.color.gray
 
     self.toggle = vgui.Create('Button', self)
     self.toggle:Dock(RIGHT)
@@ -35,6 +35,8 @@ function PANEL:Init()
 
         Mantle.func.sound()
     end
+
+    self._convar_timer_name = self:CreateConVarSyncTimer()
 end
 
 function PANEL:OnMousePressed(mcode)
@@ -59,6 +61,30 @@ function PANEL:SetConvar(convar)
     local c = GetConVar(convar)
     if c then self.value = c:GetBool() end
     self.convar = convar
+end
+
+function PANEL:CreateConVarSyncTimer()
+    local name = ('mantle_check_sync_%s'):format(tostring(self))
+    timer.Create(name, 0.1, 0, function()
+        if not IsValid(self) or self.convar == '' then return end
+
+        local cvar = GetConVar(self.convar)
+        if not cvar then return end
+
+        local val = cvar:GetBool()
+        if self.value != val then
+            self:SetValue(val)
+            self:OnChange(self.value)
+        end
+    end)
+    return name
+end
+
+function PANEL:OnRemove()
+    if self._convar_timer_name then
+        timer.Remove(self._convar_timer_name)
+        self._convar_timer_name = nil
+    end
 end
 
 function PANEL:OnChange(new_value)
