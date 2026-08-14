@@ -26,7 +26,6 @@ function PANEL:Init()
     self.min_value = 0
     self.max_value = 1
     self.decimals = 0
-    self.convar = nil
 
     self.value = 0
     self.smoothProgress = 0
@@ -38,7 +37,6 @@ function PANEL:Init()
     self:SetCursor('hand')
     self.OnValueChanged = function() end
 
-    self._convar_last = nil
     self._convar_timer_name = self:CreateConVarSyncTimer()
 end
 
@@ -127,21 +125,12 @@ local function getTrackBounds(self, w)
 end
 
 function PANEL:SetFromProgress(progress)
-    progress = math.Clamp(progress, 0, 1)
-    local val = self.min_value + progress * (self.max_value - self.min_value)
-
-    if self.decimals > 0 then
-        val = tonumber(string.format('%.' .. self.decimals .. 'f', val)) or val
-    else
-        val = math.Round(val)
-    end
-
+    local val = self.min_value + math.Clamp(progress, 0, 1) * (self.max_value - self.min_value)
     self:SetValue(val)
 end
 
 function PANEL:UpdateFromCursor(absX)
-    local _, _, barW = getTrackBounds(self, self:GetWide())
-    local start = SIDE_PADDING + TRACK_INSET
+    local start, _, barW = getTrackBounds(self, self:GetWide())
     if barW <= 0 then return end
     self:SetFromProgress(math.Clamp((absX - start) / barW, 0, 1))
 end
@@ -173,22 +162,21 @@ function PANEL:Paint(w, h)
 
     local handleX = start + self.smoothProgress
     local handleY = BAR_Y + BAR_H * 0.5
-    local handleR = HANDLE_R
-    local dragAlpha = math.floor((1 - self._dragLerp) * 255)
+    local dragAlpha = math_floor((1 - self._dragLerp) * 255)
 
-    RNDX.Circle(handleX, handleY, handleR)
+    RNDX.Circle(handleX, handleY, HANDLE_R)
         :Color(Mantle.color.window_shadow)
         :Shadow(4, 2)
     :Draw()
 
     if self._hoverLerp > 0.01 then
         local hv = Mantle.color.hover_overlay_strong
-        RNDX.Circle(handleX, handleY, handleR + 2)
+        RNDX.Circle(handleX, handleY, HANDLE_R + 2)
             :Color(Color(hv.r, hv.g, hv.b, math_floor(hv.a * self._hoverLerp)))
         :Draw()
     end
 
-    RNDX.Circle(handleX, handleY, handleR)
+    RNDX.Circle(handleX, handleY, HANDLE_R)
         :Color(Color(Mantle.color.theme.r, Mantle.color.theme.g, Mantle.color.theme.b, dragAlpha))
     :Draw()
 
