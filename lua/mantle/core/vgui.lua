@@ -121,10 +121,6 @@ function Mantle.ui.getActiveThemeName()
     return getActiveThemeName()
 end
 
-local function isColor(v)
-    return type(v) == 'table' and type(v.r) == 'number'
-end
-
 local transition = {
     active = false,
     to = nil,
@@ -154,13 +150,13 @@ local function startThemeTransition(name)
             end
 
             for k, v in pairs(to) do
-                if isColor(v) then
+                if IsColor(v) then
                     Mantle.color[k] = Mantle.func.LerpColor(transition.colorBlend, Mantle.color[k] or v, v)
                 elseif type(v) == 'table' and #v > 0 then
                     Mantle.color[k] = Mantle.color[k] or {}
                     for i = 1, #v do
                         local vi = v[i]
-                        if isColor(vi) then
+                        if IsColor(vi) then
                             Mantle.color[k][i] = Mantle.func.LerpColor(transition.colorBlend, (Mantle.color[k] and Mantle.color[k][i]) or vi, vi)
                         else
                             Mantle.color[k][i] = vi

@@ -30,11 +30,15 @@ function menu.open()
     tabs:Dock(FILL)
 
     for _, tab in ipairs(menu.getTabs()) do
+        menu._activeTab = tab
+        local content = tab.build()
+        menu._activeTab = nil
+
         tabs:AddTab({
             title = tab.title,
             description = tab.description,
             icon = tab.icon
-        }, tab.create())
+        }, content)
     end
 
     return frame

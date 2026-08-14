@@ -2,8 +2,8 @@ local menu = Mantle.menu
 
 local icon = Material('icon16/exclamation.png')
 
-local function createLegacyTab()
-    local panel = menu.createTabPanel('Legacy UI', 'Старые функции для поддержания древних скриптов.', icon)
+local function build()
+    local panel = menu.createTabPanel()
     local menuWide = menu.getMenuWide()
 
     local btnFrame = vgui.Create('MantleBtn')
@@ -114,15 +114,20 @@ local function createLegacyTab()
         tabs:ActiveTab('Вкладка 1')
     end
 
-    menu.createCategory('Элементы', {
-        {'Mantle.ui.frame(object frame, string title, int w, int h, bool cls_btn, bool open_anim)', 'Оформление для DFrame: заголовок, анимация появления, кнопка закрытия'},
-        {'Mantle.ui.sp(object scroll)', 'Оформление для DScrollPanel: тематический скроллбар'},
-        {'Mantle.ui.btn(object btn, mat icon, int icon_size, color col, int rad, bool off_grad, color hov, bool off_hov)', 'Оформление для DButton: иконка, цвет, скругление, ховер'},
-        {'Mantle.ui.slidebox(object parent, string label, int min_value, int max_value, string convar, int decimals)', 'Слайдер с подписью и текущим значением, привязанный к ConVar'},
-        {'Mantle.ui.desc_entry(object parent, string title, string placeholder, bool off_title)', 'Поле ввода с заголовком. Возвращает entry и его фон'},
-        {'Mantle.ui.checkbox(object parent, string text, string convar)', 'Тумблер ВКЛ/ВЫКЛ. Возвращает панель и кнопку'},
-        {'Mantle.ui.panel_tabs(object parent)', 'Панель вкладок. Настройка через :AddTab(title, panel, icon, col, col_hov) и :ActiveTab(title)'}
-    }, panel, btnFrame, true)
+    menu.createCategory(panel, {
+        title = 'Элементы',
+        open = true,
+        rows = {
+            { name = 'Mantle.ui.frame(object frame, string title, int w, int h, bool cls_btn, bool open_anim)', desc = 'Оформление для DFrame' },
+            { name = 'Mantle.ui.sp(object scroll)', desc = 'Оформление для DScrollPanel' },
+            { name = 'Mantle.ui.btn(object btn, mat icon, int icon_size, color col, int rad, bool off_grad, color hov, bool off_hov)', desc = 'Оформление для DButton' },
+            { name = 'Mantle.ui.slidebox(object parent, string label, int min_value, int max_value, string convar, int decimals)', desc = 'Слайдер с подписью и текущим значением, привязанный к ConVar' },
+            { name = 'Mantle.ui.desc_entry(object parent, string title, string placeholder, bool off_title)', desc = 'Поле ввода с заголовком. Возвращает entry и его фон' },
+            { name = 'Mantle.ui.checkbox(object parent, string text, string convar)', desc = 'Тумблер. Возвращает панель и кнопку' },
+            { name = 'Mantle.ui.panel_tabs(object parent)', desc = 'Панель вкладок. Настройка через :AddTab(title, panel, icon, col, col_hov) и :ActiveTab(title)' }
+        },
+        demo = btnFrame
+    })
 
     return panel
 end
@@ -132,5 +137,5 @@ menu.registerTab('legacy', {
     title = 'Legacy UI',
     description = 'Старые функции для поддержания древних скриптов.',
     icon = icon,
-    create = createLegacyTab
+    build = build
 })

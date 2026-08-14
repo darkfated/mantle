@@ -2,8 +2,8 @@ local menu = Mantle.menu
 
 local icon = Material('icon16/cog.png')
 
-local function createSettingsTab()
-    local panel = menu.createTabPanel('Настройки', 'Конфигурационные настройки библиотеки.', icon)
+local function build()
+    local panel = menu.createTabPanel()
     local forcedTheme = Mantle.ui.getForcedThemeName()
 
     local checkboxDepth = vgui.Create('MantleCheckBox', panel)
@@ -23,15 +23,9 @@ local function createSettingsTab()
     categoryTheme:SetText('Изменение цветовой темы')
     categoryTheme:SetActive(true)
 
-    menu.createInfo({
-        'Файл config/theme.lua',
-        'forced = "тема" - принудительная тема для всех игроков, enabled = { red = true } - какие темы разрешены.'
-    }, categoryTheme)
+    menu.createDoc(categoryTheme, 'Файл config/theme.lua', 'forced = "тема" - принудительная тема для всех игроков, enabled = { red = true } - какие темы разрешены.')
 
-    menu.createInfo({
-        'Файл config/colors.lua',
-        'Здесь создаются и редактируются цветовые пресеты для тем.'
-    }, categoryTheme)
+    menu.createDoc(categoryTheme, 'Файл config/colors.lua', 'Здесь создаются и редактируются цветовые пресеты для тем.')
 
     local comboboxTheme = vgui.Create('MantleComboBox')
     comboboxTheme:Dock(TOP)
@@ -52,10 +46,7 @@ local function createSettingsTab()
     if forcedTheme == '' then
         categoryTheme:AddItem(comboboxTheme)
     else
-        menu.createInfo({
-            'Серверная тема - "' .. forcedTheme .. '"',
-            'Владелец сервера принудительно выбрал её для всех, сменить на другую нельзя.'
-        }, categoryTheme)
+        menu.createDoc(categoryTheme, 'Серверная тема - "' .. forcedTheme .. '"', 'Владелец сервера принудительно выбрал её для всех, сменить на другую нельзя.')
     end
 
     local listThemeColors = vgui.Create('DIconLayout')
@@ -67,7 +58,7 @@ local function createSettingsTab()
     categoryTheme:AddItem(listThemeColors)
 
     for colId, value in pairs(Mantle.color) do
-        if menu.isColor(value) then
+        if IsColor(value) then
             local panCol = vgui.Create('DPanel', listThemeColors)
             panCol:SetSize(78, 78)
             panCol.Paint = function(_, w, h)
@@ -88,5 +79,5 @@ menu.registerTab('settings', {
     title = 'Настройки',
     description = 'Конфигурационные настройки библиотеки.',
     icon = icon,
-    create = createSettingsTab
+    build = build
 })
