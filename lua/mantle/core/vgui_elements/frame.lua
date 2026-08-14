@@ -2,52 +2,69 @@ local PANEL = {}
 
 local mat_close = Material('mantle/close_btn_new.png')
 
+local HEADER_TALL = 24
+
 function PANEL:Init()
     self.bool_alpha = true
     self.bool_lite = false
+    self.draggable = true
     self.title = Mantle.lang.get('mantle', 'frame_title')
     self.center_title = ''
 
-    self:DockPadding(8, 32, 8, 8)
+    self._drag = nil
 
-    self.top_panel = vgui.Create('Button', self)
-    self.top_panel:SetText('')
-    self.top_panel:SetCursor('sizeall')
-    self.top_panel.Paint = nil
-    self.top_panel.OnMousePressed = function(s, key)
-        if key == MOUSE_LEFT then
-            self.Dragging = {gui.MouseX() - self.x, gui.MouseY() - self.y}
-            s:MouseCapture(true)
-            self:SetAlpha(200)
-        end
-    end
-    self.top_panel.OnMouseReleased = function(s, key)
-        if key == MOUSE_LEFT then
-            self.Dragging = nil
-            s:MouseCapture(false)
-            self:SetAlpha(255)
-        end
-    end
-    self.top_panel.Think = function(s)
-        if self.Dragging then
-            local mouseX, mouseY = gui.MousePos()
-            local newPosX, newPosY = mouseX - self.Dragging[1], mouseY - self.Dragging[2]
+    self:DockPadding(8, HEADER_TALL + 8, 8, 8)
 
-            self:SetPos(newPosX, newPosY)
-        end
+    self.header = vgui.Create('Panel', self)
+    self.header:SetCursor('sizeall')
+    self.header.Paint = nil
+    self.header.frame = self
+
+    function self.header:OnMousePressed(key)
+        local frame = self.frame
+        if key != MOUSE_LEFT or !frame.draggable then return end
+
+        frame._drag = {
+            x = gui.MouseX() - frame.x,
+            y = gui.MouseY() - frame.y
+        }
+        self:MouseCapture(true)
+        frame:SetAlpha(200)
     end
 
-    self.cls = vgui.Create('Button', self)
-    self.cls:SetText('')
-    self.cls.Paint = function(_, w, h)
-        RNDX.Rect(2, 2, w - 4, h - 4)
+    function self.header:OnMouseReleased(key)
+        if key != MOUSE_LEFT then return end
+
+        local frame = self.frame
+        frame._drag = nil
+        self:MouseCapture(false)
+        frame:SetAlpha(255)
+    end
+
+    function self.header:Think()
+        local frame = self.frame
+        if !frame._drag then return end
+
+        frame:SetPos(gui.MouseX() - frame._drag.x, gui.MouseY() - frame._drag.y)
+    end
+
+    self.cls = vgui.Create('MantleBtn', self)
+    self.cls:SetRadius(6)
+    self.cls.Paint = function(btn, w, h)
+        if btn:IsHovered() then
+            RNDX.Rect(2, 2, w - 4, h - 4)
+                :Rad(6)
+                :Color(Mantle.color.hover_overlay)
+            :Draw()
+        end
+
+        RNDX.Rect(4, 4, w - 8, h - 8)
             :Color(Mantle.color.header_text)
             :Material(mat_close)
         :Draw()
     end
     self.cls.DoClick = function()
         self:Close()
-
         Mantle.func.sound()
     end
     self.cls.DoRightClick = function()
@@ -85,6 +102,9 @@ function PANEL:ShowAnimation()
 end
 
 function PANEL:Close()
+    if self._closing then return end
+    self._closing = true
+
     self:AlphaTo(0, 0.1, 0, function()
         self:Remove()
     end)
@@ -95,13 +115,14 @@ function PANEL:DisableCloseBtn()
 end
 
 function PANEL:SetDraggable(is_draggable)
-    self.top_panel:SetVisible(is_draggable)
+    self.draggable = is_draggable
 end
 
 function PANEL:LiteMode()
+    if self.bool_lite then return end
+
     self.bool_lite = true
     self:DockPadding(6, 6, 6, 6)
-
     self.cls:SetZPos(2)
 end
 
@@ -116,10 +137,11 @@ function PANEL:Notify(text, duration, col)
     local mp = vgui.Create('Panel', self)
     mp:SetSize(tw + 16, th + 8)
     mp:SetMouseInputEnabled(false)
-    local startY = self:GetTall() + mp:GetTall()
-    local endY = self:GetTall() - mp:GetTall() - 16
-    mp:SetPos((self:GetWide() - mp:GetWide()) * 0.5, startY)
     mp:SetAlpha(0)
+    mp:SetPos((self:GetWide() - mp:GetWide()) * 0.5, self:GetTall() + mp:GetTall())
+
+    local endY = self:GetTall() - mp:GetTall() - 16
+
     mp.Paint = function(_, w, h)
         RNDX.Rect(0, 0, w, h)
             :Rad(14)
@@ -141,6 +163,7 @@ function PANEL:Notify(text, duration, col)
     mp:AlphaTo(255, 0.3, 0, function()
         timer.Simple(duration, function()
             if !IsValid(mp) then return end
+
             mp:AlphaTo(0, 0.25, 0, function()
                 if IsValid(mp) then
                     mp:Remove()
@@ -158,44 +181,49 @@ function PANEL:Paint(w, h)
         :Color(Mantle.color.window_shadow)
         :Shadow(16, 10)
     :Draw()
-    if !self.bool_lite then
-        RNDX.Rect(0, 0, w, 24)
+
+    local lite = self.bool_lite
+    local headerTall = lite and 0 or HEADER_TALL
+    local bodyRad = lite and 6 or 0
+
+    if !lite then
+        RNDX.Rect(0, 0, w, headerTall)
             :Radii(6, 6, 0, 0)
             :Color(Mantle.color.header)
         :Draw()
     end
 
-    local headerTall = self.bool_lite and 0 or 24
-    if self.bool_alpha and Mantle.ui.convar.blur then
+    local alphaBg = self.bool_alpha and Mantle.ui.convar.blur
+    if alphaBg then
         RNDX.Rect(0, headerTall, w, h - headerTall)
-            :Radii(self.bool_lite and 6 or 0, self.bool_lite and 6 or 0, 6, 6)
+            :Radii(bodyRad, bodyRad, 6, 6)
             :Blur()
         :Draw()
     end
 
-    if !self.bool_lite then
-        Mantle.func.gradient(0, 24, w, 6, 2, Mantle.color.window_shadow)
-    end
-
     RNDX.Rect(0, headerTall, w, h - headerTall)
-        :Radii(self.bool_lite and 6 or 0, self.bool_lite and 6 or 0, 6, 6)
-        :Color((self.bool_alpha and Mantle.ui.convar.blur) and Mantle.color.background_alpha or Mantle.color.background)
+        :Radii(bodyRad, bodyRad, 6, 6)
+        :Color(alphaBg and Mantle.color.background_alpha or Mantle.color.background)
     :Draw()
 
-    if !self.bool_lite then
-        if self.center_title != '' then
-            draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, Mantle.color.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
+    if lite then return end
 
+    Mantle.func.gradient(0, headerTall, w, 6, 2, Mantle.color.window_shadow)
+
+    if self.center_title != '' then
+        draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, Mantle.color.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    if self.title != '' then
         draw.SimpleText(self.title, 'Fated.16', 6, 4, Mantle.color.header_text)
     end
 end
 
 function PANEL:PerformLayout(w, h)
-    self.top_panel:SetSize(w, 24)
+    self.header:SetSize(w - 24, HEADER_TALL)
 
-    self.cls:SetSize(20, 20)
-    self.cls:SetPos(w - 22, 2)
+    self.cls:SetSize(24, 24)
+    self.cls:SetPos(w - 24, 0)
 end
 
 vgui.Register('MantleFrame', PANEL, 'EditablePanel')
