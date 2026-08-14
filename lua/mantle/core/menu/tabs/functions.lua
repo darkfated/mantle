@@ -56,18 +56,19 @@ local function build()
         title = 'Отрисовка (RNDX)',
         rows = {
             { name = 'RNDX.Rect(int x, int y, int w, int h)', desc = 'Начать построение прямоугольника. Дальше - цепочка модификаторов' },
+            { name = 'RNDX.Circle(int x, int y, int radius)', desc = 'Круг по центру. Работают те же модификаторы (кроме скругления)' },
             { name = ':Rad(int rad) / :Radii(int tl, int tr, int bl, int br)', desc = 'Скругление углов: всех сразу или каждого отдельно' },
             { name = ':Color(color col или int r, int g, int b, int a)', desc = 'Цвет заливки' },
-            { name = ':Outline(int thickness)', desc = 'Обводка (по умолчанию - 1)' },
+            { name = ':Outline(int thickness)', desc = 'Обводка вместо заливки (по умолчанию - 1)' },
             { name = ':Texture(ITexture) / :Material(IMaterial)', desc = 'Картинка внутри фигуры' },
             { name = ':Blur(int intensity)', desc = 'Размытие фона внутри фигуры' },
+            { name = ':Fade(int top, int bottom)', desc = 'Вертикальное затухание (1 - видно, 0 - прозрачно). Например :Fade(1, 0) - прозрачно снизу' },
             { name = ':Shadow(int blur, int spread, int offset_x, int offset_y)', desc = 'Тень под фигурой' },
             { name = ':Rotation(int deg)', desc = 'Поворот фигуры' },
             { name = ':Angles(int start, int end)', desc = 'Сектор круга (для RNDX.Circle)' },
             { name = ':Clip(object panel)', desc = 'Обрезать отрисовку по границам панели' },
             { name = ':Flags(int flags)', desc = 'Быстрые флаги: RNDX.NO_TL/TR/BL/BR (убрать углы), RNDX.BLUR, RNDX.MANUAL_COLOR' },
-            { name = ':Draw()', desc = 'Завершить и вывести фигуру на экран' },
-            { name = 'RNDX.Circle(int x, int y, int radius)', desc = 'Круг по центру. Работают те же модификаторы (кроме скругления)' }
+            { name = ':Draw()', desc = 'Завершить и вывести фигуру на экран' }
         }
     })
 
