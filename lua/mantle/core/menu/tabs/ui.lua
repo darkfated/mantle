@@ -1,7 +1,5 @@
 local menu = Mantle.menu
 
-local icon = Material('icon16/chart_pie.png')
-
 local function build()
     local panel = menu.createTabPanel()
     local menuWide = menu.getMenuWide()
@@ -535,6 +533,6 @@ menu.registerTab('ui', {
     order = 1,
     title = 'UI Элементы',
     description = 'Демонстрация всех графических компонентов.',
-    icon = icon,
+    icon = Material('icon16/chart_pie.png'),
     build = build
 })

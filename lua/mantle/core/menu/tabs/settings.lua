@@ -1,7 +1,5 @@
 local menu = Mantle.menu
 
-local icon = Material('icon16/cog.png')
-
 local function build()
     local panel = menu.createTabPanel()
     local forcedTheme = Mantle.ui.getForcedThemeName()
@@ -84,6 +82,6 @@ menu.registerTab('settings', {
     order = 5,
     title = 'Настройки',
     description = 'Конфигурационные настройки библиотеки.',
-    icon = icon,
+    icon = Material('icon16/cog.png'),
     build = build
 })

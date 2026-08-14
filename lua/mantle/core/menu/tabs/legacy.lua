@@ -1,7 +1,5 @@
 local menu = Mantle.menu
 
-local icon = Material('icon16/exclamation.png')
-
 local function build()
     local panel = menu.createTabPanel()
     local menuWide = menu.getMenuWide()
@@ -136,6 +134,6 @@ menu.registerTab('legacy', {
     order = 4,
     title = 'Legacy UI',
     description = 'Старые функции для поддержания древних скриптов.',
-    icon = icon,
+    icon = Material('icon16/exclamation.png'),
     build = build
 })

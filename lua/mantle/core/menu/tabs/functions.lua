@@ -1,7 +1,5 @@
 local menu = Mantle.menu
 
-local icon = Material('icon16/error.png')
-
 local function build()
     local panel = menu.createTabPanel()
 
@@ -98,6 +96,6 @@ menu.registerTab('functions', {
     order = 3,
     title = 'Функции',
     description = 'Функционал, который предоставляет библиотека.',
-    icon = icon,
+    icon = Material('icon16/error.png'),
     build = build
 })

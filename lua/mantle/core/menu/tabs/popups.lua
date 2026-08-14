@@ -1,7 +1,5 @@
 local menu = Mantle.menu
 
-local icon = Material('icon16/application_double.png')
-
 local function createDemoButton(text, callback)
     local button = vgui.Create('MantleBtn')
     button:Dock(TOP)
@@ -154,6 +152,6 @@ menu.registerTab('popups', {
     order = 2,
     title = 'Всплывающие',
     description = 'Показ панелей, открывающихся поверх меню.',
-    icon = icon,
+    icon = Material('icon16/application_double.png'),
     build = build
 })
