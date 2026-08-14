@@ -414,8 +414,7 @@ local function build()
     slider:Dock(TOP)
     slider:DockMargin(menuWide * 0.3, 6, menuWide * 0.3, 0)
     slider:SetRange(0, 5)
-    slider:SetConvar('r_skybox')
-    slider:SetText('Отключение неба')
+    slider:SetText('Тестовый ползунок')
     menu.createCategory(panel, {
         title = 'Слайдер (MantleSlideBox)',
         rows = {
