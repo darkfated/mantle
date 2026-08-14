@@ -111,7 +111,7 @@ function PANEL:Paint(w, h)
 
     if self._activeShadowLerp > 0.01 and Mantle.ui.convar.depth_ui then
         RNDX.Rect(0, 0, w, h)
-            :Rad(self.radius)
+            :Outline(1)
             :Color(self.col_hov)
             :Shadow(4, self._activeShadowLerp * 2)
         :Draw()
