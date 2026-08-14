@@ -28,7 +28,6 @@ function PANEL:Init()
 
     self._tabShadowA = 0
     self._tabScroll = 0
-    self._tabFootA = 0
 
     self.content = vgui.Create('Panel', self)
     self.content.Paint = nil
@@ -42,38 +41,16 @@ function PANEL:Init()
         local sa = Mantle.color.blur_shadow
 
         if Mantle.ui.convar.smooth and a > 0 then
+            local bleed = 12
             RNDX.Rect(0, 0, w, h)
                 :Blur()
                 :Fade(1, 0)
                 :Alpha(sa.a > 0 and a / sa.a or 0)
             :Draw()
 
-            RNDX.Rect(0, 0, w, h)
+            RNDX.Rect(-bleed, -bleed, w + bleed * 2, h + bleed)
                 :Color(sa.r, sa.g, sa.b, math.floor(a))
                 :Fade(1, 0)
-            :Draw()
-        end
-    end
-
-    self._tabFoot = vgui.Create('Panel', self)
-    self._tabFoot:SetMouseInputEnabled(false)
-    self._tabFoot:SetTall(self.tab_height)
-    self._tabFoot.Paint = function(_, w, h)
-        if self.tab_style != 'modern' then return end
-
-        local a = self._tabFootA or 0
-        local sa = Mantle.color.blur_shadow
-
-        if Mantle.ui.convar.smooth and a > 0 then
-            RNDX.Rect(0, 0, w, h)
-                :Blur()
-                :Fade(0, 1)
-                :Alpha(sa.a > 0 and a / sa.a or 0)
-            :Draw()
-
-            RNDX.Rect(0, 0, w, h)
-                :Color(sa.r, sa.g, sa.b, math.floor(a))
-                :Fade(0, 1)
             :Draw()
         end
     end
@@ -273,9 +250,6 @@ function PANEL:Think()
         maxScroll = select(1, activePan:_range())
     end
 
-    local footTarget = Mantle.color.blur_shadow.a * math.min(1, math.max(0, maxScroll - self._tabScroll) / (self.tab_height * 2))
-    self._tabFootA = self:_stepAlpha(self._tabFootA, footTarget, 200, ft)
-
     local activeBtn = getTabButton(self, self.active_id)
 
     local targetX, targetW = 0, 0
@@ -437,16 +411,12 @@ function PANEL:PerformLayout(w, h)
         self._tabShadow:SetPos(0, 0)
         self._tabShadow:SetSize(w, blurTall)
         self._tabShadow:SetVisible(true)
-        self._tabFoot:SetPos(0, h - blurTall)
-        self._tabFoot:SetSize(w, blurTall)
-        self._tabFoot:SetVisible(true)
         self.content:Dock(FILL)
     else
         self.panel_tabs:Dock(LEFT)
         self.panel_tabs:DockMargin(0, 0, 4, 0)
         self.panel_tabs:SetWide(190)
         self._tabShadow:SetVisible(false)
-        self._tabFoot:SetVisible(false)
         self.content:Dock(FILL)
     end
 end
