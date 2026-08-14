@@ -13,11 +13,8 @@ function PANEL:Init()
     self.icon = ''
     self.icon_size = 16
     self.text = Mantle.lang.get('mantle', 'btn_default')
-    self.col = Mantle.color.button
-    self.col_hov = Mantle.color.button_hovered
     self.bool_gradient = true
     self.enable_ripple = false
-    self.ripple_color = Mantle.color.ripple
     self.ripple_alpha = 0
     self.ripple_x = 0
     self.ripple_y = 0
@@ -112,14 +109,14 @@ function PANEL:Paint(w, h)
     if self._activeShadowLerp > 0.01 and Mantle.ui.convar.depth_ui then
         RNDX.Rect(0, 0, w, h)
             :Outline(1)
-            :Color(self.col_hov)
+            :Color(self.col_hov or Mantle.color.button_hovered)
             :Shadow(4, self._activeShadowLerp * 2)
         :Draw()
     end
 
     RNDX.Rect(0, 0, w, h)
         :Rad(self.radius)
-        :Color(self.col)
+        :Color(self.col or Mantle.color.button)
     :Draw()
 
     if self.bool_gradient then
@@ -127,19 +124,21 @@ function PANEL:Paint(w, h)
     end
 
     if self.hover_status > 0.01 then
+        local hoverColor = self.col_hov or Mantle.color.button_hovered
         RNDX.Rect(0, 0, w, h)
             :Rad(self.radius)
-            :Color(Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math_floor(self.col_hov.a * self.hover_status)))
+            :Color(Color(hoverColor.r, hoverColor.g, hoverColor.b, math_floor(hoverColor.a * self.hover_status)))
         :Draw()
     end
 
     if self.enable_ripple and self.ripple_alpha > 0.01 then
         self.ripple_alpha = math_clamp(self.ripple_alpha - ft * self.ripple_speed, 0, 1)
 
+        local rippleColor = self.ripple_color or Mantle.color.ripple
         local size = (1 - self.ripple_alpha) * math_max(w, h) * 2
         RNDX.Rect(self.ripple_x - size * 0.5, self.ripple_y - size * 0.5, size, size)
             :Rad(100)
-            :Color(Color(self.ripple_color.r, self.ripple_color.g, self.ripple_color.b, math_floor(self.ripple_color.a * self.ripple_alpha)))
+            :Color(Color(rippleColor.r, rippleColor.g, rippleColor.b, math_floor(rippleColor.a * self.ripple_alpha)))
         :Draw()
     end
 
