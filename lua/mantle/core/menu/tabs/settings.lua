@@ -17,6 +17,12 @@ local function build()
     checkboxBlur:SetTxt('Размытие фона')
     checkboxBlur:SetConvar('mantle_blur')
 
+    local checkboxSmooth = vgui.Create('MantleCheckBox', panel)
+    checkboxSmooth:Dock(TOP)
+    checkboxSmooth:DockMargin(0, 6, 0, 0)
+    checkboxSmooth:SetTxt('Эффект плавности')
+    checkboxSmooth:SetConvar('mantle_smooth')
+
     local categoryTheme = vgui.Create('MantleCategory', panel)
     categoryTheme:Dock(TOP)
     categoryTheme:DockMargin(0, 6, 0, 0)

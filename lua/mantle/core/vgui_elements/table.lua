@@ -10,6 +10,9 @@ function PANEL:Init()
 
     self.scrollStep = 500
 
+    self._topShadowA = 0
+    self._footA = 0
+
     self.columns = {}
     self.rows = {}
     self.headerHeight = 36
@@ -32,10 +35,21 @@ function PANEL:Init()
     self.foot:SetMouseInputEnabled(false)
     self.foot:SetTall(self.headerHeight)
     self.foot.Paint = function(_, w, h)
-        local maxScroll = select(1, self:_range())
-        local a = Mantle.color.window_shadow.a * math.min(1, math.max(0, maxScroll - self.offset) / self.headerHeight)
-        if a <= 0 then return end
-        Mantle.func.gradient(0, 0, w, h, 1, Color(Mantle.color.window_shadow.r, Mantle.color.window_shadow.g, Mantle.color.window_shadow.b, a))
+        local sa = Mantle.color.blur_shadow
+        local a = self._footA or 0
+
+        if Mantle.ui.convar.smooth and a > 0 then
+            RNDX.Rect(0, 0, w, h)
+                :Blur()
+                :Fade(0, 1)
+                :Alpha(sa.a > 0 and a / sa.a or 0)
+            :Draw()
+
+            RNDX.Rect(0, 0, w, h)
+                :Color(sa.r, sa.g, sa.b, math_floor(a))
+                :Fade(0, 1)
+            :Draw()
+        end
     end
 
     self.vbar = vgui.Create('Panel', self)
@@ -98,6 +112,28 @@ function PANEL:Init()
 end
 
 function PANEL:_createHeaderPanel()
+    if !IsValid(self._topShadow) then
+        self._topShadow = vgui.Create('Panel', self)
+        self._topShadow:SetMouseInputEnabled(false)
+        self._topShadow.Paint = function(_, w, h)
+            local sa = Mantle.color.blur_shadow
+            local a = self._topShadowA or 0
+
+            if Mantle.ui.convar.smooth and a > 0 then
+                RNDX.Rect(0, 0, w, h)
+                    :Blur()
+                    :Fade(1, 0)
+                    :Alpha(sa.a > 0 and a / sa.a or 0)
+                :Draw()
+
+                RNDX.Rect(0, 0, w, h)
+                    :Color(sa.r, sa.g, sa.b, math_floor(a))
+                    :Fade(1, 0)
+                :Draw()
+            end
+        end
+    end
+
     if !IsValid(self.header) then
         self.header = vgui.Create('Panel', self.content)
         self.header:SetMouseInputEnabled(false)
@@ -116,12 +152,7 @@ function PANEL:_createHeaderPanel()
         self.headerText = vgui.Create('Panel', self)
         self.headerText:SetMouseInputEnabled(true)
         self.headerText:SetSize(self:GetWide(), self.headerHeight)
-        self.headerText.Paint = function(_, w, h)
-            local a = Mantle.color.window_shadow.a * math.min(1, self.offset / self.headerHeight)
-            if a > 0 then
-                Mantle.func.gradient(0, 0, w, h, 2, Color(Mantle.color.window_shadow.r, Mantle.color.window_shadow.g, Mantle.color.window_shadow.b, a))
-            end
-        end
+        self.headerText.Paint = function() end
         self.headerText.OnMouseWheeled = function(_, delta)
             self:OnMouseWheeled(delta)
         end
@@ -129,7 +160,30 @@ function PANEL:_createHeaderPanel()
 end
 
 function PANEL:_isInternal(child)
-    return child == self.content or child == self.header or child == self.headerText or child == self.foot or child == self.vbar or child == self.vbar.grip
+    return child == self.content or child == self.header or child == self.headerText or child == self._topShadow or child == self.foot or child == self.vbar or child == self.vbar.grip
+end
+
+function PANEL:_stepAlpha(cur, tgt, maxSpeed, ft)
+    local next = Mantle.func.approachExp(cur, tgt, 20, ft)
+    local maxStep = maxSpeed * ft
+    local delta = next - cur
+    if math.abs(delta) > maxStep then
+        delta = delta > 0 and maxStep or -maxStep
+    end
+    return cur + delta
+end
+
+function PANEL:Think()
+    self.BaseClass.Think(self)
+    local ft = FrameTime()
+    local sa = Mantle.color.blur_shadow
+
+    local topTarget = sa.a * math.min(1, self.offset / self.headerHeight)
+    self._topShadowA = self:_stepAlpha(self._topShadowA, topTarget, 200, ft)
+
+    local maxScroll = select(1, self:_range())
+    local footTarget = sa.a * math.min(1, math.max(0, maxScroll - self.offset) / self.headerHeight)
+    self._footA = self:_stepAlpha(self._footA, footTarget, 200, ft)
 end
 
 function PANEL:_sizeCanvas()
@@ -294,8 +348,11 @@ end
 function PANEL:_layout()
     local w = self:GetWide()
     local h = self:GetTall()
-    self.foot:SetSize(w, self.headerHeight)
-    self.foot:SetPos(0, h - self.headerHeight)
+    local blurTall = math_max(self.headerHeight, h * 0.2)
+    self.foot:SetSize(w, blurTall)
+    self.foot:SetPos(0, h - blurTall)
+    self._topShadow:SetSize(w, blurTall)
+    self._topShadow:SetPos(0, 0)
     self.headerText:SetSize(w, self.headerHeight)
     self.headerText:SetPos(0, 0)
 

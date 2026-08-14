@@ -37,11 +37,22 @@ function PANEL:Init()
     self._tabShadow:SetMouseInputEnabled(false)
     self._tabShadow.Paint = function(_, w, h)
         if self.tab_style != 'modern' then return end
-        local a = self._tabShadowA or 0
-        if a <= 0.01 then return end
 
-        local sh = Mantle.color.tab_shadow
-        Mantle.func.gradient(0, 0, w, h, 2, Color(sh.r, sh.g, sh.b, a))
+        local a = self._tabShadowA or 0
+        local sa = Mantle.color.blur_shadow
+
+        if Mantle.ui.convar.smooth and a > 0 then
+            RNDX.Rect(0, 0, w, h)
+                :Blur()
+                :Fade(1, 0)
+                :Alpha(sa.a > 0 and a / sa.a or 0)
+            :Draw()
+
+            RNDX.Rect(0, 0, w, h)
+                :Color(sa.r, sa.g, sa.b, math.floor(a))
+                :Fade(1, 0)
+            :Draw()
+        end
     end
 
     self._tabFoot = vgui.Create('Panel', self)
@@ -49,11 +60,22 @@ function PANEL:Init()
     self._tabFoot:SetTall(self.tab_height)
     self._tabFoot.Paint = function(_, w, h)
         if self.tab_style != 'modern' then return end
-        local a = self._tabFootA or 0
-        if a <= 0.01 then return end
 
-        local sh = Mantle.color.tab_shadow
-        Mantle.func.gradient(0, 0, w, h, 1, Color(sh.r, sh.g, sh.b, a))
+        local a = self._tabFootA or 0
+        local sa = Mantle.color.blur_shadow
+
+        if Mantle.ui.convar.smooth and a > 0 then
+            RNDX.Rect(0, 0, w, h)
+                :Blur()
+                :Fade(0, 1)
+                :Alpha(sa.a > 0 and a / sa.a or 0)
+            :Draw()
+
+            RNDX.Rect(0, 0, w, h)
+                :Color(sa.r, sa.g, sa.b, math.floor(a))
+                :Fade(0, 1)
+            :Draw()
+        end
     end
 
     self:_rebuildTabs()
@@ -192,6 +214,16 @@ function PANEL:_createTabButton(tab, id)
     tab._btn = btn
 end
 
+function PANEL:_stepAlpha(cur, tgt, maxSpeed, ft)
+    local next = Mantle.func.approachExp(cur, tgt, 20, ft)
+    local maxStep = maxSpeed * ft
+    local delta = next - cur
+    if math.abs(delta) > maxStep then
+        delta = delta > 0 and maxStep or -maxStep
+    end
+    return cur + delta
+end
+
 function PANEL:Think()
     local ft = FrameTime()
     local speed = 30
@@ -232,14 +264,17 @@ function PANEL:Think()
     end
 
     self._tabScroll = Mantle.func.approachExp(self._tabScroll, targetScroll, 20, ft)
-    self._tabShadowA = Mantle.color.tab_shadow.a * math.min(1, math.max(0, self._tabScroll) / self.tab_height)
+
+    local shadowTarget = Mantle.color.blur_shadow.a * math.min(1, math.max(0, self._tabScroll) / (self.tab_height * 2))
+    self._tabShadowA = self:_stepAlpha(self._tabShadowA, shadowTarget, 200, ft)
 
     local maxScroll = 0
     if activePan and activePan._range then
         maxScroll = select(1, activePan:_range())
     end
 
-    self._tabFootA = Mantle.color.tab_shadow.a * math.min(1, math.max(0, maxScroll - self._tabScroll) / self.tab_height)
+    local footTarget = Mantle.color.blur_shadow.a * math.min(1, math.max(0, maxScroll - self._tabScroll) / (self.tab_height * 2))
+    self._tabFootA = self:_stepAlpha(self._tabFootA, footTarget, 200, ft)
 
     local activeBtn = getTabButton(self, self.active_id)
 
@@ -398,11 +433,12 @@ function PANEL:PerformLayout(w, h)
     if self.tab_style == 'modern' then
         self.panel_tabs:SetPos(0, 0)
         self.panel_tabs:SetSize(w, self.tab_height)
+        local blurTall = math.max(self.tab_height, h * 0.12)
         self._tabShadow:SetPos(0, 0)
-        self._tabShadow:SetSize(w, self.tab_height * 1.5)
+        self._tabShadow:SetSize(w, blurTall)
         self._tabShadow:SetVisible(true)
-        self._tabFoot:SetPos(0, h - self.tab_height)
-        self._tabFoot:SetSize(w, self.tab_height)
+        self._tabFoot:SetPos(0, h - blurTall)
+        self._tabFoot:SetSize(w, blurTall)
         self._tabFoot:SetVisible(true)
         self.content:Dock(FILL)
     else

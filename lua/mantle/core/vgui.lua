@@ -1,11 +1,13 @@
 local convar_depth_ui = CreateClientConVar('mantle_depth_ui', 1, true, false)
 local convar_theme = CreateClientConVar('mantle_theme', 'dark', true, false)
 local convar_blur = CreateClientConVar('mantle_blur', 1, true, false)
+local convar_smooth = CreateClientConVar('mantle_smooth', 1, true, false)
 
 Mantle.ui.convar = {
     depth_ui = convar_depth_ui:GetBool(),
     theme = convar_theme:GetString(),
-    blur = convar_blur:GetBool()
+    blur = convar_blur:GetBool(),
+    smooth = convar_smooth:GetBool()
 }
 
 local themes = {}
@@ -176,4 +178,8 @@ end)
 
 cvars.AddChangeCallback('mantle_blur', function(_, _, newValue)
     Mantle.ui.convar.blur = newValue == '1'
+end)
+
+cvars.AddChangeCallback('mantle_smooth', function(_, _, newValue)
+    Mantle.ui.convar.smooth = newValue == '1'
 end)
