@@ -5,11 +5,11 @@
 ]]--
 
 local function runScripts()
-    Mantle.run_cl('config/colors.lua')
     Mantle.run_sh('config/theme.lua')
 
     Mantle.run_cl('core/func.lua')
     Mantle.run_cl('core/vgui.lua')
+    Mantle.run_cl('config/colors.lua')
     Mantle.run_cl('core/legacy_vgui.lua')
 
     Mantle.run_cl('core/menu/helpers.lua')

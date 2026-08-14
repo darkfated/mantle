@@ -1,39 +1,26 @@
-CreateClientConVar('mantle_depth_ui', 1, true, false)
-CreateClientConVar('mantle_theme', 'dark', true, false)
-CreateClientConVar('mantle_blur', 1, true, false)
+local convar_depth_ui = CreateClientConVar('mantle_depth_ui', 1, true, false)
+local convar_theme = CreateClientConVar('mantle_theme', 'dark', true, false)
+local convar_blur = CreateClientConVar('mantle_blur', 1, true, false)
 
 Mantle.ui.convar = {
-    depth_ui = GetConVar('mantle_depth_ui'):GetBool(),
-    theme = GetConVar('mantle_theme'):GetString(),
-    blur = GetConVar('mantle_blur'):GetBool()
+    depth_ui = convar_depth_ui:GetBool(),
+    theme = convar_theme:GetString(),
+    blur = convar_blur:GetBool()
 }
 
-Mantle.ui.themes = {
-    { id = 'dark', title = 'Тёмная (dark)', colors = Mantle.color_dark },
-    { id = 'dark_mono', title = 'Тёмная монотонная (dark_mono)', colors = Mantle.color_dark_mono },
-    { id = 'light', title = 'Светлая (light)', colors = Mantle.color_light },
-    { id = 'blue', title = 'Синяя (blue)', colors = Mantle.color_blue },
-    { id = 'red', title = 'Красная (red)', colors = Mantle.color_red },
-    { id = 'green', title = 'Зелёная (green)', colors = Mantle.color_green },
-    { id = 'orange', title = 'Оранжевая (orange)', colors = Mantle.color_orange },
-    { id = 'purple', title = 'Фиолетовая (purple)', colors = Mantle.color_purple },
-    { id = 'coffee', title = 'Кофейная (coffee)', colors = Mantle.color_coffee },
-    { id = 'ice', title = 'Ледяная (ice)', colors = Mantle.color_ice },
-    { id = 'wine', title = 'Винная (wine)', colors = Mantle.color_wine },
-    { id = 'violet', title = 'Фиалковая (violet)', colors = Mantle.color_violet },
-    { id = 'moss', title = 'Моховая (moss)', colors = Mantle.color_moss },
-    { id = 'coral', title = 'Коралловая (coral)', colors = Mantle.color_coral }
-}
+local themes = {}
+local theme_map = {}
 
-Mantle.ui.theme_map = {}
-for _, theme in ipairs(Mantle.ui.themes) do
-    Mantle.ui.theme_map[theme.id] = theme.colors
+function Mantle.ui.registerTheme(id, title, colors)
+    if !colors then return end
+
+    table.insert(themes, { id = id, title = title, colors = colors })
+    theme_map[id] = colors
 end
 
-local function getForcedThemeName()
-    local themeId = Mantle.config.theme.forced or ''
-
-    if themeId != '' and Mantle.ui.theme_map[themeId] then
+function Mantle.ui.getForcedThemeName()
+    local themeId = Mantle.config.theme.forced
+    if themeId != '' and theme_map[themeId] then
         return themeId
     end
 
@@ -41,7 +28,7 @@ local function getForcedThemeName()
 end
 
 local function isThemeEnabled(themeId)
-    local forced = getForcedThemeName()
+    local forced = Mantle.ui.getForcedThemeName()
     if forced != '' then
         return themeId == forced
     end
@@ -56,7 +43,7 @@ local function isThemeEnabled(themeId)
 end
 
 local function getFallbackThemeName()
-    for _, theme in ipairs(Mantle.ui.themes) do
+    for _, theme in ipairs(themes) do
         if isThemeEnabled(theme.id) then
             return theme.id
         end
@@ -65,122 +52,116 @@ local function getFallbackThemeName()
     return 'dark'
 end
 
-local function getActiveThemeName()
-    local forced = getForcedThemeName()
+function Mantle.ui.getActiveThemeName()
+    local forced = Mantle.ui.getForcedThemeName()
     if forced != '' then
         return forced
     end
 
     local saved = Mantle.ui.convar.theme
-    if Mantle.ui.theme_map[saved] and isThemeEnabled(saved) then
+    if theme_map[saved] and isThemeEnabled(saved) then
         return saved
     end
 
     return getFallbackThemeName()
 end
 
-function Mantle.ui.getForcedThemeName()
-    return getForcedThemeName()
-end
-
-function Mantle.ui.isThemeEnabled(themeId)
-    return isThemeEnabled(themeId)
-end
-
 function Mantle.ui.getAvailableThemes()
-    local themes = {}
+    local available = {}
 
-    for _, theme in ipairs(Mantle.ui.themes) do
+    for _, theme in ipairs(themes) do
         if isThemeEnabled(theme.id) then
-            themes[#themes + 1] = theme
+            available[#available + 1] = theme
         end
     end
 
-    if #themes == 0 then
-        local fallbackTheme = getFallbackThemeName()
-        local fallbackTitle = fallbackTheme
+    if #available == 0 then
+        local fallback = getFallbackThemeName()
+        local title = fallback
 
-        for _, theme in ipairs(Mantle.ui.themes) do
-            if theme.id == fallbackTheme then
-                fallbackTitle = theme.title
+        for _, theme in ipairs(themes) do
+            if theme.id == fallback then
+                title = theme.title
                 break
             end
         end
 
-        themes[1] = {
-            id = fallbackTheme,
-            title = fallbackTitle,
-            colors = Mantle.ui.theme_map[fallbackTheme]
+        available[1] = {
+            id = fallback,
+            title = title,
+            colors = theme_map[fallback]
         }
     end
 
-    return themes
-end
-
-function Mantle.ui.getActiveThemeName()
-    return getActiveThemeName()
+    return available
 end
 
 local transition = {
     active = false,
     to = nil,
     progress = 0,
-    speed = 3,
-    colorBlend = 8
+    speed = 6
 }
 
-local function startThemeTransition(name)
-    transition.to = table.Copy(Mantle.ui.theme_map[name] or Mantle.color_dark)
-    transition.active = true
-    transition.progress = 0
+local function updateTransition()
+    local tr = transition
+    if !tr.active then
+        hook.Remove('Think', 'MantleThemeTransition')
+        return
+    end
 
-    if !hook.GetTable().MantleThemeTransition then
-        hook.Add('Think', 'MantleThemeTransition', function()
-            if !transition.active then return end
+    tr.progress = Mantle.func.approachExp(tr.progress, 1, tr.speed, FrameTime())
 
-            local dt = FrameTime()
-            transition.progress = Mantle.func.approachExp(transition.progress, 1, transition.speed, dt)
-            local eased = Mantle.func.easeOutCubic(transition.progress)
-
-            local to = transition.to
-            if !to then
-                transition.active = false
-                hook.Remove('Think', 'MantleThemeTransition')
-                return
+    local to = tr.to
+    for k, v in pairs(to) do
+        if IsColor(v) then
+            local cur = Mantle.color[k]
+            if IsColor(cur) then
+                Mantle.color[k] = Mantle.func.LerpColor(tr.speed, cur, v)
+            else
+                Mantle.color[k] = v
             end
+        elseif type(v) == 'table' then
+            local cur = Mantle.color[k] or {}
+            Mantle.color[k] = cur
 
-            for k, v in pairs(to) do
-                if IsColor(v) then
-                    Mantle.color[k] = Mantle.func.LerpColor(transition.colorBlend, Mantle.color[k] or v, v)
-                elseif type(v) == 'table' and #v > 0 then
-                    Mantle.color[k] = Mantle.color[k] or {}
-                    for i = 1, #v do
-                        local vi = v[i]
-                        if IsColor(vi) then
-                            Mantle.color[k][i] = Mantle.func.LerpColor(transition.colorBlend, (Mantle.color[k] and Mantle.color[k][i]) or vi, vi)
-                        else
-                            Mantle.color[k][i] = vi
-                        end
-                    end
+            for i = 1, #v do
+                local vi = v[i]
+                if IsColor(vi) and IsColor(cur[i]) then
+                    cur[i] = Mantle.func.LerpColor(tr.speed, cur[i], vi)
+                else
+                    cur[i] = vi
                 end
             end
+        end
+    end
 
-            if transition.progress >= 0.999 then
-                Mantle.color = table.Copy(transition.to)
-                transition.active = false
-                hook.Remove('Think', 'MantleThemeTransition')
-            end
-        end)
+    if tr.progress >= 0.999 then
+        Mantle.color = table.Copy(to)
+        tr.active = false
+    end
+end
+
+local function startThemeTransition(name)
+    transition.to = theme_map[name] or theme_map['dark']
+    transition.progress = 0
+    transition.active = true
+
+    if !hook.GetTable().MantleThemeTransition then
+        hook.Add('Think', 'MantleThemeTransition', updateTransition)
     end
 end
 
 local function applyInitialTheme()
-    local theme = getActiveThemeName()
+    local theme = Mantle.ui.getActiveThemeName()
     Mantle.ui.convar.theme = theme
-    Mantle.color = table.Copy(Mantle.ui.theme_map[theme] or Mantle.color_dark)
+    Mantle.color = table.Copy(theme_map[theme] or theme_map['dark'])
 end
 
-applyInitialTheme()
+hook.Add('Think', 'MantleApplyInitialTheme', function()
+    hook.Remove('Think', 'MantleApplyInitialTheme')
+    applyInitialTheme()
+end)
 
 cvars.AddChangeCallback('mantle_depth_ui', function(_, _, newValue)
     Mantle.ui.convar.depth_ui = newValue == '1'
@@ -188,7 +169,7 @@ end)
 
 cvars.AddChangeCallback('mantle_theme', function(_, _, newValue)
     Mantle.ui.convar.theme = newValue
-    local theme = getActiveThemeName()
+    local theme = Mantle.ui.getActiveThemeName()
     Mantle.ui.convar.theme = theme
     startThemeTransition(theme)
 end)
