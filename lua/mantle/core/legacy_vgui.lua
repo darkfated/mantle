@@ -1,9 +1,3 @@
---[[
-    Старые функции отрисовки ui-элементов
-]]--
-
-local color_gray = Color(200, 200, 200)
-local color_red = Color(255, 50, 50)
 local mat_close = Material('mantle/close_btn.png')
 
 function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
@@ -18,8 +12,16 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
         local x, y = self:LocalToScreen()
 
         BShadows.BeginShadow()
-            draw.RoundedBoxEx(6, x, y, w, 24, Mantle.color.header, true, true)
-            draw.RoundedBoxEx(6, x, y + 24, w, h - 24, s.background_alpha and Mantle.color.background_alpha or Mantle.color.background, false, false, true, true)
+            RNDX.Rect(x, y, w, 24)
+                :Radii(6, 6, 0, 0)
+                :Color(Mantle.color.header)
+                :Shape(RNDX.SHAPE_FIGMA)
+            :Draw()
+            RNDX.Rect(x, y + 24, w, h - 24)
+                :Radii(0, 0, 6, 6)
+                :Color(s.background_alpha and Mantle.color.background_alpha or Mantle.color.background)
+                :Shape(RNDX.SHAPE_FIGMA)
+            :Draw()
             draw.SimpleText(self.f_title, 'Fated.16', x + 6, y + 4, Mantle.color.text)
 
             if self.center_title then
@@ -70,7 +72,11 @@ function Mantle.ui.sp(s)
             self:SetCursor('sizens')
         end
 
-        draw.RoundedBox(6, 6, 0, w - 6, h, Mantle.color.theme)
+        RNDX.Rect(6, 0, w - 6, h)
+            :Rad(6)
+            :Color(Mantle.color.theme)
+            :Shape(RNDX.SHAPE_FIGMA)
+        :Draw()
     end
 end
 
@@ -90,13 +96,21 @@ function Mantle.ui.btn(s, icon, icon_size, col, rad, off_grad_bool, hov_color, o
             self.hoverStatus = math.Clamp(self.hoverStatus - 8 * FrameTime(), 0, 255)
         end
 
-        draw.RoundedBox(rad and rad or 6, 0, 0, w, h, col and col or Mantle.color.button)
+        RNDX.Rect(0, 0, w, h)
+            :Rad(rad or 6)
+            :Color(col or Mantle.color.button)
+            :Shape(RNDX.SHAPE_FIGMA)
+        :Draw()
 
         if !off_hov_bool then
-            local color_hover = hov_color and hov_color or Mantle.color.button_hovered
+            local color_hover = hov_color or Mantle.color.button_hovered
             color_hover = Color(color_hover.r, color_hover.g, color_hover.b, 255 * self.hoverStatus)
 
-            draw.RoundedBox(rad and rad or 6, 0, 0, w, h, color_hover)
+            RNDX.Rect(0, 0, w, h)
+                :Rad(rad or 6)
+                :Color(color_hover)
+                :Shape(RNDX.SHAPE_FIGMA)
+            :Draw()
         end
 
         if !off_grad_bool then
@@ -121,54 +135,123 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
     slider:DockMargin(0, 6, 0, 0)
     slider:SetTall(40)
     slider:SetText('')
+    slider:SetCursor('hand')
 
-    local value = GetConVar(convar):GetFloat()
-    local sections = max_value - min_value
-    local smoothPos = 0
-    local targetPos = 0
+    slider.min_value = min_value
+    slider.max_value = max_value
+    slider.decimals = decimals or 0
+    slider.convar = convar
 
-    local function updateSliderPosition(new_value)
-        local progress = (new_value - min_value) / sections
-        targetPos = (slider:GetWide() - 16) * progress
-        LocalPlayer():ConCommand(convar .. ' ' .. new_value)
-        value = new_value
+    slider.smoothProgress = 0
+    slider.dragging = false
+
+    local TRACK_INSET = 8
+    local BAR_H = 6
+    local HANDLE_R = 8
+
+    local function formatValue(val)
+        if slider.decimals > 0 then
+            return string.format('%.' .. slider.decimals .. 'f', val)
+        end
+        return tostring(math.Round(val))
     end
 
-    updateSliderPosition(value)
+    local function clampValue(val)
+        if slider.decimals > 0 then
+            val = tonumber(string.format('%.' .. slider.decimals .. 'f', val)) or val
+        else
+            val = math.Round(val)
+        end
+        return math.Clamp(val, slider.min_value, slider.max_value)
+    end
+
+    slider.value = clampValue(convar and GetConVar(convar):GetFloat() or slider.min_value)
+
+    local function setValue(val)
+        val = clampValue(val)
+        if slider.value == val then return end
+
+        slider.value = val
+
+        if slider.convar then
+            LocalPlayer():ConCommand(slider.convar .. ' ' .. tostring(val))
+        end
+    end
+
+    local sync_name = 'mantle_slide_sync_' .. tostring(slider)
+    timer.Create(sync_name, 0.1, 0, function()
+        if not IsValid(slider) or not slider.convar then return end
+
+        local cvar = GetConVar(slider.convar)
+        if not cvar then return end
+
+        local val = clampValue(cvar:GetFloat())
+        if slider.value != val then
+            slider.value = val
+        end
+    end)
+
+    slider.OnRemove = function()
+        timer.Remove(sync_name)
+    end
+
+    local function getTrackBounds(w)
+        return TRACK_INSET, math.max(0, w - TRACK_INSET * 2)
+    end
+
+    local function getProgress()
+        local denom = slider.max_value - slider.min_value
+        if denom <= 0 then return 0 end
+
+        return math.Clamp((slider.value - slider.min_value) / denom, 0, 1)
+    end
 
     slider.Paint = function(self, w, h)
-        draw.RoundedBox(4, 0, h - 16, w, 6, Mantle.color.panel_alpha[1])
+        local start, barW = getTrackBounds(w)
+        local barY = h - 10
 
-        smoothPos = Lerp(FrameTime() * 10, smoothPos, targetPos)
+        self.smoothProgress = Mantle.func.approachExp(self.smoothProgress, barW * getProgress(), 14, FrameTime())
 
-        draw.RoundedBox(16, smoothPos, 18, 16, 16, Mantle.color.theme)
+        RNDX.Rect(start, barY - BAR_H * 0.5, barW, BAR_H)
+            :Rad(BAR_H * 0.5)
+            :Color(Mantle.color.panel_alpha[1])
+            :Shape(RNDX.SHAPE_FIGMA)
+        :Draw()
+
+        RNDX.Circle(start + self.smoothProgress, barY, HANDLE_R)
+            :Color(Mantle.color.theme)
+        :Draw()
 
         draw.SimpleText(label, 'Fated.18', 4, 0, Mantle.color.text)
-        draw.SimpleText(math.Round(value, decimals), 'Fated.18', w - 4, 0, Mantle.color.text, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+        draw.SimpleText(formatValue(slider.value), 'Fated.18', w - 4, 0, Mantle.color.text, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
     end
 
-    local function updateSliderByCursorPos(x)
-        local progress = math.Clamp(x / (slider:GetWide() - 16), 0, 1)
-        local new_value = math.Round(min_value + (progress * sections), decimals)
-        updateSliderPosition(new_value)
+    slider.UpdateFromCursor = function(_, x)
+        local start, barW = getTrackBounds(slider:GetWide())
+        if barW <= 0 then return end
+
+        local progress = math.Clamp((x - start) / barW, 0, 1)
+        setValue(slider.min_value + progress * (slider.max_value - slider.min_value))
     end
 
     slider.OnMousePressed = function(_, mcode)
-        if mcode == MOUSE_LEFT then
-            updateSliderByCursorPos(slider:CursorPos())
-            slider:MouseCapture(true)
-        end
+        if mcode != MOUSE_LEFT then return end
+
+        slider:UpdateFromCursor(slider:CursorPos())
+        slider.dragging = true
+        slider:MouseCapture(true)
     end
 
     slider.OnMouseReleased = function(_, mcode)
-        if mcode == MOUSE_LEFT then
-            slider:MouseCapture(false)
-        end
+        if mcode != MOUSE_LEFT then return end
+
+        slider.dragging = false
+        slider:MouseCapture(false)
     end
 
     slider.OnCursorMoved = function(_, x, _)
-        if input.IsMouseDown(MOUSE_LEFT) then
-            updateSliderByCursorPos(x)
+        if slider.dragging then
+            slider:UpdateFromCursor(x)
         end
     end
 
@@ -206,7 +289,11 @@ function Mantle.ui.checkbox(parent, text, convar)
     panel:DockMargin(4, 0, 4, 0)
     panel:SetTall(28)
     panel.Paint = function(_, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
+        RNDX.Rect(0, 0, w, h)
+            :Rad(6)
+            :Color(Mantle.color.panel_alpha[2])
+            :Shape(RNDX.SHAPE_FIGMA)
+        :Draw()
         draw.SimpleText(text, 'Fated.18', 8, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
@@ -216,7 +303,11 @@ function Mantle.ui.checkbox(parent, text, convar)
     option:SetText('')
     option.enabled = convar and GetConVar(convar):GetBool() or false
     option.Paint = function(self, w, h)
-        draw.RoundedBoxEx(6, 0, 0, w, h, Mantle.color.panel_alpha[1], false, true, false, true)
+        RNDX.Rect(0, 0, w, h)
+            :Radii(0, 6, 0, 6)
+            :Color(Mantle.color.panel_alpha[1])
+            :Shape(RNDX.SHAPE_FIGMA)
+        :Draw()
         draw.SimpleText(self.enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.19', w * 0.5 - 1, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
     option.DoClick = function()
@@ -268,10 +359,18 @@ function Mantle.ui.panel_tabs(parent)
         end
 
         btn_tab.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, panel_tabs.active_tab == title and (col_hov and col_hov or Mantle.color.panel[2]) or (col and col or Mantle.color.theme))
+            RNDX.Rect(0, 0, w, h)
+                :Rad(6)
+                :Color(panel_tabs.active_tab == title and (col_hov or Mantle.color.panel[2]) or (col or Mantle.color.theme))
+                :Shape(RNDX.SHAPE_FIGMA)
+            :Draw()
 
             if self:IsHovered() then
-                draw.RoundedBox(6, 0, 0, w, h, Mantle.color.button_shadow)
+                RNDX.Rect(0, 0, w, h)
+                    :Rad(6)
+                    :Color(Mantle.color.button_shadow)
+                    :Shape(RNDX.SHAPE_FIGMA)
+                :Draw()
             end
 
             draw.SimpleText(title, 'Fated.20', w * 0.5 + (self.icon and 9 or 0), 11, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
