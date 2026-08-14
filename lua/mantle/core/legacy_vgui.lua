@@ -352,6 +352,7 @@ function Mantle.ui.panel_tabs(parent)
     panel_tabs:Dock(FILL)
     panel_tabs.Paint = nil
     panel_tabs.content = {}
+    panel_tabs.btns = {}
     panel_tabs.active_tab = ''
 
     panel_tabs.sp = vgui.Create('DHorizontalScroller', panel_tabs)
@@ -384,20 +385,16 @@ function Mantle.ui.panel_tabs(parent)
             panel_tabs.content[title].icon = icon
         end
 
+        btn_tab._colBase = col or Mantle.color.theme
+        btn_tab._colActive = Color(btn_tab._colBase.r * 0.5, btn_tab._colBase.g * 0.5, btn_tab._colBase.b * 0.5, btn_tab._colBase.a)
+        btn_tab._color = btn_tab._colBase
+
         btn_tab.Paint = function(self, w, h)
             RNDX.Rect(0, 0, w, h)
                 :Rad(6)
-                :Color(panel_tabs.active_tab == title and (col_hov or Mantle.color.panel[2]) or (col or Mantle.color.theme))
+                :Color(self._color)
                 :Shape(RNDX.SHAPE_FIGMA)
             :Draw()
-
-            if self:IsHovered() then
-                RNDX.Rect(0, 0, w, h)
-                    :Rad(6)
-                    :Color(Mantle.color.button_shadow)
-                    :Shape(RNDX.SHAPE_FIGMA)
-                :Draw()
-            end
 
             draw.SimpleText(title, 'Fated.20', w * 0.5 + (self.icon and 9 or 0), 11, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
@@ -420,6 +417,7 @@ function Mantle.ui.panel_tabs(parent)
             end
         end
 
+        panel_tabs.btns[title] = btn_tab
         panel_tabs.sp:AddPanel(btn_tab)
     end
 
@@ -436,6 +434,15 @@ function Mantle.ui.panel_tabs(parent)
 
                 panel_tabs.active_tab = title
             end
+        end
+    end
+
+    panel_tabs.Think = function(self)
+        local ft = FrameTime()
+
+        for title, btn in pairs(self.btns) do
+            local target = title == self.active_tab and btn._colActive or btn._colBase
+            btn._color = Mantle.func.LerpColor(14, btn._color, target)
         end
     end
 
