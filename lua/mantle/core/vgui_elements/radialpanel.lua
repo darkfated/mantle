@@ -30,40 +30,9 @@ local function clampEndAngle(a)
     return a
 end
 
-function PANEL:Init(options)
-    options = options or {}
-
+function PANEL:Init()
     self.options = {}
-    self.rootMenu = { title = options.title or 'Меню', desc = options.desc or 'Выберите опцию', options = self.options }
     self.menuStack = {}
-    self.currentMenu = self.rootMenu
-
-    local baseRadius = options.radius or 320
-    local baseInner = options.inner_radius or 110
-
-    local scale = 1
-    if Mantle.func.sw > 1366 and Mantle.func.sh > 768 then
-        scale = math_min(math_min(Mantle.func.sw / 1920, Mantle.func.sh / 1080), 1.15)
-    end
-
-    self.radius = Mantle.func.w(baseRadius) * scale
-    self.innerRadius = Mantle.func.w(baseInner) * scale
-    self.scale = scale
-
-    self.titleFont = options.title_font or 'Fated.28'
-    self.font = options.font or 'Fated.20'
-    self.descFont = options.desc_font or 'Fated.14'
-
-    self.fadeInTime = options.fade_in_time or 0.18
-    self.fadeOutTime = options.fade_out_time or 0.12
-    self.openTime = SysTime()
-    self.currentAlpha = 0
-    self.scaleAnim = 0.96
-    self.scale_animation = options.scale_animation != false
-
-    self.disable_background = options.disable_background or false
-    self.hover_sound = options.hover_sound or 'mantle/ratio_btn.ogg'
-
     self.hoverOption = nil
     self.hoverAnim = 0
     self.hoverAngle = nil
@@ -78,12 +47,48 @@ function PANEL:Init(options)
 
     self.optionHover = {}
 
+    self.openTime = SysTime()
+    self.currentAlpha = 0
+    self.scaleAnim = 0.96
+
+    self:ApplySettings(self.settings)
+
     self:SetSize(Mantle.func.sw, Mantle.func.sh)
     self:SetPos(0, 0)
     self:MakePopup()
     self:SetKeyboardInputEnabled(true)
     self:SetDrawOnTop(true)
     self:SetMouseInputEnabled(true)
+end
+
+function PANEL:ApplySettings(settings)
+    settings = settings or {}
+
+    self.rootMenu = { title = settings.title or 'Меню', desc = settings.desc or 'Выберите опцию', options = self.options }
+    self.currentMenu = self.rootMenu
+
+    local baseRadius = settings.radius or 320
+    local baseInner = settings.inner_radius or 110
+
+    local scale = 1
+    if Mantle.func.sw > 1366 and Mantle.func.sh > 768 then
+        scale = math_min(math_min(Mantle.func.sw / 1920, Mantle.func.sh / 1080), 1.15)
+    end
+
+    self.radius = Mantle.func.w(baseRadius) * scale
+    self.innerRadius = Mantle.func.w(baseInner) * scale
+    self.scale = scale
+
+    self.titleFont = settings.title_font or 'Fated.28'
+    self.font = settings.font or 'Fated.20'
+    self.descFont = settings.desc_font or 'Fated.14'
+
+    self.fadeInTime = settings.fade_in_time or 0.18
+    self.fadeOutTime = settings.fade_out_time or 0.12
+    self.scale_animation = settings.scale_animation != false
+
+    self.disable_background = settings.disable_background or false
+    self.hover_sound = settings.hover_sound or 'mantle/ratio_btn.ogg'
 end
 
 function PANEL:GetCenter()
@@ -501,7 +506,9 @@ function Mantle.ui.radial_menu(options)
         Mantle.ui.menu_radial:Remove()
     end
 
-    local m = vgui.Create('MantleRadialPanel', nil, options)
+    local m = vgui.Create('MantleRadialPanel')
+    m.settings = options or {}
+    m:ApplySettings(m.settings)
     Mantle.ui.menu_radial = m
     return m
 end
