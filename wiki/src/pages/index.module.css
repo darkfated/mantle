@@ -1,0 +1,37 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 12rem);
+  text-align: center;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.75rem 2.5rem;
+  border-radius: 8px;
+  background-color: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: var(--ifm-color-primary-darker);
+  color: #fff;
+  text-decoration: none;
+}
