@@ -14,8 +14,8 @@ function PANEL:Init()
     self.textEntry = vgui.Create('DTextEntry', self)
     self.textEntry:Dock(FILL)
     self.textEntry:SetText('')
-    self.textEntry.OnCloseFocus = function()
-        self.action(self:GetValue())
+    self.textEntry.OnLoseFocus = function(s)
+        self.action(s:GetValue())
     end
     self.textEntry.Paint = nil
     self.textEntry.PaintOver = function(s, w, h)
