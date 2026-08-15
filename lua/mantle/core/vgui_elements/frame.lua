@@ -122,7 +122,7 @@ function PANEL:LiteMode()
     if self.bool_lite then return end
 
     self.bool_lite = true
-    self:DockPadding(16, 16, 16, 16)
+    self:DockPadding(24, 24, 24, 24)
     self.cls:SetZPos(2)
 end
 
