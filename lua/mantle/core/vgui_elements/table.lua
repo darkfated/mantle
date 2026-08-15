@@ -5,6 +5,15 @@ PANEL.IsVertical = true
 local math_floor = math.floor
 local math_max = math.max
 
+local function isDescendantOf(panel, of)
+    while IsValid(panel) do
+        if panel == of then return true end
+        panel = panel:GetParent()
+    end
+
+    return false
+end
+
 function PANEL:Init()
     self.BaseClass.Init(self)
 
@@ -356,7 +365,7 @@ end
 
 function PANEL:OnMousePressed(mc)
     local hovered = vgui.GetHoveredPanel()
-    if IsValid(hovered) and (hovered == self.headerText or hovered:IsDescendantOf(self.headerText) or hovered == self.vbar or hovered:IsDescendantOf(self.vbar)) then
+    if IsValid(hovered) and (hovered == self.headerText or isDescendantOf(hovered, self.headerText) or hovered == self.vbar or isDescendantOf(hovered, self.vbar)) then
         return
     end
 
