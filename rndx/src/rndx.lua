@@ -6,6 +6,9 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
 
+-- Modified version of RNDX for the Mantle library:
+-- https://github.com/darkfated/mantle/blob/master/lua/mantle/modules/rndx.lua
+
 if SERVER then
 	AddCSLuaFile()
 	return
@@ -17,6 +20,10 @@ local surface_SetMaterial = surface.SetMaterial
 local surface_DrawTexturedRectUV = surface.DrawTexturedRectUV
 local surface_DrawTexturedRect = surface.DrawTexturedRect
 local render_CopyRenderTargetToTexture = render.CopyRenderTargetToTexture
+local render_PushRenderTarget = render.PushRenderTarget
+local render_PopRenderTarget = render.PopRenderTarget
+local cam_Start2D = cam.Start2D
+local cam_End2D = cam.End2D
 local math_min = math.min
 local math_max = math.max
 local math_ceil = math.ceil
@@ -60,6 +67,20 @@ local BLUR_RT = GetRenderTargetEx("RNDX" .. SHADERS_VERSION .. SysTime(),
 	IMAGE_FORMAT_BGRA8888
 )
 
+local KB_RT_SIZES = { 1024, 512, 256, 128, 64 }
+local KB_RTS = { BLUR_RT }
+for i = 2, #KB_RT_SIZES do
+	KB_RTS[i] = GetRenderTargetEx("RNDX_KB" .. (i - 1) .. SHADERS_VERSION .. SysTime(),
+		KB_RT_SIZES[i], KB_RT_SIZES[i],
+		RT_SIZE_LITERAL,
+		MATERIAL_RT_DEPTH_SEPARATE,
+		bit.bor(2, 256, 4, 8),
+		0,
+		IMAGE_FORMAT_BGRA8888
+	)
+end
+local MAX_KB_LEVELS = #KB_RT_SIZES - 1
+
 -- ============================================================
 --                        CONSTANTS
 -- ============================================================
@@ -75,6 +96,7 @@ end
 local NO_TL, NO_TR, NO_BL, NO_BR = NEW_FLAG(), NEW_FLAG(), NEW_FLAG(), NEW_FLAG()
 local SHAPE_CIRCLE, SHAPE_FIGMA, SHAPE_IOS = NEW_FLAG(), NEW_FLAG(), NEW_FLAG()
 local BLUR = NEW_FLAG()
+local KBLUR = NEW_FLAG()
 local MANUAL_COLOR = NEW_FLAG()
 
 local SHAPES = {
@@ -85,8 +107,10 @@ local SHAPES = {
 
 local DEFAULT_SHAPE = SHAPE_FIGMA
 local DEFAULT_BLUR_INTENSITY = 1.0
+local DEFAULT_KB_ITERATIONS = 4
 
 local BLUR_VERTICAL = "$c0_x"
+local KB_OFFSET_C = "$c0_x"
 local SHADOW_OX_C, SHADOW_OY_C = "$c0_y", "$c0_z"
 
 local FLAG_FADE_TOP = 8
@@ -150,7 +174,7 @@ end
 
 local LEGACY_GAMMA = false
 
-local ROUNDED_MAT, ROUNDED_TEXTURE_MAT, ROUNDED_BLUR_MAT, SHADOWS_MAT, SHADOWS_BLUR_MAT
+local ROUNDED_MAT, ROUNDED_TEXTURE_MAT, ROUNDED_BLUR_MAT, KBLUR_MAT, KB_DOWN_MAT, KB_UP_MAT, SHADOWS_MAT, SHADOWS_BLUR_MAT
 
 local function create_materials()
 	local vs = GET_SHADER(LEGACY_GAMMA and "mantle_vertex_gamma_vs30" or "mantle_vertex_screen_vs30")
@@ -178,6 +202,19 @@ local function create_materials()
 		["$basetexture"] = BLUR_RT:GetName(),
 		["$texture1"] = "_rt_FullFrameFB",
 	})
+	KBLUR_MAT = make("kblur", {
+		["$pixshader"] = GET_SHADER("mantle_kawase_ps30"),
+		["$basetexture"] = BLUR_RT:GetName(),
+		["$texture1"] = "_rt_FullFrameFB",
+	})
+	KB_DOWN_MAT = make("kawase_down", {
+		["$pixshader"] = GET_SHADER("mantle_kawase_down_ps30"),
+		["$basetexture"] = BLUR_RT:GetName(),
+	})
+	KB_UP_MAT = make("kawase_up", {
+		["$pixshader"] = GET_SHADER("mantle_kawase_up_ps30"),
+		["$basetexture"] = BLUR_RT:GetName(),
+	})
 	SHADOWS_MAT = make("rounded_shadows", {
 		["$pixshader"] = GET_SHADER("mantle_shadow_ps30"),
 	})
@@ -202,6 +239,7 @@ local X, Y, W, H
 local TL, TR, BL, BR
 local TEXTURE
 local USING_BLUR, BLUR_INTENSITY, BLUR_ALPHA
+local USING_KB, KB_ITERATIONS
 local FADE_FLAG
 local COL_SET, COL_R, COL_G, COL_B, COL_A
 local SHAPE, OUTLINE_THICKNESS
@@ -217,6 +255,7 @@ local function RESET_PARAMS()
 	TL, TR, BL, BR = 0, 0, 0, 0
 	TEXTURE = nil
 	USING_BLUR, BLUR_INTENSITY, BLUR_ALPHA = false, DEFAULT_BLUR_INTENSITY, 1
+	USING_KB, KB_ITERATIONS = false, DEFAULT_KB_ITERATIONS
 	FADE_FLAG = 0
 	COL_SET, COL_R, COL_G, COL_B, COL_A = false, 255, 255, 255, 255
 	SHAPE, OUTLINE_THICKNESS = SHAPES[DEFAULT_SHAPE], -1
@@ -322,6 +361,40 @@ local function draw_blur(shadow)
 	surface_DrawTexturedRect(X, Y, W, H)
 end
 
+local function draw_rt(src, dst, mat, w, h, offset)
+	MATERIAL_SetTexture(mat, "$basetexture", src)
+	MATERIAL_SetFloat(mat, KB_OFFSET_C, offset)
+
+	render_PushRenderTarget(dst, 0, 0, w, h)
+	cam_Start2D()
+	surface_SetMaterial(mat)
+	surface_DrawTexturedRect(0, 0, w, h)
+	cam_End2D()
+	render_PopRenderTarget()
+end
+
+local function draw_kblur()
+	MAT = KBLUR_MAT
+
+	COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
+	SetupDraw()
+
+	local levels = math_min(KB_ITERATIONS, MAX_KB_LEVELS)
+
+	render_CopyRenderTargetToTexture(BLUR_RT)
+
+	for i = 1, levels do
+		draw_rt(KB_RTS[i], KB_RTS[i + 1], KB_DOWN_MAT, KB_RT_SIZES[i + 1], KB_RT_SIZES[i + 1], BLUR_INTENSITY)
+	end
+
+	for i = levels, 1, -1 do
+		draw_rt(KB_RTS[i + 1], KB_RTS[i], KB_UP_MAT, KB_RT_SIZES[i], KB_RT_SIZES[i], BLUR_INTENSITY)
+	end
+
+	SetupDraw()
+	surface_DrawTexturedRect(X, Y, W, H)
+end
+
 local function setup_shadows()
 	TL, TR, BL, BR = normalize_corner_radii()
 	RADII_NORMALIZED = true
@@ -421,6 +494,12 @@ local BASE_FUNCS; BASE_FUNCS = {
 		USING_BLUR, BLUR_INTENSITY = true, math_max(intensity, 0)
 		return self
 	end,
+	KBlur = function(self, iterations, radius)
+		USING_KB = true
+		KB_ITERATIONS = math_max(1, math_min(math.floor(iterations or DEFAULT_KB_ITERATIONS), MAX_KB_LEVELS))
+		BLUR_INTENSITY = math_max(radius or DEFAULT_BLUR_INTENSITY, 0)
+		return self
+	end,
 	Alpha = function(self, alpha)
 		BLUR_ALPHA = math_max(0, math_min(1, alpha or 1))
 		return self
@@ -483,6 +562,10 @@ local BASE_FUNCS; BASE_FUNCS = {
 			BASE_FUNCS.Blur(self)
 		end
 
+		if bit_band(flags, KBLUR) ~= 0 then
+			BASE_FUNCS.KBlur(self)
+		end
+
 		if bit_band(flags, MANUAL_COLOR) ~= 0 then
 			COL_R = nil
 		end
@@ -525,6 +608,9 @@ local BASE_FUNCS; BASE_FUNCS = {
 		elseif USING_BLUR then
 			setup_pad()
 			draw_blur()
+		elseif USING_KB then
+			setup_pad()
+			draw_kblur()
 		else
 			setup_pad()
 			if TEXTURE then
@@ -546,7 +632,7 @@ local BASE_FUNCS; BASE_FUNCS = {
 	end,
 
 	GetMaterial = function(self)
-		if SHADOW_ENABLED or USING_BLUR then
+		if SHADOW_ENABLED or USING_BLUR or USING_KB then
 			error("You can't get the material of a shadowed or blurred rectangle!")
 		end
 
@@ -610,6 +696,14 @@ function RNDX.GetDefaultBlurIntensity()
 	return DEFAULT_BLUR_INTENSITY
 end
 
+function RNDX.SetDefaultKBlurIterations(val)
+	DEFAULT_KB_ITERATIONS = math_max(1, math_min(math.floor(tonumber(val) or 4), MAX_KB_LEVELS))
+end
+
+function RNDX.GetDefaultKBlurIterations()
+	return DEFAULT_KB_ITERATIONS
+end
+
 RNDX.NO_TL = NO_TL
 RNDX.NO_TR = NO_TR
 RNDX.NO_BL = NO_BL
@@ -620,6 +714,7 @@ RNDX.SHAPE_FIGMA = SHAPE_FIGMA
 RNDX.SHAPE_IOS = SHAPE_IOS
 
 RNDX.BLUR = BLUR
+RNDX.KBLUR = KBLUR
 RNDX.MANUAL_COLOR = MANUAL_COLOR
 
 function RNDX.SetFlag(flags, flag, bool)

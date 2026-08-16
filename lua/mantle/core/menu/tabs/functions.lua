@@ -62,6 +62,7 @@ local function build()
             { name = ':Outline(int thickness)', desc = 'Обводка вместо заливки (по умолчанию - 1)' },
             { name = ':Texture(ITexture) / :Material(IMaterial)', desc = 'Картинка внутри фигуры' },
             { name = ':Blur(int intensity)', desc = 'Размытие фона внутри фигуры' },
+            { name = ':KBlur(int iterations, int radius)', desc = 'Kawase размытие фона' },
             { name = ':Fade(int top, int bottom)', desc = 'Вертикальное затухание (1 - видно, 0 - прозрачно). Например :Fade(1, 0) - прозрачно снизу' },
             { name = ':Shadow(int blur, int spread, int offset_x, int offset_y)', desc = 'Тень под фигурой' },
             { name = ':Rotation(int deg)', desc = 'Поворот фигуры' },
