@@ -186,25 +186,25 @@ function PANEL:Paint(w, h)
     local headerTall = lite and 0 or HEADER_TALL
     local bodyRad = lite and 6 or 0
 
+    local alphaBg = self.bool_alpha and Mantle.ui.convar.blur
+    if alphaBg then
+        RNDX.Rect(0, 0, w, h)
+            :Radii(bodyRad, bodyRad, 6, 6)
+            :Blur()
+        :Draw()
+    end
+
+    RNDX.Rect(0, 0, w, h)
+        :Radii(bodyRad, bodyRad, 6, 6)
+        :Color(alphaBg and Mantle.color.background_alpha or Mantle.color.background)
+    :Draw()
+
     if !lite then
         RNDX.Rect(0, 0, w, headerTall)
             :Radii(6, 6, 0, 0)
             :Color(Mantle.color.header)
         :Draw()
     end
-
-    local alphaBg = self.bool_alpha and Mantle.ui.convar.blur
-    if alphaBg then
-        RNDX.Rect(0, headerTall, w, h - headerTall)
-            :Radii(bodyRad, bodyRad, 6, 6)
-            :Blur()
-        :Draw()
-    end
-
-    RNDX.Rect(0, headerTall, w, h - headerTall)
-        :Radii(bodyRad, bodyRad, 6, 6)
-        :Color(alphaBg and Mantle.color.background_alpha or Mantle.color.background)
-    :Draw()
 
     if lite then return end
 
