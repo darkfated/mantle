@@ -53,7 +53,11 @@ float rounded_box_sdf(float2 p, float2 b, float4 r)
         quadrant.x);
     float2 q = abs(p) - b + radius;
     float2 q_clamped = max(q, 0.0);
-    float len = length_custom(q_clamped);
+    float len;
+    if (POWER_PARAMETER == 2.0)
+        len = length(q_clamped);
+    else
+        len = length_custom(q_clamped);
     return min(max(q.x, q.y), 0.0) + len - radius;
 }
 
