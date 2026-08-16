@@ -339,7 +339,7 @@ local function SetupDraw()
 		MATERIAL_SetFloat(MAT, SHADOW_OY_C, SHADOW_OY)
 	end
 
-	if COL_R then
+	if COL_R ~= nil then
 		surface_SetDrawColor(COL_R, COL_G, COL_B, COL_A)
 	end
 
@@ -349,6 +349,7 @@ end
 local function draw_blur(shadow)
 	MAT = shadow and SHADOWS_BLUR_MAT or ROUNDED_BLUR_MAT
 
+	local r, g, b, a = COL_R, COL_G, COL_B, COL_A
 	COL_R, COL_G, COL_B, COL_A = 255, 255, 255, math.floor(255 * BLUR_ALPHA)
 	SetupDraw()
 
@@ -359,6 +360,8 @@ local function draw_blur(shadow)
 	render_CopyRenderTargetToTexture(BLUR_RT)
 	MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 1)
 	surface_DrawTexturedRect(X, Y, W, H)
+
+	COL_R, COL_G, COL_B, COL_A = r, g, b, a
 end
 
 local function draw_rt(src, dst, mat, w, h, offset)
@@ -376,6 +379,7 @@ end
 local function draw_kblur()
 	MAT = KBLUR_MAT
 
+	local r, g, b, a = COL_R, COL_G, COL_B, COL_A
 	COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
 	SetupDraw()
 
@@ -391,6 +395,7 @@ local function draw_kblur()
 		draw_rt(KB_RTS[i + 1], KB_RTS[i], KB_UP_MAT, KB_RT_SIZES[i], KB_RT_SIZES[i], BLUR_INTENSITY)
 	end
 
+	COL_R, COL_G, COL_B, COL_A = r, g, b, a
 	SetupDraw()
 	surface_DrawTexturedRect(X, Y, W, H)
 end
