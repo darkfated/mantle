@@ -1,15 +1,19 @@
 local PANEL = {}
 
+local HEIGHT = 32
+local RADIUS = 12
+local TITLE_H = 18
+local TITLE_GAP = 6
+
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self.title = nil
     self.placeholder = Mantle.lang.get('mantle', 'entry_default_placeholder')
-    self:SetTall(32)
+    self:SetTall(HEIGHT)
     self.action = function() end
 
-    self.font = 'Fated.16'
+    self.font = 'Fated.18'
     self._focusLerp = 0
-    self._hoverLerp = 0
     self._textOffset = 0
 
     self.textEntry = vgui.Create('DTextEntry', self)
@@ -28,29 +32,16 @@ function PANEL:_paintEntry(s, w, h)
     local ft = FrameTime()
 
     self._focusLerp = Mantle.func.approachExp(self._focusLerp, s:IsEditing() and 1 or 0, 10, ft)
-    self._hoverLerp = Mantle.func.approachExp(self._hoverLerp, s:IsHovered() and 1 or 0, 12, ft)
 
     RNDX.Rect(0, 0, w, h)
-        :Rad(12)
+        :Rad(RADIUS)
         :Color(Mantle.color.focus_panel)
     :Draw()
-
-    if self._hoverLerp > 0.01 then
-        local hv = Mantle.color.hover_overlay
-        RNDX.Rect(0, 0, w, h)
-            :Rad(12)
-            :Color(Color(hv.r, hv.g, hv.b, math.floor(hv.a * self._hoverLerp)))
-        :Draw()
-    end
 
     if self._focusLerp > 0.01 then
         local theme = Mantle.color.theme
         RNDX.Rect(0, 0, w, h)
-            :Rad(12)
-:Color(Color(theme.r, theme.g, theme.b, math.floor(60 * self._focusLerp)))
-            :Draw()
-            RNDX.Rect(0, 0, w, h)
-            :Rad(12)
+            :Rad(RADIUS)
             :Color(Color(theme.r, theme.g, theme.b, math.floor(160 * self._focusLerp)))
             :Outline(1)
         :Draw()
@@ -77,7 +68,7 @@ end
 
 function PANEL:SetTitle(title)
     self.title = title
-    self:SetTall(52)
+    self:SetTall(HEIGHT + TITLE_H + TITLE_GAP)
 
     if IsValid(self.titlePanel) then
         self.titlePanel:Remove()
@@ -85,8 +76,8 @@ function PANEL:SetTitle(title)
 
     self.titlePanel = vgui.Create('Panel', self)
     self.titlePanel:Dock(TOP)
-    self.titlePanel:DockMargin(0, 0, 0, 6)
-    self.titlePanel:SetTall(18)
+    self.titlePanel:DockMargin(0, 0, 0, TITLE_GAP)
+    self.titlePanel:SetTall(TITLE_H)
     self.titlePanel.Paint = function(_, w, h)
         draw.SimpleText(self.title, 'Fated.16', 0, 0, Mantle.color.text)
     end
