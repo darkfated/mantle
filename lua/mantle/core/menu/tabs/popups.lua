@@ -3,7 +3,6 @@ local menu = Mantle.menu
 local function createDemoButton(text, callback)
     local button = vgui.Create('MantleBtn')
     button:Dock(TOP)
-    button:DockMargin(0, 6, 0, 0)
     button:SetTall(30)
     button:SetTxt(text)
     button.DoClick = function()
@@ -18,12 +17,8 @@ local function build()
     local panel = menu.createTabPanel()
 
     menu.createCategory(panel, {
-        title = 'Палитра цвета',
-        open = true,
-        rows = {
-            { name = 'Mantle.ui.color_picker(func callback, color default_color)', desc = 'Окно выбора цвета. Выбранный цвет приходит в callback(col)' }
-        },
-        demo = createDemoButton('Открыть палитру', function()
+        title = 'Выбор цвета',
+        demo = createDemoButton('Открыть выбор цвета', function()
             Mantle.ui.color_picker(function(col)
                 chat.AddText('Вы выбрали цвет: ', col, col)
             end, Color(25, 59, 102))
@@ -31,14 +26,7 @@ local function build()
     })
 
     menu.createCategory(panel, {
-        title = 'Контекстное меню (MantleDermaMenu)',
-        rows = {
-            { name = 'Mantle.ui.derma_menu()', desc = 'Контекстное меню в позиции курсора' },
-            { name = ':AddOption(string text, func callback, string|material icon)', desc = 'Добавить пункт. Возвращает объект пункта для дальнейших действий' },
-            { name = ':AddSpacer()', desc = 'Визуальный разделитель между пунктами' },
-            { name = 'option:AddSubMenu()', desc = 'Вложенное подменю для конкретного пункта' },
-            { name = ':CloseMenu()', desc = 'Плавно закрыть меню' }
-        },
+        title = 'Контекстное меню',
         demo = createDemoButton('Открыть контекстное меню', function()
             local dermaMenu = Mantle.ui.derma_menu()
             for i = 1, 5 do
@@ -64,11 +52,7 @@ local function build()
 
     menu.createCategory(panel, {
         title = 'Выбор игрока',
-        rows = {
-            { name = 'Mantle.ui.player_selector(func onSelect, func filter)', desc = 'Окно со списком игроков. Выбранный игрок приходит в onSelect(ply)' },
-            { name = 'filter(player pl)', desc = 'Фильтр показа: если вернуть false - игрок не появится в списке' }
-        },
-        demo = createDemoButton('Открыть список игроков', function()
+        demo = createDemoButton('Открыть выбор игрока', function()
             Mantle.ui.player_selector(function(pl)
                 chat.AddText('Вы выбрали игрока: ', color_white, pl:Name())
             end)
@@ -76,20 +60,8 @@ local function build()
     })
 
     menu.createCategory(panel, {
-        title = 'Круговое меню',
-        rows = {
-            { name = 'Mantle.ui.radial_menu(table options)', desc = 'Круговое меню в центре экрана. В options можно задать radius, inner_radius, title, desc, шрифты и длительность анимаций' },
-            { name = ':SetCenterText(string title, string desc)', desc = 'Заголовок и описание в центре меню' },
-            { name = ':AddOption(string text, func callback, string icon, string desc)', desc = 'Обычный пункт-кнопка' },
-            { name = ':CreateSubMenu(string title, string desc)', desc = 'Создать подменю (таблица с методом :AddOption)' },
-            { name = 'submenu:AddOption(string text, func callback, string icon, string desc)', desc = 'Пункт внутри подменю' },
-            { name = ':AddSubMenuOption(string text, table submenu, string icon, string desc)', desc = 'Кнопка перехода в подменю' },
-            { name = ':GetCurrentOptions()', desc = 'Текущий список опций (активное меню или подменю)' },
-            { name = ':GoBack()', desc = 'Вернуться назад по стеку подменю' },
-            { name = ':CloseMenu(func callback)', desc = 'Закрыть меню (callback вызовется после закрытия)' },
-            { name = 'Управление', desc = '1-9 - выбор пункта, ESC - закрыть, клик в центр - назад, клик вне круга - закрыть' }
-        },
-        demo = createDemoButton('Открыть круговое меню', function()
+        title = 'Радиальное меню',
+        demo = createDemoButton('Открыть радиальное меню', function()
             local radialMenu = Mantle.ui.radial_menu()
             radialMenu:SetCenterText('Действия', 'Выберите действие')
 
@@ -124,11 +96,8 @@ local function build()
     })
 
     menu.createCategory(panel, {
-        title = 'Текстовый ввод',
-        rows = {
-            { name = 'Mantle.ui.text_box(string title, string desc, func callback)', desc = 'Окно ввода. Введённая строка приходит в callback(text)' }
-        },
-        demo = createDemoButton('Открыть текстовый ввод', function()
+        title = 'Текстовое окно',
+        demo = createDemoButton('Открыть текстовое окно', function()
             Mantle.ui.text_box('Заголовок', 'Описание того, что вводиться', function(text)
                 chat.AddText('Вы ввели: ', color_white, text)
             end)
@@ -136,10 +105,7 @@ local function build()
     })
 
     menu.createCategory(panel, {
-        title = 'Уведомление в MantleFrame',
-        rows = {
-            { name = 'frame:Notify(string text, number duration, color col)', desc = 'Уведомление снизу окна. frame - ваша переменная от MantleFrame' }
-        },
+        title = 'Уведомления',
         demo = createDemoButton('Показать уведомление', function()
             menu.notify('Тестовое сообщение!')
         end)
@@ -149,9 +115,9 @@ local function build()
 end
 
 menu.registerTab('popups', {
-    order = 2,
-    title = 'Всплывающие',
-    description = 'Показ панелей, открывающихся поверх меню.',
+    order = 3,
+    title = 'Всплывающие окна',
+    description = 'Список всплывающих элементов.',
     icon = Material('icon16/application_double.png'),
     build = build
 })

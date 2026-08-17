@@ -12,6 +12,7 @@ local function isDescendantOf(panel, of)
 end
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self.content = vgui.Create('Panel', self)
     self.content:SetMouseInputEnabled(true)
 

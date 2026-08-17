@@ -18,6 +18,7 @@ const sidebars = {
         "ui/category",
         "ui/slidebox",
         "ui/text",
+        "ui/panel",
       ],
     },
     {

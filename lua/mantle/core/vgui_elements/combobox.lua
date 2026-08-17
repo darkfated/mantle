@@ -7,6 +7,7 @@ local PAD = 12
 local RADIUS = 12
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self.choices = {}
     self.selected = nil
     self.opened = false
@@ -27,14 +28,6 @@ function PANEL:Init()
         self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, target, 12, ft)
         self._focusLerp = Mantle.func.approachExp(self._focusLerp, self.opened and 1 or 0, 10, ft)
 
-        if Mantle.ui.convar.depth_ui then
-            RNDX.Rect(0, 0, w, h)
-                :Rad(RADIUS)
-                :Color(Mantle.color.window_shadow)
-                :Shadow(4, 2)
-            :Draw()
-        end
-
         RNDX.Rect(0, 0, w, h)
             :Rad(RADIUS)
             :Color(Mantle.color.focus_panel)
@@ -53,7 +46,6 @@ function PANEL:Init()
             RNDX.Rect(0, 0, w, h)
                 :Rad(RADIUS)
                 :Color(Color(theme.r, theme.g, theme.b, math_floor(60 * self._focusLerp)))
-                :Shadow(4, self._focusLerp * 2)
             :Draw()
             RNDX.Rect(0, 0, w, h)
                 :Rad(RADIUS)

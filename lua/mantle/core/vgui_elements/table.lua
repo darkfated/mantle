@@ -43,23 +43,12 @@ function PANEL:Init()
     self.vbar:SetMouseInputEnabled(true)
     self.vbar:SetWide(self.vbarW)
     self.vbar:Dock(RIGHT)
-    self.vbar:DockMargin(0, 0, 0, 0)
     self.vbar.Paint = function() end
 
     self.vbar.grip = vgui.Create('Panel', self.vbar)
     self.vbar.grip:SetMouseInputEnabled(true)
     self.vbar.grip:SetCursor('hand')
-    self.vbar.grip._ShadowLerp = 0
     self.vbar.grip.Paint = function(s, w, h)
-        s._ShadowLerp = Lerp(FrameTime() * 10, s._ShadowLerp, self._draggingGrip and 1 or 0)
-
-        if s._ShadowLerp > 0.01 then
-            RNDX.Rect(0, 0, w, h)
-                :Rad(32)
-                :Color(Mantle.color.theme)
-                :Shadow(4, s._ShadowLerp)
-            :Draw()
-        end
         RNDX.Rect(0, 0, w, h)
             :Rad(32)
             :Color(Mantle.color.theme)
@@ -107,33 +96,22 @@ function PANEL:_createHeaderPanel()
             local a = self._topShadowA or 0
 
             if Mantle.ui.convar.smooth and a > 0 then
-                local bleed = 12
                 RNDX.Rect(0, 0, w, h)
                     :Blur()
                     :Fade(1, 0)
                     :Alpha(sa.a > 0 and a / sa.a or 0)
-                :Draw()
-
-                RNDX.Rect(-bleed, -bleed, w + bleed * 2, h + bleed)
-                    :Color(sa.r, sa.g, sa.b, math_floor(a))
-                    :Fade(1, 0)
                 :Draw()
             end
         end
     end
 
     if !IsValid(self.header) then
-        self.header = vgui.Create('Panel', self.content)
-        self.header:SetMouseInputEnabled(false)
-        self.header:Dock(TOP)
-        self.header:DockMargin(0, 0, 0, 0)
-        self.header:SetTall(self.headerHeight)
-        self.header.Paint = function(_, w, h)
-            RNDX.Rect(0, 0, w, h)
-                :Rad(12)
-                :Color(Mantle.color.panel_alpha[1])
-            :Draw()
-        end
+self.header = vgui.Create('MantlePanel', self.content)
+    self.header:SetMouseInputEnabled(false)
+    self.header:Dock(TOP)
+    self.header:SetTall(self.headerHeight)
+    self.header:SetColorAlpha(1)
+    self.header:SetRadius(12)
     end
 
     if !IsValid(self.headerText) then
@@ -476,7 +454,6 @@ end
 function PANEL:CreateRow(rowIndex, rowData)
     local row = vgui.Create('Button', self.content)
     row:Dock(TOP)
-    row:DockMargin(0, 0, 0, 0)
     row:SetTall(self.rowHeight)
     row:SetText('')
 

@@ -22,6 +22,7 @@ local function getValueWidth(maxValue, decimals)
 end
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self.text = ''
     self.min_value = 0
     self.max_value = 1
@@ -163,11 +164,6 @@ function PANEL:Paint(w, h)
     local handleX = start + self.smoothProgress
     local handleY = BAR_Y + BAR_H * 0.5
     local dragAlpha = math_floor((1 - self._dragLerp) * 255)
-
-    RNDX.Circle(handleX, handleY, HANDLE_R)
-        :Color(Mantle.color.window_shadow)
-        :Shadow(4, 2)
-    :Draw()
 
     if self._hoverLerp > 0.01 then
         local hv = Mantle.color.hover_overlay_strong

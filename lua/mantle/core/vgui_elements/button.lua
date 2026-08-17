@@ -5,6 +5,9 @@ local math_max = math.max
 local math_floor = math.floor
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
+    self:SetTall(40)
+
     self.hover_status = 0
     self.press_status = 0
     self.bool_hover = true
@@ -19,7 +22,6 @@ function PANEL:Init()
     self.ripple_x = 0
     self.ripple_y = 0
     self.ripple_speed = 4
-    self._activeShadowLerp = 0
 
     self:SetText('')
 end
@@ -101,21 +103,12 @@ end
 function PANEL:Paint(w, h)
     local ft = FrameTime()
     local hovered = self.bool_hover and self:IsHovered()
-    local pressed = self:IsDown()
 
     self.hover_status = Mantle.func.approachExp(self.hover_status, hovered and 1 or 0, 14, ft)
-    self._activeShadowLerp = Mantle.func.approachExp(self._activeShadowLerp, pressed and 1 or 0, 9, ft)
-
-    if self._activeShadowLerp > 0.01 and Mantle.ui.convar.depth_ui then
-        RNDX.Rect(0, 0, w, h)
-            :Rad(self.radius)
-            :Color(self.col_hov or Mantle.color.button_hovered)
-            :Shadow(4, self._activeShadowLerp * 2)
-        :Draw()
-    end
 
     RNDX.Rect(0, 0, w, h)
         :Rad(self.radius)
+        :Shape(RNDX.SHAPE_IOS)
         :Color(self.col or Mantle.color.button)
     :Draw()
 
@@ -127,6 +120,7 @@ function PANEL:Paint(w, h)
         local hoverColor = self.col_hov or Mantle.color.button_hovered
         RNDX.Rect(0, 0, w, h)
             :Rad(self.radius)
+            :Shape(RNDX.SHAPE_IOS)
             :Color(Color(hoverColor.r, hoverColor.g, hoverColor.b, math_floor(hoverColor.a * self.hover_status)))
         :Draw()
     end

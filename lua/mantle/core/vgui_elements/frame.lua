@@ -118,6 +118,10 @@ function PANEL:SetDraggable(is_draggable)
     self.draggable = is_draggable
 end
 
+function PANEL:SetPopupPad(pad)
+    self:DockPadding(pad, HEADER_TALL + pad, pad, pad)
+end
+
 function PANEL:LiteMode()
     if self.bool_lite then return end
 
@@ -176,10 +180,16 @@ function PANEL:Notify(text, duration, col)
 end
 
 function PANEL:Paint(w, h)
+    local col = Mantle.color.window_shadow
     RNDX.Rect(0, 0, w, h)
-        :Rad(6)
-        :Color(Mantle.color.window_shadow)
-        :Shadow(16, 10)
+        :Radii(6, 6, 6, 6)
+        :Color(col)
+        :Shadow(20, 12)
+    :Draw()
+    RNDX.Rect(0, 0, w, h)
+        :Radii(6, 6, 6, 6)
+        :Color(col)
+        :Shadow(6, 3)
     :Draw()
 
     local lite = self.bool_lite

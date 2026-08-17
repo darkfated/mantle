@@ -13,7 +13,7 @@ function Mantle.ui.player_selector(onSelect, filterFn)
     frame:SetTitle('')
     frame:SetCenterTitle(Mantle.lang.get('mantle', 'player_title'))
     frame:ShowAnimation()
-    frame:DockPadding(12, 36, 12, 12)
+    frame:SetPopupPad(12)
 
     local cards = {}
     local shownCount = 0
@@ -46,7 +46,6 @@ function Mantle.ui.player_selector(onSelect, filterFn)
     local countLabel = vgui.Create('Panel', frame)
     countLabel:Dock(TOP)
     countLabel:SetTall(18)
-    countLabel:DockMargin(2, 0, 2, 4)
     countLabel:SetMouseInputEnabled(false)
     countLabel.Paint = function(_, w, h)
         draw.SimpleText(
@@ -58,12 +57,11 @@ function Mantle.ui.player_selector(onSelect, filterFn)
 
     local sp = vgui.Create('MantleScrollPanel', frame)
     sp:Dock(FILL)
-    sp:DockMargin(0, 0, 0, 8)
 
     local function createPlayerCard(pl)
         local card = vgui.Create('Button', sp)
         card:Dock(TOP)
-        card:DockMargin(0, 0, 0, 6)
+        card:DockMargin(0, 0, 0, 8)
         card:SetTall(CARD_HEIGHT)
         card:SetText('')
         card._hoverLerp = 0
@@ -84,14 +82,6 @@ function Mantle.ui.player_selector(onSelect, filterFn)
             local ft = FrameTime()
             local hovered = self:IsHovered()
             self._hoverLerp = Mantle.func.approachExp(self._hoverLerp, hovered and 1 or 0, 14, ft)
-
-            if Mantle.ui.convar.depth_ui and self._hoverLerp > 0.01 then
-                RNDX.Rect(0, 0, w, h)
-                    :Rad(14)
-                    :Color(Mantle.color.window_shadow)
-                    :Shadow(6, self._hoverLerp * 3)
-                :Draw()
-            end
 
             RNDX.Rect(0, 0, w, h)
                 :Rad(14)
@@ -179,7 +169,6 @@ function Mantle.ui.player_selector(onSelect, filterFn)
 
     local btnClose = vgui.Create('MantleBtn', frame)
     btnClose:Dock(BOTTOM)
-    btnClose:DockMargin(0, 8, 0, 0)
     btnClose:SetTall(32)
     btnClose:SetRadius(10)
     btnClose:SetTxt(Mantle.lang.get('mantle', 'player_close'))

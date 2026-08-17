@@ -362,11 +362,6 @@ function PANEL:Paint(w, h)
     local outerR = self.radius * self.scaleAnim
     local innerR = self.innerRadius * self.scaleAnim
 
-    RNDX.Circle(cx, cy, outerR + 6)
-        :Color(Mantle.color.window_shadow)
-        :Shadow(24, 8)
-    :Draw()
-
     RNDX.Circle(cx, cy, outerR)
         :Color(Color(Mantle.color.background.r, Mantle.color.background.g, Mantle.color.background.b, math_floor(240 * alpha)))
     :Draw()
@@ -499,7 +494,7 @@ function PANEL:Paint(w, h)
     draw.SimpleText(self.centerDesc or self.rootMenu.desc, self.descFont, cx, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.header_text.r, Mantle.color.header_text.g, Mantle.color.header_text.b, math_floor(160 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
-vgui.Register('MantleRadialPanel', PANEL, 'DPanel')
+vgui.Register('MantleRadialPanel', PANEL, 'Panel')
 
 function Mantle.ui.radial_menu(options)
     if IsValid(Mantle.ui.menu_radial) then

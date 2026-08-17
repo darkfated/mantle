@@ -8,6 +8,7 @@ local function getTabButton(self, tab_id)
 end
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self.tabs = {}
     self.active_id = 1
     self.tab_height = 38
@@ -41,16 +42,10 @@ function PANEL:Init()
         local sa = Mantle.color.blur_shadow
 
         if Mantle.ui.convar.smooth and a > 0 then
-            local bleed = 12
             RNDX.Rect(0, 0, w, h)
                 :Blur()
                 :Fade(1, 0)
                 :Alpha(sa.a > 0 and a / sa.a or 0)
-            :Draw()
-
-            RNDX.Rect(-bleed, -bleed, w + bleed * 2, h + bleed)
-                :Color(sa.r, sa.g, sa.b, math.floor(a))
-                :Fade(1, 0)
             :Draw()
         end
     end
@@ -95,6 +90,7 @@ function PANEL:_createTabBar()
 
         RNDX.Rect(0, 0, w, h)
             :Rad(radius)
+            :Shape(RNDX.SHAPE_IOS)
             :Color(Color(hover.r, hover.g, hover.b, math_floor(hover.a * a)))
             :Flags(flags)
         :Draw()
@@ -294,8 +290,6 @@ function PANEL:_applyTabLayout()
             else
                 if pan.GetScroll then
                     pan:DockPadding(0, 0, 0, 0)
-                else
-                    pan:DockMargin(0, 0, 0, 0)
                 end
             end
         end

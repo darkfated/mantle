@@ -5,15 +5,16 @@ function Mantle.ui.text_box(title, desc, callback)
 
     local window = vgui.Create('MantleFrame')
     Mantle.ui.menu_text_box = window
-    window:SetSize(340, 148)
+    window:SetSize(340, 140)
     window:Center()
     window:MakePopup()
     window:SetTitle(title)
     window:ShowAnimation()
-    window:DockPadding(12, 36, 12, 12)
+    window:SetPopupPad(12)
 
     local entry = vgui.Create('MantleEntry', window)
     entry:Dock(TOP)
+    entry:DockMargin(0, 0, 0, 8)
     entry:SetTitle(desc)
 
     local function applyFunction()
@@ -33,7 +34,6 @@ function Mantle.ui.text_box(title, desc, callback)
 
     local btnAccept = vgui.Create('MantleBtn', window)
     btnAccept:Dock(BOTTOM)
-    btnAccept:DockMargin(0, 8, 0, 0)
     btnAccept:SetTall(32)
     btnAccept:SetRadius(10)
     btnAccept:SetTxt(Mantle.lang.get('mantle', 'apply'))

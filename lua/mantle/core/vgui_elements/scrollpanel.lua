@@ -39,17 +39,7 @@ function PANEL:Init()
 
     self.vbar.btnGrip = vgui.Create('MantleBtn', self.vbar)
     self.vbar.btnGrip:SetText('')
-    self.vbar.btnGrip._ShadowLerp = 0
     self.vbar.btnGrip.Paint = function(s, w, h)
-        s._ShadowLerp = Lerp(FrameTime() * 10, s._ShadowLerp, self.vbar.Dragging and 1 or 0)
-
-        if s._ShadowLerp > 0.01 then
-            RNDX.Rect(0, 0, w, h)
-                :Rad(32)
-                :Color(Mantle.color.theme)
-                :Shadow(4, s._ShadowLerp)
-            :Draw()
-        end
         RNDX.Rect(0, 0, w, h)
             :Rad(32)
             :Color(Mantle.color.theme)

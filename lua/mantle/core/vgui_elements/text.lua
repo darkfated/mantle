@@ -183,8 +183,9 @@ local function wrapAndEllipsize(font, text, maxw, maxLines)
 end
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self.text = ''
-    self.font = 'Fated.18'
+    self.font = 'Fated.16'
     self.color = Mantle.color.text
     self.align = TEXT_ALIGN_LEFT
     self.valign = 'top'

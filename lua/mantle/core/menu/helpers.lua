@@ -71,69 +71,58 @@ function menu.createTabPanel()
 
     local panel = vgui.Create('MantleScrollPanel')
 
-    local header = vgui.Create('Panel', panel)
+    local header = vgui.Create('MantlePanel', panel)
     header:Dock(TOP)
-    header:DockMargin(0, 0, 0, 8)
-    header:SetTall(56)
+    header:SetTall(58)
+    header:SetColorAlpha(2)
+    header:SetRadius(12)
 
-    header.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w, h)
-            :Rad(8)
-            :Color(Mantle.color.panel_alpha[2])
-        :Draw()
-
-        if data.icon then
-            RNDX.Rect(12, h * 0.5 - 12, 24, 24)
-                :Color(255, 255, 255)
-                :Material(data.icon)
-            :Draw()
-        end
-
-        draw.SimpleText(title, 'Fated.20', 48, 10, Mantle.color.text)
-        draw.SimpleText(description, 'Fated.16', 48, h - 10, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
-    end
-
-    return panel
-end
-
-function menu.createCopyButton(parent, snippet)
-    local button = vgui.Create('MantleBtn', parent)
-    button:SetTxt('Скопировать')
-    button:SetWide(110)
-    button:SetRadius(8)
-    button.DoClick = function()
-        SetClipboardText(snippet)
-        menu.notify(snippet)
-        Mantle.func.sound()
-    end
-
-    return button
-end
-
-function menu.createDoc(parent, name, desc)
-    local panel = vgui.Create('Panel')
-    panel:Dock(TOP)
-    panel:DockMargin(0, 0, 0, 8)
-    panel:SetTall(50)
-
-    panel.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w, h)
-            :Rad(6)
-            :Color(Mantle.color.panel_alpha[2])
-        :Draw()
-
+    header.PaintOver = function(_, w, h)
         RNDX.Rect(0, 0, 4, h)
             :Rad(32)
             :Color(Mantle.color.theme)
         :Draw()
 
-        draw.SimpleText(name, 'Fated.20', 16, 7, Mantle.color.text)
-        draw.SimpleText(desc, 'Fated.16', 16, h - 7, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        local iconX = 18
+        if data.icon then
+            RNDX.Rect(iconX, h * 0.5 - 11, 22, 22)
+                :Color(255, 255, 255)
+                :Material(data.icon)
+            :Draw()
+        end
+
+        local textX = data.icon and (iconX + 32) or 24
+        draw.SimpleText(title, 'Fated.20', textX, 8, Mantle.color.text)
+        draw.SimpleText(description, 'Fated.14', textX, h - 8, Mantle.color.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
     end
 
-    local copyButton = menu.createCopyButton(panel, name)
-    copyButton:Dock(RIGHT)
-    copyButton:DockMargin(0, 10, 10, 10)
+    return panel
+end
+
+function menu.createColorRow(parent, name, color)
+    local panel = vgui.Create('MantlePanel')
+    panel:Dock(TOP)
+    panel:SetTall(44)
+    panel:SetColorAlpha(2)
+    panel:SetRadius(6)
+
+    panel.PaintOver = function(_, w, h)
+        draw.SimpleText(name, 'Fated.16', 16, h * 0.5, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+        local s = 24
+        local sx = w - s - 16
+        local sy = (h - s) * 0.5
+
+        RNDX.Rect(sx, sy, s, s)
+            :Rad(6)
+            :Color(color)
+        :Draw()
+        RNDX.Rect(sx, sy, s, s)
+            :Rad(6)
+            :Color(Mantle.color.window_shadow)
+            :Outline(1)
+        :Draw()
+    end
 
     parent:AddItem(panel)
     return panel
@@ -142,22 +131,13 @@ end
 function menu.createCategory(parent, opts)
     local category = vgui.Create('MantleCategory', parent)
     category:Dock(TOP)
-    category:DockMargin(0, 0, 0, 8)
     category:SetText(opts.title)
-
-    if opts.open then
-        category:SetActive(true)
-    end
-
-    if opts.rows then
-        for _, row in ipairs(opts.rows) do
-            menu.createDoc(category, row.name, row.desc)
-        end
-    end
+    category:SetActive(true)
 
     if opts.demo then
-        local demo = type(opts.demo) == 'function' and opts.demo(category) or opts.demo
+        local demo = isfunction(opts.demo) and opts.demo(category) or opts.demo
         if IsValid(demo) then
+            demo:DockMargin(8, 8, 8, 8)
             category:AddItem(demo)
         end
     end

@@ -3,6 +3,7 @@ local PANEL = {}
 local math_floor = math.floor
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self.text = ''
     self.convar = ''
     self.value = false
@@ -91,14 +92,6 @@ function PANEL:OnChange(new_value)
 end
 
 function PANEL:Paint(w, h)
-    if Mantle.ui.convar.depth_ui then
-        RNDX.Rect(0, 0, w, h)
-            :Rad(12)
-            :Color(Mantle.color.window_shadow)
-            :Shadow(4, 2)
-        :Draw()
-    end
-
     RNDX.Rect(0, 0, w, h)
         :Rad(12)
         :Color(Mantle.color.focus_panel)

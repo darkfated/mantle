@@ -185,7 +185,7 @@ tabs:AddTab('Настройки', settings)
 
 | Метод                                        | Описание                                                              |
 | -------------------------------------------- | --------------------------------------------------------------------- |
-| `:AddTab(string\|table tab, DPanel panel)`   | Добавить вкладку. `tab` может быть строкой или `{ title, icon, ... }` |
+| `:AddTab(string\|table tab, pan panel)`      | Добавить вкладку. `tab` может быть строкой или `{ title, icon, ... }` |
 | `:SetActiveTab(int\|string id, bool silent)` | Переключить вкладку. `silent` отключает анимацию                      |
 | `:SetTabStyle(string style)`                 | Стиль: `modern` или `classic`. По умолчанию `modern`                  |
 | `:SetTabHeight(int height)`                  | Высота области вкладок. По умолчанию `38`                             |

@@ -5,6 +5,7 @@ local CONTENT_OFFSET = 36
 local CONTENT_PADDING = 12
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self:SetTall(HEADER_HEIGHT)
 
     self.name = 'Категория'

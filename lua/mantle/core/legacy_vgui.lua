@@ -267,7 +267,7 @@ function Mantle.ui.desc_entry(parent, title, placeholder, off_title_bool)
         label:SetFont('Fated.16')
     end
 
-    local entry_background = vgui.Create('DPanel', parent)
+    local entry_background = vgui.Create('Panel', parent)
     entry_background:Dock(TOP)
     entry_background:DockMargin(4, 4, 4, 0)
     entry_background:SetTall(24)
@@ -284,7 +284,7 @@ function Mantle.ui.desc_entry(parent, title, placeholder, off_title_bool)
 end
 
 function Mantle.ui.checkbox(parent, text, convar)
-    local panel = vgui.Create('DPanel', parent)
+    local panel = vgui.Create('Panel', parent)
     panel:Dock(TOP)
     panel:DockMargin(4, 0, 4, 0)
     panel:SetTall(28)
@@ -348,7 +348,7 @@ function Mantle.ui.checkbox(parent, text, convar)
 end
 
 function Mantle.ui.panel_tabs(parent)
-    local panel_tabs = vgui.Create('DPanel', parent)
+    local panel_tabs = vgui.Create('Panel', parent)
     panel_tabs:Dock(FILL)
     panel_tabs.Paint = nil
     panel_tabs.content = {}
@@ -361,7 +361,7 @@ function Mantle.ui.panel_tabs(parent)
     panel_tabs.sp:SetTall(24)
     panel_tabs.sp:SetOverlap(-6)
 
-    panel_tabs.panel_content = vgui.Create('DPanel', panel_tabs)
+    panel_tabs.panel_content = vgui.Create('Panel', panel_tabs)
     panel_tabs.panel_content:Dock(FILL)
     panel_tabs.panel_content.Paint = function(_, w, h)
         if panel_tabs.active_tab == '' then

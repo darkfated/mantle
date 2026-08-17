@@ -1,12 +1,13 @@
 local PANEL = {}
 
 function PANEL:Init()
+    self:DockMargin(8, 8, 8, 8)
     self.title = nil
     self.placeholder = Mantle.lang.get('mantle', 'entry_default_placeholder')
     self:SetTall(32)
     self.action = function() end
 
-    self.font = 'Fated.18'
+    self.font = 'Fated.16'
     self._focusLerp = 0
     self._hoverLerp = 0
     self._textOffset = 0
@@ -29,14 +30,6 @@ function PANEL:_paintEntry(s, w, h)
     self._focusLerp = Mantle.func.approachExp(self._focusLerp, s:IsEditing() and 1 or 0, 10, ft)
     self._hoverLerp = Mantle.func.approachExp(self._hoverLerp, s:IsHovered() and 1 or 0, 12, ft)
 
-    if Mantle.ui.convar.depth_ui then
-        RNDX.Rect(0, 0, w, h)
-            :Rad(12)
-            :Color(Mantle.color.window_shadow)
-            :Shadow(4, 2)
-        :Draw()
-    end
-
     RNDX.Rect(0, 0, w, h)
         :Rad(12)
         :Color(Mantle.color.focus_panel)
@@ -54,10 +47,9 @@ function PANEL:_paintEntry(s, w, h)
         local theme = Mantle.color.theme
         RNDX.Rect(0, 0, w, h)
             :Rad(12)
-            :Color(Color(theme.r, theme.g, theme.b, math.floor(60 * self._focusLerp)))
-            :Shadow(4, self._focusLerp * 2)
-        :Draw()
-        RNDX.Rect(0, 0, w, h)
+:Color(Color(theme.r, theme.g, theme.b, math.floor(60 * self._focusLerp)))
+            :Draw()
+            RNDX.Rect(0, 0, w, h)
             :Rad(12)
             :Color(Color(theme.r, theme.g, theme.b, math.floor(160 * self._focusLerp)))
             :Outline(1)
@@ -102,12 +94,12 @@ function PANEL:SetTitle(title)
         self.titlePanel:Remove()
     end
 
-    self.titlePanel = vgui.Create('DPanel', self)
+    self.titlePanel = vgui.Create('Panel', self)
     self.titlePanel:Dock(TOP)
     self.titlePanel:DockMargin(0, 0, 0, 6)
     self.titlePanel:SetTall(18)
     self.titlePanel.Paint = function(_, w, h)
-        draw.SimpleText(self.title, 'Fated.18', 0, 0, Mantle.color.text)
+        draw.SimpleText(self.title, 'Fated.16', 0, 0, Mantle.color.text)
     end
 end
 
