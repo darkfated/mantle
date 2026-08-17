@@ -136,9 +136,9 @@ end)
 | Метод                                   | Описание                                                   |
 | --------------------------------------- | ---------------------------------------------------------- |
 | `:SetTitle(string title)`               | Заголовок слева в шапке                                    |
-| `:SetCenterTitle(string title)`         | Заголовок по центру шапки                                  |
-| `:SetAlphaBackground(bool is_alpha)`    | Прозрачный фон окна. По умолчанию `true`                   |
-| `:SetDraggable(bool is_draggable)`      | Перетаскивание окна. По умолчанию `true`                   |
+| `:SetCenterTitle(string centerTitle)`   | Заголовок по центру шапки                                  |
+| `:SetAlphaBackground(bool isAlpha)`     | Прозрачный фон окна. По умолчанию `true`                   |
+| `:SetDraggable(bool isDraggable)`       | Перетаскивание окна. По умолчанию `true`                   |
 | `:ShowAnimation()`                      | Анимация появления окна                                    |
 | `:Close()`                              | Закрыть окно                                               |
 | `:DisableCloseBtn()`                    | Скрыть кнопку закрытия                                     |

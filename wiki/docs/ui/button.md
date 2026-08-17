@@ -127,17 +127,17 @@ iconBtn:SetIcon(Material('icon16/star.png'), 16)
 
 ## Методы
 
-| Метод                                            | Описание                                     |
-| ------------------------------------------------ | -------------------------------------------- |
-| `:SetTxt(string text)`                           | Текст кнопки                                 |
-| `:SetFont(string font)`                          | Шрифт                                        |
-| `:SetColor(color col)`                           | Основной цвет кнопки                         |
-| `:SetColorHover(color col)`                      | Цвет при наведении                           |
-| `:SetRadius(int rad)`                            | Скругление углов. По умолчанию `16`          |
-| `:SetGradient(bool is_grad)`                     | Градиент внизу кнопки. По умолчанию `true`   |
-| `:SetRipple(bool is_ripple)`                     | Эффект волны при клике. По умолчанию `false` |
-| `:SetHover(bool is_hover)`                       | Подсветка при наведении. По умолчанию `true` |
-| `:SetIcon(string\|material icon, int icon_size)` | Иконка                                       |
+| Метод                                       | Описание                                     |
+| ------------------------------------------- | -------------------------------------------- |
+| `:SetTxt(string text)`                      | Текст кнопки                                 |
+| `:SetFont(string font)`                     | Шрифт                                        |
+| `:SetColor(color color)`                    | Основной цвет кнопки                         |
+| `:SetColorHover(color color)`               | Цвет при наведении                           |
+| `:SetRadius(int rad)`                       | Скругление углов. По умолчанию `16`          |
+| `:SetGradient(bool enabled)`                | Градиент внизу кнопки. По умолчанию `true`   |
+| `:SetRipple(bool enabled)`                  | Эффект волны при клике. По умолчанию `false` |
+| `:SetHover(bool isHover)`                   | Подсветка при наведении. По умолчанию `true` |
+| `:SetIcon(string\|material icon, int size)` | Иконка                                       |
 
 ## Примечания
 

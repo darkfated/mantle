@@ -85,8 +85,8 @@ function PANEL:Init()
     end
 end
 
-function PANEL:SetAlphaBackground(is_alpha)
-    self.alpha = is_alpha
+function PANEL:SetAlphaBackground(isAlpha)
+    self.alpha = isAlpha
 end
 
 function PANEL:SetTitle(title)
@@ -114,8 +114,8 @@ function PANEL:DisableCloseBtn()
     self.cls:SetVisible(false)
 end
 
-function PANEL:SetDraggable(is_draggable)
-    self.draggable = is_draggable
+function PANEL:SetDraggable(isDraggable)
+    self.draggable = isDraggable
 end
 
 function PANEL:SetPopupPad(pad)

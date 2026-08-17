@@ -77,15 +77,15 @@ text:SetPadding(12)
 
 ## Методы
 
-| Метод                       | Описание                             |
-| --------------------------- | ------------------------------------ |
-| `:SetText(string text)`     | Установить текст                     |
-| `:GetText()`                | Текущий текст                        |
-| `:SetFont(string font)`     | Шрифт. По умолчанию `Fated.18`       |
-| `:SetColor(color col)`      | Цвет текста                          |
-| `:SetAlign(number align)`   | Выравнивание по горизонтали          |
-| `:SetVAlign(number valign)` | Выравнивание по вертикали            |
-| `:SetPadding(int padding)`  | Внутренние отступы. По умолчанию `6` |
+| Метод                               | Описание                                                                                                              |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `:SetText(string text)`             | Установить текст                                                                                                      |
+| `:GetText()`                        | Текущий текст                                                                                                         |
+| `:SetFont(string font)`             | Шрифт. По умолчанию `Fated.16`                                                                                        |
+| `:SetColor(color color)`            | Цвет текста                                                                                                           |
+| `:SetAlign(number align)`           | Выравнивание по горизонтали                                                                                           |
+| `:SetVAlign(string\|number valign)` | Выравнивание по вертикали: `'top'`/`'center'`/`'bottom'` или `TEXT_ALIGN_TOP`/`TEXT_ALIGN_CENTER`/`TEXT_ALIGN_BOTTOM` |
+| `:SetPadding(int padding)`          | Внутренние отступы. По умолчанию `6`                                                                                  |
 
 ## Примечания
 

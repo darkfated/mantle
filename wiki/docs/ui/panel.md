@@ -58,5 +58,5 @@ pan:SetCustomColor(Color(86, 132, 235))
 | ------------------------------ | -------------------------------------------------------- |
 | `:SetColor(number index)`      | Цвет из `Mantle.color.panel[index]`.                     |
 | `:SetColorAlpha(number index)` | Полупрозрачный цвет из `Mantle.color.panel_alpha[index]` |
-| `:SetCustomColor(color col)`   | Свой цвет.                                               |
+| `:SetCustomColor(color color)` | Свой цвет.                                               |
 | `:SetRadius(number radius)`    | Радиус скругления. По умолчанию `12`                     |
