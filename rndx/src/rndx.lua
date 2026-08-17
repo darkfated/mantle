@@ -207,6 +207,11 @@ local function create_materials()
 		["$basetexture"] = BLUR_RT:GetName(),
 		["$texture1"] = "_rt_FullFrameFB",
 	})
+	ACRYLIC_MAT = make("acrylic", {
+		["$pixshader"] = GET_SHADER("mantle_acrylic_ps30"),
+		["$basetexture"] = BLUR_RT:GetName(),
+		["$texture1"] = "_rt_FullFrameFB",
+	})
 	KB_DOWN_MAT = make("kawase_down", {
 		["$pixshader"] = GET_SHADER("mantle_kawase_down_ps30"),
 		["$basetexture"] = BLUR_RT:GetName(),
@@ -240,6 +245,12 @@ local TL, TR, BL, BR
 local TEXTURE
 local USING_BLUR, BLUR_INTENSITY, BLUR_ALPHA
 local USING_KB, KB_ITERATIONS
+local USING_ACRYLIC
+local ACRYLIC_BLUR, ACRYLIC_ITERATIONS, ACRYLIC_RADIUS
+local ACRYLIC_BURN, ACRYLIC_BURN_COLOR, ACRYLIC_BURN_AMOUNT
+local ACRYLIC_TINT, ACRYLIC_TINT_COLOR, ACRYLIC_TINT_AMOUNT
+local ACRYLIC_NOISE, ACRYLIC_NOISE_INTENSITY, ACRYLIC_NOISE_SCALE
+local ACRYLIC_FRESNEL, ACRYLIC_FRESNEL_COLOR, ACRYLIC_FRESNEL_AMOUNT, ACRYLIC_FRESNEL_WIDTH
 local FADE_FLAG
 local COL_SET, COL_R, COL_G, COL_B, COL_A
 local SHAPE, OUTLINE_THICKNESS
@@ -256,6 +267,12 @@ local function RESET_PARAMS()
 	TEXTURE = nil
 	USING_BLUR, BLUR_INTENSITY, BLUR_ALPHA = false, DEFAULT_BLUR_INTENSITY, 1
 	USING_KB, KB_ITERATIONS = false, DEFAULT_KB_ITERATIONS
+	USING_ACRYLIC = false
+	ACRYLIC_BLUR, ACRYLIC_ITERATIONS, ACRYLIC_RADIUS = true, 4, 2
+	ACRYLIC_BURN, ACRYLIC_BURN_COLOR, ACRYLIC_BURN_AMOUNT = true, Color(120, 120, 120), 0.6
+	ACRYLIC_TINT, ACRYLIC_TINT_COLOR, ACRYLIC_TINT_AMOUNT = true, Color(26, 28, 34), 0.55
+	ACRYLIC_NOISE, ACRYLIC_NOISE_INTENSITY, ACRYLIC_NOISE_SCALE = true, 0.05, 4
+	ACRYLIC_FRESNEL, ACRYLIC_FRESNEL_COLOR, ACRYLIC_FRESNEL_AMOUNT, ACRYLIC_FRESNEL_WIDTH = true, Color(255, 255, 255), 0.35, 0.4
 	FADE_FLAG = 0
 	COL_SET, COL_R, COL_G, COL_B, COL_A = false, 255, 255, 255, 255
 	SHAPE, OUTLINE_THICKNESS = SHAPES[DEFAULT_SHAPE], -1
@@ -310,6 +327,12 @@ local function SetupDraw()
 	local flags_f = 0
 	if TEXTURE then flags_f = flags_f + 1 end
 	if FADE_FLAG ~= 0 then flags_f = flags_f + FADE_FLAG end
+	if USING_ACRYLIC then
+		if ACRYLIC_BURN then flags_f = flags_f + 64 end
+		if ACRYLIC_TINT then flags_f = flags_f + 128 end
+		if ACRYLIC_NOISE then flags_f = flags_f + 256 end
+		if ACRYLIC_FRESNEL then flags_f = flags_f + 512 end
+	end
 
 	local start_rad, sweep_rad
 	local sweep = END_ANGLE - START_ANGLE
@@ -396,6 +419,51 @@ local function draw_kblur()
 	end
 
 	COL_R, COL_G, COL_B, COL_A = r, g, b, a
+	SetupDraw()
+	surface_DrawTexturedRect(X, Y, W, H)
+end
+
+local function draw_acrylic()
+	MAT = ACRYLIC_MAT
+
+	local r, g, b, a = COL_R, COL_G, COL_B, COL_A
+	COL_R, COL_G, COL_B, COL_A = 255, 255, 255, math.floor(255 * BLUR_ALPHA)
+	SetupDraw()
+
+	local levels = math_min(ACRYLIC_ITERATIONS, MAX_KB_LEVELS)
+
+	render_CopyRenderTargetToTexture(BLUR_RT)
+
+	if ACRYLIC_BLUR then
+		for i = 1, levels do
+			draw_rt(KB_RTS[i], KB_RTS[i + 1], KB_DOWN_MAT, KB_RT_SIZES[i + 1], KB_RT_SIZES[i + 1], ACRYLIC_RADIUS)
+		end
+
+		for i = levels, 1, -1 do
+			draw_rt(KB_RTS[i + 1], KB_RTS[i], KB_UP_MAT, KB_RT_SIZES[i], KB_RT_SIZES[i], ACRYLIC_RADIUS)
+		end
+	end
+
+	MATERIAL_SetFloat(MAT, "$c0_y", ACRYLIC_FRESNEL_WIDTH)
+	MATERIAL_SetFloat(MAT, "$c0_z", ACRYLIC_NOISE_INTENSITY)
+	MATERIAL_SetFloat(MAT, "$c0_w", ACRYLIC_NOISE_SCALE)
+
+	MATERIAL_SetFloat(MAT, "$c1_x", ACRYLIC_BURN_COLOR.r / 255)
+	MATERIAL_SetFloat(MAT, "$c1_y", ACRYLIC_BURN_COLOR.g / 255)
+	MATERIAL_SetFloat(MAT, "$c1_z", ACRYLIC_BURN_COLOR.b / 255)
+	MATERIAL_SetFloat(MAT, "$c1_w", ACRYLIC_BURN_AMOUNT)
+
+	MATERIAL_SetFloat(MAT, "$c2_x", ACRYLIC_TINT_COLOR.r / 255)
+	MATERIAL_SetFloat(MAT, "$c2_y", ACRYLIC_TINT_COLOR.g / 255)
+	MATERIAL_SetFloat(MAT, "$c2_z", ACRYLIC_TINT_COLOR.b / 255)
+	MATERIAL_SetFloat(MAT, "$c2_w", ACRYLIC_TINT_AMOUNT)
+
+	MATERIAL_SetFloat(MAT, "$c3_x", ACRYLIC_FRESNEL_COLOR.r / 255)
+	MATERIAL_SetFloat(MAT, "$c3_y", ACRYLIC_FRESNEL_COLOR.g / 255)
+	MATERIAL_SetFloat(MAT, "$c3_z", ACRYLIC_FRESNEL_COLOR.b / 255)
+	MATERIAL_SetFloat(MAT, "$c3_w", ACRYLIC_FRESNEL_AMOUNT)
+
+	COL_R, COL_G, COL_B, COL_A = r, g, b, math.floor(a * BLUR_ALPHA)
 	SetupDraw()
 	surface_DrawTexturedRect(X, Y, W, H)
 end
@@ -503,6 +571,68 @@ local BASE_FUNCS; BASE_FUNCS = {
 		USING_KB = true
 		KB_ITERATIONS = math_max(1, math_min(math.floor(iterations or DEFAULT_KB_ITERATIONS), MAX_KB_LEVELS))
 		BLUR_INTENSITY = math_max(radius or DEFAULT_BLUR_INTENSITY, 0)
+		return self
+	end,
+	Acrylic = function(self, opts)
+		USING_ACRYLIC = true
+		if not opts then return self end
+
+		local blur = opts.blur
+		if blur ~= nil then
+			if blur == false then
+				ACRYLIC_BLUR = false
+			else
+				ACRYLIC_BLUR = true
+				if blur.iterations then ACRYLIC_ITERATIONS = math_max(1, math_min(math.floor(blur.iterations), MAX_KB_LEVELS)) end
+				if blur.radius then ACRYLIC_RADIUS = math_max(blur.radius, 0) end
+			end
+		end
+
+		local burn = opts.burn
+		if burn ~= nil then
+			if burn == false then
+				ACRYLIC_BURN = false
+			else
+				ACRYLIC_BURN = true
+				if burn.color then ACRYLIC_BURN_COLOR = burn.color end
+				if burn.amount then ACRYLIC_BURN_AMOUNT = burn.amount end
+			end
+		end
+
+		local tint = opts.tint
+		if tint ~= nil then
+			if tint == false then
+				ACRYLIC_TINT = false
+			else
+				ACRYLIC_TINT = true
+				if tint.color then ACRYLIC_TINT_COLOR = tint.color end
+				if tint.amount then ACRYLIC_TINT_AMOUNT = tint.amount end
+			end
+		end
+
+		local noise = opts.noise
+		if noise ~= nil then
+			if noise == false then
+				ACRYLIC_NOISE = false
+			else
+				ACRYLIC_NOISE = true
+				if noise.intensity then ACRYLIC_NOISE_INTENSITY = math_max(noise.intensity, 0) end
+				if noise.scale then ACRYLIC_NOISE_SCALE = math_max(noise.scale, 0.0001) end
+			end
+		end
+
+		local fresnel = opts.fresnel
+		if fresnel ~= nil then
+			if fresnel == false then
+				ACRYLIC_FRESNEL = false
+			else
+				ACRYLIC_FRESNEL = true
+				if fresnel.color then ACRYLIC_FRESNEL_COLOR = fresnel.color end
+				if fresnel.amount then ACRYLIC_FRESNEL_AMOUNT = fresnel.amount end
+				if fresnel.width then ACRYLIC_FRESNEL_WIDTH = fresnel.width end
+			end
+		end
+
 		return self
 	end,
 	Alpha = function(self, alpha)
@@ -616,6 +746,9 @@ local BASE_FUNCS; BASE_FUNCS = {
 		elseif USING_KB then
 			setup_pad()
 			draw_kblur()
+		elseif USING_ACRYLIC then
+			setup_pad()
+			draw_acrylic()
 		else
 			setup_pad()
 			if TEXTURE then

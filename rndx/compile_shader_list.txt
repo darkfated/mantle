@@ -3,6 +3,7 @@ mantle_vertex_gamma_vsxx.hlsl -v-30
 
 mantle_rounded_rect_psxx.hlsl -v-30
 mantle_rounded_blur_psxx.hlsl -v-30
+mantle_acrylic_psxx.hlsl -v-30
 mantle_kawase_psxx.hlsl -v-30
 mantle_kawase_down_psxx.hlsl -v-30
 mantle_kawase_up_psxx.hlsl -v-30
