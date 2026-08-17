@@ -1,60 +1,31 @@
 local PANEL = {}
 
 local ELLIPSIS = '...'
+local DEFAULT_LINE_H = 16
 
-local function utf8Chars(str)
-    return str:gmatch('([%z\1-\127\194-\244][\128-\191]*)')
+local function charIter(str)
+    return string.gmatch(str, utf8.charpattern)
 end
 
-local function measure(font, str)
+local function measure(font)
     surface.SetFont(font)
-    local w, h = surface.GetTextSize(str)
-
-    if h <= 0 then
-        _, h = surface.GetTextSize('Ay')
-    end
-
-    return w, h > 0 and h or 16
+    local _, h = surface.GetTextSize('Ay')
+    return h > 0 and h or DEFAULT_LINE_H
 end
 
-local function buildTokens(text)
-    local tokens = {}
-    local paragraphs = string.Explode('\n', text)
-
-    for pi, para in ipairs(paragraphs) do
-        local hasWords = false
-
-        for w in string.gmatch(para, '%S+') do
-            tokens[#tokens + 1] = { word = w, breakBefore = pi > 1 }
-            hasWords = true
-        end
-
-        if not hasWords then
-            tokens[#tokens + 1] = { word = '', breakBefore = pi > 1 }
-        end
-    end
-
-    return tokens
+local function getWidth(font, str)
+    surface.SetFont(font)
+    return surface.GetTextSize(str)
 end
 
-local function joinTokens(tokens, from, partial)
-    local parts = {}
-
-    if partial ~= '' then parts[#parts + 1] = partial end
-
-    for i = from, #tokens do
-        parts[#parts + 1] = tokens[i].word
+local function trimToFit(text, maxw, font)
+    if getWidth(font, text) <= maxw then
+        return text
     end
-
-    return table.concat(parts, ' ')
-end
-
-local function trimToFit(text, maxw, width)
-    if width(text) <= maxw then return text end
 
     local out = ''
-    for ch in utf8Chars(text) do
-        if width(out .. ch) <= maxw then
+    for ch in charIter(text) do
+        if getWidth(font, out .. ch) <= maxw then
             out = out .. ch
         else
             break
@@ -64,144 +35,124 @@ local function trimToFit(text, maxw, width)
     return out
 end
 
-local function splitLongWord(word, maxw, width, emit)
-    local chars = {}
-    for ch in utf8Chars(word) do chars[#chars + 1] = ch end
+local function buildTokens(text)
+    local tokens = {}
+    local paraIndex = 0
 
-    local piece = ''
-    for ci = 1, #chars do
-        local ch = chars[ci]
+    for para in (text .. '\n'):gmatch('([^\n]*)\n') do
+        paraIndex = paraIndex + 1
+        local words = 0
 
-        if width(piece .. ch) <= maxw then
-            piece = piece .. ch
-        elseif piece ~= '' then
-            if emit(piece) then
-                return '', table.concat(chars, '', ci), true
-            end
-            piece = ch
-        else
-            piece = ch
+        for word in para:gmatch('%S+') do
+            tokens[#tokens + 1] = { word = word, newLine = paraIndex > 1 }
+            words = words + 1
+        end
+
+        if words == 0 then
+            tokens[#tokens + 1] = { word = '' }
         end
     end
 
-    return piece, '', false
+    return tokens
 end
 
 local function wrapAndEllipsize(font, text, maxw, maxLines)
     if maxw <= 0 or maxLines <= 0 then
-        return {''}
-    end
-
-    surface.SetFont(font)
-    local width = surface.GetTextSize
-    local ellWidth = width(ELLIPSIS)
-
-    local lines = {}
-    local function emit(line)
-        lines[#lines + 1] = line
-        return #lines >= maxLines
+        return { '' }
     end
 
     local tokens = buildTokens(text)
-    local truncated = false
-    local restFrom = #tokens + 1
-    local restPartial = ''
-    local i, line = 1, ''
+    local lines = {}
+    local current = {}
+    local i, n = 1, #tokens
 
-    while i <= #tokens do
+    local function lineText()
+        return table.concat(current, ' ')
+    end
+
+    while i <= n do
         local tok = tokens[i]
 
         if tok.word == '' then
-            if line ~= '' then
-                if emit(line) then
-                    truncated = true
-                    restFrom = i
-                    break
-                end
-                line = ''
+            if #current > 0 then
+                lines[#lines + 1] = lineText()
+                current = {}
             end
-
-            if emit('') then
-                truncated = true
-                restFrom = i + 1
-                break
-            end
-        elseif tok.breakBefore and line ~= '' then
-            if emit(line) then
-                truncated = true
-                restFrom = i
-                break
-            end
-            line = ''
+            lines[#lines + 1] = ''
         else
-            local word = tok.word
-            local candidate = (line == '') and word or (line .. ' ' .. word)
+            if tok.newLine and #current > 0 then
+                lines[#lines + 1] = lineText()
+                current = {}
+            end
 
-            if width(candidate) <= maxw then
-                line = candidate
-                i = i + 1
-            elseif line ~= '' then
-                if emit(line) then
-                    truncated = true
-                    restFrom = i
-                    break
-                end
-                line = ''
+            local cand = #current == 0 and tok.word or (lineText() .. ' ' .. tok.word)
+            if getWidth(font, cand) <= maxw then
+                current[#current + 1] = tok.word
+            elseif #current > 0 then
+                lines[#lines + 1] = lineText()
+                current = {}
+                current[#current + 1] = tok.word
             else
-                local piece, partial, full = splitLongWord(word, maxw, width, emit)
-
-                if full then
-                    truncated = true
-                    restFrom = i + 1
-                    restPartial = partial
-                    break
+                local piece = ''
+                for ch in charIter(tok.word) do
+                    if piece ~= '' and getWidth(font, piece .. ch) > maxw then
+                        lines[#lines + 1] = piece
+                        piece = ch
+                    else
+                        piece = piece .. ch
+                    end
                 end
-
-                line = piece
-                i = i + 1
+                current[#current + 1] = piece
             end
         end
 
-        if truncated then break end
+        i = i + 1
     end
 
-    if not truncated and line ~= '' then
-        emit(line)
+    if #current > 0 then
+        lines[#lines + 1] = lineText()
     end
 
-    if truncated and #lines > 0 then
-        local rest = joinTokens(tokens, restFrom, restPartial)
-        if rest ~= '' then
-            local last = lines[#lines]
-            local pool = (last == '') and rest or (last .. ' ' .. rest)
-            lines[#lines] = trimToFit(pool, math.max(0, maxw - ellWidth), width) .. ELLIPSIS
-        end
+    if #lines == 0 then
+        return { '' }
     end
 
-    return lines
+    if #lines <= maxLines then
+        return lines
+    end
+
+    local visible = {}
+    for k = 1, maxLines - 1 do
+        visible[k] = lines[k]
+    end
+
+    local rest = {}
+    for k = maxLines, #lines do
+        rest[#rest + 1] = lines[k]
+    end
+    local pool = table.concat(rest, ' ')
+
+    local fitWidth = math.max(0, maxw - getWidth(font, ELLIPSIS))
+    visible[maxLines] = trimToFit(pool, fitWidth, font) .. ELLIPSIS
+
+    return visible
 end
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self.text = ''
     self.font = 'Fated.16'
-    self.color = Mantle.color.text
     self.align = TEXT_ALIGN_LEFT
-    self.valign = 'top'
+    self.valign = TEXT_ALIGN_TOP
     self.padding = 6
 
-    self._lines = {''}
-    self._line_h = 16
-    self._last_w, self._last_h = 0, 0
+    self._lines = { '' }
+    self._lineH = 0
+    self._lastW, self._lastH = 0, 0
     self._dirty = true
 
     self:SetMouseInputEnabled(false)
     self:SetKeyboardInputEnabled(false)
-end
-
-function PANEL:InvalidateTextLayout()
-    self._dirty = true
-    self:InvalidateLayout()
 end
 
 function PANEL:SetText(text)
@@ -218,8 +169,8 @@ function PANEL:SetFont(font)
     self:InvalidateTextLayout()
 end
 
-function PANEL:SetColor(col)
-    self.color = col
+function PANEL:SetColor(color)
+    self.color = color
 end
 
 function PANEL:SetAlign(align)
@@ -227,7 +178,13 @@ function PANEL:SetAlign(align)
 end
 
 function PANEL:SetVAlign(valign)
-    if valign == 'top' or valign == 'center' or valign == 'bottom' then
+    local strVAlign = valign == 'top' and TEXT_ALIGN_TOP
+        or valign == 'center' and TEXT_ALIGN_CENTER
+        or valign == 'bottom' and TEXT_ALIGN_BOTTOM
+
+    if strVAlign then
+        self.valign = strVAlign
+    elseif valign == TEXT_ALIGN_TOP or valign == TEXT_ALIGN_CENTER or valign == TEXT_ALIGN_BOTTOM then
         self.valign = valign
     end
 end
@@ -237,18 +194,25 @@ function PANEL:SetPadding(padding)
     self:InvalidateTextLayout()
 end
 
+function PANEL:InvalidateTextLayout()
+    self._dirty = true
+    self:InvalidateLayout()
+end
+
 function PANEL:_rebuild()
     local w, h = self:GetSize()
-    if not self._dirty and w == self._last_w and h == self._last_h then return end
+    if not self._dirty and w == self._lastW and h == self._lastH then
+        return
+    end
 
-    self._last_w, self._last_h = w, h
+    self._lastW, self._lastH = w, h
     self._dirty = false
 
     local availWidth = math.max(1, w - self.padding * 2)
-    local _, lineH = measure(self.font, 'Ay')
-    self._line_h = lineH
+    local lineH = measure(self.font)
+    self._lineH = lineH
 
-    local maxLines = math.max(1, math.floor((h - self.padding * 2) / self._line_h))
+    local maxLines = math.max(1, math.floor((h - self.padding * 2) / lineH))
     self._lines = wrapAndEllipsize(self.font, self.text, availWidth, maxLines)
 end
 
@@ -260,13 +224,13 @@ function PANEL:Paint(w, h)
     self:_rebuild()
 
     local lines = self._lines
-    local lineH = self._line_h
+    local lineH = self._lineH
     local totalH = #lines * lineH
 
     local startY = self.padding
-    if self.valign == 'center' then
+    if self.valign == TEXT_ALIGN_CENTER then
         startY = math.floor((h - totalH) / 2)
-    elseif self.valign == 'bottom' then
+    elseif self.valign == TEXT_ALIGN_BOTTOM then
         startY = h - self.padding - totalH
     end
 
@@ -278,7 +242,7 @@ function PANEL:Paint(w, h)
             x = w - self.padding
         end
 
-        draw.SimpleText(line, self.font, x, startY + (i - 1) * lineH, self.color, self.align, TEXT_ALIGN_TOP)
+        draw.SimpleText(line, self.font, x, startY + (i - 1) * lineH, self.color or Mantle.color.text, self.align, TEXT_ALIGN_TOP)
     end
 
     return true
