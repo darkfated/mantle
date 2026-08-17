@@ -267,7 +267,7 @@ function Mantle.ui.desc_entry(parent, title, placeholder, off_title_bool)
         label:SetFont('Fated.16')
     end
 
-    local entry_background = vgui.Create('Panel', parent)
+    local entry_background = vgui.Create('DPanel', parent)
     entry_background:Dock(TOP)
     entry_background:DockMargin(4, 4, 4, 0)
     entry_background:SetTall(24)
