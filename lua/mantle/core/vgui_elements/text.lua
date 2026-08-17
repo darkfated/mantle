@@ -11,11 +11,10 @@ local function measure(font, str)
     local w, h = surface.GetTextSize(str)
 
     if h <= 0 then
-        surface.SetFont(font)
         _, h = surface.GetTextSize('Ay')
     end
 
-    return w or 0, h > 0 and h or 16
+    return w, h > 0 and h or 16
 end
 
 local function buildTokens(text)
@@ -90,7 +89,7 @@ end
 
 local function wrapAndEllipsize(font, text, maxw, maxLines)
     if maxw <= 0 or maxLines <= 0 then
-        return {''}, true
+        return {''}
     end
 
     surface.SetFont(font)
@@ -260,8 +259,8 @@ end
 function PANEL:Paint(w, h)
     self:_rebuild()
 
-    local lines = self._lines or {''}
-    local lineH = self._line_h or 16
+    local lines = self._lines
+    local lineH = self._line_h
     local totalH = #lines * lineH
 
     local startY = self.padding

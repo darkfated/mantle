@@ -31,7 +31,7 @@ function PANEL:Paint(w, h)
         if self.colorAlphaIndex then
             col = Mantle.color.panel_alpha[self.colorAlphaIndex]
         else
-            col = Mantle.color.panel[self.colorIndex or 1]
+            col = Mantle.color.panel[self.colorIndex]
         end
     end
 

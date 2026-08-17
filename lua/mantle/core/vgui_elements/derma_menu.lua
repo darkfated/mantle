@@ -20,7 +20,6 @@ function PANEL:Init()
     self._anim = 0
     self._animTarget = 1
     self._animSpeed = 18
-    self._animEased = 0
     self._initPosSet = false
     self._closing = false
     self._disableBlur = false
@@ -101,21 +100,20 @@ function PANEL:Init()
         self._hoverBar:SetSize(self._hoverW, self._hoverH)
 
         self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
-        self._animEased = self._anim
-        self:SetAlpha(math_floor(255 * self._animEased + 0.5))
+        self:SetAlpha(math_floor(255 * self._anim + 0.5))
 
         if self._targetX and self._targetY then
-            self:SetPos(self._targetX, self._targetY + 6 * (1 - self._animEased))
+            self:SetPos(self._targetX, self._targetY + 6 * (1 - self._anim))
         end
 
-        if self._closing and self._animEased <= 0.005 then
+        if self._closing and self._anim <= 0.005 then
             return self:Remove()
         end
     end
 end
 
 function PANEL:Paint(w, h)
-    local aMul = self._animEased or (self:GetAlpha() or 255) / 255
+    local aMul = self._anim or (self:GetAlpha() or 255) / 255
 
     local blurMul = 0
     if !(self._closing or self._disableBlur or self._animTarget == 0) then
@@ -156,7 +154,6 @@ function PANEL:AddOption(text, func, icon, optData)
     option:DockMargin(0, 2, 0, 0)
     option:SetTall(ITEM_HEIGHT)
     option.sumTall = ITEM_HEIGHT + 2
-    option.Icon = icon
     option.Text = text
     option._submenu = nil
     option._submenu_open = false
@@ -184,7 +181,7 @@ function PANEL:AddOption(text, func, icon, optData)
 
         local panel = option
         while IsValid(panel) do
-            if panel.GetName and panel:GetName() == 'MantleDermaMenu' then
+            if panel:GetName() == 'MantleDermaMenu' then
                 local parent = panel:GetParent()
                 panel:CloseMenu()
                 panel = parent
@@ -339,10 +336,6 @@ function PANEL:CloseMenu()
     self._closing = true
     self._disableBlur = true
     self._animTarget = 0
-end
-
-function PANEL:GetDeleteSelf()
-    return true
 end
 
 vgui.Register('MantleDermaMenu', PANEL, 'Panel')

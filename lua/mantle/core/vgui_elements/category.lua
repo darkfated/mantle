@@ -9,11 +9,11 @@ function PANEL:Init()
     self:SetTall(HEADER_HEIGHT)
 
     self.name = 'Категория'
-    self.bool_opened = false
-    self.bool_header_centered = false
-    self.header_color = Mantle.color.category
-    self.header_color_standard = self.header_color
-    self.header_color_opened = Mantle.color.category_opened
+    self.opened = false
+    self.centered = false
+    self.headerColor = Mantle.color.category
+    self.headerColorStandard = self.headerColor
+    self.headerColorOpened = Mantle.color.category_opened
 
     self._anim = 0
     self._animTarget = 0
@@ -26,18 +26,18 @@ function PANEL:Init()
     self.header.Paint = function(_, w, h)
         RNDX.Rect(0, 0, w, h)
             :Rad(16)
-            :Color(self.header_color)
+            :Color(self.headerColor)
         :Draw()
 
-        local posX = self.bool_header_centered and w * 0.5 or 8
-        local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
+        local posX = self.centered and w * 0.5 or 8
+        local alignX = self.centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
         draw.SimpleText(self.name, 'Fated.20', posX, 4, Mantle.color.text, alignX)
 
-        self.header_color = Mantle.func.LerpColor(8, self.header_color, self.bool_opened and self.header_color_opened or self.header_color_standard)
+        self.headerColor = Mantle.func.LerpColor(8, self.headerColor, self.opened and self.headerColorOpened or self.headerColorStandard)
     end
     self.header.DoClick = function()
-        self.bool_opened = !self.bool_opened
-        self._animTarget = self.bool_opened and 1 or 0
+        self.opened = !self.opened
+        self._animTarget = self.opened and 1 or 0
     end
 
     self.content = vgui.Create('Panel', self)
@@ -49,27 +49,27 @@ function PANEL:SetText(name)
     self.name = name
 end
 
-function PANEL:SetCenterText(is_centered)
-    self.bool_header_centered = is_centered
+function PANEL:SetCenterText(isCentered)
+    self.centered = isCentered
 end
 
 function PANEL:SetColor(col)
-    self.header_color_standard = col
-    if !self.bool_opened then
-        self.header_color = self.header_color_standard
+    self.headerColorStandard = col
+    if !self.opened then
+        self.headerColor = self.headerColorStandard
     end
 end
 
-function PANEL:SetActive(is_active)
-    is_active = tobool(is_active)
-    if self.bool_opened == is_active then return end
-    self.bool_opened = is_active
-    self._animTarget = is_active and 1 or 0
-    self.header_color = is_active and self.header_color_opened or self.header_color_standard
+function PANEL:SetActive(isActive)
+    isActive = tobool(isActive)
+    if self.opened == isActive then return end
+    self.opened = isActive
+    self._animTarget = isActive and 1 or 0
+    self.headerColor = isActive and self.headerColorOpened or self.headerColorStandard
 end
 
 function PANEL:IsActive()
-    return self.bool_opened
+    return self.opened
 end
 
 function PANEL:AddItem(panel)
@@ -80,7 +80,7 @@ end
 
 function PANEL:Clear()
     for _, c in ipairs(self.content:GetChildren()) do c:Remove() end
-    self.bool_opened = false
+    self.opened = false
     self._animTarget = 0
 end
 
@@ -104,12 +104,10 @@ end
 local function measureContent(content)
     local total = 0
     for _, c in ipairs(content:GetChildren()) do
-        if IsValid(c) and c.GetTall then
+        if IsValid(c) then
             total = total + c:GetTall()
-            if c.GetDockMargin then
-                local _, t, _, b = c:GetDockMargin()
-                total = total + (t or 0) + (b or 0)
-            end
+            local _, t, _, b = c:GetDockMargin()
+            total = total + (t or 0) + (b or 0)
         end
     end
     return total

@@ -12,16 +12,7 @@ end
 
 
 function menu.getFrame()
-    if IsValid(menu.frame) then
-        return menu.frame
-    end
-
-    return menuMantle
-end
-
-function menu.getMenuWide()
-    local frame = menu.getFrame()
-    return IsValid(frame) and frame:GetWide() or 920
+    return menu.frame
 end
 
 function menu.notify(text, duration, col)

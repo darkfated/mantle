@@ -10,14 +10,14 @@ end
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self.tabs = {}
-    self.active_id = 1
-    self.tab_height = 38
-    self.animation_speed = 12
-    self.tab_style = 'modern'
-    self.indicator_height = 2
+    self.activeId = 1
+    self.tabHeight = 38
+    self.animationSpeed = 12
+    self.tabStyle = 'modern'
+    self.indicatorHeight = 2
 
-    self.indicator_x = 0
-    self.indicator_w = 0
+    self.indicatorX = 0
+    self.indicatorW = 0
     self._indicator_inited = false
 
     self._hoverX = 0
@@ -36,7 +36,7 @@ function PANEL:Init()
     self._tabShadow = vgui.Create('Panel', self)
     self._tabShadow:SetMouseInputEnabled(false)
     self._tabShadow.Paint = function(_, w, h)
-        if self.tab_style != 'modern' then return end
+        if self.tabStyle != 'modern' then return end
 
         local a = self._tabShadowA or 0
         local sa = Mantle.color.blur_shadow
@@ -54,12 +54,12 @@ function PANEL:Init()
 end
 
 function PANEL:_createTabBar()
-    if IsValid(self.panel_tabs) then
-        self.panel_tabs:Remove()
+    if IsValid(self.panelTabs) then
+        self.panelTabs:Remove()
     end
 
     local bar
-    if self.tab_style == 'modern' then
+    if self.tabStyle == 'modern' then
         bar = vgui.Create('MantleHScroll', self)
     else
         bar = vgui.Create('MantleScrollPanel', self)
@@ -68,10 +68,10 @@ function PANEL:_createTabBar()
     bar.Paint = function() end
 
     bar.PaintOver = function(s, w, h)
-        if self.tab_style == 'modern' and self.indicator_w > 0 then
+        if self.tabStyle == 'modern' and self.indicatorW > 0 then
             local flags = self._indicator_moving and (RNDX.NO_BL + RNDX.NO_BR) or 0
-            RNDX.Rect(self.indicator_x, h - self.indicator_height, self.indicator_w, self.indicator_height)
-                :Rad(self.indicator_height)
+            RNDX.Rect(self.indicatorX, h - self.indicatorHeight, self.indicatorW, self.indicatorHeight)
+                :Rad(self.indicatorHeight)
                 :Color(Mantle.color.theme)
                 :Flags(flags)
             :Draw()
@@ -85,8 +85,8 @@ function PANEL:_createTabBar()
         if a <= 0.01 then return end
 
         local hover = Mantle.color.tab_hover
-        local flags = self.tab_style == 'modern' and self._hoverActive and (RNDX.NO_BL + RNDX.NO_BR) or 0
-        local radius = self.tab_style == 'modern' and 16 or 24
+        local flags = self.tabStyle == 'modern' and self._hoverActive and (RNDX.NO_BL + RNDX.NO_BR) or 0
+        local radius = self.tabStyle == 'modern' and 16 or 24
 
         RNDX.Rect(0, 0, w, h)
             :Rad(radius)
@@ -96,12 +96,12 @@ function PANEL:_createTabBar()
         :Draw()
     end
 
-    self.panel_tabs = bar
+    self.panelTabs = bar
 end
 
 function PANEL:_syncPanels()
     for id, tab in ipairs(self.tabs) do
-        tab.pan:SetVisible(id == self.active_id)
+        tab.pan:SetVisible(id == self.activeId)
     end
 end
 
@@ -117,10 +117,10 @@ function PANEL:_rebuildTabs()
 end
 
 function PANEL:_createTabButton(tab, id)
-    local btn = vgui.Create('Button', self.panel_tabs)
+    local btn = vgui.Create('Button', self.panelTabs)
     btn:SetText('')
 
-    if self.tab_style == 'modern' then
+    if self.tabStyle == 'modern' then
         surface.SetFont('Fated.18')
         local textW = select(1, surface.GetTextSize(tab.title))
         local iconW = tab.icon and 16 or 0
@@ -149,11 +149,11 @@ function PANEL:_createTabButton(tab, id)
     end
 
     btn.Paint = function(s, w, h)
-        local isActive = self.active_id == id
+        local isActive = self.activeId == id
         local colorText = isActive and Mantle.color.theme or Mantle.color.text
         local colorIcon = isActive and Mantle.color.theme or Mantle.color.icon
 
-        if self.tab_style == 'modern' then
+        if self.tabStyle == 'modern' then
             local padding = 16
             local iconW = tab.icon and 16 or 0
             local iconTextGap = tab.icon and 8 or 0
@@ -187,16 +187,6 @@ function PANEL:_createTabButton(tab, id)
     tab._btn = btn
 end
 
-function PANEL:_stepAlpha(cur, tgt, maxSpeed, ft)
-    local next = Mantle.func.approachExp(cur, tgt, 20, ft)
-    local maxStep = maxSpeed * ft
-    local delta = next - cur
-    if math.abs(delta) > maxStep then
-        delta = delta > 0 and maxStep or -maxStep
-    end
-    return cur + delta
-end
-
 function PANEL:Think()
     local ft = FrameTime()
     local speed = 30
@@ -206,7 +196,7 @@ function PANEL:Think()
         local btn = tab._btn
         if IsValid(btn) and btn:IsHovered() then
             hovered = btn
-            self._hoverActive = (id == self.active_id)
+            self._hoverActive = (id == self.activeId)
             break
         end
     end
@@ -226,10 +216,10 @@ function PANEL:Think()
         self._hoverBar:SetSize(self._hoverW, self._hoverH)
     end
 
-    if self.tab_style != 'modern' then return end
+    if self.tabStyle != 'modern' then return end
 
-    local activeTab = self.tabs[self.active_id]
-    local activePan = activeTab and IsValid(activeTab.pan) and activeTab.pan or nil
+    local activeTab = self.tabs[self.activeId]
+    local activePan = activeTab and IsValid(activeTab.pan) and activeTab.pan
 
     local targetScroll = 0
     if activePan and activePan.GetScroll then
@@ -238,50 +228,50 @@ function PANEL:Think()
 
     self._tabScroll = Mantle.func.approachExp(self._tabScroll, targetScroll, 20, ft)
 
-    local shadowTarget = Mantle.color.blur_shadow.a * math.min(1, math.max(0, self._tabScroll) / (self.tab_height * 2))
-    self._tabShadowA = self:_stepAlpha(self._tabShadowA, shadowTarget, 200, ft)
+    local shadowTarget = Mantle.color.blur_shadow.a * math.min(1, math.max(0, self._tabScroll) / (self.tabHeight * 2))
+    self._tabShadowA = Mantle.util.stepAlpha(self._tabShadowA, shadowTarget, 200, ft)
 
     local maxScroll = 0
     if activePan and activePan._range then
         maxScroll = select(1, activePan:_range())
     end
 
-    local activeBtn = getTabButton(self, self.active_id)
+    local activeBtn = getTabButton(self, self.activeId)
 
     local targetX, targetW = 0, 0
     if IsValid(activeBtn) then
-        targetX = activeBtn:GetX() - self.panel_tabs:GetScroll()
+        targetX = activeBtn:GetX() - self.panelTabs:GetScroll()
         targetW = activeBtn:GetWide()
     end
 
     if !self._indicator_inited then
-        self.indicator_x = targetX
-        self.indicator_w = targetW
+        self.indicatorX = targetX
+        self.indicatorW = targetW
         self._indicator_inited = true
         self._indicator_moving = false
         return
     end
 
-    self.indicator_x = Mantle.func.approachExp(self.indicator_x, targetX, self.animation_speed, ft)
-    self.indicator_w = Mantle.func.approachExp(self.indicator_w, targetW, self.animation_speed, ft)
+    self.indicatorX = Mantle.func.approachExp(self.indicatorX, targetX, self.animationSpeed, ft)
+    self.indicatorW = Mantle.func.approachExp(self.indicatorW, targetW, self.animationSpeed, ft)
 
-    if math.abs(self.indicator_x - targetX) < 0.5 then
-        self.indicator_x = targetX
+    if math.abs(self.indicatorX - targetX) < 0.5 then
+        self.indicatorX = targetX
     end
 
-    if math.abs(self.indicator_w - targetW) < 0.5 then
-        self.indicator_w = targetW
+    if math.abs(self.indicatorW - targetW) < 0.5 then
+        self.indicatorW = targetW
     end
 
-    self._indicator_moving = math.abs(self.indicator_x - targetX) >= 0.5 or math.abs(self.indicator_w - targetW) >= 0.5
+    self._indicator_moving = math.abs(self.indicatorX - targetX) >= 0.5 or math.abs(self.indicatorW - targetW) >= 0.5
 end
 
 function PANEL:_applyTabLayout()
     for _, tab in ipairs(self.tabs) do
         local pan = tab.pan
         if IsValid(pan) then
-            if self.tab_style == 'modern' then
-                local offset = self.tab_height + 8
+            if self.tabStyle == 'modern' then
+                local offset = self.tabHeight + 8
                 if pan.GetScroll then
                     pan:DockPadding(0, offset, 0, 0)
                 else
@@ -298,21 +288,21 @@ end
 
 function PANEL:SetTabStyle(style)
     if style != 'modern' and style != 'classic' then return end
-    if self.tab_style == style then return end
+    if self.tabStyle == style then return end
 
-    self.tab_style = style
+    self.tabStyle = style
     self:_rebuildTabs()
     self:_applyTabLayout()
 end
 
 function PANEL:SetTabHeight(height)
-    self.tab_height = height
+    self.tabHeight = height
     self:_applyTabLayout()
     self:InvalidateLayout(true)
 end
 
 function PANEL:SetIndicatorHeight(height)
-    self.indicator_height = height
+    self.indicatorHeight = height
 end
 
 function PANEL:AddTab(data, pan, icon)
@@ -329,7 +319,6 @@ function PANEL:AddTab(data, pan, icon)
     local newId = #self.tabs + 1
 
     local tab = {
-        name = title,
         title = title,
         description = description,
         pan = pan,
@@ -352,14 +341,14 @@ function PANEL:SetActiveTab(tab_id, is_silent)
 
     if isstring(tab_id) then
         for id, tab in ipairs(self.tabs) do
-            if tab.title == tab_id or tab.name == tab_id then
+            if tab.title == tab_id then
                 next_id = id
                 break
             end
         end
     end
 
-    local current = self.tabs[self.active_id]
+    local current = self.tabs[self.activeId]
     local next_tab = self.tabs[next_id]
     if !next_tab then return end
 
@@ -368,24 +357,24 @@ function PANEL:SetActiveTab(tab_id, is_silent)
     end
 
     next_tab.pan:SetVisible(true)
-    self.active_id = next_id
+    self.activeId = next_id
 
     if next_tab.pan and next_tab.pan.GetScroll then
         next_tab.pan:SetScroll(0)
     end
 
-    if self.tab_style == 'modern' then
+    if self.tabStyle == 'modern' then
         local btn = next_tab._btn
         if IsValid(btn) then
-            local scroll = self.panel_tabs:GetScroll()
-            local viewW = self.panel_tabs:GetWide()
+            local scroll = self.panelTabs:GetScroll()
+            local viewW = self.panelTabs:GetWide()
             local bx = btn:GetX()
             local bw = btn:GetWide()
 
             if bx - scroll < 0 then
-                self.panel_tabs:SetScroll(bx)
+                self.panelTabs:SetScroll(bx)
             elseif bx + bw - scroll > viewW then
-                self.panel_tabs:SetScroll(bx + bw - viewW)
+                self.panelTabs:SetScroll(bx + bw - viewW)
             end
         end
     end
@@ -398,18 +387,18 @@ function PANEL:SetActiveTab(tab_id, is_silent)
 end
 
 function PANEL:PerformLayout(w, h)
-    if self.tab_style == 'modern' then
-        self.panel_tabs:SetPos(0, 0)
-        self.panel_tabs:SetSize(w, self.tab_height)
-        local blurTall = math.max(self.tab_height, h * 0.12)
+    if self.tabStyle == 'modern' then
+        self.panelTabs:SetPos(0, 0)
+        self.panelTabs:SetSize(w, self.tabHeight)
+        local blurTall = math.max(self.tabHeight, h * 0.12)
         self._tabShadow:SetPos(0, 0)
         self._tabShadow:SetSize(w, blurTall)
         self._tabShadow:SetVisible(true)
         self.content:Dock(FILL)
     else
-        self.panel_tabs:Dock(LEFT)
-        self.panel_tabs:DockMargin(0, 0, 4, 0)
-        self.panel_tabs:SetWide(190)
+        self.panelTabs:Dock(LEFT)
+        self.panelTabs:DockMargin(0, 0, 4, 0)
+        self.panelTabs:SetWide(190)
         self._tabShadow:SetVisible(false)
         self.content:Dock(FILL)
     end

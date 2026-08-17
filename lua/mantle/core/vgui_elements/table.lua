@@ -1,18 +1,7 @@
 local PANEL = {}
 
-PANEL.IsVertical = true
-
 local math_floor = math.floor
 local math_max = math.max
-
-local function isDescendantOf(panel, of)
-    while IsValid(panel) do
-        if panel == of then return true end
-        panel = panel:GetParent()
-    end
-
-    return false
-end
 
 function PANEL:Init()
     self.BaseClass.Init(self)
@@ -129,23 +118,13 @@ function PANEL:_isInternal(child)
     return child == self.content or child == self.header or child == self.headerText or child == self._topShadow or child == self.vbar or child == self.vbar.grip
 end
 
-function PANEL:_stepAlpha(cur, tgt, maxSpeed, ft)
-    local next = Mantle.func.approachExp(cur, tgt, 20, ft)
-    local maxStep = maxSpeed * ft
-    local delta = next - cur
-    if math.abs(delta) > maxStep then
-        delta = delta > 0 and maxStep or -maxStep
-    end
-    return cur + delta
-end
-
 function PANEL:Think()
     self.BaseClass.Think(self)
     local ft = FrameTime()
     local sa = Mantle.color.blur_shadow
 
     local topTarget = sa.a * math.min(1, self.offset / self.headerHeight)
-    self._topShadowA = self:_stepAlpha(self._topShadowA, topTarget, 200, ft)
+    self._topShadowA = Mantle.util.stepAlpha(self._topShadowA, topTarget, 200, ft)
 end
 
 function PANEL:_sizeCanvas()
@@ -343,7 +322,7 @@ end
 
 function PANEL:OnMousePressed(mc)
     local hovered = vgui.GetHoveredPanel()
-    if IsValid(hovered) and (hovered == self.headerText or isDescendantOf(hovered, self.headerText) or hovered == self.vbar or isDescendantOf(hovered, self.vbar)) then
+    if IsValid(hovered) and (hovered == self.headerText or Mantle.util.isDescendantOf(hovered, self.headerText) or hovered == self.vbar or Mantle.util.isDescendantOf(hovered, self.vbar)) then
         return
     end
 
@@ -390,29 +369,21 @@ function PANEL:_afterScroll(ft, maxScroll, viewH, contentH)
     local vb = self.vbar
     if !vb:IsVisible() then return end
 
+    local gripH = math.max(24, math.floor(vb:GetTall() * (viewH / math.max(1, contentH))))
+
     if self._draggingGrip then
         local _, my = vb:CursorPos()
-        local trackH = vb:GetTall()
-        local gripH = math.max(24, math.floor(trackH * (viewH / math.max(1, contentH))))
-        local range = trackH - gripH
+        local range = math.max(0, vb:GetTall() - gripH)
         if range > 0 then
-            local y = math.Clamp(my - self._gripOffset, 0, range)
-            self.offset = (y / range) * maxScroll
+            local dragY = math.Clamp(my - self._gripOffset, 0, range)
+            self.offset = (dragY / range) * maxScroll
             self.vel = 0
         end
         self:_applyScroll()
     end
 
-    local gripH = math.max(24, math.floor(vb:GetTall() * (viewH / math.max(1, contentH))))
     local scroll01 = maxScroll <= 0 and 0 or (self.offset / maxScroll)
     local y = math.max(0, vb:GetTall() - gripH) * scroll01
-
-    if self._draggingGrip then
-        local _, my = vb:CursorPos()
-        local trackH = vb:GetTall()
-        local range = trackH - gripH
-        y = math.Clamp(my - self._gripOffset, 0, math.max(0, range))
-    end
 
     vb.grip:SetSize(vb:GetWide(), gripH)
     vb.grip:SetPos(0, y)

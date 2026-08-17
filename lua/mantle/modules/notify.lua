@@ -5,10 +5,10 @@ if SERVER then
         Функция для выведения в чат текста.
         Можно выводить определённой цели информацию, либо всем, указав вместо pl - true
     ]]--
-    function Mantle.notify(pl, header_color, header, text)
+    function Mantle.notify(pl, headerColor, header, text)
         net.Start('Mantle-Notify')
             net.WriteString(header)
-            net.WriteColor(header_color)
+            net.WriteColor(headerColor)
             net.WriteString(text)
 
         if pl == true then

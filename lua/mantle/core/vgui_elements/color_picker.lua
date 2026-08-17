@@ -12,11 +12,28 @@ function Mantle.ui.color_picker(callback, defaultColor)
     local rgbEntries = {}
 
     if defaultColor then
-        local r, g, b = defaultColor.r / 255, defaultColor.g / 255, defaultColor.b / 255
-        local h, s, v = ColorToHSV(Color(r * 255, g * 255, b * 255))
+        local h, s, v = ColorToHSV(defaultColor)
         hue = h
         saturation = s
         value = v
+    end
+
+    local function updateRgbEntries()
+        for _, ch in ipairs({ 'R', 'G', 'B' }) do
+            if IsValid(rgbEntries[ch]) then
+                rgbEntries[ch]:SetValue(tostring(ch == 'R' and selectedColor.r or ch == 'G' and selectedColor.g or selectedColor.b))
+            end
+        end
+    end
+
+    local function syncCursorPositions()
+        timer.Simple(0, function()
+            if IsValid(colorField) and IsValid(hueSlider) then
+                colorCursor.x = saturation * colorField:GetWide()
+                colorCursor.y = (1 - value) * colorField:GetTall()
+                huePos = (hue / 360) * hueSlider:GetWide()
+            end
+        end)
     end
 
     local frame = vgui.Create('MantleFrame')
@@ -72,12 +89,7 @@ function Mantle.ui.color_picker(callback, defaultColor)
 
             selectedColor = HSVToColor(hue, saturation, value)
             preview:SetCustomColor(selectedColor)
-
-            for _, ch in ipairs({ 'R', 'G', 'B' }) do
-                if IsValid(rgbEntries[ch]) then
-                    rgbEntries[ch]:SetValue(tostring(ch == 'R' and selectedColor.r or ch == 'G' and selectedColor.g or selectedColor.b))
-                end
-            end
+            updateRgbEntries()
         end
     end
 
@@ -140,12 +152,7 @@ function Mantle.ui.color_picker(callback, defaultColor)
 
             selectedColor = HSVToColor(hue, saturation, value)
             preview:SetCustomColor(selectedColor)
-
-            for _, ch in ipairs({ 'R', 'G', 'B' }) do
-                if IsValid(rgbEntries[ch]) then
-                    rgbEntries[ch]:SetValue(tostring(ch == 'R' and selectedColor.r or ch == 'G' and selectedColor.g or selectedColor.b))
-                end
-            end
+            updateRgbEntries()
         end
     end
 
@@ -198,19 +205,12 @@ function Mantle.ui.color_picker(callback, defaultColor)
                 else
                     selectedColor.b = v
                 end
-                local r, g, b = selectedColor.r / 255, selectedColor.g / 255, selectedColor.b / 255
-                local h2, s2, v2 = ColorToHSV(Color(r * 255, g * 255, b * 255))
+                local h2, s2, v2 = ColorToHSV(selectedColor)
                 hue = h2
                 saturation = s2
                 value = v2
                 preview:SetCustomColor(selectedColor)
-                timer.Simple(0, function()
-                    if IsValid(colorField) and IsValid(hueSlider) then
-                        colorCursor.x = saturation * colorField:GetWide()
-                        colorCursor.y = (1 - value) * colorField:GetTall()
-                        huePos = (hue / 360) * hueSlider:GetWide()
-                    end
-                end)
+                syncCursorPositions()
             end
         end
 
@@ -243,11 +243,5 @@ function Mantle.ui.color_picker(callback, defaultColor)
         callback(selectedColor)
     end
 
-    timer.Simple(0, function()
-        if IsValid(colorField) and IsValid(hueSlider) then
-            colorCursor.x = saturation * colorField:GetWide()
-            colorCursor.y = (1 - value) * colorField:GetTall()
-            huePos = (hue / 360) * hueSlider:GetWide()
-        end
-    end)
+    syncCursorPositions()
 end

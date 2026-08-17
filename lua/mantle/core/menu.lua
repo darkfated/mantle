@@ -17,14 +17,9 @@ function menu.open()
         if menu.frame == frame then
             menu.frame = nil
         end
-
-        if menuMantle == frame then
-            menuMantle = nil
-        end
     end
 
     menu.frame = frame
-    menuMantle = frame
 
     local tabs = vgui.Create('MantleTabs', frame)
     tabs:Dock(FILL)

@@ -2,15 +2,6 @@ local PANEL = {}
 
 PANEL.IsVertical = true
 
-local function isDescendantOf(panel, of)
-    while IsValid(panel) do
-        if panel == of then return true end
-        panel = panel:GetParent()
-    end
-
-    return false
-end
-
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self.content = vgui.Create('Panel', self)
@@ -138,7 +129,7 @@ function PANEL:OnMousePressed(mc)
     if self.MouseReleasedTime + 0.3 > CurTime() then return end
 
     local hovered = vgui.GetHoveredPanel()
-    if IsValid(hovered) and hovered != self and isDescendantOf(hovered, self.content) then return end
+    if IsValid(hovered) and hovered != self and Mantle.util.isDescendantOf(hovered, self.content) then return end
 
     self.drag = true
     self.dragLast = select(self.IsVertical and 2 or 1, self:CursorPos())
@@ -155,7 +146,7 @@ function PANEL:OnMouseReleased(mc)
     self.drag = false
     self:MouseCapture(false)
 
-    self:_checkOverscroll(select(1, self:_range()) or 0)
+    self:_checkOverscroll(select(1, self:_range()))
     self.MouseReleasedTime = CurTime()
 end
 

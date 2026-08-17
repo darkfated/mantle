@@ -5,11 +5,11 @@ local mat_close = Material('mantle/close_btn_new.png')
 local HEADER_TALL = 24
 
 function PANEL:Init()
-    self.bool_alpha = true
-    self.bool_lite = false
+    self.alpha = true
+    self.lite = false
     self.draggable = true
     self.title = Mantle.lang.get('mantle', 'frame_title')
-    self.center_title = ''
+    self.centerTitle = ''
 
     self._drag = nil
 
@@ -71,8 +71,8 @@ function PANEL:Init()
         local DM = Mantle.ui.derma_menu()
 
         DM:AddOption(Mantle.lang.get('mantle', 'frame_alpha'), function()
-            self.bool_alpha = !self.bool_alpha
-        end, self.bool_alpha and 'icon16/bullet_green.png' or 'icon16/bullet_red.png')
+            self.alpha = !self.alpha
+        end, self.alpha and 'icon16/bullet_green.png' or 'icon16/bullet_red.png')
 
         local boolInput = self:IsKeyboardInputEnabled()
         DM:AddOption(Mantle.lang.get('mantle', 'frame_move_from_menu'), function()
@@ -86,15 +86,15 @@ function PANEL:Init()
 end
 
 function PANEL:SetAlphaBackground(is_alpha)
-    self.bool_alpha = is_alpha
+    self.alpha = is_alpha
 end
 
 function PANEL:SetTitle(title)
     self.title = title
 end
 
-function PANEL:SetCenterTitle(center_title)
-    self.center_title = center_title
+function PANEL:SetCenterTitle(centerTitle)
+    self.centerTitle = centerTitle
 end
 
 function PANEL:ShowAnimation()
@@ -123,9 +123,9 @@ function PANEL:SetPopupPad(pad)
 end
 
 function PANEL:LiteMode()
-    if self.bool_lite then return end
+    if self.lite then return end
 
-    self.bool_lite = true
+    self.lite = true
     self:DockPadding(24, 24, 24, 24)
     self.cls:SetZPos(2)
 end
@@ -192,11 +192,11 @@ function PANEL:Paint(w, h)
         :Shadow(6, 3)
     :Draw()
 
-    local lite = self.bool_lite
+    local lite = self.lite
     local headerTall = lite and 0 or HEADER_TALL
     local bodyRad = lite and 6 or 0
 
-    local alphaBg = self.bool_alpha and Mantle.ui.convar.blur
+    local alphaBg = self.alpha and Mantle.ui.convar.blur
     if alphaBg then
         RNDX.Rect(0, 0, w, h)
             :Radii(bodyRad, bodyRad, 6, 6)
@@ -220,8 +220,8 @@ function PANEL:Paint(w, h)
 
     Mantle.func.gradient(0, headerTall, w, 6, 2, Mantle.color.window_shadow)
 
-    if self.center_title != '' then
-        draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, Mantle.color.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    if self.centerTitle != '' then
+        draw.SimpleText(self.centerTitle, 'Fated.20b', w * 0.5, 12, Mantle.color.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     if self.title != '' then

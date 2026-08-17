@@ -75,18 +75,6 @@ function PANEL:Init()
         self.lastInput = CurTime()
         self._springing = false
     end
-
-    function self.vbar:AnimateTo(yPos)
-        self:GetParent():SetScroll(yPos)
-    end
-
-    function self.vbar:GetScroll()
-        return self:GetParent():GetScroll()
-    end
-
-    self._vb_gripH = nil
-    self._vb_gripY = nil
-    self._vb_width = nil
 end
 
 function PANEL:GetVBar()
@@ -94,18 +82,14 @@ function PANEL:GetVBar()
 end
 
 function PANEL:DisableVBarPadding()
-    if !IsValid(self.vbar) then return end
-
     self._vbarPadRight = 0
-    self.vbar:DockMargin(self._vbarPadRight, 0, 0, 0)
+    self.vbar:DockMargin(0, 0, 0, 0)
     self:_markDirty()
     self:InvalidateLayout(true)
     self.content:InvalidateLayout(true)
 end
 
 function PANEL:SetVBarPaddingRight(enabled)
-    if !IsValid(self.vbar) then return end
-
     self.vbar:DockMargin(enabled and 6 or 0, 0, 0, 0)
     self:_markDirty()
 end
@@ -121,7 +105,7 @@ end
 function PANEL:_range()
     if self._needLayout then
         local w, h = self:GetWide(), self:GetTall()
-        local vbReserve = self.vbarReserveWidth or self.vbarExpandedWidth
+        local vbReserve = self.vbarReserveWidth
 
         self.content:SetPos(self.padL, self.padT - self.offset)
         self.content:SetWide(math.max(0, w - self.padL - self.padR - vbReserve - self._vbarPadRight))

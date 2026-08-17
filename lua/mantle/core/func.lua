@@ -55,10 +55,8 @@ function Mantle.func.blur(panel)
     surface.SetMaterial(mat_blur)
 
     for i = 1, 6 do
-        if !mat_blur:GetFloat('$blur') then
-            mat_blur:SetFloat('$blur', i)
-            mat_blur:Recompute()
-        end
+        mat_blur:SetFloat('$blur', i)
+        mat_blur:Recompute()
 
         render.UpdateScreenEffectTexture()
         surface.DrawTexturedRect(-x, -y, Mantle.func.sw, Mantle.func.sh)
@@ -189,8 +187,9 @@ function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alp
 
     local targetX, targetY = panel:GetPos()
 
-    local initialW = target_w * (scale_factor and scale_factor or 0.8)
-    local initialH = target_h * (scale_factor and scale_factor or 0.8)
+    local initialScale = scale_factor or 0.8
+    local initialW = target_w * initialScale
+    local initialH = target_h * initialScale
     local initialX = targetX + (target_w - initialW) / 2
     local initialY = targetY + (target_h - initialH) / 2
 

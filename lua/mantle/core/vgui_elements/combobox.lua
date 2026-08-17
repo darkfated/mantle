@@ -115,7 +115,6 @@ function PANEL:OpenMenu()
 
     menu:MakePopup()
     menu:SetKeyboardInputEnabled(false)
-    menu._initPosSet = false
     menu:UpdateSize()
 
     self.menu = menu

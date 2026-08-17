@@ -66,7 +66,7 @@ function Mantle.ui.player_selector(onSelect, filterFn)
         card:SetText('')
         card._hoverLerp = 0
 
-        local teamColor = IsValid(pl) and (team.GetColor(pl:Team()) or Mantle.color.status_online) or Mantle.color.status_disconnect
+        local teamColor = IsValid(pl) and team.GetColor(pl:Team()) or Mantle.color.status_disconnect
         card._teamColor = teamColor
 
         card.DoClick = function()
@@ -144,16 +144,14 @@ function Mantle.ui.player_selector(onSelect, filterFn)
 
     local function rebuild()
         for _, card in ipairs(cards) do
-            if IsValid(card) then
-                card:Remove()
-            end
+            card:Remove()
         end
         cards = {}
         shownCount = 0
 
-        local query = string.lower(search:GetValue() or '')
+        local query = string.lower(search:GetValue())
         for _, pl in ipairs(getPlayerList()) do
-            local name = (pl:Name() or ''):lower()
+            local name = pl:Name():lower()
             if query == '' or string.find(name, query, 1, true) then
                 createPlayerCard(pl)
                 shownCount = shownCount + 1

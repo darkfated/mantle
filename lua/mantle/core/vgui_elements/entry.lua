@@ -56,23 +56,12 @@ function PANEL:_paintEntry(s, w, h)
         :Draw()
     end
 
-    local value = self:GetValue() or ''
+    local value = self:GetValue()
     surface.SetFont(self.font)
     local padding = 6
     local availableW = w - padding * 2
-
-    local caret = #value
-    local beforeCaret = string.sub(value, 1, caret)
-    local caretX = surface.GetTextSize(beforeCaret)
     local textW = surface.GetTextSize(value)
-
-    local desiredOffset = 0
-    if caretX > availableW then
-        desiredOffset = caretX - availableW
-    end
-    if textW - desiredOffset < availableW then
-        desiredOffset = math.max(0, textW - availableW)
-    end
+    local desiredOffset = math.max(0, textW - availableW)
 
     self._textOffset = Mantle.func.approachExp(self._textOffset, desiredOffset, 24, ft)
 

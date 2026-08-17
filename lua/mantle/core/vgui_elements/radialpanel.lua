@@ -51,8 +51,6 @@ function PANEL:Init()
     self.currentAlpha = 0
     self.scaleAnim = 0.96
 
-    self:ApplySettings(self.settings)
-
     self:SetSize(Mantle.func.sw, Mantle.func.sh)
     self:SetPos(0, 0)
     self:MakePopup()
@@ -85,10 +83,10 @@ function PANEL:ApplySettings(settings)
 
     self.fadeInTime = settings.fade_in_time or 0.18
     self.fadeOutTime = settings.fade_out_time or 0.12
-    self.scale_animation = settings.scale_animation != false
+    self.scaleAnimation = settings.scale_animation != false
 
-    self.disable_background = settings.disable_background or false
-    self.hover_sound = settings.hover_sound or 'mantle/ratio_btn.ogg'
+    self.disableBackground = settings.disable_background
+    self.hoverSound = settings.hover_sound or 'mantle/ratio_btn.ogg'
 end
 
 function PANEL:GetCenter()
@@ -122,7 +120,7 @@ function PANEL:Think()
         local t = math_clamp((SysTime() - self.openTime) / self.fadeInTime, 0, 1)
         self.currentAlpha = math_floor(255 * t)
 
-        if self.scale_animation then
+        if self.scaleAnimation then
             self.scaleAnim = 0.96 + (1 - (1 - t) * (1 - t)) * 0.04
         else
             self.scaleAnim = 1
@@ -180,8 +178,8 @@ function PANEL:Think()
         end
     end
 
-    if hovered and self.hoverOption != hovered and self.hover_sound then
-        surface.PlaySound(self.hover_sound)
+if hovered and self.hoverOption != hovered and self.hoverSound then
+            surface.PlaySound(self.hoverSound)
     end
 
     self.hoverOption = hovered
@@ -284,7 +282,7 @@ function PANEL:SelectOption(index)
         table.insert(self.menuStack, self.currentMenu)
         self.currentMenu = opt.submenu
         self:UpdateCenterText()
-        if self.hover_sound then surface.PlaySound(self.hover_sound) end
+        if self.hoverSound then surface.PlaySound(self.hoverSound) end
         return
     end
 
@@ -299,7 +297,7 @@ function PANEL:GoBack()
         self.currentMenu = table.remove(self.menuStack)
         self.hoverOption = nil
         self:UpdateCenterText()
-        if self.hover_sound then surface.PlaySound(self.hover_sound) end
+        if self.hoverSound then surface.PlaySound(self.hoverSound) end
     end
 end
 
@@ -351,7 +349,7 @@ function PANEL:Paint(w, h)
     local opts = self:GetCurrentOptions()
     local cnt = #opts
 
-    if !self.disable_background then
+    if !self.disableBackground then
         local dim = Mantle.color.dim_overlay
         RNDX.Rect(0, 0, w, h)
             :Radii(0, 0, 0, 0)

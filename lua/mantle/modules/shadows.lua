@@ -38,7 +38,6 @@ local function createShadows()
         opacity = opacity or 255
         direction = direction or 0
         distance = distance or 0
-        bool_shadow_only = bool_shadow_only or false
 
         render.CopyRenderTargetToTexture(BShadows.RenderTarget2)
 
@@ -76,7 +75,6 @@ local function createShadows()
         opacity = opacity or 255
         direction = direction or 0
         distance = distance or 0
-        bool_shadow_only = bool_shadow_only or false
 
         render.CopyTexture(texture, BShadows.RenderTarget2)
 

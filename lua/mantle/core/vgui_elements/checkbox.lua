@@ -37,7 +37,7 @@ function PANEL:Init()
         Mantle.func.sound()
     end
 
-    self._convar_timer_name = self:CreateConVarSyncTimer()
+    self._convarTimerName = self:CreateConVarSyncTimer()
 end
 
 function PANEL:OnMousePressed(mcode)
@@ -82,9 +82,9 @@ function PANEL:CreateConVarSyncTimer()
 end
 
 function PANEL:OnRemove()
-    if self._convar_timer_name then
-        timer.Remove(self._convar_timer_name)
-        self._convar_timer_name = nil
+    if self._convarTimerName then
+        timer.Remove(self._convarTimerName)
+        self._convarTimerName = nil
     end
 end
 
@@ -154,11 +154,6 @@ function PANEL:PaintOver(w, h)
     RNDX.Circle(circleCenterX, circleCenterY + 1, circleSize * 1.03 * 0.5)
         :Color(Mantle.color.circle_shadow)
     :Draw()
-end
-
-function PANEL:PerformLayout(w, h)
-    self.toggle:SetWide(38)
-    self.toggle:DockMargin(0, 0, 10, 0)
 end
 
 vgui.Register('MantleCheckBox', PANEL, 'Panel')

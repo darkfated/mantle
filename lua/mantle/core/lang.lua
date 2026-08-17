@@ -6,11 +6,7 @@ function Mantle.lang.get(addon, key)
     end
 
     local lang = GetConVar('gmod_language'):GetString()
-    local langTable = addonTable[lang]
-
-    if !addonTable[lang] then
-        langTable = addonTable[Mantle.lang.default]
-    end
+    local langTable = addonTable[lang] or addonTable[Mantle.lang.default]
 
     if !langTable then
         for _, v in pairs(addonTable) do

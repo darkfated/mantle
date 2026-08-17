@@ -24,8 +24,8 @@ end
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self.text = ''
-    self.min_value = 0
-    self.max_value = 1
+    self.minValue = 0
+    self.maxValue = 1
     self.decimals = 0
 
     self.value = 0
@@ -38,7 +38,7 @@ function PANEL:Init()
     self:SetCursor('hand')
     self.OnValueChanged = function() end
 
-    self._convar_timer_name = self:CreateConVarSyncTimer()
+    self._convarTimerName = self:CreateConVarSyncTimer()
 end
 
 function PANEL:CreateConVarSyncTimer()
@@ -58,15 +58,15 @@ function PANEL:CreateConVarSyncTimer()
 end
 
 function PANEL:OnRemove()
-    if self._convar_timer_name then
-        timer.Remove(self._convar_timer_name)
-        self._convar_timer_name = nil
+    if self._convarTimerName then
+        timer.Remove(self._convarTimerName)
+        self._convarTimerName = nil
     end
 end
 
-function PANEL:SetRange(min_value, max_value, decimals)
-    self.min_value = tonumber(min_value) or 0
-    self.max_value = tonumber(max_value) or 1
+function PANEL:SetRange(minValue, maxValue, decimals)
+    self.minValue = tonumber(minValue) or 0
+    self.maxValue = tonumber(maxValue) or 1
     self.decimals = tonumber(decimals) or 0
     self:SetValue(self.value, true)
 end
@@ -86,10 +86,10 @@ function PANEL:SetText(text)
 end
 
 function PANEL:SetValue(val, fromConVar)
-    if self.max_value == self.min_value then
-        val = self.min_value
+    if self.maxValue == self.minValue then
+        val = self.minValue
     else
-        val = math.Clamp(val, self.min_value, self.max_value)
+        val = math.Clamp(val, self.minValue, self.maxValue)
     end
 
     if self.decimals > 0 then
@@ -114,19 +114,19 @@ function PANEL:GetValue()
 end
 
 local function getProgress(self)
-    local denom = self.max_value - self.min_value
+    local denom = self.maxValue - self.minValue
     if denom <= 0 then return 0 end
-    return math.Clamp((self.value - self.min_value) / denom, 0, 1)
+    return math.Clamp((self.value - self.minValue) / denom, 0, 1)
 end
 
 local function getTrackBounds(self, w)
     local start = SIDE_PADDING + TRACK_INSET
-    local end_ = w - SIDE_PADDING - getValueWidth(self.max_value, self.decimals)
+    local end_ = w - SIDE_PADDING - getValueWidth(self.maxValue, self.decimals)
     return start, end_, math.max(0, end_ - start)
 end
 
 function PANEL:SetFromProgress(progress)
-    local val = self.min_value + math.Clamp(progress, 0, 1) * (self.max_value - self.min_value)
+    local val = self.minValue + math.Clamp(progress, 0, 1) * (self.maxValue - self.minValue)
     self:SetValue(val)
 end
 
@@ -179,8 +179,8 @@ function PANEL:Paint(w, h)
     local valueStr = formatValue(self.value, self.decimals)
     draw.SimpleText(valueStr, 'Fated.16', end_ + VALUE_GAP, handleY, Mantle.color.theme, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
-    draw.SimpleText(tostring(self.min_value), 'Fated.14', start, BAR_Y + BAR_H + 12, Mantle.color.gray)
-    draw.SimpleText(tostring(self.max_value), 'Fated.14', end_, BAR_Y + BAR_H + 12, Mantle.color.gray, TEXT_ALIGN_RIGHT)
+    draw.SimpleText(tostring(self.minValue), 'Fated.14', start, BAR_Y + BAR_H + 12, Mantle.color.gray)
+    draw.SimpleText(tostring(self.maxValue), 'Fated.14', end_, BAR_Y + BAR_H + 12, Mantle.color.gray, TEXT_ALIGN_RIGHT)
 end
 
 function PANEL:OnMousePressed(mcode)
