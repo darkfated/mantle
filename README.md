@@ -1,21 +1,26 @@
 # Mantle
 
-🎈 Библиотека пользовательского интерфейса и рендера для Garry's Mod. Интерфейсы, отрисовочные функции и многое другое.
+🎈 **A UI and renderer library for Garry's Mod**. Interfaces, drawing functions, and much more.
 
-Экспериментальный UI в стиле macOS находится в ветке [new-design](https://github.com/darkfated/mantle/tree/new-design).
+The renderer is built on a modified RNDX, which includes Kawase blur, Acrylic material, and other tweaks. For more details, [see here](https://darkfated.github.io/mantle/docs/rndx).
 
-## Демонстрация
+## Demo
 
-Чтобы ознакомиться с API - [посетите Документацию](https://darkfated.github.io/mantle/).
+To explore the API with screenshots - [visit the Documentation](https://darkfated.github.io/mantle/).
 
-<img width="983" height="720" alt="image" src="https://github.com/user-attachments/assets/892290e4-eb7f-4f65-b306-4ed5cc0c0e5b" />
+<img width="999" height="726" alt="Screenshot" src="https://github.com/user-attachments/assets/2590fcca-0237-4b38-95b1-39798e053e83" />
 
-## Steam Workshop
+## Installation
+### Steam Workshop
 
-Рекомендуется подписаться в [Мастерской](<(https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993)>) и добавить аддон в серверную коллекцию. Это позволит обновляться библиотеке без ручного скачивания ✅
+It is recommended to subscribe on the [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993) and add the addon to your server collection. This will allow the library to update automatically without manual downloading ✅
 
-## Лицензия
+### Manual Download
 
-Этот проект под MIT лицензией - посмотрите [LICENSE](LICENSE) файл для подробностей.
+Grab the latest release from the [Releases](https://github.com/darkfated/mantle/releases/tag/v2.2) page and extract it into your `garrysmod/addons/` folder.
+
+## License
+
+This project is under the MIT terms - see the [LICENSE](LICENSE) file for details.
 
 Copyright (C) 2026 darkfated.
