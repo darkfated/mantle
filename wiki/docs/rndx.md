@@ -186,6 +186,29 @@ concommand.Add('mantle_test_blur', function()
 end)
 ```
 
+Рекомендованное значение - `:KBlur(4, 2)`.
+
+## Акриловый материал
+
+![](./assets/rndx-2.png)
+
+```js
+local stateAcrylic = {
+    blur = { enabled = true, iterations = 4, radius = 4 }, -- Фоновое размытие
+    burn = { enabled = true, color = Color(120, 120, 120), amount = 0.4 }, -- Затемнение
+    tint = { enabled = true, color = Color(25, 25, 25), amount = 0.4 }, -- Заливка цветом
+    noise = { enabled = true, intensity = 0.02, scale = 8 }, -- Шум
+    fresnel = { enabled = true, color = Color(70, 140, 230), amount = 0.3, width = 1.4 } -- Свечение по краям
+}
+
+hook.Add('HUDPaint', 'Test', function()
+    RNDX.Rect(50, 50, 150, 150)
+        :Rad(16)
+        :Acrylic(stateAcrylic)
+    :Draw()
+end)
+```
+
 ## Сектор круга
 
 ```js
