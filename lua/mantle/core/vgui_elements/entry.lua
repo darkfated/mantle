@@ -64,6 +64,15 @@ function PANEL:_paintEntry(s, w, h)
     end
 
     draw.SimpleText(text, self.font, padding - self._textOffset, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+    if s:IsEditing() then
+        if not s.caret_col then s.caret_col = Mantle.color.text:Copy() end
+        s.caret_col.a = math.abs(math.floor(255 * math.sin(CurTime() * 3.2)))
+        surface.SetDrawColor(s.caret_col:Unpack())
+        surface.DrawRect(padding - self._text_offset + caret_x, 5, self._caretSize, h - 10)
+    else
+        s.caret_col = nil
+    end
 end
 
 function PANEL:SetTitle(title)
