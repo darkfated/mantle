@@ -198,4 +198,16 @@ function PANEL:GetNumeric()
     return self.textEntry:GetNumeric()
 end
 
+function PANEL:OnEditingDone( strValue )
+end
+
+function PANEL:OnChange( strValue )
+end
+
+function PANEL:OnKeyCode( numKeyCode )
+end
+
+function PANEL:AllowInput( strValue )
+end
+
 vgui.Register('MantleEntry', PANEL, 'EditablePanel')
