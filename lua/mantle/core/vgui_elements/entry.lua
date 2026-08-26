@@ -16,6 +16,7 @@ function PANEL:Init()
     self._focusLerp = 0
     self._textOffset = 0
     self._caretSize = 2
+    self._caretAlpha = 0
     self._caretColor = Mantle.color.text:Copy()
 
     self.textEntry = vgui.Create('DTextEntry', self)
@@ -68,10 +69,14 @@ function PANEL:_paintEntry(s, w, h)
     draw.SimpleText(text, self.font, padding - self._textOffset, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     if s:IsEditing() then
-        self._caretColor.a = 255 * math.abs(math.sin(CurTime() * 3.2))
+        local blinkTarget = math.floor(CurTime() * 1.5) % 2 == 0 and 255 or 0
+        self._caretAlpha = Mantle.func.approachExp(self._caretAlpha, blinkTarget, 16, ft)
+        self._caretColor.a = self._caretAlpha
         surface.SetDrawColor(self._caretColor:Unpack())
         local caret_x = surface.GetTextSize(string.sub(value, 1, #value))
         surface.DrawRect(padding - self._textOffset + caret_x, 5, self._caretSize, h - 10)
+    else
+        self._caretAlpha = 0
     end
 end
 
