@@ -102,58 +102,6 @@ Mantle.ui.registerTheme('dark_mono', 'Тёмная монотонная (dark_mo
     text = Color(236, 238, 244)
 })
 
-Mantle.ui.registerTheme('light', 'Светлая (light)', {
-    header = Color(234, 236, 244),
-    header_text = Color(108, 114, 130),
-    background = Color(252, 252, 255),
-    background_alpha = Color(252, 252, 255, 245),
-    background_panelpopup = Color(255, 255, 255, 190),
-
-    button = Color(231, 233, 241),
-    button_shadow = Color(95, 100, 115, 22),
-    button_hovered = Color(205, 209, 224),
-
-    category = Color(239, 241, 248),
-    category_opened = Color(239, 241, 248, 0),
-
-    theme = Color(88, 102, 192),
-
-    panel = {
-        Color(255, 255, 255),
-        Color(245, 246, 252),
-        Color(222, 225, 236)
-    },
-    panel_alpha = {
-        Color(255, 255, 255, 120),
-        Color(245, 246, 252, 120),
-        Color(222, 225, 236, 120)
-    },
-
-    toggle = Color(216, 218, 229),
-
-    focus_panel = Color(241, 243, 249, 210),
-    hover = Color(203, 208, 236),
-
-    window_shadow = Color(105, 112, 128, 40),
-
-    hover_overlay = Color(0, 0, 0, 28),
-    hover_overlay_strong = Color(0, 0, 0, 42),
-    notify_outline = Color(0, 0, 0, 45),
-    dim_overlay = Color(0, 0, 0, 140),
-    circle_shadow = Color(0, 0, 0, 20),
-    ripple = Color(0, 0, 0, 40),
-    blur_shadow = Color(105, 112, 128, 10),
-    tab_hover = Color(0, 0, 0, 14),
-    icon = Color(255, 255, 255),
-    status_disconnect = Color(210, 65, 65),
-    status_bot = Color(70, 150, 220),
-    status_online = Color(120, 180, 70),
-
-    gray = Color(120, 124, 136, 220),
-    text_muted = Color(120, 124, 136, 180),
-    text = Color(26, 28, 34)
-})
-
 Mantle.ui.registerTheme('blue', 'Синяя (blue)', {
     header = Color(30, 40, 54),
     header_text = Color(150, 170, 196),
@@ -310,58 +258,6 @@ Mantle.ui.registerTheme('green', 'Зелёная (green)', {
     text = Color(226, 240, 230)
 })
 
-Mantle.ui.registerTheme('orange', 'Оранжевая (orange)', {
-    header = Color(78, 40, 18),
-    header_text = Color(250, 236, 222),
-    background = Color(250, 244, 235),
-    background_alpha = Color(250, 244, 235, 245),
-    background_panelpopup = Color(255, 250, 243, 180),
-
-    button = Color(208, 142, 84),
-    button_shadow = Color(130, 110, 90, 25),
-    button_hovered = Color(218, 158, 102),
-
-    category = Color(248, 238, 224),
-    category_opened = Color(248, 238, 224, 0),
-
-    theme = Color(246, 132, 54),
-
-    panel = {
-        Color(252, 246, 238),
-        Color(244, 230, 208),
-        Color(222, 160, 100)
-    },
-    panel_alpha = {
-        Color(252, 246, 238, 120),
-        Color(244, 230, 208, 120),
-        Color(222, 160, 100, 120)
-    },
-
-    toggle = Color(186, 150, 118),
-
-    focus_panel = Color(250, 240, 228, 200),
-    hover = Color(248, 190, 140),
-
-    window_shadow = Color(130, 116, 102, 45),
-
-    hover_overlay = Color(0, 0, 0, 28),
-    hover_overlay_strong = Color(0, 0, 0, 42),
-    notify_outline = Color(0, 0, 0, 45),
-    dim_overlay = Color(0, 0, 0, 140),
-    circle_shadow = Color(0, 0, 0, 20),
-    ripple = Color(0, 0, 0, 40),
-    blur_shadow = Color(130, 116, 102, 10),
-    tab_hover = Color(0, 0, 0, 14),
-    icon = Color(255, 255, 255),
-    status_disconnect = Color(210, 65, 65),
-    status_bot = Color(70, 150, 220),
-    status_online = Color(120, 180, 70),
-
-    gray = Color(255, 255, 255),
-    text_muted = Color(172, 152, 140, 180),
-    text = Color(52, 30, 16)
-})
-
 Mantle.ui.registerTheme('purple', 'Фиолетовая (purple)', {
     header = Color(34, 28, 50),
     header_text = Color(186, 178, 216),
@@ -464,58 +360,6 @@ Mantle.ui.registerTheme('coffee', 'Кофейная (coffee)', {
     gray = Color(178, 156, 140, 220),
     text_muted = Color(178, 156, 140, 180),
     text = Color(240, 232, 222)
-})
-
-Mantle.ui.registerTheme('ice', 'Ледяная (ice)', {
-    header = Color(218, 232, 246),
-    header_text = Color(92, 120, 148),
-    background = Color(240, 247, 254),
-    background_alpha = Color(240, 247, 254, 245),
-    background_panelpopup = Color(250, 253, 255, 180),
-
-    button = Color(186, 210, 232),
-    button_shadow = Color(100, 120, 140, 30),
-    button_hovered = Color(158, 194, 228),
-
-    category = Color(232, 240, 250),
-    category_opened = Color(232, 240, 250, 0),
-
-    theme = Color(74, 156, 224),
-
-    panel = {
-        Color(244, 249, 254),
-        Color(236, 244, 252),
-        Color(200, 222, 244)
-    },
-    panel_alpha = {
-        Color(244, 249, 254, 120),
-        Color(236, 244, 252, 120),
-        Color(200, 222, 244, 120)
-    },
-
-    toggle = Color(168, 196, 222),
-
-    focus_panel = Color(232, 241, 250, 200),
-    hover = Color(180, 214, 240),
-
-    window_shadow = Color(105, 125, 145, 40),
-
-    hover_overlay = Color(0, 0, 0, 28),
-    hover_overlay_strong = Color(0, 0, 0, 42),
-    notify_outline = Color(0, 0, 0, 45),
-    dim_overlay = Color(0, 0, 0, 140),
-    circle_shadow = Color(0, 0, 0, 20),
-    ripple = Color(0, 0, 0, 40),
-    blur_shadow = Color(105, 125, 145, 10),
-    tab_hover = Color(0, 0, 0, 14),
-    icon = Color(255, 255, 255),
-    status_disconnect = Color(210, 65, 65),
-    status_bot = Color(70, 150, 220),
-    status_online = Color(120, 180, 70),
-
-    gray = Color(255, 255, 255),
-    text_muted = Color(110, 128, 148, 180),
-    text = Color(22, 34, 48)
 })
 
 Mantle.ui.registerTheme('wine', 'Винная (wine)', {
