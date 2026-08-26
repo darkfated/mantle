@@ -437,18 +437,13 @@ function PANEL:CreateRow(rowIndex, rowData)
         local dt = FrameTime()
         s._selectedAlpha = Mantle.func.approachExp(s._selectedAlpha, (self.selectedRow == s._index) and 1 or 0, 22, dt)
 
-        local base = Mantle.color.focus_panel
-        local selCol = Mantle.color.theme
-
-        local blendA = s._selectedAlpha
-
-        local r = Lerp(blendA, base.r, selCol.r)
-        local g = Lerp(blendA, base.g, selCol.g)
-        local b = Lerp(blendA, base.b, selCol.b)
-        local a = Lerp(blendA, base.a, selCol.a)
-
-        surface.SetDrawColor(Color(math.floor(r), math.floor(g), math.floor(b), math.floor(a)))
-        surface.DrawRect(0, h - 1, w, 1)
+        if s._selectedAlpha > 0.01 then
+            local selCol = Mantle.color.theme
+            RNDX.Rect(0, 0, w, h)
+                :Rad(12)
+                :Color(Color(selCol.r, selCol.g, selCol.b, math.floor(selCol.a * s._selectedAlpha * 0.3)))
+            :Draw()
+        end
     end
 
     row.DoClick = function()
