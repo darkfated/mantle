@@ -200,7 +200,7 @@ function PANEL:Paint(w, h)
     if alphaBg then
         RNDX.Rect(0, 0, w, h)
             :Radii(bodyRad, bodyRad, 6, 6)
-            :Blur()
+            :KBlur(4, 2)
         :Draw()
     end
 
