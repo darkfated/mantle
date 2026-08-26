@@ -17,7 +17,7 @@ function PANEL:Init()
     self._textOffset = 0
     self._caretSize = 2
     self._caretAlpha = 0
-    self._caretColor = Mantle.color.text:Copy()
+    self._caretColor = Mantle.color.gray:Copy()
 
     self.textEntry = vgui.Create('DTextEntry', self)
     self.textEntry:Dock(FILL)
