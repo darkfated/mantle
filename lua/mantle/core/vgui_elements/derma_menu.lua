@@ -96,8 +96,9 @@ function PANEL:Init()
             self._hoverA = Mantle.func.approachExp(self._hoverA, 0, 20, ft)
         end
 
-        self._hoverBar:SetPos(self._hoverX, self._hoverY)
-        self._hoverBar:SetSize(self._hoverW, self._hoverH)
+        local pad = 3
+        self._hoverBar:SetPos(self._hoverX + pad, self._hoverY)
+        self._hoverBar:SetSize(self._hoverW - pad, self._hoverH)
 
         self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
         self:SetAlpha(math_floor(255 * self._anim + 0.5))
@@ -115,19 +116,10 @@ end
 function PANEL:Paint(w, h)
     local aMul = self._anim or (self:GetAlpha() or 255) / 255
 
-    local blurMul = 0
-    if !(self._closing or self._disableBlur or self._animTarget == 0) then
-        if self._animTarget == 1 then
-            blurMul = math.Clamp((aMul - 0.6) / 0.4, 0, 1)
-        else
-            blurMul = math.Clamp(aMul / 0.3, 0, 1)
-        end
-    end
-
     if !self._disableBlur then
         RNDX.Rect(0, 0, w, h)
             :Rad(RADIUS)
-            :Blur(blurMul)
+            :KBlur(4, 2)
         :Draw()
     end
 
