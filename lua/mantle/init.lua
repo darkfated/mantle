@@ -56,32 +56,23 @@ local function runAddons()
     Mantle.run_sh('core/lang.lua')
 end
 
-local function initLib()
-    if SERVER then
-        resource.AddWorkshop('2924839375') -- DarkFated font
-        resource.AddWorkshop('3126986993') -- Mantle
-    end
+MsgC(color_white, '------------------\n')
+MsgC(Color(0, 255, 0), '| Mantle LIBRARY |\n')
+MsgC(color_white, '------------------\n')
 
-    MsgC(color_white, '------------------\n')
-    MsgC(Color(0, 255, 0), '| Mantle LIBRARY |\n')
-    MsgC(color_white, '------------------\n')
+Mantle = Mantle or {
+    lang = { list = {}, default = 'en' },
+    config = {},
+    ui = {}
+}
 
-    Mantle = Mantle or {
-        lang = { list = {}, default = 'en' },
-        config = {},
-        ui = {}
-    }
-
-    Mantle.run_cl = SERVER and AddCSLuaFile or include
-    Mantle.run_sv = SERVER and include or function() end
-    Mantle.run_sh = function(filePath)
-        local clientResult = Mantle.run_cl(filePath)
-        local serverResult = Mantle.run_sv(filePath)
-        return SERVER and serverResult or clientResult
-    end
-
-    runScripts()
-    runAddons()
+Mantle.run_cl = SERVER and AddCSLuaFile or include
+Mantle.run_sv = SERVER and include or function() end
+Mantle.run_sh = function(filePath)
+    local clientResult = Mantle.run_cl(filePath)
+    local serverResult = Mantle.run_sv(filePath)
+    return SERVER and serverResult or clientResult
 end
 
-initLib()
+runScripts()
+runAddons()
