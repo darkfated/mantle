@@ -138,4 +138,8 @@ function PANEL:Paint(w, h)
     self:_drawContent(w, h)
 end
 
+function PANEL:DoClick()
+    Mantle.func.sound()
+end
+
 vgui.Register('MantleBtn', PANEL, 'Button')
