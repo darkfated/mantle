@@ -65,7 +65,6 @@ function Mantle.ui.color_picker(callback, defaultColor)
         if keyCode == MOUSE_LEFT then
             isDraggingColor = true
             self:OnCursorMoved(self:CursorPos())
-            Mantle.func.sound()
         end
     end
 
@@ -132,7 +131,6 @@ function Mantle.ui.color_picker(callback, defaultColor)
         if keyCode == MOUSE_LEFT then
             isDraggingHue = true
             self:OnCursorMoved(self:CursorPos())
-            Mantle.func.sound()
         end
     end
 
