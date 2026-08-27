@@ -1,32 +1,26 @@
-local menu = Mantle.menu
+local function build(tab)
+    local panel = Mantle.menu.createBanner(tab)
 
-local function build()
-    local panel = menu.createTabPanel()
+    local cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Элементы')
+    cat:SetActive(true)
 
-    local btnFrame = vgui.Create('MantleBtn')
-    btnFrame:SetTxt('Посмотреть пример')
-    btnFrame:SetTall(32)
-    btnFrame:Dock(TOP)
-    btnFrame.DoClick = function()
-        --[[
-            Окно
-        ]]--
+    local button = vgui.Create('MantleBtn', cat)
+    button:Dock(TOP)
+    button:SetTxt('Посмотреть пример')
+    button:SetTall(32)
+    button.DoClick = function()
         local frame = vgui.Create('DFrame')
         frame:SetSize(400, 300)
         frame:Center()
         frame:MakePopup()
         Mantle.ui.frame(frame, 'Окно', 400, 300, true, true)
 
-        --[[
-            Панель прокрутки
-        ]]--
         local scroll = vgui.Create('DScrollPanel', frame)
         scroll:Dock(FILL)
         Mantle.ui.sp(scroll)
 
-        --[[
-            Кнопка
-        ]]--
         local btn1 = vgui.Create('DButton', scroll)
         btn1:Dock(TOP)
         btn1:DockMargin(8, 8, 8, 8)
@@ -51,36 +45,24 @@ local function build()
         btn4:SetText('Кнопка без ховера')
         Mantle.ui.btn(btn4, nil, nil, nil, nil, nil, nil, true)
 
-        --[[
-            Слайдер
-        ]]--
         local slider1 = Mantle.ui.slidebox(scroll, 'Слайдер (0-5)', 0, 5, 'r_skybox', 0)
         slider1:DockMargin(8, 8, 8, 8)
 
         local slider2 = Mantle.ui.slidebox(scroll, 'Слайдер (0-1)', 0, 1, 'cl_drawhud', 2)
         slider2:DockMargin(8, 8, 8, 8)
 
-        --[[
-            Поле ввода
-        ]]--
         local entry1, entry_bg1 = Mantle.ui.desc_entry(scroll, 'Поле с заголовком', 'Введите текст...')
         entry_bg1:DockMargin(8, 8, 8, 8)
 
         local entry2, entry_bg2 = Mantle.ui.desc_entry(scroll, nil, 'Поле без заголовка')
         entry_bg2:DockMargin(8, 8, 8, 8)
 
-        --[[
-            Тумблер
-        ]]--
-        local checkbox1, checkbox_btn1 = Mantle.ui.checkbox(scroll, 'Тумблер с ConVar', 'cl_drawhud')
+        local checkbox1 = Mantle.ui.checkbox(scroll, 'Тумблер с ConVar', 'cl_drawhud')
         checkbox1:DockMargin(8, 8, 8, 8)
 
-        local checkbox2, checkbox_btn2 = Mantle.ui.checkbox(scroll, 'Тумблер без ConVar')
+        local checkbox2 = Mantle.ui.checkbox(scroll, 'Тумблер без ConVar')
         checkbox2:DockMargin(8, 8, 8, 8)
 
-        --[[
-            Вкладки
-        ]]--
         local panelTabs = vgui.Create('Panel', scroll)
         panelTabs:Dock(TOP)
         panelTabs:DockMargin(8, 8, 8, 8)
@@ -110,18 +92,13 @@ local function build()
         tabs:ActiveTab('Вкладка 1')
     end
 
-    menu.createCategory(panel, {
-        title = 'Элементы',
-        demo = btnFrame
-    })
-
     return panel
 end
 
-menu.registerTab('legacy', {
+Mantle.menu.registerTab('legacy', {
     order = 4,
     title = 'Legacy UI',
-    description = 'Старые функции для поддержания древних скриптов.',
+    description = 'Функции для поддержания древних скриптов.',
     icon = Material('icon16/exclamation.png'),
     build = build
 })

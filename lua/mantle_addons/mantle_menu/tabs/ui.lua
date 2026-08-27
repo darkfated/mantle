@@ -1,11 +1,6 @@
-local menu = Mantle.menu
+local function build(tab)
+    local panel = Mantle.menu.createBanner(tab)
 
-local function build()
-    local panel = menu.createTabPanel()
-
-    --[[
-        Кнопка
-    ]]--
     local panelBtns = vgui.Create('Panel')
     panelBtns:Dock(TOP)
     panelBtns:SetTall(168)
@@ -29,35 +24,37 @@ local function build()
     btn3:SetColorHover(Color(143, 57, 57))
     btn3:SetIcon(Material('icon16/delete.png'), 16)
 
-    menu.createCategory(panel, {
-        title = 'Кнопка',
-        demo = panelBtns
-    })
+    local cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Кнопка')
+    cat:SetActive(true)
+    panelBtns:DockMargin(8, 8, 8, 8)
+    cat:AddItem(panelBtns)
 
-    --[[
-        Ввод текста
-    ]]--
     local checkbox = vgui.Create('MantleCheckBox')
     checkbox:Dock(TOP)
     checkbox:SetTxt('Отображение HUD')
     checkbox:SetConvar('cl_drawhud')
-    menu.createCategory(panel, {
-        title = 'Тумблер',
-        demo = checkbox
-    })
+
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Тумблер')
+    cat:SetActive(true)
+    checkbox:DockMargin(8, 8, 8, 8)
+    cat:AddItem(checkbox)
 
     local entry = vgui.Create('MantleEntry')
     entry:Dock(TOP)
     entry:SetTitle('Никнейм')
     entry:SetPlaceholder('darkf')
-    menu.createCategory(panel, {
-        title = 'Поле ввода',
-        demo = entry
-    })
 
-    --[[
-        Окно
-    ]]--
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Поле ввода')
+    cat:SetActive(true)
+    entry:DockMargin(8, 8, 8, 8)
+    cat:AddItem(entry)
+
     local panelFrames = vgui.Create('Panel')
     panelFrames:Dock(TOP)
     panelFrames:SetTall(112)
@@ -86,14 +83,13 @@ local function build()
         frame:LiteMode()
     end
 
-    menu.createCategory(panel, {
-        title = 'Окно',
-        demo = panelFrames
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Окно')
+    cat:SetActive(true)
+    panelFrames:DockMargin(8, 8, 8, 8)
+    cat:AddItem(panelFrames)
 
-    --[[
-        Панель прокрутки
-    ]]--
     local sp = vgui.Create('MantleScrollPanel')
     sp:Dock(TOP)
     sp:SetTall(150)
@@ -106,14 +102,13 @@ local function build()
         spPanel:SetRadius(16)
     end
 
-    menu.createCategory(panel, {
-        title = 'Панель прокрутки',
-        demo = sp
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Панель прокрутки')
+    cat:SetActive(true)
+    sp:DockMargin(8, 8, 8, 8)
+    cat:AddItem(sp)
 
-    --[[
-        Вкладки
-    ]]--
     local panelTabs = vgui.Create('Panel')
     panelTabs:Dock(TOP)
     panelTabs:SetTall(320)
@@ -123,19 +118,13 @@ local function build()
     testTabs:SetTall(150)
     local testTab1 = vgui.Create('Panel')
     testTab1.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w - 12, h)
-            :Rad(16)
-            :Color(53, 98, 40)
-        :Draw()
+        RNDX.Rect(0, 0, w - 12, h):Rad(16):Color(53, 98, 40):Draw()
     end
     testTabs:AddTab('Test1', testTab1)
 
     local testTab2 = vgui.Create('Panel')
     testTab2.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w - 12, h)
-            :Rad(16)
-            :Color(108, 41, 45)
-        :Draw()
+        RNDX.Rect(0, 0, w - 12, h):Rad(16):Color(108, 41, 45):Draw()
     end
     testTabs:AddTab('Test2', testTab2)
 
@@ -144,39 +133,29 @@ local function build()
     testTabs2:SetTabStyle('classic')
     local testTab3 = vgui.Create('Panel')
     testTab3.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w - 12, h)
-            :Rad(16)
-            :Color(51, 61, 116)
-        :Draw()
+        RNDX.Rect(0, 0, w - 12, h):Rad(16):Color(51, 61, 116):Draw()
     end
     testTabs2:AddTab('Test3', testTab3)
 
     local testTab4 = vgui.Create('Panel')
     testTab4.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w - 12, h)
-            :Rad(16)
-            :Color(138, 89, 43)
-        :Draw()
+        RNDX.Rect(0, 0, w - 12, h):Rad(16):Color(138, 89, 43):Draw()
     end
     testTabs2:AddTab('Test4', testTab4)
 
     local testTab5 = vgui.Create('Panel')
     testTab5.Paint = function(_, w, h)
-        RNDX.Rect(0, 0, w - 12, h)
-            :Rad(16)
-            :Color(43, 138, 133)
-        :Draw()
+        RNDX.Rect(0, 0, w - 12, h):Rad(16):Color(43, 138, 133):Draw()
     end
     testTabs2:AddTab('С иконкой', testTab5, Material('icon16/folder.png'))
 
-    menu.createCategory(panel, {
-        title = 'Вкладки',
-        demo = panelTabs
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Вкладки')
+    cat:SetActive(true)
+    panelTabs:DockMargin(8, 8, 8, 8)
+    cat:AddItem(panelTabs)
 
-    --[[
-        Горизонтальная прокрутка
-    ]]--
     local hscroll = vgui.Create('MantleHScroll')
     hscroll:Dock(TOP)
     hscroll:SetTall(80)
@@ -189,10 +168,12 @@ local function build()
         hscroll:AddItem(btn)
     end
 
-    menu.createCategory(panel, {
-        title = 'Горизонтальная прокрутка',
-        demo = hscroll
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Горизонтальная прокрутка')
+    cat:SetActive(true)
+    hscroll:DockMargin(8, 8, 8, 8)
+    cat:AddItem(hscroll)
 
     local combo = vgui.Create('MantleComboBox')
     combo:SetPlaceholder('Выберите вариант')
@@ -209,14 +190,13 @@ local function build()
     end
     combo:Dock(TOP)
 
-    menu.createCategory(panel, {
-        title = 'Выпадающий список',
-        demo = combo
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Выпадающий список')
+    cat:SetActive(true)
+    combo:DockMargin(8, 8, 8, 8)
+    cat:AddItem(combo)
 
-    --[[
-        Таблица
-    ]]--
     local tableExample = vgui.Create('MantleTable')
     tableExample:Dock(TOP)
     tableExample:SetTall(250)
@@ -257,57 +237,54 @@ local function build()
         chat.AddText(color_white, 'Выбран продукт: ', Mantle.color.theme, row_data[1], color_white, ' (', row_data[2], ')')
     end)
 
-    menu.createCategory(panel, {
-        title = 'Таблица',
-        demo = tableExample
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Таблица')
+    cat:SetActive(true)
+    tableExample:DockMargin(8, 8, 8, 8)
+    cat:AddItem(tableExample)
 
-    --[[
-        Категория
-    ]]--
     local panelCat = vgui.Create('Panel')
     panelCat:Dock(TOP)
     panelCat:SetTall(170)
     panelCat.Paint = nil
 
-    local cat = vgui.Create('MantleCategory', panelCat)
-    cat:Dock(TOP)
-    cat:SetCenterText(true)
-    cat:SetActive(true)
+    local catDemo = vgui.Create('MantleCategory', panelCat)
+    catDemo:Dock(TOP)
+    catDemo:SetCenterText(true)
+    catDemo:SetActive(true)
 
     local panGreen = vgui.Create('MantlePanel')
     panGreen:Dock(TOP)
     panGreen:SetTall(50)
     panGreen:SetCustomColor(Color(93, 179, 101))
-    cat:AddItem(panGreen)
+    catDemo:AddItem(panGreen)
 
     local panRed = vgui.Create('MantlePanel')
     panRed:Dock(TOP)
     panRed:SetTall(50)
     panRed:SetCustomColor(Color(179, 110, 93))
-    cat:AddItem(panRed)
+    catDemo:AddItem(panRed)
 
-    menu.createCategory(panel, {
-        title = 'Категория',
-        demo = panelCat
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Категория')
+    cat:SetActive(true)
+    panelCat:DockMargin(8, 8, 8, 8)
+    cat:AddItem(panelCat)
 
-    --[[
-        Слайдер
-    ]]--
     local slider = vgui.Create('MantleSlideBox')
     slider:Dock(TOP)
     slider:SetRange(0, 5)
     slider:SetText('Тестовый ползунок')
 
-    menu.createCategory(panel, {
-        title = 'Слайдер',
-        demo = slider
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Слайдер')
+    cat:SetActive(true)
+    slider:DockMargin(8, 8, 8, 8)
+    cat:AddItem(slider)
 
-    --[[
-        Текст
-    ]]--
     local panelTexts = vgui.Create('MantlePanel')
     panelTexts:Dock(TOP)
     panelTexts:DockPadding(8, 8, 8, 8)
@@ -357,25 +334,25 @@ local function build()
     panelText4:SetColorAlpha(1)
     panelText4:SetRadius(32)
 
-    local longText = [[
-        Это длинный пример текста, который занимает несколько строк. Если блок небольшой по высоте - последняя видимая строка будет усечена с троеточием, чтобы не порвать верстку и не выходить за пределы панели нашего меню.
-    ]]
-
     local text4 = vgui.Create('MantleText', panelText4)
     text4:Dock(FILL)
     text4:SetPadding(8)
     text4:SetFont('Fated.16')
-    text4:SetText(longText)
+    text4:SetText([[
+        Это длинный пример текста, который занимает несколько строк. Если блок небольшой по высоте - последняя видимая строка будет усечена с троеточием, чтобы не порвать верстку и не выходить за пределы панели нашего меню.
+    ]])
 
-    menu.createCategory(panel, {
-        title = 'Текст',
-        demo = panelTexts
-    })
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Текст')
+    cat:SetActive(true)
+    panelTexts:DockMargin(8, 8, 8, 8)
+    cat:AddItem(panelTexts)
 
     return panel
 end
 
-menu.registerTab('ui', {
+Mantle.menu.registerTab('ui', {
     order = 2,
     title = 'UI Элементы',
     description = 'Демонстрация всех графических компонентов.',

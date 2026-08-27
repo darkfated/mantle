@@ -13,13 +13,6 @@ local function runScripts()
     Mantle.run_cl('config/colors.lua')
     Mantle.run_cl('core/legacy_vgui.lua')
 
-    Mantle.run_cl('core/menu/helpers.lua')
-    Mantle.run_cl('core/menu/tabs/ui.lua')
-    Mantle.run_cl('core/menu/tabs/popups.lua')
-    Mantle.run_cl('core/menu/tabs/legacy.lua')
-    Mantle.run_cl('core/menu/tabs/settings.lua')
-    Mantle.run_cl('core/menu.lua')
-
     Mantle.run_cl('core/vgui_elements/panel.lua')
     Mantle.run_cl('core/vgui_elements/button.lua')
     Mantle.run_cl('core/vgui_elements/checkbox.lua')
@@ -76,10 +69,6 @@ local function initLib()
     Mantle = Mantle or {
         lang = { list = {}, default = 'en' },
         config = {},
-        menu = {
-            tabs = {},
-            order = {}
-        },
         ui = {}
     }
 
