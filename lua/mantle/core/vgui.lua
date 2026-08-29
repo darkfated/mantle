@@ -14,7 +14,7 @@ local themes = {}
 local theme_map = {}
 
 function Mantle.ui.registerTheme(id, title, colors)
-    if !colors then return end
+    if not colors then return end
 
     table.insert(themes, { id = id, title = title, colors = colors })
     theme_map[id] = colors
@@ -22,7 +22,7 @@ end
 
 function Mantle.ui.getForcedThemeName()
     local themeId = Mantle.config.theme.forced
-    if themeId != '' and theme_map[themeId] then
+    if themeId ~= '' and theme_map[themeId] then
         return themeId
     end
 
@@ -31,7 +31,7 @@ end
 
 local function isThemeEnabled(themeId)
     local forced = Mantle.ui.getForcedThemeName()
-    if forced != '' then
+    if forced ~= '' then
         return themeId == forced
     end
 
@@ -56,7 +56,7 @@ end
 
 function Mantle.ui.getActiveThemeName()
     local forced = Mantle.ui.getForcedThemeName()
-    if forced != '' then
+    if forced ~= '' then
         return forced
     end
 
@@ -107,7 +107,7 @@ local transition = {
 
 local function updateTransition()
     local tr = transition
-    if !tr.active then
+    if not tr.active then
         hook.Remove('Think', 'MantleThemeTransition')
         return
     end
@@ -149,7 +149,7 @@ local function startThemeTransition(name)
     transition.progress = 0
     transition.active = true
 
-    if !hook.GetTable().MantleThemeTransition then
+    if not hook.GetTable().MantleThemeTransition then
         hook.Add('Think', 'MantleThemeTransition', updateTransition)
     end
 end

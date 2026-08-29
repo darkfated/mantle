@@ -16,7 +16,7 @@ local EPS = 1e-6
 local EPS_ANGLE = 1e-4
 
 local function getSectorIndexFromAngle(angle, cnt)
-    if !angle or cnt <= 0 then return nil end
+    if not angle or cnt <= 0 then return nil end
     local sector = (2 * pi) / cnt
     local raw = angle / sector
     local idx = (math.floor(raw + EPS) % cnt) + 1
@@ -57,6 +57,7 @@ function PANEL:Init()
     self:SetKeyboardInputEnabled(true)
     self:SetDrawOnTop(true)
     self:SetMouseInputEnabled(true)
+    self:SetTooltipPanelOverride("MantleTooltip")
 end
 
 function PANEL:ApplySettings(settings)
@@ -83,7 +84,7 @@ function PANEL:ApplySettings(settings)
 
     self.fadeInTime = settings.fade_in_time or 0.18
     self.fadeOutTime = settings.fade_out_time or 0.12
-    self.scaleAnimation = settings.scale_animation != false
+    self.scaleAnimation = settings.scale_animation ~= false
 
     self.disableBackground = settings.disable_background
     self.hoverSound = settings.hover_sound or 'mantle/ratio_btn.ogg'
@@ -96,7 +97,7 @@ end
 function PANEL:GetIconMaterial(icon)
     if icon == nil or icon == false then return nil end
     local mat = self._matCache[icon]
-    if !mat then
+    if not mat then
         mat = Material(icon)
         self._matCache[icon] = mat
     end
@@ -178,7 +179,7 @@ function PANEL:Think()
         end
     end
 
-if hovered and self.hoverOption != hovered and self.hoverSound then
+    if hovered and self.hoverOption ~= hovered and self.hoverSound then
             surface.PlaySound(self.hoverSound)
     end
 
@@ -274,7 +275,7 @@ function PANEL:SelectOption(index)
     if self._closing then return end
 
     local opts = self:GetCurrentOptions()
-    if !opts or !opts[index] then return end
+    if not opts or !opts[index] then return end
     local opt = opts[index]
     if opt.disabled then return end
 
@@ -321,7 +322,7 @@ function PANEL:IsMouseOver()
 end
 
 function PANEL:OnCursorMoved(x, y)
-    if !self:IsMouseOver() then self.hoverOption = nil end
+    if not self:IsMouseOver() then self.hoverOption = nil end
 end
 
 function PANEL:CloseMenu(callback)
@@ -349,7 +350,7 @@ function PANEL:Paint(w, h)
     local opts = self:GetCurrentOptions()
     local cnt = #opts
 
-    if !self.disableBackground then
+    if not self.disableBackground then
         local dim = Mantle.color.dim_overlay
         RNDX.Rect(0, 0, w, h)
             :Radii(0, 0, 0, 0)
@@ -393,7 +394,7 @@ function PANEL:Paint(w, h)
         end
 
         local hoveredOpt = self.hoverOption and opts[self.hoverOption]
-        if hoveredOpt and !hoveredOpt.disabled and self.hoverAngle and self.hoverWidth > 0.01 then
+        if hoveredOpt and not hoveredOpt.disabled and self.hoverAngle and self.hoverWidth > 0.01 then
             local th = Mantle.color.theme
             local hoverAlpha = math_floor(200 * self.hoverAnim * alpha)
             local startDeg = (self.hoverAngle - self.hoverWidth * 0.5) * (180 / pi)
@@ -492,7 +493,7 @@ function PANEL:Paint(w, h)
     draw.SimpleText(self.centerDesc or self.rootMenu.desc, self.descFont, cx, cy + Mantle.func.h(18) * self.scale, Color(Mantle.color.header_text.r, Mantle.color.header_text.g, Mantle.color.header_text.b, math_floor(160 * alpha)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
-vgui.Register('MantleRadialPanel', PANEL, 'Panel')
+vgui.Register('MantleRadialPanel', PANEL)
 
 function Mantle.ui.radial_menu(options)
     if IsValid(Mantle.ui.menu_radial) then

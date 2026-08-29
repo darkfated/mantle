@@ -29,7 +29,7 @@ end
 
 local function flushPending(cacheKey, material)
     local callbacks = pendingLoads[cacheKey]
-    if !callbacks then return end
+    if not callbacks then return end
 
     pendingLoads[cacheKey] = nil
 
@@ -40,7 +40,7 @@ end
 
 local function ensureDataPath(path)
     local dir = getPathFromFilename(path)
-    if dir != '' then
+    if dir ~= '' then
         fileCreateDir(dir)
     end
 end
@@ -67,7 +67,7 @@ function http.DownloadMaterial(url, path, callback, retryCount)
 
     local function loadMaterial()
         fetch(url, function(body)
-            if !body or find(body, '<!DOCTYPE HTML>', 1, true) then
+            if not body or find(body, '<!DOCTYPE HTML>', 1, true) then
                 flushPending(cacheKey, errorMat)
                 return
             end
@@ -76,7 +76,7 @@ function http.DownloadMaterial(url, path, callback, retryCount)
             fileWrite(path, body)
 
             local material = getMaterial('data/' .. path, 'noclamp mips')
-            if !material or material:IsError() then
+            if not material or material:IsError() then
                 flushPending(cacheKey, errorMat)
                 return
             end

@@ -4,8 +4,11 @@ PANEL.IsVertical = true
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
+    self:SetTooltipPanelOverride("MantleTooltip")
+
     self.content = vgui.Create('Panel', self)
     self.content:SetMouseInputEnabled(true)
+    self.content:SetTooltipPanelOverride("MantleTooltip")
 
     self.MouseReleasedTime = 0
 
@@ -76,7 +79,7 @@ end
 
 function PANEL:OnChildAdded(child)
     timer.Simple(0, function()
-        if !IsValid(child) or !IsValid(self) then return end
+        if not IsValid(child) or !IsValid(self) then return end
         if self:_isInternal(child) then return end
         if child:GetParent() == self then
             child:SetParent(self.content)
@@ -125,11 +128,11 @@ function PANEL:OnMouseWheeled(delta)
 end
 
 function PANEL:OnMousePressed(mc)
-    if mc != MOUSE_LEFT then return end
+    if mc ~= MOUSE_LEFT then return end
     if self.MouseReleasedTime + 0.3 > CurTime() then return end
 
     local hovered = vgui.GetHoveredPanel()
-    if IsValid(hovered) and hovered != self and Mantle.util.isDescendantOf(hovered, self.content) then return end
+    if IsValid(hovered) and hovered ~= self and Mantle.util.isDescendantOf(hovered, self.content) then return end
 
     self.drag = true
     self.dragLast = select(self.IsVertical and 2 or 1, self:CursorPos())
@@ -141,7 +144,7 @@ function PANEL:OnMousePressed(mc)
 end
 
 function PANEL:OnMouseReleased(mc)
-    if mc != MOUSE_LEFT then return end
+    if mc ~= MOUSE_LEFT then return end
 
     self.drag = false
     self:MouseCapture(false)
@@ -151,7 +154,7 @@ function PANEL:OnMouseReleased(mc)
 end
 
 function PANEL:OnCursorMoved(x, y)
-    if !self.drag then return end
+    if not self.drag then return end
 
     local pos = self.IsVertical and y or x
     local d = pos - self.dragLast
@@ -206,7 +209,7 @@ function PANEL:Think()
             self.offset = self._springTarget
             self._springing = false
         end
-    elseif !self.drag then
+    elseif not self.drag then
         self.offset = self.offset + self.vel * ft
 
         if self.offset < -self.overscroll then

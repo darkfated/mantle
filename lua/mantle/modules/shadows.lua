@@ -62,7 +62,7 @@ local function createShadows()
             render.DrawScreenQuadEx(xOffset, yOffset, Mantle.func.sw, Mantle.func.sh)
         end
 
-        if !bool_shadow_only then
+        if not bool_shadow_only then
             BShadows.ShadowMaterial:SetTexture('$basetexture', BShadows.RenderTarget)
             render.SetMaterial(BShadows.ShadowMaterial)
             render.DrawScreenQuad()
@@ -98,7 +98,7 @@ local function createShadows()
             render.DrawScreenQuadEx(xOffset, yOffset, Mantle.func.sw, Mantle.func.sh)
         end
 
-        if !bool_shadow_only then
+        if not bool_shadow_only then
             BShadows.ShadowMaterial:SetTexture('$basetexture', texture)
             render.SetMaterial(BShadows.ShadowMaterial)
             render.DrawScreenQuad()

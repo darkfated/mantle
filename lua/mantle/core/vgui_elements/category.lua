@@ -7,6 +7,7 @@ local CONTENT_PADDING = 12
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self:SetTall(HEADER_HEIGHT)
+    self:SetTooltipPanelOverride("MantleTooltip")
 
     self.name = 'Категория'
     self.opened = false
@@ -22,6 +23,7 @@ function PANEL:Init()
     self._contentTall = -1
 
     self.header = vgui.Create('Button', self)
+    self.header:SetTooltipPanelOverride("MantleTooltip")
     self.header:SetText('')
     self.header.Paint = function(_, w, h)
         RNDX.Rect(0, 0, w, h)
@@ -41,6 +43,7 @@ function PANEL:Init()
     end
 
     self.content = vgui.Create('Panel', self)
+    self.content:SetTooltipPanelOverride("MantleTooltip")
     self.content:SetVisible(false)
     self._contentVisible = false
 end
@@ -55,7 +58,7 @@ end
 
 function PANEL:SetColor(col)
     self.headerColorStandard = col
-    if !self.opened then
+    if not self.opened then
         self.headerColor = self.headerColorStandard
     end
 end
@@ -86,7 +89,7 @@ end
 
 function PANEL:OnChildAdded(child)
     timer.Simple(0, function()
-        if !IsValid(child) or !IsValid(self) then return end
+        if not IsValid(child) or not IsValid(self) then return end
         if child == self.header or child == self.content then return end
         if child:GetParent() == self then
             child:SetParent(self.content)
@@ -94,7 +97,7 @@ function PANEL:OnChildAdded(child)
     end)
 end
 
-function PANEL:PerformLayout(w, h)
+function PANEL:PerformLayout(w)
     self.header:SetPos(0, 0)
     self.header:SetSize(w, HEADER_HEIGHT)
     self.content:SetPos(0, CONTENT_OFFSET)
@@ -120,27 +123,27 @@ function PANEL:Think()
     local eased = Mantle.func.easeOutCubic(self._anim)
 
     local contentTall = measureContent(self.content)
-    if contentTall != self._contentTall then
+    if contentTall ~= self._contentTall then
         self._contentTall = contentTall
         self.content:SetTall(math.max(0, contentTall))
     end
 
     local targetTall = math.max(HEADER_HEIGHT, math.floor(HEADER_HEIGHT + (contentTall + CONTENT_PADDING) * eased + 0.5))
-    if self:GetTall() != targetTall then
+    if self:GetTall() ~= targetTall then
         self:SetTall(targetTall)
     end
 
     local alphaVal = math.floor(255 * eased + 0.5)
-    if alphaVal != self._childrenAlpha then
+    if alphaVal ~= self._childrenAlpha then
         self._childrenAlpha = alphaVal
         self.content:SetAlpha(alphaVal)
     end
 
     local visible = eased >= 0.004
-    if visible != self._contentVisible then
+    if visible ~= self._contentVisible then
         self._contentVisible = visible
         self.content:SetVisible(visible)
     end
 end
 
-vgui.Register('MantleCategory', PANEL, 'Panel')
+vgui.Register('MantleCategory', PANEL)

@@ -85,7 +85,7 @@ function Mantle.ui.btn(s, icon, icon_size, col, rad, off_grad_bool, hov_color, o
     s.hoverStatus = 0
     s.btn_font = 'Fated.18'
     s.Paint = function(self, w, h)
-        if !self.btn_text then
+        if not self.btn_text then
             self.btn_text = self:GetText()
             self:SetText('')
         end
@@ -102,7 +102,7 @@ function Mantle.ui.btn(s, icon, icon_size, col, rad, off_grad_bool, hov_color, o
             :Shape(RNDX.SHAPE_FIGMA)
         :Draw()
 
-        if !off_hov_bool then
+        if not off_hov_bool then
             local color_hover = hov_color or Mantle.color.button_hovered
             color_hover = Color(color_hover.r, color_hover.g, color_hover.b, 255 * self.hoverStatus)
 
@@ -113,7 +113,7 @@ function Mantle.ui.btn(s, icon, icon_size, col, rad, off_grad_bool, hov_color, o
             :Draw()
         end
 
-        if !off_grad_bool then
+        if not off_grad_bool then
             Mantle.func.gradient(0, 0, w, h, 1, Mantle.color.button_shadow)
         end
 
@@ -186,7 +186,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
         if not cvar then return end
 
         local val = clampValue(cvar:GetFloat())
-        if slider.value != val then
+        if slider.value ~= val then
             slider.value = val
         end
     end)
@@ -235,7 +235,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
     end
 
     slider.OnMousePressed = function(_, mcode)
-        if mcode != MOUSE_LEFT then return end
+        if mcode ~= MOUSE_LEFT then return end
 
         slider:UpdateFromCursor(slider:CursorPos())
         slider.dragging = true
@@ -243,7 +243,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
     end
 
     slider.OnMouseReleased = function(_, mcode)
-        if mcode != MOUSE_LEFT then return end
+        if mcode ~= MOUSE_LEFT then return end
 
         slider.dragging = false
         slider:MouseCapture(false)
@@ -259,7 +259,7 @@ function Mantle.ui.slidebox(parent, label, min_value, max_value, convar, decimal
 end
 
 function Mantle.ui.desc_entry(parent, title, placeholder, off_title_bool)
-    if !off_title_bool and title then
+    if not off_title_bool and title then
         local label = vgui.Create('DLabel', parent)
         label:Dock(TOP)
         label:DockMargin(4, 0, 4, 0)
@@ -427,7 +427,7 @@ function Mantle.ui.panel_tabs(parent)
         end
 
         for tab_title, tab in pairs(panel_tabs.content) do
-            if tab_title != title then
+            if tab_title ~= title then
                 tab:SetVisible(false)
             else
                 tab:SetVisible(true)

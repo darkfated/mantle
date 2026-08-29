@@ -25,7 +25,7 @@ local function setupFonts()
     createFont('Fated.16', 'Montserrat Medium', 16)
 
     function surface.SetFont(font)
-        if type(font) != 'string' then
+        if type(font) ~= 'string' then
             if font == nil then
                 ErrorNoHalt('surface.SetFont called with nil! Using fallback font')
                 original('DermaDefault')
@@ -35,7 +35,7 @@ local function setupFonts()
             return
         end
 
-        if !created[font] and font:match('^Fated%.') then
+        if not created[font] and font:match('^Fated%.') then
             local size, isBold = font:match('^Fated%.(%d+)(b?)$')
             if size then
                 createFont(font, isBold == 'b' and 'Montserrat Bold' or 'Montserrat Medium', tonumber(size))
@@ -44,6 +44,16 @@ local function setupFonts()
         end
 
         original(font)
+    end
+
+    function Mantle.func.cache_font( size, isBold )
+        if not isnumber(size) then return "DermaDefault" end
+        size = math.max(0, size)
+
+        local font = string.format("Fated.%i%s", size, isBold and "b" or "")
+        surface.SetFont(font)
+
+        return font
     end
 end
 
@@ -81,7 +91,7 @@ end
 -- Относительная ширина (база 1920)
 function Mantle.func.w(px)
     local cached = Mantle.func.w_save[px]
-    if !cached then
+    if not cached then
         cached = px / 1920 * Mantle.func.sw
         Mantle.func.w_save[px] = cached
     end
@@ -92,7 +102,7 @@ end
 -- Относительная высота (база 1080)
 function Mantle.func.h(px)
     local cached = Mantle.func.h_save[px]
-    if !cached then
+    if not cached then
         cached = px / 1080 * Mantle.func.sh
         Mantle.func.h_save[px] = cached
     end
@@ -278,6 +288,24 @@ function Mantle.func.ClampMenuPosition(panel)
     if y < 5 then y = 5 elseif y + h > sh - 5 then y = sh - 5 - h end
     panel:SetPos(x, y)
 end
+
+-- Конвертация integer в boolean
+function Mantle.func.int2bool( val, rev )
+    if not isnumber(val) then return false end
+    return rev and val < 1 or val > 0
+end
+
+    -- Конвертация boolean в integer
+    function Mantle.func.bool2int( bool, rev )
+        if not isbool(bool) and bool ~= nil then return 0 end
+        return rev and (bool and 0 or 1) or (bool and 1 or 0)
+    end
+
+    -- Проверка на пустоту в string-
+    function Mantle.func.nil_str( str )
+        if isstring(str) and #str > 0 then return str end
+        return nil
+    end
 
 setupFonts()
 
