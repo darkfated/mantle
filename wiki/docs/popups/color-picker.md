@@ -10,7 +10,7 @@ sidebar_position: 1
 
 ## Пример
 
-![](./assets/color-picker-1.gif)
+![](./assets/color-picker-1.webp)
 
 ```js
 Mantle.ui.color_picker(function(color)
@@ -28,7 +28,7 @@ end, Color(182, 65, 65))
 
 ## Применение к элементу
 
-![](./assets/color-picker-2.gif)
+![](./assets/color-picker-2.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')

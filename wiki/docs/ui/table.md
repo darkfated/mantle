@@ -10,7 +10,7 @@ sidebar_position: 9
 
 ## Пример
 
-![](./assets/table-1.gif)
+![](./assets/table-1.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')

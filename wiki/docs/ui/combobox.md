@@ -10,7 +10,7 @@ sidebar_position: 8
 
 ## Пример
 
-![](./assets/combobox-1.gif)
+![](./assets/combobox-1.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')

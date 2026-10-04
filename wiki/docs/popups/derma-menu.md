@@ -10,7 +10,7 @@ sidebar_position: 2
 
 ## Пример
 
-![](./assets/derma-menu-1.gif)
+![](./assets/derma-menu-1.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -36,7 +36,7 @@ end
 
 ## Пункты с иконками
 
-![](./assets/derma-menu-2.gif)
+![](./assets/derma-menu-2.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -58,7 +58,7 @@ end
 
 ## Подменю
 
-![](./assets/derma-menu-3.gif)
+![](./assets/derma-menu-3.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')

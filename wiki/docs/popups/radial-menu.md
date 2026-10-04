@@ -8,7 +8,7 @@ sidebar_position: 4
 
 Кольцевое меню с пунктами вокруг центра. Управление с клавиатуры (цифры 1-9), ESC для закрытия, клик в центр возвращает назад. Поддерживает вложенные подменю.
 
-![](./assets/radial-menu-1.gif)
+![](./assets/radial-menu-1.webp)
 
 ## Пример
 
@@ -50,7 +50,7 @@ end, 'icon16/bullet_green.png', 'Хрустящий огурец, 25 руб.')
 
 Вложенное меню создаётся через `:CreateSubMenu`, а добавляется в пункт через `:AddSubMenuOption`.
 
-![](./assets/radial-menu-2.gif)
+![](./assets/radial-menu-2.webp)
 
 ```js
 local menu = Mantle.ui.radial_menu({ title = 'Магазин', desc = 'Выберите отдел' })

@@ -97,7 +97,7 @@ end)
 
 ## Kawase размытие фона
 
-![](./assets/rndx-1.png)
+![](./assets/rndx-1.webp)
 
 ```js
 local blur = 2
@@ -190,7 +190,7 @@ end)
 
 ## Акриловый материал
 
-![](./assets/rndx-2.png)
+![](./assets/rndx-2.webp)
 
 ```js
 local stateAcrylic = {

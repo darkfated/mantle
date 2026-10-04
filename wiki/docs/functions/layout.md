@@ -17,7 +17,7 @@ local height = Mantle.func.h(300)
 
 ## Анимация появления панели
 
-![](./assets/layout-4.gif)
+![](./assets/layout-4.webp)
 
 ```js
 local frame = vgui.Create('DFrame')
@@ -42,7 +42,7 @@ end, 0.8)
 
 Каждый кадр цвет приближается к целевому. `frac` это скорость приближения за кадр (например `0.1`).
 
-![](./assets/layout-1.gif)
+![](./assets/layout-1.webp)
 
 ```js
 local col = Mantle.color.theme
@@ -64,7 +64,7 @@ end)
 
 `approachExp(current, target, speed, dt)` плавно приближает значение к целевому. Подходит для инерционных движений: квадрат плавно съезжает вниз.
 
-![](./assets/layout-2.gif)
+![](./assets/layout-2.webp)
 
 ```js
 local offset = 0
@@ -87,7 +87,7 @@ end)
 
 `t` это прогресс от 0 до 1. Квадрат ездит по экрану с ускорением/замедлением.
 
-![](./assets/layout-3.gif)
+![](./assets/layout-3.webp)
 
 ```js
 local duration = 2
