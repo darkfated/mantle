@@ -51,55 +51,8 @@ Mantle.ui.registerTheme('dark', 'Тёмная (dark)', {
 })
 
 Mantle.ui.registerTheme('dark_mono', 'Тёмная монотонная (dark_mono)', {
-    header = Color(34, 35, 39),
-    header_text = Color(165, 170, 180),
-    background = Color(18, 19, 22),
-    background_alpha = Color(18, 19, 22, 245),
-    background_panelpopup = Color(23, 24, 28, 170),
-
-    button = Color(44, 46, 52),
-    button_shadow = Color(0, 0, 0, 30),
-    button_hovered = Color(60, 63, 72),
-
-    category = Color(37, 39, 44),
-    category_opened = Color(37, 39, 44, 0),
-
     theme = Color(148, 150, 156),
-
-    panel = {
-        Color(46, 48, 54),
-        Color(38, 40, 46),
-        Color(72, 76, 86)
-    },
-    panel_alpha = {
-        Color(46, 48, 54, 160),
-        Color(38, 40, 46, 160),
-        Color(72, 76, 86, 160)
-    },
-
-    toggle = Color(44, 46, 52),
-
-    focus_panel = Color(42, 44, 50, 200),
-    hover = Color(67, 76, 102),
-
-    window_shadow = Color(0, 0, 0, 60),
-
-    hover_overlay = Color(255, 255, 255, 28),
-    hover_overlay_strong = Color(255, 255, 255, 42),
-    notify_outline = Color(255, 255, 255, 45),
-    dim_overlay = Color(0, 0, 0, 150),
-    circle_shadow = Color(0, 0, 0, 20),
-    ripple = Color(255, 255, 255, 40),
-    blur_shadow = Color(0, 0, 0, 10),
-    tab_hover = Color(255, 255, 255, 14),
-    icon = Color(255, 255, 255),
-    status_disconnect = Color(230, 90, 90),
-    status_bot = Color(90, 160, 230),
-    status_online = Color(110, 200, 120),
-
-    gray = Color(148, 153, 163, 220),
-    text_muted = Color(150, 150, 150, 180),
-    text = Color(236, 238, 244)
+    text_muted = Color(150, 150, 150, 180)
 })
 
 Mantle.ui.registerTheme('blue', 'Синяя (blue)', {
@@ -569,3 +522,5 @@ Mantle.ui.registerTheme('coral', 'Коралловая (coral)', {
     text_muted = Color(190, 160, 160, 180),
     text = Color(250, 238, 238)
 })
+
+Mantle.ui.applyTheme(Mantle.ui.getActiveThemeName())

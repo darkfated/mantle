@@ -10,18 +10,25 @@ sidebar_position: 4
 
 Библиотека предоставляет клиентские ConVars, которые можно менять из консоли.
 
-| ConVar            | Описание                 | Значение по умолчанию |
-| ----------------- | ------------------------ | --------------------- |
-| `mantle_depth_ui` | Тени для UI элементов    | `1`                   |
-| `mantle_smooth`   | Эффект плавности         | `1`                   |
-| `mantle_theme`    | Активная тема интерфейса | `dark`                |
+| ConVar            | Описание                          | Значение по умолчанию |
+| ----------------- | --------------------------------- | --------------------- |
+| `mantle_depth_ui` | Тени для UI элементов             | `1`                   |
+| `mantle_blur`     | Размытие фона                     | `1`                   |
+| `mantle_smooth`   | Плавные переходы и анимации       | `1`                   |
+| `mantle_theme`    | Выбранная игроком тема интерфейса | `dark`                |
 
 Получить текущее состояние:
 
 ```js
 local depth = Mantle.ui.convar.depth_ui
+local blur = Mantle.ui.convar.blur
 local smooth = Mantle.ui.convar.smooth
-local theme = Mantle.ui.convar.theme
+
+-- Выбор игрока
+local preferred = Mantle.ui.convar.theme
+
+-- Тема, которая отрисована сейчас
+local active = Mantle.ui.activeTheme
 ```
 
 ## config/theme.lua
@@ -34,14 +41,11 @@ Mantle.config.theme = {
     enabled = {
         dark = true,
         dark_mono = true,
-        light = true,
         blue = true,
         red = true,
         green = true,
-        orange = true,
         purple = true,
         coffee = true,
-        ice = true,
         wine = true,
         violet = true,
         moss = true,
@@ -51,7 +55,7 @@ Mantle.config.theme = {
 ```
 
 - `forced` - принудительная тема для всех игроков. Если пусто, каждый выбирает тему сам.
-- `enabled` - какие темы доступны игрокам при выборе.
+- `enabled` - какие темы доступны игрокам при выборе. Если тема не указана в таблице, она считается доступной.
 
 ## config/colors.lua
 

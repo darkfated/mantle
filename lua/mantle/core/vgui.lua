@@ -10,48 +10,156 @@ Mantle.ui.convar = {
     smooth = convar_smooth:GetBool()
 }
 
+local math_abs = math.abs
+local math_exp = math.exp
+local math_max = math.max
+
+local THEME_TRANSITION_HOOK = 'MantleThemeTransition'
+local THEME_TRANSITION_SPEED = 10
+
 local themes = {}
-local theme_map = {}
+local theme_index = {}
 
-function Mantle.ui.registerTheme(id, title, colors)
-    if !colors then return end
+local transition = {
+    active = false,
+    target = nil
+}
 
-    table.insert(themes, { id = id, title = title, colors = colors })
-    theme_map[id] = colors
+local function mergeColors(base, overrides)
+    local out = {}
+
+    if istable(base) and !IsColor(base) then
+        for key, value in pairs(base) do
+            if IsColor(value) then
+                out[key] = value:Copy()
+            elseif istable(value) then
+                out[key] = mergeColors(value)
+            else
+                out[key] = value
+            end
+        end
+    end
+
+    if istable(overrides) and !IsColor(overrides) then
+        for key, value in pairs(overrides) do
+            if IsColor(value) then
+                out[key] = value:Copy()
+            elseif istable(value) then
+                out[key] = mergeColors(out[key], value)
+            else
+                out[key] = value
+            end
+        end
+    end
+
+    return out
 end
 
+local function normalizeColors(colors)
+    local base = theme_index.dark
+    return mergeColors(base and base.colors, colors)
+end
+
+local function syncColors(dst, src, t)
+    if !istable(dst) or !istable(src) then return 0 end
+
+    local maxDiff = 0
+
+    for key, value in pairs(src) do
+        local current = dst[key]
+
+        if IsColor(value) then
+            if IsColor(current) then
+                current.r = current.r + (value.r - current.r) * t
+                current.g = current.g + (value.g - current.g) * t
+                current.b = current.b + (value.b - current.b) * t
+                current.a = current.a + (value.a - current.a) * t
+
+                maxDiff = math_max(
+                    maxDiff,
+                    math_abs(value.r - current.r),
+                    math_abs(value.g - current.g),
+                    math_abs(value.b - current.b),
+                    math_abs(value.a - current.a)
+                )
+            else
+                dst[key] = value:Copy()
+            end
+        elseif istable(value) then
+            if !istable(current) or IsColor(current) then
+                current = {}
+                dst[key] = current
+            end
+
+            maxDiff = math_max(maxDiff, syncColors(current, value, t))
+        else
+            dst[key] = value
+        end
+    end
+
+    for key in pairs(dst) do
+        if src[key] == nil then
+            dst[key] = nil
+        end
+    end
+
+    return maxDiff
+end
+
+local function getFallbackThemeName()
+    for _, theme in ipairs(themes) do
+        if Mantle.ui.isThemeEnabled(theme.id) then
+            return theme.id
+        end
+    end
+
+    return themes[1] and themes[1].id
+end
+
+local function resolveThemeName(name)
+    if isstring(name) and theme_index[name] then
+        return name
+    end
+
+    return getFallbackThemeName()
+end
+
+local warnedForcedTheme = false
+
 function Mantle.ui.getForcedThemeName()
-    local themeId = Mantle.config.theme.forced
-    if themeId != '' and theme_map[themeId] then
+    local config = Mantle.config.theme
+    local themeId = config and config.forced
+
+    if !isstring(themeId) or themeId == '' then
+        return ''
+    end
+
+    if theme_index[themeId] then
         return themeId
+    end
+
+    if !warnedForcedTheme then
+        warnedForcedTheme = true
+        print(('[Mantle] Unknown forced theme: %s'):format(themeId))
     end
 
     return ''
 end
 
-local function isThemeEnabled(themeId)
+function Mantle.ui.isThemeEnabled(themeId)
     local forced = Mantle.ui.getForcedThemeName()
     if forced != '' then
         return themeId == forced
     end
 
-    local enabledThemes = Mantle.config.theme.enabled
-    if enabledThemes == nil then
+    local config = Mantle.config.theme
+    local enabled = config and config.enabled
+
+    if !enabled then
         return true
     end
 
-    local isEnabled = enabledThemes[themeId]
-    return isEnabled == nil or isEnabled
-end
-
-local function getFallbackThemeName()
-    for _, theme in ipairs(themes) do
-        if isThemeEnabled(theme.id) then
-            return theme.id
-        end
-    end
-
-    return 'dark'
+    return enabled[themeId] != false
 end
 
 function Mantle.ui.getActiveThemeName()
@@ -61,7 +169,8 @@ function Mantle.ui.getActiveThemeName()
     end
 
     local saved = Mantle.ui.convar.theme
-    if theme_map[saved] and isThemeEnabled(saved) then
+
+    if theme_index[saved] and Mantle.ui.isThemeEnabled(saved) then
         return saved
     end
 
@@ -72,108 +181,153 @@ function Mantle.ui.getAvailableThemes()
     local available = {}
 
     for _, theme in ipairs(themes) do
-        if isThemeEnabled(theme.id) then
-            available[#available + 1] = theme
+        if Mantle.ui.isThemeEnabled(theme.id) then
+            available[#available + 1] = {
+                id = theme.id,
+                title = theme.title,
+                colors = theme.colors
+            }
         end
     end
 
     if #available == 0 then
-        local fallback = getFallbackThemeName()
-        local title = fallback
+        local entry = theme_index[getFallbackThemeName()]
 
-        for _, theme in ipairs(themes) do
-            if theme.id == fallback then
-                title = theme.title
-                break
-            end
+        if entry then
+            available[1] = {
+                id = entry.id,
+                title = entry.title,
+                colors = entry.colors
+            }
         end
-
-        available[1] = {
-            id = fallback,
-            title = title,
-            colors = theme_map[fallback]
-        }
     end
 
     return available
 end
 
-local transition = {
-    active = false,
-    to = nil,
-    progress = 0,
-    speed = 6
-}
+function Mantle.ui.registerTheme(id, title, colors)
+    if !isstring(id) or id == '' or !istable(colors) then return end
+
+    local normalized = normalizeColors(colors)
+    local entry = theme_index[id]
+
+    if entry then
+        entry.title = title or entry.title
+        entry.colors = normalized
+
+        if Mantle.ui.activeTheme == id and Mantle.color then
+            syncColors(Mantle.color, normalized, 1)
+        end
+
+        return entry
+    end
+
+    entry = {
+        id = id,
+        title = title or id,
+        colors = normalized
+    }
+
+    theme_index[id] = entry
+    themes[#themes + 1] = entry
+
+    return entry
+end
+
+function Mantle.ui.applyTheme(name)
+    local resolved = resolveThemeName(name)
+    local entry = resolved and theme_index[resolved]
+
+    if !entry then
+        return false
+    end
+
+    transition.active = false
+    transition.target = nil
+    hook.Remove('Think', THEME_TRANSITION_HOOK)
+
+    if Mantle.color then
+        syncColors(Mantle.color, entry.colors, 1)
+    else
+        Mantle.color = mergeColors(entry.colors)
+    end
+
+    Mantle.ui.activeTheme = resolved
+
+    return resolved
+end
+
+function Mantle.ui.setTheme(name)
+    if !isstring(name) or !theme_index[name] then return false end
+    if Mantle.ui.getForcedThemeName() != '' then return false end
+    if !Mantle.ui.isThemeEnabled(name) then return false end
+
+    RunConsoleCommand('mantle_theme', name)
+
+    return true
+end
 
 local function updateTransition()
     local tr = transition
+
     if !tr.active then
-        hook.Remove('Think', 'MantleThemeTransition')
+        hook.Remove('Think', THEME_TRANSITION_HOOK)
         return
     end
 
-    tr.progress = Mantle.func.approachExp(tr.progress, 1, tr.speed, FrameTime())
+    local entry = tr.target and theme_index[tr.target]
 
-    local to = tr.to
-    for k, v in pairs(to) do
-        if IsColor(v) then
-            local cur = Mantle.color[k]
-            if IsColor(cur) then
-                Mantle.color[k] = Mantle.func.LerpColor(tr.speed, cur, v)
-            else
-                Mantle.color[k] = v
-            end
-        elseif type(v) == 'table' then
-            local cur = Mantle.color[k] or {}
-            Mantle.color[k] = cur
-
-            for i = 1, #v do
-                local vi = v[i]
-                if IsColor(vi) and IsColor(cur[i]) then
-                    cur[i] = Mantle.func.LerpColor(tr.speed, cur[i], vi)
-                else
-                    cur[i] = vi
-                end
-            end
-        end
+    if !entry or !Mantle.color then
+        tr.active = false
+        hook.Remove('Think', THEME_TRANSITION_HOOK)
+        return
     end
 
-    if tr.progress >= 0.999 then
-        Mantle.color = table.Copy(to)
+    local t = 1 - math_exp(-THEME_TRANSITION_SPEED * FrameTime())
+    local maxDiff = syncColors(Mantle.color, entry.colors, t)
+
+    if maxDiff <= 0.5 then
+        syncColors(Mantle.color, entry.colors, 1)
+        Mantle.ui.activeTheme = tr.target
         tr.active = false
+        hook.Remove('Think', THEME_TRANSITION_HOOK)
     end
 end
 
 local function startThemeTransition(name)
-    transition.to = theme_map[name] or theme_map['dark']
-    transition.progress = 0
+    local resolved = resolveThemeName(name)
+    local entry = resolved and theme_index[resolved]
+
+    if !entry then
+        return
+    end
+
+    if !Mantle.color or !Mantle.ui.convar.smooth then
+        Mantle.ui.applyTheme(resolved)
+        return
+    end
+
+    if transition.active and transition.target == resolved then
+        return
+    end
+
+    if !transition.active and Mantle.ui.activeTheme == resolved then
+        return
+    end
+
+    transition.target = resolved
     transition.active = true
 
-    if !hook.GetTable().MantleThemeTransition then
-        hook.Add('Think', 'MantleThemeTransition', updateTransition)
-    end
+    hook.Add('Think', THEME_TRANSITION_HOOK, updateTransition)
 end
 
-local function applyInitialTheme()
-    local theme = Mantle.ui.getActiveThemeName()
-    Mantle.ui.convar.theme = theme
-    Mantle.color = table.Copy(theme_map[theme] or theme_map['dark'])
-end
-
-hook.Add('Think', 'MantleApplyInitialTheme', function()
-    hook.Remove('Think', 'MantleApplyInitialTheme')
-    applyInitialTheme()
+cvars.AddChangeCallback('mantle_theme', function(_, _, newValue)
+    Mantle.ui.convar.theme = newValue
+    startThemeTransition(Mantle.ui.getActiveThemeName())
 end)
 
 cvars.AddChangeCallback('mantle_depth_ui', function(_, _, newValue)
     Mantle.ui.convar.depth_ui = newValue == '1'
-end)
-
-cvars.AddChangeCallback('mantle_theme', function(_, _, newValue)
-    Mantle.ui.convar.theme = newValue
-    local theme = Mantle.ui.getActiveThemeName()
-    Mantle.ui.convar.theme = theme
-    startThemeTransition(theme)
 end)
 
 cvars.AddChangeCallback('mantle_blur', function(_, _, newValue)
@@ -182,4 +336,8 @@ end)
 
 cvars.AddChangeCallback('mantle_smooth', function(_, _, newValue)
     Mantle.ui.convar.smooth = newValue == '1'
+
+    if !Mantle.ui.convar.smooth and transition.active then
+        Mantle.ui.applyTheme(transition.target)
+    end
 end)

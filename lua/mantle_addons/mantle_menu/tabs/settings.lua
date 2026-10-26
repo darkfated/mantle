@@ -30,7 +30,7 @@ local function build(tab)
         end
 
         comboboxTheme.OnSelect = function(_, _, data)
-            LocalPlayer():ConCommand('mantle_theme ' .. data)
+            Mantle.ui.setTheme(data)
         end
 
         cat:AddItem(comboboxTheme)
