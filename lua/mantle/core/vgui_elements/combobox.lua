@@ -114,9 +114,7 @@ function PANEL:OpenMenu()
         self.menu:Remove()
     end
 
-    local x, y = self:LocalToScreen(0, self:GetTall())
     local menu = vgui.Create('MantleDermaMenu')
-    menu:SetPos(x, y)
     menu._owner = self
 
     for i, choice in ipairs(self.choices) do
@@ -127,7 +125,7 @@ function PANEL:OpenMenu()
         })
     end
 
-    menu:MakePopup()
+    menu:SetAnchor(self)
     menu:UpdateSize()
 
     self.menu = menu
