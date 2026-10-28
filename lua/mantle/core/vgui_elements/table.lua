@@ -3,6 +3,12 @@ local PANEL = {}
 local math_floor = math.floor
 local math_max = math.max
 
+local ALIGN = {
+    left = TEXT_ALIGN_LEFT,
+    center = TEXT_ALIGN_CENTER,
+    right = TEXT_ALIGN_RIGHT,
+}
+
 function PANEL:Init()
     self.BaseClass.Init(self)
 
@@ -58,6 +64,8 @@ function PANEL:Init()
     self:DockPadding(0, 0, 0, 0)
 
     self._headerButtons = {}
+    self._headerDirty = true
+    self._rowPanels = {}
     self._colWidthsTarget = {}
     self._colWidthsCurrent = {}
     self._lastVBarVis = false
@@ -173,20 +181,33 @@ function PANEL:AddColumn(name, width, align, sortable)
     table.insert(self.columns, {
         name = name,
         width = width or 100,
-        align = align or TEXT_ALIGN_LEFT,
+        align = ALIGN[align] or align or TEXT_ALIGN_LEFT,
         sortable = sortable or false
     })
+
+    self._headerDirty = true
+    if #self.rows > 0 then self._needRebuild = true end
 end
 
 function PANEL:AddItem(...)
-    local args = {...}
-    if #args != #self.columns then
+    if select('#', ...) != #self.columns then
         print(Mantle.lang.get('mantle', 'table_wrong_args'))
         return
     end
 
-    table.insert(self.rows, args)
-    self:RebuildRows()
+    local rowData = {...}
+    table.insert(self.rows, rowData)
+
+    if !IsValid(self._hoverBar) or self._needRebuild then
+        self:RebuildRows()
+    else
+        self:CreateHeader()
+        self:CreateRow(#self.rows, rowData)
+        self._needWidths = true
+        self:_markDirty()
+        self:InvalidateLayout(true)
+    end
+
     return #self.rows
 end
 
@@ -213,6 +234,7 @@ function PANEL:SortByColumn(columnIndex)
     end
 
     local desc = self.sortDesc
+    local selected = self.selectedRow and self.rows[self.selectedRow]
 
     table.sort(self.rows, function(a, b)
         local va = a[columnIndex]
@@ -250,6 +272,15 @@ function PANEL:SortByColumn(columnIndex)
             return la < lb
         end
     end)
+
+    if selected then
+        for i, row in ipairs(self.rows) do
+            if row == selected then
+                self.selectedRow = i
+                break
+            end
+        end
+    end
 
     self:RebuildRows()
 end
@@ -393,6 +424,9 @@ end
 function PANEL:CreateHeader()
     self:_createHeaderPanel()
 
+    if !self._headerDirty and #self._headerButtons == #self.columns then return end
+    self._headerDirty = false
+
     self.headerText:Clear()
     self._headerButtons = {}
 
@@ -498,13 +532,8 @@ function PANEL:CreateRow(rowIndex, rowData)
     table.insert(self._rowPanels, row)
 end
 
-function PANEL:RebuildRows()
-    self.content:Clear()
-    self._rowPanels = {}
-
-    if IsValid(self._hoverBar) then
-        self._hoverBar:Remove()
-    end
+function PANEL:_createHoverBar()
+    if IsValid(self._hoverBar) then self._hoverBar:Remove() end
 
     self._hoverBar = vgui.Create('Panel', self.content)
     self._hoverBar:SetMouseInputEnabled(false)
@@ -548,7 +577,23 @@ function PANEL:RebuildRows()
         self._hoverBar:SetPos(self._hoverX, self._hoverY)
         self._hoverBar:SetSize(self._hoverW, self._hoverH)
     end
+end
 
+function PANEL:_removeRows()
+    for _, row in ipairs(self._rowPanels) do
+        if IsValid(row) then row:Remove() end
+    end
+    self._rowPanels = {}
+
+    if IsValid(self._hoverBar) then self._hoverBar:Remove() end
+    self._hoverBar = nil
+end
+
+function PANEL:RebuildRows()
+    self._needRebuild = false
+    self:_removeRows()
+    self:_createHoverBar()
+    self:_createHeaderPanel()
     self:CreateHeader()
 
     for rowIndex, rowData in ipairs(self.rows) do
@@ -571,7 +616,7 @@ end
 function PANEL:Clear()
     self.rows = {}
     self.selectedRow = nil
-    self.content:Clear()
+    self:_removeRows()
     self.offset = 0
     self.vel = 0
     self:_markDirty()
