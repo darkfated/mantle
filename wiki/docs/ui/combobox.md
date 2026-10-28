@@ -92,6 +92,7 @@ combo:AddChoice('Постройка')
 | `:AddChoice(string text, any data)`           | Добавить опцию. Возвращает её индекс |
 | `:SetValue(string text)`                      | Выбрать опцию по тексту              |
 | `:GetValue()`                                 | Текст выбранной опции                |
+| `:SelectChoice(int index)`                    | Выбрать опцию по индексу             |
 | `:SetPlaceholder(string text)`                | Подсказка, пока ничего не выбрано    |
 | `:OpenMenu()`                                 | Открыть список                       |
 | `:CloseMenu()`                                | Закрыть список                       |

@@ -57,7 +57,8 @@ function PANEL:Init()
         end
 
         if CurTime() - self._openTime >= 0.08 then
-            if (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) and !self:IsChildHovered() then
+            local ownerHovered = IsValid(self._owner) and (self._owner:IsHovered() or self._owner:IsChildHovered())
+            if (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) and !self:IsChildHovered() and !ownerHovered then
                 self:CloseMenu()
             end
         end
