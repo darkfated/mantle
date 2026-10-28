@@ -21,7 +21,7 @@ local function build(tab)
     btn3:SetTall(40)
     btn3:SetTxt('Свой цвет')
     btn3:SetColor(Color(182, 65, 65))
-    btn3:SetColorHover(Color(143, 57, 57))
+    btn3:SetColorHover(Color(146, 46, 46))
     btn3:SetIcon(Material('icon16/delete.png'), 16)
 
     local cat = vgui.Create('MantleCategory', panel)
