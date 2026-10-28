@@ -7,7 +7,12 @@
 local function runScripts()
     Mantle.run_sh('config/theme.lua')
 
-    Mantle.run_cl('core/func.lua')
+    Mantle.run_cl('core/functions/init.lua')
+    Mantle.run_cl('core/functions/screen.lua')
+    Mantle.run_cl('core/functions/fonts.lua')
+    Mantle.run_cl('core/functions/anim.lua')
+    Mantle.run_cl('core/functions/draw.lua')
+    Mantle.run_cl('core/functions/ui.lua')
     Mantle.run_cl('core/utils.lua')
     Mantle.run_cl('core/vgui.lua')
     Mantle.run_cl('config/colors.lua')

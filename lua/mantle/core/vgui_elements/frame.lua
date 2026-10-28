@@ -76,7 +76,7 @@ function PANEL:Init()
 
         local boolInput = self:IsKeyboardInputEnabled()
         DM:AddOption(Mantle.lang.get('mantle', 'frame_move_from_menu'), function()
-            self:SetKeyBoardInputEnabled(!boolInput)
+            self:SetKeyboardInputEnabled(!boolInput)
         end, !boolInput and 'icon16/bullet_green.png' or 'icon16/bullet_red.png')
 
         DM:AddOption(Mantle.lang.get('mantle', 'frame_close_window'), function()
