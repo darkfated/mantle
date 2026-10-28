@@ -97,7 +97,7 @@ function PANEL:AddOption(text, func, icon, optData)
     local textW = select(1, surface.GetTextSize(text))
     self.MaxTextWidth = math_max(self.MaxTextWidth, textW)
 
-    local option = vgui.Create('MantleBtn', self.scroll:GetCanvas())
+    local option = vgui.Create('Button', self.scroll:GetCanvas())
     option:SetText('')
     option:Dock(TOP)
     option:DockMargin(0, ITEM_GAP, 0, 0)
@@ -109,8 +109,8 @@ function PANEL:AddOption(text, func, icon, optData)
     option._submenu_open = false
 
     if icon then
-        option:SetIcon(icon)
-        self.MaxTextWidth = self.MaxTextWidth + 26
+        option.matIcon = type(icon) == 'IMaterial' and icon or Material(icon)
+        self.MaxTextWidth = self.MaxTextWidth + 24
     end
 
     if optData then
@@ -222,7 +222,15 @@ function PANEL:AddOption(text, func, icon, optData)
     end
 
     option.Paint = function(pnl, w, h)
-        local textX = 10 + (self.icon != '' and 24 or 0)
+        local textX = 10 + (pnl.matIcon and 24 or 0)
+
+        if pnl.matIcon then
+            RNDX.Rect(8, 8, 16, 16)
+                :Color(color_white)
+                :Material(pnl.matIcon)
+            :Draw()
+        end
+
         local col = pnl.selected and Mantle.color.theme or Mantle.color.text
         draw.SimpleText(pnl.Text, 'Fated.16', textX, h * 0.5 - 1, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
