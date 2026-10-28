@@ -56,10 +56,7 @@ function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alp
     local state = panel.__mantleAppearance
 
     if !state then
-        state = {
-            think = panel.Think,
-            own = rawget(panel, 'Think') != nil
-        }
+        state = { think = panel.Think }
         panel.__mantleAppearance = state
     end
 
@@ -91,7 +88,7 @@ function Mantle.func.animate_appearance(panel, target_w, target_h, duration, alp
             s:SetSize(target_w, target_h)
             s:SetPos(targetX, targetY)
             s:SetAlpha(255)
-            s.Think = state.own and state.think or nil
+            s.Think = state.think
             s.__mantleAppearance = nil
             if callback then callback(s) end
         end
