@@ -182,30 +182,30 @@ end
 function PANEL:Paint(w, h)
     local col = Mantle.color.window_shadow
     RNDX.Rect(0, 0, w, h)
-        :Radii(6, 6, 6, 6)
+        :Rad(6)
         :Color(col)
         :Shadow(20, 12)
     :Draw()
     RNDX.Rect(0, 0, w, h)
-        :Radii(6, 6, 6, 6)
+        :Rad(6)
         :Color(col)
         :Shadow(6, 3)
     :Draw()
 
     local lite = self.lite
     local headerTall = lite and 0 or HEADER_TALL
-    local bodyRad = lite and 6 or 0
+    local bodyRad = 6
 
     local alphaBg = self.alpha and Mantle.ui.convar.blur
     if alphaBg then
         RNDX.Rect(0, 0, w, h)
-            :Radii(bodyRad, bodyRad, 6, 6)
+            :Rad(6)
             :KBlur(4, 2)
         :Draw()
     end
 
     RNDX.Rect(0, 0, w, h)
-        :Radii(bodyRad, bodyRad, 6, 6)
+        :Rad(6)
         :Color(alphaBg and Mantle.color.background_alpha or Mantle.color.background)
     :Draw()
 
