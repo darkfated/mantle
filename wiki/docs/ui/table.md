@@ -165,17 +165,17 @@ print(tbl:GetRowCount()) -- 3
 
 ## Методы
 
-| Метод                                                             | Описание                                    |
-| ----------------------------------------------------------------- | ------------------------------------------- |
-| `:AddColumn(string name, int width, string align, bool sortable)` | Колонка. `align`: `left`, `center`, `right` |
-| `:AddItem(...)`                                                   | Добавить строку. Возвращает номер строки    |
-| `:SortByColumn(int columnIndex)`                                  | Программная сортировка                      |
-| `:SetAction(function func)`                                       | Действие при ЛКМ: `func(row)`               |
-| `:SetRightClickAction(function func)`                             | Действие при ПКМ: `func(row)`               |
-| `:Clear()`                                                        | Очистка                                     |
-| `:GetSelectedRow()`                                               | Индекс выбранной строки или `nil`           |
-| `:GetRowCount()`                                                  | Количество строк                            |
-| `:RemoveRow(int index)`                                           | Удалить строку по индексу                   |
+| Метод                                                                     | Описание                                                             |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `:AddColumn(string name, int width, string\|number align, bool sortable)` | Колонка. `align`: `'left'`, `'center'`, `'right'` или `TEXT_ALIGN_*` |
+| `:AddItem(...)`                                                           | Добавить строку. Возвращает номер строки                             |
+| `:SortByColumn(int columnIndex)`                                          | Программная сортировка                                               |
+| `:SetAction(function func)`                                               | Действие при ЛКМ: `func(row)`                                        |
+| `:SetRightClickAction(function func)`                                     | Действие при ПКМ: `func(row)`                                        |
+| `:Clear()`                                                                | Очистка                                                              |
+| `:GetSelectedRow()`                                                       | Данные выбранной строки или `nil`                                    |
+| `:GetRowCount()`                                                          | Количество строк                                                     |
+| `:RemoveRow(int index)`                                                   | Удалить строку по индексу                                            |
 
 ## Примечания
 

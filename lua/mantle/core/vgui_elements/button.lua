@@ -11,7 +11,7 @@ function PANEL:Init()
     self.hoverAmount = 0
     self.hoverEnabled = true
     self.font = 'Fated.18'
-    self.radius = 16
+    self.radius = 12
     self.icon = ''
     self.iconSize = 16
     self.text = Mantle.lang.get('mantle', 'btn_default')
@@ -107,7 +107,6 @@ function PANEL:Paint(w, h)
 
     RNDX.Rect(0, 0, w, h)
         :Rad(self.radius)
-        :Shape(RNDX.SHAPE_IOS)
         :Color(self.color or Mantle.color.button)
     :Draw()
 
@@ -119,7 +118,6 @@ function PANEL:Paint(w, h)
         local hoverColor = self.colorHover or Mantle.color.button_hovered
         RNDX.Rect(0, 0, w, h)
             :Rad(self.radius)
-            :Shape(RNDX.SHAPE_IOS)
             :Color(Color(hoverColor.r, hoverColor.g, hoverColor.b, math_floor(hoverColor.a * self.hoverAmount)))
         :Draw()
     end

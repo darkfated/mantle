@@ -63,7 +63,13 @@ local text = Mantle.color.text
 
 ```js
 -- ID активной темы: dark, red, blue и т.д.
-local name = Mantle.ui.getActiveThemeName()
+local name = Mantle.ui.activeTheme
+
+-- ID темы, которая выбрана с учётом настроек сервера
+local resolved = Mantle.ui.getActiveThemeName()
+
+-- Доступна ли тема игроку
+local available = Mantle.ui.isThemeEnabled('red')
 
 -- Список доступных тем: { {id, title, colors}, ... }
 local themes = Mantle.ui.getAvailableThemes()
@@ -72,23 +78,32 @@ for _, theme in ipairs(themes) do
 end
 ```
 
+`getActiveThemeName()` возвращает тему, которая должна быть активна, а `Mantle.ui.activeTheme` - тему, которая сейчас у пользователя.
+
 ## Переключение темы
 
 ```js
-RunConsoleCommand("mantle_theme", "red");
+-- Лучший вариант
+Mantle.ui.setTheme('red')
+
+-- Консольный вариант
+RunConsoleCommand('mantle_theme', 'red')
 ```
 
-Встроенные темы: `dark`, `dark_mono`, `light`, `blue`, `red`, `green`, `orange`, `purple`, `coffee`, `ice`, `wine`, `violet`, `moss`, `coral`.
+При включённом `mantle_smooth` цвета переходят плавно. При `mantle_smooth 0` тема применяется мгновенно.
 
-## Дополнение
+Встроенные темы: `dark`, `dark_mono`, `blue`, `red`, `green`, `purple`, `coffee`, `wine`, `violet`, `moss`, `coral`.
 
-Создавать и редактировать темы нужно в файле `config/colors.lua`.
+## Свои темы
+
+Темы создаются в `config/colors.lua` через `Mantle.ui.registerTheme(id, title, colors)`.
+
+Указывать все ключи не обязательно: недостающие цвета берутся из темы `dark`.
 
 ```js
 Mantle.ui.registerTheme('mytheme', 'Моя тема', {
     theme = Color(120, 80, 200),
     background = Color(20, 16, 28),
-    text = Color(230, 230, 240),
-    -- и другие ключи
+    text = Color(230, 230, 240)
 })
 ```

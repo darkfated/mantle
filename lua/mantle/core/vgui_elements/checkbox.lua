@@ -1,6 +1,7 @@
 local PANEL = {}
 
 local math_floor = math.floor
+local syncCounter = 0
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
@@ -27,17 +28,9 @@ function PANEL:Init()
     self.toggle.Paint = nil
 
     self.toggle.DoClick = function()
-        if self.convar != '' then
-            LocalPlayer():ConCommand(self.convar .. ' ' .. (self.value and 0 or 1))
-        end
-
         self:SetValue(not self.value)
-        self:OnChange(self.value)
-
         Mantle.func.sound()
     end
-
-    self._convarTimerName = self:CreateConVarSyncTimer()
 end
 
 function PANEL:OnMousePressed(mcode)
@@ -50,8 +43,17 @@ function PANEL:SetTxt(text)
     self.text = text
 end
 
-function PANEL:SetValue(val)
-    self.value = tobool(val)
+function PANEL:SetValue(val, fromConVar)
+    val = tobool(val)
+    if self.value == val then return end
+
+    self.value = val
+
+    if self.convar != '' and !fromConVar then
+        LocalPlayer():ConCommand(self.convar .. ' ' .. (val and 1 or 0))
+    end
+
+    self:OnChange(val)
 end
 
 function PANEL:GetBool()
@@ -59,13 +61,21 @@ function PANEL:GetBool()
 end
 
 function PANEL:SetConvar(convar)
+    self.convar = convar
+
     local c = GetConVar(convar)
     if c then self.value = c:GetBool() end
-    self.convar = convar
+
+    if convar != '' and !self._convarTimerName then
+        self._convarTimerName = self:CreateConVarSyncTimer()
+    end
 end
 
 function PANEL:CreateConVarSyncTimer()
-    local name = ('mantle_check_sync_%s'):format(tostring(self))
+    syncCounter = syncCounter + 1
+
+    local name = ('MantleCheckSync%d'):format(syncCounter)
+
     timer.Create(name, 0.1, 0, function()
         if not IsValid(self) or self.convar == '' then return end
 
@@ -74,10 +84,10 @@ function PANEL:CreateConVarSyncTimer()
 
         local val = cvar:GetBool()
         if self.value != val then
-            self:SetValue(val)
-            self:OnChange(self.value)
+            self:SetValue(val, true)
         end
     end)
+
     return name
 end
 

@@ -10,6 +10,7 @@ function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self.choices = {}
     self.selected = nil
+    self.selectedIndex = nil
     self.opened = false
     self:SetTall(HEIGHT)
     self:SetText('')
@@ -61,7 +62,7 @@ function PANEL:Init()
     end
 
     self.btn.DoClick = function()
-        if self.opened then
+        if IsValid(self.menu) and !self.menu._closing then
             self:CloseMenu()
         else
             self:OpenMenu()
@@ -71,11 +72,21 @@ function PANEL:Init()
 end
 
 function PANEL:AddChoice(text, data)
-    table.insert(self.choices, {text = text, data = data})
+    self.choices[#self.choices + 1] = {text = text, data = data}
+    return #self.choices
 end
 
-function PANEL:SetValue(val)
-    self.selected = val
+function PANEL:SetValue(text)
+    self.selected = nil
+    self.selectedIndex = nil
+
+    for i, choice in ipairs(self.choices) do
+        if choice.text == text then
+            self.selected = choice.text
+            self.selectedIndex = i
+            return
+        end
+    end
 end
 
 function PANEL:GetValue()
@@ -86,44 +97,44 @@ function PANEL:SetPlaceholder(text)
     self.placeholder = text
 end
 
+function PANEL:SelectChoice(index)
+    local choice = self.choices[index]
+    if !choice then return end
+
+    self.selected = choice.text
+    self.selectedIndex = index
+
+    if self.OnSelect then
+        self.OnSelect(index, choice.text, choice.data)
+    end
+end
+
 function PANEL:OpenMenu()
     if IsValid(self.menu) then
-        self.menu:CloseMenu()
+        self.menu:Remove()
     end
 
-    local x, y = self:LocalToScreen(0, self:GetTall())
     local menu = vgui.Create('MantleDermaMenu')
-    menu:SetParent(nil)
-    menu:SetPos(x, y)
+    menu._owner = self
 
     for i, choice in ipairs(self.choices) do
-        local function onClick()
-            self.selected = choice.text
-
-            if IsValid(menu) then
-                menu:CloseMenu()
-            end
-            if self.OnSelect then
-                self.OnSelect(i, choice.text, choice.data)
-            end
-            Mantle.func.sound()
-        end
-        menu:AddOption(choice.text, onClick, nil, {
-            selected = choice.text == self.selected
+        menu:AddOption(choice.text, function()
+            self:SelectChoice(i)
+        end, nil, {
+            selected = i == self.selectedIndex
         })
     end
 
-    menu:MakePopup()
-    menu:SetKeyboardInputEnabled(false)
+    menu:SetAnchor(self)
     menu:UpdateSize()
 
     self.menu = menu
     self.opened = true
 
     menu.OnRemove = function()
-        if IsValid(self) then
-            self.opened = false
-        end
+        if self.menu != menu then return end
+        self.menu = nil
+        self.opened = false
     end
 end
 
@@ -134,8 +145,25 @@ function PANEL:CloseMenu()
     self.opened = false
 end
 
+function PANEL:Think()
+    if !IsValid(self.menu) then return end
+
+    local panel = self
+    while IsValid(panel) do
+        if !panel:IsVisible() then
+            self:CloseMenu()
+            return
+        end
+        panel = panel:GetParent()
+    end
+end
+
 function PANEL:OnRemove()
-    self:CloseMenu()
+    if IsValid(self.menu) then
+        self.menu:Remove()
+    end
+    self.menu = nil
+    self.opened = false
 end
 
 vgui.Register('MantleComboBox', PANEL, 'Panel')
