@@ -1,5 +1,8 @@
 local PANEL = {}
 
+local math_max = math.max
+local math_floor = math.floor
+
 PANEL.IsVertical = false
 
 function PANEL:_sizeCanvas()
@@ -8,34 +11,31 @@ end
 
 function PANEL:_range()
     if self._needLayout then
-        local w, h = self:GetWide(), self:GetTall()
+        local w, h = self:GetSize()
+        local viewW = math_max(0, w - self.padL - self.padR)
+        local viewH = math_max(0, h - self.padT - self.padB)
 
-        self.content:SetPos(self.padL - self.offset, self.padT)
-        self.content:SetTall(math.max(0, h - self.padT - self.padB))
+        self.content:SetTall(viewH)
         self.content:InvalidateLayout(true)
-        self.content:SizeToChildren(true, false)
+        self:_sizeCanvas()
 
-        local viewW = math.max(0, w - self.padL - self.padR)
         local contentW = self.content:GetWide()
-
-        if contentW <= viewW then
-            self.content:SetWide(math.max(0, w - self.padL - self.padR))
+        if contentW < viewW then
+            self.content:SetWide(viewW)
             self.content:InvalidateLayout(true)
-            self.content:SizeToChildren(true, false)
-            contentW = self.content:GetWide()
         end
 
         self._needLayout = false
     end
 
-    local viewW = math.max(0, self:GetWide() - self.padL - self.padR)
+    local viewW = math_max(0, self:GetWide() - self.padL - self.padR)
     local contentW = self.content:GetWide()
 
-    return math.max(0, contentW - viewW), viewW, contentW
+    return math_max(0, contentW - viewW), viewW, contentW
 end
 
 function PANEL:_applyScroll()
-    self.content:SetPos(self.padL - math.floor(self.offset), self.padT)
+    self.content:SetPos(self.padL - math_floor(self.offset), self.padT)
 end
 
 vgui.Register('MantleHScroll', PANEL, 'MantleScroll')
