@@ -285,69 +285,75 @@ local function build(tab)
     slider:DockMargin(8, 8, 8, 8)
     cat:AddItem(slider)
 
+    local textCategory = vgui.Create('MantleCategory', panel)
+    textCategory:Dock(TOP)
+    textCategory:SetText('Текст')
+    textCategory:SetActive(true)
+
     local panelTexts = vgui.Create('MantlePanel')
     panelTexts:Dock(TOP)
+    panelTexts:DockMargin(8, 8, 8, 8)
     panelTexts:DockPadding(8, 8, 8, 8)
-    panelTexts:SetTall(418)
+    panelTexts:SetTall(388)
     panelTexts:SetColorAlpha(2)
-    panelTexts:SetRadius(32)
 
     local panelText1 = vgui.Create('MantlePanel', panelTexts)
+    panelText1:DockMargin(0, 0, 0, 8)
     panelText1:Dock(TOP)
     panelText1:SetTall(70)
     panelText1:SetColorAlpha(1)
-    panelText1:SetRadius(32)
 
     local text1 = vgui.Create('MantleText', panelText1)
     text1:Dock(FILL)
     text1:SetPadding(10)
-    text1:SetText('MantleText - компонент для аккуратного вывода многострочного текста. Текст автоматически переносится по ширине и сокращается троеточием')
+    text1:SetFont('Fated.16')
+    text1:SetText('MantleText автоматически переносит слова по доступной ширине и ограничивает количество строк по высоте панели. Если содержимого больше, чем помещается, последняя видимая строка аккуратно сокращается многоточием. Здесь проверяется обычный перенос и обрезка текста.')
 
     local panelText2 = vgui.Create('MantlePanel', panelTexts)
+    panelText2:DockMargin(0, 0, 0, 8)
     panelText2:Dock(TOP)
     panelText2:SetTall(130)
     panelText2:SetColorAlpha(1)
-    panelText2:SetRadius(32)
 
     local text2 = vgui.Create('MantleText', panelText2)
     text2:Dock(FILL)
     text2:SetPadding(12)
     text2:SetFont('Fated.20')
-    text2:SetText('Центрирование: горизонталь + вертикаль. Текст выровнен по центру блока.')
+    text2:SetText('Центрирование по горизонтали\nи вертикали. Текст выравнивается относительно внутренней области с учётом padding.')
     text2:SetAlign(TEXT_ALIGN_CENTER)
     text2:SetVAlign('center')
 
     local panelText3 = vgui.Create('MantlePanel', panelTexts)
+    panelText3:DockMargin(0, 0, 0, 8)
     panelText3:Dock(TOP)
     panelText3:SetTall(60)
     panelText3:SetColorAlpha(1)
-    panelText3:SetRadius(32)
 
     local text3 = vgui.Create('MantleText', panelText3)
     text3:Dock(FILL)
     text3:SetPadding(8)
-    text3:SetText('ОченьДлинноеСловоБезПробеловКотороеНужноОтделитьЧтобыНеПорвалосьОформление')
+    text3:SetFont('Fated.16')
+    text3:SetText('Перед длинным словом: ' .. string.rep('ОченьДлинноеСловоБезПробелов', 8))
 
     local panelText4 = vgui.Create('MantlePanel', panelTexts)
     panelText4:Dock(TOP)
-    panelText4:SetTall(80)
+    panelText4:DockMargin(0, 0, 0, 0)
+    panelText4:SetTall(88)
     panelText4:SetColorAlpha(1)
-    panelText4:SetRadius(32)
 
     local text4 = vgui.Create('MantleText', panelText4)
     text4:Dock(FILL)
     text4:SetPadding(8)
     text4:SetFont('Fated.16')
-    text4:SetText([[
-        Это длинный пример текста, который занимает несколько строк. Если блок небольшой по высоте - последняя видимая строка будет усечена с троеточием, чтобы не порвать верстку и не выходить за пределы панели нашего меню.
-    ]])
+    text4:SetText(string.Trim([=[
+    Это длинный пример текста, который занимает несколько строк. Если блок небольшой по высоте, последняя видимая строка будет сокращена многоточием, но только когда за пределами блока действительно остаётся текст.
 
-    cat = vgui.Create('MantleCategory', panel)
-    cat:Dock(TOP)
-    cat:SetText('Текст')
-    cat:SetActive(true)
-    panelTexts:DockMargin(8, 8, 8, 8)
-    cat:AddItem(panelTexts)
+    Пустая строка между абзацами сохраняется как отдельный перенос. Переносы CRLF и LF обрабатываются одинаково. Длинные слова без пробелов разбиваются по UTF-8 символам, а текст не должен выходить за доступную ширину.
+
+    Этот дополнительный абзац нужен для проверки обрезки по высоте, корректного многоточия и отсутствия лишних символов в конце строки.
+    ]=]))
+
+    textCategory:AddItem(panelTexts)
 
     return panel
 end
