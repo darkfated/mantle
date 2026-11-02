@@ -25,7 +25,7 @@ function PANEL:Init()
     self.header:SetText('')
     self.header.Paint = function(_, w, h)
         RNDX.Rect(0, 0, w, h)
-            :Rad(16)
+            :Rad(12)
             :Color(self.headerColor)
         :Draw()
 
