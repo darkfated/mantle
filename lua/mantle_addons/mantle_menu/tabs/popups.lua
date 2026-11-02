@@ -11,10 +11,9 @@ local function createDemoButton(text, callback)
 end
 
 local function build(tab)
-    local panel = Mantle.menu.createBanner(tab)
-    local cat
+    local panel = vgui.Create('MantleScrollPanel')
 
-    cat = vgui.Create('MantleCategory', panel)
+    local cat = vgui.Create('MantleCategory', panel)
     cat:Dock(TOP)
     cat:SetText('Выбор цвета')
     cat:SetActive(true)

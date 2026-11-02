@@ -1,5 +1,6 @@
 local function build(tab)
-    local panel = Mantle.menu.createBanner(tab)
+    local panel = vgui.Create('MantleScrollPanel')
+
     local forcedTheme = Mantle.ui.getForcedThemeName()
 
     local checkboxBlur = vgui.Create('MantleCheckBox', panel)

@@ -1,5 +1,5 @@
 local function build(tab)
-    local panel = Mantle.menu.createBanner(tab)
+    local panel = vgui.Create('MantleScrollPanel')
 
     local panelBtns = vgui.Create('Panel')
     panelBtns:Dock(TOP)
@@ -92,12 +92,12 @@ local function build(tab)
 
     local sp = vgui.Create('MantleScrollPanel')
     sp:Dock(TOP)
-    sp:SetTall(150)
+    sp:SetTall(210)
 
     for k = 1, 10 do
         local spPanel = vgui.Create('MantlePanel', sp)
         spPanel:Dock(TOP)
-        spPanel:SetTall(24)
+        spPanel:SetTall(70)
         spPanel:SetColorAlpha(1)
         spPanel:SetRadius(16)
     end
@@ -111,11 +111,11 @@ local function build(tab)
 
     local panelTabs = vgui.Create('Panel')
     panelTabs:Dock(TOP)
-    panelTabs:SetTall(320)
+    panelTabs:SetTall(420)
 
     local testTabs = vgui.Create('MantleTabs', panelTabs)
     testTabs:Dock(TOP)
-    testTabs:SetTall(150)
+    testTabs:SetTall(200)
     local testTab1 = vgui.Create('Panel')
     testTab1.Paint = function(_, w, h)
         RNDX.Rect(0, 0, w - 12, h):Rad(16):Color(53, 98, 40):Draw()

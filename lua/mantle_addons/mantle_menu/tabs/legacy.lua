@@ -1,5 +1,5 @@
 local function build(tab)
-    local panel = Mantle.menu.createBanner(tab)
+    local panel = vgui.Create('MantleScrollPanel')
 
     local cat = vgui.Create('MantleCategory', panel)
     cat:Dock(TOP)
