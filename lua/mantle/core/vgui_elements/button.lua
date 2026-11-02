@@ -6,7 +6,7 @@ local math_floor = math.floor
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
-    self:SetTall(40)
+    self:SetTall(36)
 
     self.hoverAmount = 0
     self.hoverEnabled = true
