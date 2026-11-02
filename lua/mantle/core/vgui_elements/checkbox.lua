@@ -1,46 +1,33 @@
 local PANEL = {}
 
+local math_abs = math.abs
 local math_floor = math.floor
 local syncCounter = 0
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
+    self:SetTall(32)
+    self:SetText('')
+    self:SetCursor('hand')
+
     self.text = ''
     self.convar = ''
     self.value = false
 
-    self._toggleHover = 0
-
-    self:SetText('')
-    self:SetCursor('hand')
-    self:SetTall(32)
-
-    self._circle = 0
-    self._circleEased = 0
-    self._circleColor = Mantle.color.gray
-
-    self.toggle = vgui.Create('Button', self)
-    self.toggle:Dock(RIGHT)
-    self.toggle:SetWide(38)
-    self.toggle:DockMargin(0, 0, 10, 0)
-    self.toggle:SetText('')
-    self.toggle:SetCursor('hand')
-    self.toggle.Paint = nil
-
-    self.toggle.DoClick = function()
-        self:SetValue(not self.value)
-        Mantle.func.sound()
-    end
-end
-
-function PANEL:OnMousePressed(mcode)
-    if mcode == MOUSE_LEFT then
-        self.toggle:DoClick()
-    end
+    self._checked = 0
+    self._convarTimerName = nil
 end
 
 function PANEL:SetTxt(text)
-    self.text = text
+    self.text = tostring(text or '')
+end
+
+function PANEL:SetText(text)
+    self:SetTxt(text)
+end
+
+function PANEL:GetText()
+    return self.text
 end
 
 function PANEL:SetValue(val, fromConVar)
@@ -60,15 +47,26 @@ function PANEL:GetBool()
     return self.value
 end
 
+function PANEL:GetValue()
+    return self.value
+end
+
 function PANEL:SetConvar(convar)
-    self.convar = convar
-
-    local c = GetConVar(convar)
-    if c then self.value = c:GetBool() end
-
-    if convar != '' and !self._convarTimerName then
-        self._convarTimerName = self:CreateConVarSyncTimer()
+    if self._convarTimerName then
+        timer.Remove(self._convarTimerName)
+        self._convarTimerName = nil
     end
+
+    self.convar = tostring(convar or '')
+
+    if self.convar == '' then return end
+
+    local c = GetConVar(self.convar)
+    if c then
+        self:SetValue(c:GetBool(), true)
+    end
+
+    self._convarTimerName = self:CreateConVarSyncTimer()
 end
 
 function PANEL:CreateConVarSyncTimer()
@@ -77,18 +75,80 @@ function PANEL:CreateConVarSyncTimer()
     local name = ('MantleCheckSync%d'):format(syncCounter)
 
     timer.Create(name, 0.1, 0, function()
-        if not IsValid(self) or self.convar == '' then return end
+        if !IsValid(self) then
+            timer.Remove(name)
+            return
+        end
 
-        local cvar = GetConVar(self.convar)
-        if not cvar then return end
+        if self.convar == '' then return end
 
-        local val = cvar:GetBool()
-        if self.value != val then
-            self:SetValue(val, true)
+        local c = GetConVar(self.convar)
+        if !c then return end
+
+        local value = c:GetBool()
+        if self.value != value then
+            self:SetValue(value, true)
         end
     end)
 
     return name
+end
+
+function PANEL:OnMousePressed(mouseCode)
+    if mouseCode != MOUSE_LEFT or !self:IsEnabled() then return end
+
+    self:SetValue(!self.value)
+    Mantle.func.sound()
+
+    return true
+end
+
+function PANEL:Think()
+    local ft = FrameTime()
+    local checkedTarget = self.value and 1 or 0
+
+    self._checked = Mantle.func.approachExp(self._checked, checkedTarget, 16, ft)
+
+    if math_abs(self._checked - checkedTarget) < 0.001 then
+        self._checked = checkedTarget
+    end
+end
+
+function PANEL:Paint(w, h)
+    local checked = self._checked or 0
+
+    local boxSize = 18
+    local boxX = 9
+    local boxY = math_floor((h - boxSize) * 0.5)
+    local innerSize = 12
+    local innerX = boxX + (boxSize - innerSize) * 0.5
+    local innerY = boxY + (boxSize - innerSize) * 0.5
+
+    local unchecked = Mantle.color.toggle
+    local theme = Mantle.color.theme
+    local border = Mantle.func.LerpColor(checked, unchecked, theme)
+
+    RNDX.Rect(boxX, boxY, boxSize, boxSize)
+        :Rad(5)
+        :Color(border)
+    :Draw()
+
+    if checked > 0.001 then
+        local fillAlpha = math_floor(255 * checked)
+
+        RNDX.Rect(innerX, innerY, innerSize, innerSize)
+            :Rad(3.5)
+            :Color(Color(theme.r, theme.g, theme.b, fillAlpha))
+        :Draw()
+    end
+
+    local textColor = Mantle.color.text
+    if !self:IsEnabled() then
+        textColor = Color(textColor.r, textColor.g, textColor.b, 110)
+    end
+
+    local textX = boxX + boxSize + 9
+    draw.SimpleText(self.text, 'Fated.16', textX, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
 function PANEL:OnRemove()
@@ -98,72 +158,7 @@ function PANEL:OnRemove()
     end
 end
 
-function PANEL:OnChange(new_value)
-end
-
-function PANEL:Paint(w, h)
-    RNDX.Rect(0, 0, w, h)
-        :Rad(12)
-        :Color(Mantle.color.focus_panel)
-    :Draw()
-
-    draw.SimpleText(self.text, 'Fated.16', 10, h * 0.5, Mantle.color.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-end
-
-function PANEL:PaintOver(w, h)
-    local tw, th = self.toggle:GetWide(), self.toggle:GetTall()
-    local tx, ty = self.toggle:GetPos()
-    local ft = FrameTime()
-
-    local target = self.value and 1 or 0
-    self._circle = Mantle.func.approachExp(self._circle, target, 12, ft)
-    if math.abs(self._circle - target) < 0.001 then self._circle = target end
-    self._circleEased = Mantle.func.easeInOutCubic(self._circle)
-
-    self._toggleHover = Mantle.func.approachExp(self._toggleHover, self.toggle:IsHovered() and 1 or 0, 14, ft)
-
-    local trackW = tw - 8
-    local trackH = 14
-    local trackX = tx + (tw - trackW) * 0.5
-    local trackY = ty + (th - trackH) * 0.5
-
-    RNDX.Rect(trackX, trackY + 1, trackW, trackH - 2)
-        :Rad(trackH / 2)
-        :Color(Mantle.color.toggle)
-    :Draw()
-
-    if self._toggleHover > 0.01 then
-        local hv = Mantle.color.hover_overlay_strong
-        RNDX.Rect(trackX, trackY + 1, trackW, trackH - 2)
-            :Rad(trackH / 2)
-            :Color(Color(hv.r, hv.g, hv.b, math_floor(hv.a * self._toggleHover)))
-        :Draw()
-    end
-
-    local circleSize = 16
-    local pad = 0
-    local textMargin = 10
-
-    local x0_base = trackX + pad - (circleSize * 0.5) + 0.5
-    local x1 = trackX + trackW - pad - (circleSize * 0.5) - 0.5
-    local x0_align = textMargin - (circleSize * 0.5)
-    local x0 = math.max(x0_base, x0_align)
-
-    local circleX = x0 + (x1 - x0) * self._circleEased
-    local circleCenterX = circleX + circleSize * 0.5
-    local circleCenterY = trackY + trackH * 0.5
-
-    local baseCircle = self.value and Mantle.color.theme or Mantle.color.gray
-    local circleCol = Color(baseCircle.r, baseCircle.g, baseCircle.b, 255)
-    self._circleColor = Mantle.func.LerpColor(14, self._circleColor, circleCol)
-
-    RNDX.Circle(circleCenterX, circleCenterY, circleSize * 0.5)
-        :Color(self._circleColor)
-    :Draw()
-
-    RNDX.Circle(circleCenterX, circleCenterY + 1, circleSize * 1.03 * 0.5)
-        :Color(Mantle.color.circle_shadow)
-    :Draw()
+function PANEL:OnChange(newValue)
 end
 
 vgui.Register('MantleCheckBox', PANEL, 'Panel')
