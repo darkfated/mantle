@@ -19,7 +19,7 @@ It is recommended to subscribe on the [Workshop](https://steamcommunity.com/shar
 
 ### Manual Download
 
-Grab the latest release from the [Releases](https://github.com/darkfated/mantle/releases/tag/v2.2) page and extract it into your `garrysmod/addons/` folder.
+Grab the latest release from the [Releases](https://github.com/darkfated/mantle/releases/latest) page and extract it into your `garrysmod/addons/` folder.
 
 ## 🔐 License
 
