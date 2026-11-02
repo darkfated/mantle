@@ -1,7 +1,6 @@
 local function createDemoButton(text, callback)
     local button = vgui.Create('MantleBtn')
     button:Dock(TOP)
-    button:SetTall(30)
     button:SetTxt(text)
     button.DoClick = function()
         callback()
@@ -127,6 +126,40 @@ local function build(tab)
     end)
     btnNotify:DockMargin(8, 8, 8, 8)
     cat:AddItem(btnNotify)
+
+    cat = vgui.Create('MantleCategory', panel)
+    cat:Dock(TOP)
+    cat:SetText('Model Selector')
+    cat:SetActive(true)
+
+    local btnModel = createDemoButton('Open Model Selector', function()
+        Mantle.ui.model_selector({
+            'models/player/group01/male_01.mdl',
+            'models/player/group01/female_01.mdl',
+            {
+                model = 'models/player/combine_soldier.mdl',
+                name = 'Combine Soldier',
+                description = 'Combine faction'
+            },
+            {
+                model = 'models/player/alyx.mdl',
+                name = 'Alyx',
+                description = 'Resistance'
+            },
+            {
+                model = 'models/player/monk.mdl',
+                name = 'Monk',
+                description = 'Civilian character'
+            }
+        }, function(model, data, index)
+            local name = istable(data) and data.name or model
+
+            chat.AddText('Selected model: ', Mantle.color.theme, name, color_white, ' (' .. model .. ')')
+        end)
+    end)
+
+    btnModel:DockMargin(8, 8, 8, 8)
+    cat:AddItem(btnModel)
 
     return panel
 end

@@ -1,7 +1,7 @@
 ---
 title: Радиальное меню
 description: Кольцевое меню с клавишами
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Радиальное меню

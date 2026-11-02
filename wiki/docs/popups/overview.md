@@ -10,6 +10,7 @@ description: Список всплывающих элементов
 | [Выбор цвета](color-picker.md)     | `Mantle.ui.color_picker(callback, defaultColor)` | Выбор цвета                    |
 | [Контекстное меню](derma-menu.md)  | `Mantle.ui.derma_menu()`                         | Выбор опций                    |
 | [Выбор игрока](player-selector.md) | `Mantle.ui.player_selector(onSelect, filterFn)`  | Список игроков                 |
+| [Выбор модели](model-selector.md)  | `Mantle.ui.model_selector(models, callback)`     | Список моделей                 |
 | [Радиальное меню](radial-menu.md)  | `Mantle.ui.radial_menu(options)`                 | Кольцевое меню с клавишами 1-9 |
 | [Текстовое окно](text-box.md)      | `Mantle.ui.text_box(title, desc, callback)`      | Окно ввода текста              |
 

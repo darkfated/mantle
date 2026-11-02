@@ -1,7 +1,7 @@
 ---
 title: Текстовое окно
 description: Окно ввода текста
-sidebar_position: 5
+sidebar_position: 6
 ---
 
 # Текстовое окно

@@ -29,6 +29,7 @@ const sidebars = {
         "popups/color-picker",
         "popups/derma-menu",
         "popups/player-selector",
+        "popups/model-selector",
         "popups/radial-menu",
         "popups/text-box",
       ],
