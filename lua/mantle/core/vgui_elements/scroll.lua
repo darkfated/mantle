@@ -8,18 +8,60 @@ local math_sqrt = math.sqrt
 local math_ceil = math.ceil
 local math_clamp = math.Clamp
 
+local function isCursorInside(panel, mouseX, mouseY)
+    if !IsValid(panel) then return false end
+
+    local x, y = panel:LocalToScreen(0, 0)
+    return mouseX >= x and mouseX <= x + panel:GetWide()
+        and mouseY >= y and mouseY <= y + panel:GetTall()
+end
+
+local function findScrollAncestor(panel, mouseX, mouseY)
+    while IsValid(panel) do
+        if panel._mantleScroll and panel:IsVisible() and panel._range
+            and isCursorInside(panel, mouseX, mouseY)
+        then
+            local maxScroll = select(1, panel:_range()) or 0
+            if maxScroll > 0 then
+                return panel
+            end
+        end
+
+        panel = panel:GetParent()
+    end
+end
+
+local function findWheelOwner(fallback)
+    local mouseX, mouseY = input.GetCursorPos()
+    local owner = findScrollAncestor(vgui.GetHoveredPanel(), mouseX, mouseY)
+    if IsValid(owner) then return owner end
+
+    return findScrollAncestor(fallback, mouseX, mouseY)
+end
+
+local function routeWheel(delta, fallback)
+    if !delta or delta == 0 then return end
+
+    local owner = findWheelOwner(fallback)
+    if !IsValid(owner) then return end
+
+    owner:_handleWheelInput(delta)
+    return true
+end
+
 PANEL.IsVertical = true
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
+    self._mantleScroll = true
 
     self.content = vgui.Create('Panel', self)
     self.content:SetMouseInputEnabled(true)
     self.content.OnMousePressed = function(_, mc)
         self:OnMousePressed(mc)
     end
-    self.content.OnMouseWheeled = function(_, delta)
-        return self:OnMouseWheeled(delta)
+    self.content.OnMouseWheeled = function(pnl, delta)
+        return routeWheel(delta, pnl)
     end
 
     local contentChildAdded = self.content.OnChildAdded
@@ -99,18 +141,18 @@ function PANEL:_hookSize(pnl)
 end
 
 function PANEL:_hookWheel(pnl)
-    if pnl._mantleScrollWheelOwner == self then return end
+    if pnl._mantleScrollWheelHooked then return end
 
-    local old = pnl.OnMouseWheeled
-    pnl._mantleScrollWheelOwner = self
+    pnl._mantleScrollWheelHooked = true
+    pnl._mantleScrollWheelOriginal = pnl.OnMouseWheeled
     pnl.OnMouseWheeled = function(s, delta)
-        if old then
+        local old = s._mantleScrollWheelOriginal
+        if old and !(s._mantleScroll and old == PANEL.OnMouseWheeled) then
             local handled = old(s, delta)
             if handled then return handled end
         end
 
-        if !IsValid(self) then return end
-        return self:OnMouseWheeled(delta)
+        return routeWheel(delta, s)
     end
 end
 
@@ -318,7 +360,7 @@ function PANEL:_nudge(distance)
     self.lastInput = CurTime()
 end
 
-function PANEL:OnMouseWheeled(delta)
+function PANEL:_handleWheelInput(delta)
     if !delta or delta == 0 then return end
 
     local maxScroll = self:_range()
@@ -334,6 +376,10 @@ function PANEL:OnMouseWheeled(delta)
     self.lastInput = CurTime()
 
     return true
+end
+
+function PANEL:OnMouseWheeled(delta)
+    return routeWheel(delta, self)
 end
 
 function PANEL:OnMousePressed(mc)
