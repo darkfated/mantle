@@ -10,7 +10,7 @@ To explore the API with screenshots - [visit the Documentation](https://darkfate
 
 You can also access the test menu via the console command `mantle_menu`:
 
-<img width="999" height="726" alt="Screenshot" src="https://github.com/user-attachments/assets/2590fcca-0237-4b38-95b1-39798e053e83" />
+<img width="999" height="734" alt="Screenshot" src="https://github.com/user-attachments/assets/474e9fe8-2960-4457-8558-575c9ebb906c" />
 
 ## 📩 Installation
 ### Steam Workshop
