@@ -1,16 +1,16 @@
 ---
-title: Отрисовка
-description: Размытие и градиент
+title: Drawing
+description: Blur and gradient
 sidebar_position: 1
 ---
 
-# Отрисовка
+# Drawing
 
-Отрисовочные функции. Вызываются внутри `:Paint()`.
+Drawing functions. Call them inside `:Paint()`.
 
-## Размытие фона
+## Background blur
 
-Размывает всё, что находится под панелью.
+Blurs everything behind the panel.
 
 ```js
 function Panel:Paint(w, h)
@@ -18,7 +18,7 @@ function Panel:Paint(w, h)
 end
 ```
 
-## Градиент
+## Gradient
 
 ```js
 function Panel:Paint(w, h)
@@ -26,10 +26,10 @@ function Panel:Paint(w, h)
 end
 ```
 
-| Аргумент           | Тип     | Описание                                        |
+| Argument           | Type    | Description                                     |
 | ------------------ | ------- | ----------------------------------------------- |
-| `x`, `y`, `w`, `h` | `int`   | Область градиента                               |
-| `dir`              | `int`   | Направление: 1 вверх, 2 вниз, 3 влево, 4 вправо |
-| `col`              | `color` | Цвет градиента                                  |
-| `radius`           | `int`   | Скругление углов                                |
-| `flags`            | `int`   | Флаги RNDX (например, форма). Опционально |
+| `x`, `y`, `w`, `h` | `int`   | Gradient area                                   |
+| `dir`              | `int`   | Direction: 1 up, 2 down, 3 left, 4 right        |
+| `col`              | `color` | Gradient color                                  |
+| `radius`           | `int`   | Corner radius                                   |
+| `flags`            | `int`   | RNDX flags (for example, the shape). Optional   |

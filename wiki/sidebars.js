@@ -4,7 +4,7 @@ const sidebars = {
     "getting-started",
     {
       type: "category",
-      label: "UI Элементы",
+      label: "UI Elements",
       items: [
         "ui/button",
         "ui/checkbox",
@@ -24,7 +24,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Всплывающие элементы",
+      label: "Popups",
       link: { type: "doc", id: "popups/overview" },
       items: [
         "popups/color-picker",
@@ -37,7 +37,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Функции",
+      label: "Functions",
       items: [
         "functions/drawing",
         "functions/sound",

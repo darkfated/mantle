@@ -1,16 +1,16 @@
 ---
-title: Категория
-description: Сворачиваемая категория
+title: Category
+description: Collapsible category
 sidebar_position: 10
 ---
 
 # MantleCategory
 
-Сворачиваемый блок с заголовком и контентом. Клик по заголовку раскрывает или скрывает содержимое.
+A collapsible block with a header and content. Clicking the header expands or hides the content.
 
-## Пример
+## Example
 
-![](./assets/category-1.gif)
+![](/img/docs/ui/category-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -20,7 +20,7 @@ frame:MakePopup()
 
 local cat = vgui.Create('MantleCategory', frame)
 cat:Dock(TOP)
-cat:SetText('Тестовая категория')
+cat:SetText('Test category')
 
 local pan = vgui.Create('MantleText', cat)
 pan:Dock(TOP)
@@ -33,7 +33,7 @@ pan.Paint = function(_, w, h)
 end
 ```
 
-## Раскрыта по умолчанию
+## Expanded by default
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -43,14 +43,14 @@ frame:MakePopup()
 
 local cat = vgui.Create('MantleCategory', frame)
 cat:Dock(TOP)
-cat:SetActive(true) -- по умолчанию false
+cat:SetActive(true) -- false by default
 
 local pan = vgui.Create('DPanel', cat)
 pan:Dock(TOP)
 pan:SetTall(300)
 ```
 
-## Проверка состояния
+## Checking the state
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -60,16 +60,16 @@ frame:MakePopup()
 
 local cat = vgui.Create('MantleCategory', frame)
 cat:Dock(TOP)
-cat:SetText('Блок')
+cat:SetText('Block')
 
 if !cat:IsActive() then
-    print('Категория не раскрыта')
+    print('The category is collapsed')
 end
 ```
 
-## Центрирование заголовка
+## Centering the header
 
-![](./assets/category-2.gif)
+![](/img/docs/ui/category-2.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -79,7 +79,7 @@ frame:MakePopup()
 
 local cat = vgui.Create('MantleCategory', frame)
 cat:Dock(TOP)
-cat:SetText('Я по центру!')
+cat:SetText('I am centered!')
 cat:SetCenterText(true)
 
 local pan = vgui.Create('MantleText', cat)
@@ -93,7 +93,7 @@ pan.Paint = function(_, w, h)
 end
 ```
 
-## Свой цвет заголовка
+## Custom header color
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -103,22 +103,22 @@ frame:MakePopup()
 
 local cat = vgui.Create('MantleCategory', frame)
 cat:Dock(TOP)
-cat:SetText('Важно')
+cat:SetText('Important')
 cat:SetColor(Color(182, 65, 65))
 ```
 
-## Методы
+## Methods
 
-| Метод                             | Описание                                  |
+| Method                            | Description                               |
 | --------------------------------- | ----------------------------------------- |
-| `:SetText(string text)`           | Заголовок категории                       |
-| `:AddItem(panel)`                 | Добавить панель в содержимое              |
-| `:SetColor(color col)`            | Цвет заголовка                            |
-| `:SetCenterText(bool isCentered)` | Заголовок по центру. По умолчанию `false` |
-| `:SetActive(bool isActive)`       | Раскрыть или свернуть категорию           |
-| `:IsActive()`                     | `true`, если категория раскрыта           |
-| `:Clear()`                        | Очистить содержимое                       |
+| `:SetText(string text)`           | Category header                           |
+| `:AddItem(panel)`                 | Add a panel to the content                |
+| `:SetColor(color col)`            | Header color                              |
+| `:SetCenterText(bool isCentered)` | Center the header. Default `false`        |
+| `:SetActive(bool isActive)`       | Expand or collapse the category           |
+| `:IsActive()`                     | `true` if the category is expanded        |
+| `:Clear()`                        | Clear the content                         |
 
-## Примечания
+## Notes
 
-- Категория по умолчанию свёрнута.
+- The category is collapsed by default.

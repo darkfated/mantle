@@ -1,33 +1,33 @@
 ---
-title: Утилиты
-description: Вспомогательные функции для панелей и анимаций
+title: Utilities
+description: Helper functions for panels and animations
 sidebar_position: 11
 ---
 
-# Утилиты
+# Utilities
 
-Небольшие вспомогательные функции из `Mantle.util`.
+Small helper functions from `Mantle.util`.
 
-## Проверка родства панелей
+## Checking panel ancestry
 
-`Mantle.util.isDescendantOf(panel, target)` возвращает `true`, если `panel` является `target` или его дочерней панелью на любой глубине.
+`Mantle.util.isDescendantOf(panel, target)` returns `true` if `panel` is `target` or its child panel at any depth.
 
 ```js
 hook.Add('GUIMousePressed', 'Test', function()
     if Mantle.util.isDescendantOf(vgui.GetHoveredPanel(), somePanel) then
-        print('Клик внутри панели')
+        print('Clicked inside the panel')
     end
 end)
 ```
 
-| Аргумент | Тип       | Описание                  |
-| -------- | --------- | ------------------------- |
-| `panel`  | `panel`   | Проверяемая панель        |
-| `target` | `panel`   | Предполагаемый предок     |
+| Argument | Type    | Description              |
+| -------- | ------- | ------------------------ |
+| `panel`  | `panel` | Panel to check           |
+| `target` | `panel` | Presumed ancestor        |
 
-## Плавное изменение прозрачности
+## Smooth alpha transitions
 
-`Mantle.util.stepAlpha(current, target, maxSpeed, ft)` экспоненциально приближает `current` к `target`, но ограничивает шаг значением `maxSpeed * ft`.
+`Mantle.util.stepAlpha(current, target, maxSpeed, ft)` moves `current` toward `target` exponentially but limits the step to `maxSpeed * ft`.
 
 ```js
 function Panel:Think()
@@ -35,11 +35,11 @@ function Panel:Think()
 end
 ```
 
-| Аргумент   | Тип      | Описание                                   |
-| ---------- | -------- | ------------------------------------------ |
-| `current`  | `number` | Текущее значение                           |
-| `target`   | `number` | Целевое значение                           |
-| `maxSpeed` | `number` | Максимальная скорость изменения в секунду  |
-| `ft`       | `number` | `FrameTime()`                              |
+| Argument   | Type     | Description                              |
+| ---------- | -------- | ---------------------------------------- |
+| `current`  | `number` | Current value                            |
+| `target`   | `number` | Target value                             |
+| `maxSpeed` | `number` | Maximum change rate per second           |
+| `ft`       | `number` | `FrameTime()`                            |
 
-Возвращает новое значение.
+Returns the new value.

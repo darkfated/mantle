@@ -1,21 +1,21 @@
 ---
-title: Радиальное меню
-description: Кольцевое меню с клавишами
+title: Radial menu
+description: Ring menu with hotkeys
 sidebar_position: 5
 ---
 
-# Радиальное меню
+# Radial menu
 
-Кольцевое меню с пунктами вокруг центра. Управление с клавиатуры (цифры 1-9), ESC для закрытия, клик в центр возвращает назад. Поддерживает вложенные подменю.
+A ring menu with options around the center. Controlled from the keyboard (digits 1-9), ESC closes it, and clicking the center goes back. Supports nested submenus.
 
-![](./assets/radial-menu-1.webp)
+![](/img/docs/popups/radial-menu-1.webp)
 
-## Пример
+## Example
 
 ```js
 local menu = Mantle.ui.radial_menu({
-    title = 'Корзина',
-    desc = 'Выберите товар',
+    title = 'Cart',
+    desc = 'Pick a product',
     radius = 320,
     inner_radius = 110,
     font = 'Fated.20',
@@ -29,61 +29,61 @@ local total = 0
 local function addItem(name, price)
     cart[#cart + 1] = name
     total = total + price
-    chat.AddText(Mantle.color.theme, 'В корзине: ' .. name .. ' (+' .. price .. ' руб.)')
-    menu:SetCenterText('Корзина', 'Итого: ' .. total .. ' руб.')
+    chat.AddText(Mantle.color.theme, 'Added to cart: ' .. name .. ' (+$' .. price .. ')')
+    menu:SetCenterText('Cart', 'Total: $' .. total)
 end
 
-menu:AddOption('Яблоко', function()
-    addItem('Яблоко', 40)
-end, 'icon16/bullet_red.png', 'Красное яблоко, 40 руб.')
+menu:AddOption('Apple', function()
+    addItem('Apple', 40)
+end, 'icon16/bullet_red.png', 'Red apple, $40')
 
-menu:AddOption('Банан', function()
-    addItem('Банан', 30)
-end, 'icon16/bullet_yellow.png', 'Спелый банан, 30 руб.')
+menu:AddOption('Banana', function()
+    addItem('Banana', 30)
+end, 'icon16/bullet_yellow.png', 'Ripe banana, $30')
 
-menu:AddOption('Огурец', function()
-    addItem('Огурец', 25)
-end, 'icon16/bullet_green.png', 'Хрустящий огурец, 25 руб.')
+menu:AddOption('Cucumber', function()
+    addItem('Cucumber', 25)
+end, 'icon16/bullet_green.png', 'Crisp cucumber, $25')
 ```
 
-## Подменю
+## Submenus
 
-Вложенное меню создаётся через `:CreateSubMenu`, а добавляется в пункт через `:AddSubMenuOption`.
+A nested menu is created with `:CreateSubMenu` and attached to an item with `:AddSubMenuOption`.
 
-![](./assets/radial-menu-2.webp)
+![](/img/docs/popups/radial-menu-2.webp)
 
 ```js
-local menu = Mantle.ui.radial_menu({ title = 'Магазин', desc = 'Выберите отдел' })
+local menu = Mantle.ui.radial_menu({ title = 'Shop', desc = 'Pick a department' })
 
-local fruits = menu:CreateSubMenu('Фрукты', 'Что возьмёте?')
-fruits:AddOption('Яблоко', function()
-    chat.AddText(Mantle.color.theme, 'Яблоко куплено')
-end, 'icon16/bullet_red.png', '40 руб.')
-fruits:AddOption('Груша', function()
-    chat.AddText(Mantle.color.theme, 'Груша куплена')
-end, 'icon16/bullet_yellow.png', '35 руб.')
+local fruits = menu:CreateSubMenu('Fruits', 'What will you take?')
+fruits:AddOption('Apple', function()
+    chat.AddText(Mantle.color.theme, 'Apple purchased')
+end, 'icon16/bullet_red.png', '$40')
+fruits:AddOption('Pear', function()
+    chat.AddText(Mantle.color.theme, 'Pear purchased')
+end, 'icon16/bullet_yellow.png', '$35')
 
-local vegetables = menu:CreateSubMenu('Овощи', 'Что возьмёте?')
-vegetables:AddOption('Помидор', function()
-    chat.AddText(Mantle.color.theme, 'Помидор куплен')
-end, 'icon16/bullet_red.png', '30 руб.')
-vegetables:AddOption('Капуста', function()
-    chat.AddText(Mantle.color.theme, 'Капуста куплена')
-end, 'icon16/bullet_green.png', '50 руб.')
+local vegetables = menu:CreateSubMenu('Vegetables', 'What will you take?')
+vegetables:AddOption('Tomato', function()
+    chat.AddText(Mantle.color.theme, 'Tomato purchased')
+end, 'icon16/bullet_red.png', '$30')
+vegetables:AddOption('Cabbage', function()
+    chat.AddText(Mantle.color.theme, 'Cabbage purchased')
+end, 'icon16/bullet_green.png', '$50')
 
-menu:AddSubMenuOption('Фрукты', fruits, 'icon16/bullet_orange.png', 'Сладкие фрукты')
-menu:AddSubMenuOption('Овощи', vegetables, 'icon16/bullet_green.png', 'Свежие овощи')
-menu:AddOption('Вода', function()
-    chat.AddText(Mantle.color.theme, 'Вода куплена')
-end, 'icon16/water.png', 'Бутылка воды')
+menu:AddSubMenuOption('Fruits', fruits, 'icon16/bullet_orange.png', 'Sweet fruits')
+menu:AddSubMenuOption('Vegetables', vegetables, 'icon16/bullet_green.png', 'Fresh vegetables')
+menu:AddOption('Water', function()
+    chat.AddText(Mantle.color.theme, 'Water purchased')
+end, 'icon16/water.png', 'A bottle of water')
 ```
 
-## Настройка вида
+## Customizing the look
 
 ```js
 local menu = Mantle.ui.radial_menu({
-    title = 'Меню',
-    desc = 'Выберите действие',
+    title = 'Menu',
+    desc = 'Pick an action',
     radius = 320,
     inner_radius = 110,
     font = 'Fated.20',
@@ -92,40 +92,40 @@ local menu = Mantle.ui.radial_menu({
 })
 ```
 
-## Параметры создания
+## Creation parameters
 
-| Параметр             | Тип      | По умолчанию           | Описание                     |
-| -------------------- | -------- | ---------------------- | ---------------------------- |
-| `title`              | `string` | `Меню`                 | Заголовок в центре           |
-| `desc`               | `string` | `Выберите опцию`       | Подзаголовок в центре        |
-| `radius`             | `number` | `320`                  | Внешний радиус меню          |
-| `inner_radius`       | `number` | `110`                  | Радиус центральной области   |
-| `title_font`         | `string` | `Fated.28`             | Шрифт заголовка              |
-| `font`               | `string` | `Fated.20`             | Шрифт пунктов                |
-| `desc_font`          | `string` | `Fated.14`             | Шрифт подзаголовка           |
-| `fade_in_time`       | `number` | `0.18`                 | Длительность появления       |
-| `fade_out_time`      | `number` | `0.12`                 | Длительность закрытия        |
-| `scale_animation`    | `bool`   | `true`                 | Анимация появления из центра |
-| `disable_background` | `bool`   | `false`                | Отключить затемнение фона    |
-| `hover_sound`        | `string` | `mantle/ratio_btn.ogg` | Звук при наведении на пункт  |
+| Parameter            | Type     | Default                | Description                    |
+| -------------------- | -------- | ---------------------- | ------------------------------ |
+| `title`              | `string` | `Menu`                 | Title in the center            |
+| `desc`               | `string` | `Pick an option`       | Subtitle in the center         |
+| `radius`             | `number` | `320`                  | Outer radius of the menu       |
+| `inner_radius`       | `number` | `110`                  | Radius of the central area     |
+| `title_font`         | `string` | `Fated.28`             | Title font                     |
+| `font`               | `string` | `Fated.20`             | Option font                    |
+| `desc_font`          | `string` | `Fated.14`             | Subtitle font                  |
+| `fade_in_time`       | `number` | `0.18`                 | Appearance duration            |
+| `fade_out_time`      | `number` | `0.12`                 | Close duration                 |
+| `scale_animation`    | `bool`   | `true`                 | Scale-in animation from center |
+| `disable_background` | `bool`   | `false`                | Disable the background dim     |
+| `hover_sound`        | `string` | `mantle/ratio_btn.ogg` | Sound when hovering an option  |
 
-## Методы
+## Methods
 
-| Метод                                                                     | Описание                                        |
-| ------------------------------------------------------------------------- | ----------------------------------------------- |
-| `:AddOption(string text, function func, string icon, string desc, table submenu, bool disabled)` | Добавить пункт. Возвращает его индекс |
-| `:CreateSubMenu(string title, string desc)`                               | Создать подменю. Возвращает подменю             |
-| `:AddSubMenuOption(string text, table submenu, string icon, string desc)` | Добавить пункт, ведущий в подменю               |
-| `:ApplySettings(table settings)`                                          | Применить настройки внешности из конфиг-таблицы    |
-| `:SelectOption(int index)`                                                | Выбрать пункт программно                        |
-| `:SetCenterText(string title, string desc)`                               | Надпись в центре меню                           |
-| `:GetCurrentOptions()`                                                    | Пункты текущего меню (или подменю)              |
-| `:GoBack()`                                                               | Вернуться к предыдущему меню                    |
-| `:CloseMenu(function callback)`                                           | Закрыть меню. Callback вызовется после закрытия |
-| `:IsMouseOver()`                                                          | `true`, если курсор внутри меню                 |
+| Method                                                                                           | Description                                     |
+| ------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| `:AddOption(string text, function func, string icon, string desc, table submenu, bool disabled)` | Add an option. Returns its index                |
+| `:CreateSubMenu(string title, string desc)`                                                      | Create a submenu. Returns the submenu           |
+| `:AddSubMenuOption(string text, table submenu, string icon, string desc)`                        | Add an option that leads into a submenu         |
+| `:ApplySettings(table settings)`                                                                 | Apply appearance settings from a config table   |
+| `:SelectOption(int index)`                                                                       | Select an option programmatically               |
+| `:SetCenterText(string title, string desc)`                                                      | Text in the center of the menu                  |
+| `:GetCurrentOptions()`                                                                           | Options of the current menu (or submenu)        |
+| `:GoBack()`                                                                                      | Go back to the previous menu                    |
+| `:CloseMenu(function callback)`                                                                  | Close the menu. The callback runs after closing |
+| `:IsMouseOver()`                                                                                 | `true` if the cursor is inside the menu         |
 
-## Управление
+## Controls
 
-- Клавиши `1`-`9` выбирают пункт.
-- Клик по центру возвращает на предыдущее подменю (или закрывает, если его нет).
-- Клик мимо меню или `ESC` закрывает круговую панель.
+- Keys `1`-`9` select an option.
+- Clicking the center returns to the previous submenu (or closes the menu if there is none).
+- Clicking outside the menu or pressing `ESC` closes the ring panel.

@@ -1,16 +1,16 @@
 ---
-title: Таблица
-description: Таблица с колонками и сортировкой
+title: Table
+description: Table with columns and sorting
 sidebar_position: 9
 ---
 
 # MantleTable
 
-Таблица с колонками, выделением строк и сортировкой. Строки прокручиваются, заголовок остаётся на месте.
+A table with columns, row selection, and sorting. Rows scroll while the header stays in place.
 
-## Пример
+## Example
 
-![](./assets/table-1.webp)
+![](/img/docs/ui/table-1.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -23,10 +23,10 @@ tbl:Dock(FILL)
 tbl:DockMargin(12, 12, 12, 12)
 
 local cols = {
-    { 'Ник', 120, TEXT_ALIGN_LEFT, true },
-    { 'Роль', 110, TEXT_ALIGN_LEFT, true },
-    { 'Клан', 120, TEXT_ALIGN_LEFT, true },
-    { 'Очки', 90, TEXT_ALIGN_RIGHT, true },
+    { 'Nick', 120, TEXT_ALIGN_LEFT, true },
+    { 'Role', 110, TEXT_ALIGN_LEFT, true },
+    { 'Clan', 120, TEXT_ALIGN_LEFT, true },
+    { 'Score', 90, TEXT_ALIGN_RIGHT, true },
 }
 
 for _, col in ipairs(cols) do
@@ -34,18 +34,18 @@ for _, col in ipairs(cols) do
 end
 
 local data = {
-    { 'Влад', 'Админ', 'Легенда', 1240 },
-    { 'Макс', 'ВИП', 'Соколы', 486 },
-    { 'Саша', 'Игрок', 'Тайфун', 154 },
-    { 'Дима', 'Модератор', 'Корсары', 620 },
-    { 'Васёк', 'ВИП', 'Феникс', 301 },
-    { 'Артём', 'Игрок', 'Волки', 98 },
-    { 'Егор', 'Игрок', 'Металл', 245 },
-    { 'Игорь', 'Админ', 'Искра', 877 },
-    { 'Лала', 'Игрок', 'Тайфун', 64 },
-    { 'Паша', 'Модератор', 'Соколы', 512 },
-    { 'Олег', 'ВИП', 'Корсары', 999 },
-    { 'Мангол', 'Игрок', 'Волки', 187 },
+    { 'Vlad', 'Admin', 'Legend', 1240 },
+    { 'Max', 'VIP', 'Falcons', 486 },
+    { 'Sasha', 'Player', 'Typhoon', 154 },
+    { 'Dima', 'Moderator', 'Corsairs', 620 },
+    { 'Vasya', 'VIP', 'Phoenix', 301 },
+    { 'Artyom', 'Player', 'Wolves', 98 },
+    { 'Egor', 'Player', 'Metal', 245 },
+    { 'Igor', 'Admin', 'Spark', 877 },
+    { 'Lala', 'Player', 'Typhoon', 64 },
+    { 'Pasha', 'Moderator', 'Falcons', 512 },
+    { 'Oleg', 'VIP', 'Corsairs', 999 },
+    { 'Mangal', 'Player', 'Wolves', 187 },
 }
 
 for i = 1, #data do
@@ -53,9 +53,9 @@ for i = 1, #data do
 end
 ```
 
-## Сортировка по колонке
+## Sorting by a column
 
-Сортировка включается кликом по заголовку. Для этого колонка помечается сортируемой.
+Sorting is enabled by clicking the header. To allow it, mark the column as sortable.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -67,8 +67,8 @@ local tbl = vgui.Create('MantleTable', frame)
 tbl:Dock(FILL)
 tbl:DockMargin(12, 12, 12, 12)
 
-tbl:AddColumn('Ник', 200, nil, true) -- если false, то не сортируемая
-tbl:AddColumn('Очки', 100, nil, true) -- по умолчанию false
+tbl:AddColumn('Nick', 200, nil, true) -- when false, the column is not sortable
+tbl:AddColumn('Score', 100, nil, true) -- false by default
 
 tbl:AddItem('darkf', 42)
 tbl:AddItem('john', 5)
@@ -77,9 +77,9 @@ tbl:AddItem('max', 87)
 tbl:AddItem('dima', 33)
 ```
 
-## Выравнивание колонок
+## Column alignment
 
-![](./assets/table-2.png)
+![](/img/docs/ui/table-2.png)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -91,18 +91,18 @@ local tbl = vgui.Create('MantleTable', frame)
 tbl:Dock(FILL)
 tbl:DockMargin(12, 12, 12, 12)
 
--- Выравнивание: 'left', 'center', 'right'
-tbl:AddColumn('Имя', 200, 'left')
-tbl:AddColumn('Очки', 100, 'center', true)
-tbl:AddColumn('Статус', 80, 'right')
+-- Alignment: 'left', 'center', 'right'
+tbl:AddColumn('Name', 200, 'left')
+tbl:AddColumn('Score', 100, 'center', true)
+tbl:AddColumn('Status', 80, 'right')
 
-tbl:AddItem('Влад', 1240, 'Онлайн')
-tbl:AddItem('Макс', 486, 'Онлайн')
-tbl:AddItem('Саша', 154, 'Офлайн')
-tbl:AddItem('Олег', 999, 'Онлайн')
+tbl:AddItem('Vlad', 1240, 'Online')
+tbl:AddItem('Max', 486, 'Online')
+tbl:AddItem('Sasha', 154, 'Offline')
+tbl:AddItem('Oleg', 999, 'Online')
 ```
 
-## Действия над строками
+## Row actions
 
 ```js
 
@@ -115,30 +115,30 @@ local tbl = vgui.Create('MantleTable', frame)
 tbl:Dock(FILL)
 tbl:DockMargin(12, 12, 12, 12)
 
-tbl:AddColumn('Ник', 160)
-tbl:AddColumn('Роль', 140)
-tbl:AddColumn('Очки', 90)
+tbl:AddColumn('Nick', 160)
+tbl:AddColumn('Role', 140)
+tbl:AddColumn('Score', 90)
 
-tbl:AddItem('darkf', 'Админ', 42)
-tbl:AddItem('john', 'Игрок', 5)
-tbl:AddItem('sasha', 'ВИП', 150)
-tbl:AddItem('max', 'Модератор', 87)
-tbl:AddItem('dima', 'Игрок', 33)
+tbl:AddItem('darkf', 'Admin', 42)
+tbl:AddItem('john', 'Player', 5)
+tbl:AddItem('sasha', 'VIP', 150)
+tbl:AddItem('max', 'Moderator', 87)
+tbl:AddItem('dima', 'Player', 33)
 
--- Клик по строке
+-- Left click on a row
 tbl:SetAction(function(row, index)
-    print('Клик по строке', index)
+    print('Row clicked', index)
     PrintTable(row)
 end)
 
--- ПКМ по строке
+-- Right click on a row
 tbl:SetRightClickAction(function(row, index)
-    print('ПКМ по строке', index)
+    print('Row right-clicked', index)
     PrintTable(row)
 end)
 ```
 
-## Удаление строки
+## Removing a row
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -150,49 +150,49 @@ local tbl = vgui.Create('MantleTable', frame)
 tbl:Dock(FILL)
 tbl:DockMargin(12, 12, 12, 12)
 
-tbl:AddColumn('Ник', 300)
+tbl:AddColumn('Nick', 300)
 
 tbl:AddItem('darkf')
 tbl:AddItem('john')
 tbl:AddItem('sasha')
 tbl:AddItem('max')
 
--- Удалить первую строку (нумерация с 1)
+-- Remove the first row (indexing starts at 1)
 tbl:RemoveRow(1)
 
 print(tbl:GetRowCount()) -- 3
 ```
 
-## Методы
+## Methods
 
-| Метод                                                                     | Описание                                                             |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `:AddColumn(string name, int width, string\|number align, bool sortable)` | Колонка. `align`: `'left'`, `'center'`, `'right'` или `TEXT_ALIGN_*` |
-| `:AddItem(...)`                                                           | Добавить строку. Возвращает номер строки                             |
-| `:SortByColumn(int columnIndex, bool descending)`                         | Сортировка по колонке. `descending` - от меньшего к большему, или наоборот (опционально)                     |
-| `:SetAction(function func)`                                               | Действие при ЛКМ: `func(row, index)`                                 |
-| `:SetRightClickAction(function func)`                                     | Действие при ПКМ: `func(row, index)`                                 |
-| `:SetContextMenuEnabled(bool enabled)`                                    | Показывать встроенное контекстное меню. По умолчанию `true`          |
-| `:Clear()`                                                                | Очистка                                                              |
-| `:ClearSelection()`                                                       | Снять выделение                                                      |
-| `:GetSelectedRow()`                                                       | Данные выбранной строки или `nil`                                    |
-| `:SetSelectedRow(int index)`                                              | Выделить строку по индексу. `nil` снимает выделение                  |
-| `:GetRowCount()`                                                          | Количество строк                                                     |
-| `:GetColumnCount()`                                                       | Количество колонок                                                   |
-| `:GetRow(int index)`                                                      | Данные строки или `nil`                                              |
-| `:GetRowIndex(table rowData)`                                             | Индекс строки по её данным                                           |
-| `:RemoveRow(int index)`                                                   | Удалить строку по индексу                                            |
-| `:RemoveItem(table rowData)`                                              | Удалить строку по данным                                             |
-| `:SetCellValue(int rowIndex, int columnIndex, any value)`                 | Записать значение ячейки                                             |
-| `:GetCellValue(int rowIndex, int columnIndex)`                            | Значение ячейки                                                      |
-| `:SetFont(string font)`                                                   | Шрифт заголовка. По умолчанию `Fated.18`                             |
-| `:SetRowFont(string font)`                                                | Шрифт строк. По умолчанию `Fated.16`                                 |
-| `:SetHeaderHeight(int height)`                                            | Высота заголовка. По умолчанию `36`                                  |
-| `:SetRowHeight(int height)`                                               | Высота строки. По умолчанию `38`                                     |
-| `:SetPadding(int padding)`                                                | Отступ текста в ячейке. По умолчанию `12`                            |
-| `:SetSidePadding(int padding)`                                            | Боковой отступ таблицы. По умолчанию `14`                            |
+| Method                                                                    | Description                                                         |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `:AddColumn(string name, int width, string\|number align, bool sortable)` | Column. `align`: `'left'`, `'center'`, `'right'`, or `TEXT_ALIGN_*` |
+| `:AddItem(...)`                                                           | Add a row. Returns the row number                                   |
+| `:SortByColumn(int columnIndex, bool descending)`                         | Sort by a column. `descending` flips the direction (optional)       |
+| `:SetAction(function func)`                                               | Left click action: `func(row, index)`                               |
+| `:SetRightClickAction(function func)`                                     | Right click action: `func(row, index)`                              |
+| `:SetContextMenuEnabled(bool enabled)`                                    | Show the built-in context menu. Default `true`                      |
+| `:Clear()`                                                                | Clear the table                                                     |
+| `:ClearSelection()`                                                       | Clear the selection                                                 |
+| `:GetSelectedRow()`                                                       | Data of the selected row, or `nil`                                  |
+| `:SetSelectedRow(int index)`                                              | Select a row by index. `nil` clears the selection                   |
+| `:GetRowCount()`                                                          | Number of rows                                                      |
+| `:GetColumnCount()`                                                       | Number of columns                                                   |
+| `:GetRow(int index)`                                                      | Row data, or `nil`                                                  |
+| `:GetRowIndex(table rowData)`                                             | Row index from its data                                             |
+| `:RemoveRow(int index)`                                                   | Remove a row by index                                               |
+| `:RemoveItem(table rowData)`                                              | Remove a row by its data                                            |
+| `:SetCellValue(int rowIndex, int columnIndex, any value)`                 | Write a cell value                                                  |
+| `:GetCellValue(int rowIndex, int columnIndex)`                            | Read a cell value                                                   |
+| `:SetFont(string font)`                                                   | Header font. Default `Fated.18`                                     |
+| `:SetRowFont(string font)`                                                | Row font. Default `Fated.16`                                        |
+| `:SetHeaderHeight(int height)`                                            | Header height. Default `36`                                         |
+| `:SetRowHeight(int height)`                                               | Row height. Default `38`                                            |
+| `:SetPadding(int padding)`                                                | Text padding inside a cell. Default `12`                            |
+| `:SetSidePadding(int padding)`                                            | Side padding of the table. Default `14`                             |
 
-## Примечания
+## Notes
 
-- ПКМ по строке показывает меню с пунктами "Копировать значение" и "Удалить строку".
-- Повторный клик по сортируемой колонке меняет направление сортировки.
+- Right-clicking a row shows a menu with "Copy value" and "Remove row".
+- Clicking a sortable column again flips the sort direction.

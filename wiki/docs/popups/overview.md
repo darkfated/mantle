@@ -1,25 +1,27 @@
 ---
-title: Всплывающие элементы
-description: Список всплывающих элементов
+title: Popups
+description: List of popups
 ---
 
-## Состав
+# Popups
 
-| Окно                               | Функция                                          | Описание                       |
-| ---------------------------------- | ------------------------------------------------ | ------------------------------ |
-| [Выбор цвета](color-picker.md)     | `Mantle.ui.color_picker(callback, defaultColor)` | Выбор цвета                    |
-| [Контекстное меню](derma-menu.md)  | `Mantle.ui.derma_menu()`                         | Выбор опций                    |
-| [Выбор игрока](player-selector.md) | `Mantle.ui.player_selector(onSelect, filterFn)`  | Список игроков                 |
-| [Выбор модели](model-selector.md)  | `Mantle.ui.model_selector(models, callback)`     | Список моделей                 |
-| [Радиальное меню](radial-menu.md)  | `Mantle.ui.radial_menu(options)`                 | Кольцевое меню с клавишами 1-9 |
-| [Текстовое окно](text-box.md)      | `Mantle.ui.text_box(title, desc, callback)`      | Окно ввода текста              |
+## Contents
 
-## Общий принцип
+| Window                                | Function                                         | Description                    |
+| ------------------------------------- | ------------------------------------------------ | ------------------------------ |
+| [Color picker](color-picker.md)       | `Mantle.ui.color_picker(callback, defaultColor)` | Pick a color                   |
+| [Context menu](derma-menu.md)         | `Mantle.ui.derma_menu()`                         | Select options                 |
+| [Player selector](player-selector.md) | `Mantle.ui.player_selector(onSelect, filterFn)`  | Player list                    |
+| [Model selector](model-selector.md)   | `Mantle.ui.model_selector(models, callback)`     | Model list                     |
+| [Radial menu](radial-menu.md)         | `Mantle.ui.radial_menu(options)`                 | Ring menu with keys 1-9        |
+| [Text box](text-box.md)               | `Mantle.ui.text_box(title, desc, callback)`      | Text input window              |
 
-Всплывающие элементы вызываются через функцию, и после выполнение некоторого условия запускают callback-функцию с требуемыми вами действиями.
+## How they work
+
+Popups are opened by calling a function, and once a condition is met they run a callback with the result you asked for.
 
 ```js
 Mantle.ui.player_selector(function(pl)
-    print('Выбран:', pl:Name())
+    print('Selected:', pl:Name())
 end)
 ```

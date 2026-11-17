@@ -1,0 +1,14 @@
+{
+  "link.title.Проект": {
+    "message": "Project",
+    "description": "The title of the footer links column with title=Проект in the footer"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/darkfated/mantle"
+  },
+  "link.item.label.Workshop": {
+    "message": "Workshop",
+    "description": "The label of footer link with label=Workshop linking to https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993"
+  }
+}

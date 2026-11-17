@@ -1,28 +1,28 @@
 ---
-title: Шрифты
-description: Автоматические шрифты Montserrat
+title: Fonts
+description: Automatic Montserrat fonts
 sidebar_position: 8
 ---
 
-# Шрифты
+# Fonts
 
-Шрифты Montserrat создаются автоматически при использовании.
+Montserrat fonts are created automatically on first use.
 
-| Шрифт       | Описание                          |
+| Font        | Description                       |
 | ----------- | --------------------------------- |
-| `Fated.NN`  | Montserrat Medium нужного размера |
-| `Fated.NNb` | Жирная версия (Bold)              |
+| `Fated.NN`  | Montserrat Medium at a given size |
+| `Fated.NNb` | Bold version                      |
 
-Например: `Fated.12`, `Fated.24`, `Fated.48b`.
+For example: `Fated.12`, `Fated.24`, `Fated.48b`.
 
-## Использование в отрисовке
+## Using fonts when drawing
 
 ```js
-draw.SimpleText("Текст", "Fated.20", 15, 15, color_black);
-draw.SimpleText("Текст", "Fated.20b", 15, 35, color_black);
+draw.SimpleText("Text", "Fated.20", 15, 15, color_black);
+draw.SimpleText("Text", "Fated.20b", 15, 35, color_black);
 ```
 
-## Использование в элементах
+## Using fonts in elements
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -33,6 +33,6 @@ frame:MakePopup()
 local btn = vgui.Create('MantleBtn', frame)
 btn:Dock(TOP)
 btn:SetTall(40)
-btn:SetTxt('Кнопка')
+btn:SetTxt('Button')
 btn:SetFont('Fated.22b')
 ```

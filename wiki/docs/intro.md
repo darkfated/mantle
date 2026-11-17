@@ -1,18 +1,18 @@
 ---
-title: Введение
-description: Что такое Mantle
+title: Introduction
+description: What Mantle is
 sidebar_position: 1
 ---
 
 # Mantle
 
-🎈 Библиотека пользовательского интерфейса и рендера для Garry's Mod. Интерфейсы, отрисовочные функции и многое другое.
+🎈 A UI and renderer library for Garry's Mod. Interfaces, drawing functions, and much more.
 
-## С чего начать
+## Getting started
 
-1. Прочитайте [Установка](getting-started.md).
-2. Откройте [UI Элементы](/docs/ui/button), чтобы понять состав компонентов.
+1. Read [Installation](getting-started.md).
+2. Open [UI Elements](ui/button.md) to see what components are available.
 
-## Исходный код
+## Source code
 
-Репозиторий: [github.com/darkfated/mantle](https://github.com/darkfated/mantle). Экспериментальный UI в стиле macOS находится в ветке [new-design](https://github.com/darkfated/mantle/tree/new-design).
+Repository: [github.com/darkfated/mantle](https://github.com/darkfated/mantle). The experimental macOS-style UI lives in the [new-design](https://github.com/darkfated/mantle/tree/new-design) branch.

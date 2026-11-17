@@ -1,16 +1,16 @@
 ---
-title: Выбор цвета
-description: Окно выбора цвета
+title: Color picker
+description: Color selection window
 sidebar_position: 1
 ---
 
-# Выбор цвета
+# Color picker
 
-Окно выбора цвета с палитрой и ползунками. Создаётся через `Mantle.ui.color_picker(callback, defaultColor)`, результат приходит в `callback`.
+A color picker with a palette and sliders. Open it with `Mantle.ui.color_picker(callback, defaultColor)`; the result arrives in `callback`.
 
-## Пример
+## Example
 
-![](./assets/color-picker-1.webp)
+![](/img/docs/popups/color-picker-1.webp)
 
 ```js
 Mantle.ui.color_picker(function(color)
@@ -18,17 +18,17 @@ Mantle.ui.color_picker(function(color)
 end)
 ```
 
-## С цветом по умолчанию
+## With a default color
 
 ```js
 Mantle.ui.color_picker(function(color)
-    print('Новый цвет:', color.r, color.g, color.b)
+    print('New color:', color.r, color.g, color.b)
 end, Color(182, 65, 65))
 ```
 
-## Применение к элементу
+## Applying a color to an element
 
-![](./assets/color-picker-2.webp)
+![](/img/docs/popups/color-picker-2.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -38,7 +38,7 @@ frame:MakePopup()
 
 local btn = vgui.Create('MantleBtn', frame)
 btn:Dock(FILL)
-btn:SetTxt('Цвет')
+btn:SetTxt('Color')
 
 btn.DoClick = function()
     Mantle.ui.color_picker(function(color)
@@ -47,9 +47,9 @@ btn.DoClick = function()
 end
 ```
 
-## Аргументы
+## Arguments
 
-| Аргумент       | Тип        | Описание                           |
-| -------------- | ---------- | ---------------------------------- |
-| `callback`     | `function` | Вызывается с выбранным `Color`     |
-| `defaultColor` | `Color`    | Начальный цвет в окне. Опционально |
+| Argument       | Type       | Description                           |
+| -------------- | ---------- | ------------------------------------- |
+| `callback`     | `function` | Called with the selected `Color`      |
+| `defaultColor` | `Color`    | Initial color in the window. Optional |

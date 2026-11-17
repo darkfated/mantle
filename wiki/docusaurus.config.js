@@ -2,7 +2,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 const config = {
   title: "Mantle Wiki",
-  tagline: "Документация библиотеки Mantle для Garry's Mod",
+  tagline: "Documentation for the Mantle library for Garry's Mod",
 
   future: {
     v4: true,
@@ -18,8 +18,20 @@ const config = {
   onBrokenLinks: "throw",
 
   i18n: {
-    defaultLocale: "ru",
-    locales: ["ru"],
+    defaultLocale: "en",
+    locales: ["en", "ru"],
+    localeConfigs: {
+      en: {
+        label: "English",
+        direction: "ltr",
+        htmlLang: "en-US",
+      },
+      ru: {
+        label: "Русский",
+        direction: "ltr",
+        htmlLang: "ru-RU",
+      },
+    },
   },
 
   trailingSlash: false,
@@ -30,7 +42,7 @@ const config = {
       {
         docs: {
           sidebarPath: "./sidebars.js",
-          editUrl: "https://github.com",
+          editUrl: "https://github.com/darkfated/mantle/edit/master/wiki/docs/",
         },
         blog: false,
         theme: {
@@ -51,11 +63,15 @@ const config = {
           type: "docSidebar",
           sidebarId: "docs",
           position: "left",
-          label: "Документация",
+          label: "Documentation",
         },
         {
           href: "https://github.com/darkfated/mantle",
           label: "GitHub",
+          position: "right",
+        },
+        {
+          type: "localeDropdown",
           position: "right",
         },
       ],
@@ -64,7 +80,7 @@ const config = {
       style: "dark",
       links: [
         {
-          title: "Проект",
+          title: "Project",
           items: [
             {
               label: "GitHub",

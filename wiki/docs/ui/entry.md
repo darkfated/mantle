@@ -1,16 +1,16 @@
 ---
-title: Поле ввода
-description: Поле ввода с заголовком
+title: Input field
+description: Input field with a title
 sidebar_position: 3
 ---
 
 # MantleEntry
 
-Поле ввода с заголовком и плейсхолдером. Внутри использует `DTextEntry`, поэтому доступны все его методы, например `panel.textEntry:SetNumeric(true)`.
+An input field with a title and a placeholder. It is built on `DTextEntry`, so all of its methods are available, for example `panel.textEntry:SetNumeric(true)`.
 
-## Пример
+## Example
 
-![](./assets/entry-1.gif)
+![](/img/docs/ui/entry-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -21,11 +21,11 @@ frame:MakePopup()
 local entry = vgui.Create('MantleEntry', frame)
 entry:SetWide(400)
 entry:Center()
-entry:SetTitle('Имя персонажа')
-entry:SetPlaceholder('Введите имя...')
+entry:SetTitle('Character name')
+entry:SetPlaceholder('Enter a name...')
 ```
 
-## Чтение и запись значения
+## Reading and writing the value
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -36,17 +36,17 @@ frame:MakePopup()
 local entry = vgui.Create('MantleEntry', frame)
 entry:SetWide(400)
 entry:Center()
-entry:SetTitle('Имя персонажа')
+entry:SetTitle('Character name')
 
 entry:SetValue('darkf')
 print(entry:GetValue()) -- "darkf"
 ```
 
-## Обработка ввода
+## Handling input
 
-Событие `action` срабатывает, когда поле теряет фокус (клик мимо поля или Enter).
+The `action` event fires when the field loses focus (clicking outside it or pressing Enter).
 
-![](./assets/entry-2.gif)
+![](/img/docs/ui/entry-2.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -65,13 +65,13 @@ end
 local entry = vgui.Create('MantleEntry', frame)
 entry:Dock(TOP)
 entry:DockMargin(0, 6, 0, 0)
-entry:SetTitle('Изменение текста')
+entry:SetTitle('Text change')
 entry.action = function(value)
     text = value
 end
 ```
 
-## Числовое поле
+## Numeric field
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -82,13 +82,13 @@ frame:MakePopup()
 local entry = vgui.Create('MantleEntry', frame)
 entry:SetWide(400)
 entry:Center()
-entry:SetTitle('Количество')
-entry:SetPlaceholder('Только цифры')
+entry:SetTitle('Amount')
+entry:SetPlaceholder('Digits only')
 
 entry.textEntry:SetNumeric(true)
 ```
 
-## Обработка Enter
+## Handling Enter
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -99,25 +99,25 @@ frame:MakePopup()
 local entry = vgui.Create('MantleEntry', frame)
 entry:SetWide(400)
 entry:Center()
-entry:SetTitle('Имя персонажа')
+entry:SetTitle('Character name')
 
 entry.textEntry.OnEnter = function()
     local value = entry:GetValue()
     if value == '' then return end
 
-    print('Введённое имя:', value)
+    print('Entered name:', value)
 end
 ```
 
-## Методы
+## Methods
 
-| Метод                          | Описание                          |
-| ------------------------------ | --------------------------------- |
-| `:SetTitle(string text)`       | Заголовок над полем               |
-| `:SetPlaceholder(string text)` | Серая подсказка, пока поле пустое |
-| `:GetValue()`                  | Текст из поля                     |
-| `:SetValue(string value)`      | Вписать текст в поле              |
+| Method                         | Description                              |
+| ------------------------------ | ---------------------------------------- |
+| `:SetTitle(string text)`       | Title above the field                    |
+| `:SetPlaceholder(string text)` | Gray hint shown while the field is empty |
+| `:GetValue()`                  | Text from the field                      |
+| `:SetValue(string value)`      | Put text into the field                  |
 
-## Примечание
+## Notes
 
-- Поле автоматически скроллит текст по горизонтали, когда курсор уходит за границу.
+- The field scrolls its text horizontally automatically once the cursor moves past the edge.

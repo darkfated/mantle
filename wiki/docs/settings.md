@@ -1,39 +1,39 @@
 ---
-title: Настройки
-description: Конфигурационные настройки библиотеки
+title: Settings
+description: Library configuration
 sidebar_position: 4
 ---
 
-# Настройки
+# Settings
 
 ## ConVars
 
-Библиотека предоставляет клиентские ConVars, которые можно менять из консоли.
+The library provides client ConVars that can be changed from the console.
 
-| ConVar            | Описание                          | Значение по умолчанию |
-| ----------------- | --------------------------------- | --------------------- |
-| `mantle_depth_ui` | Тени для UI элементов             | `1`                   |
-| `mantle_blur`     | Размытие фона                     | `1`                   |
-| `mantle_smooth`   | Плавные переходы и анимации       | `1`                   |
-| `mantle_theme`    | Выбранная игроком тема интерфейса | `dark`                |
+| ConVar            | Description                          | Default value |
+| ----------------- | ------------------------------------ | ------------- |
+| `mantle_depth_ui` | Shadows for UI elements              | `1`           |
+| `mantle_blur`     | Background blur                      | `1`           |
+| `mantle_smooth`   | Smooth transitions and animations    | `1`           |
+| `mantle_theme`    | The interface theme chosen by player | `dark`        |
 
-Получить текущее состояние:
+Read the current state:
 
 ```js
 local depth = Mantle.ui.convar.depth_ui
 local blur = Mantle.ui.convar.blur
 local smooth = Mantle.ui.convar.smooth
 
--- Выбор игрока
+-- Player's choice
 local preferred = Mantle.ui.convar.theme
 
--- Тема, которая отрисована сейчас
+-- The theme currently rendered
 local active = Mantle.ui.activeTheme
 ```
 
 ## config/theme.lua
 
-Файл лежит в `lua/mantle/config/theme.lua`. Управляет доступными темами.
+The file is located at `lua/mantle/config/theme.lua`. It controls which themes are available.
 
 ```js
 Mantle.config.theme = {
@@ -54,9 +54,9 @@ Mantle.config.theme = {
 }
 ```
 
-- `forced` - принудительная тема для всех игроков. Если пусто, каждый выбирает тему сам.
-- `enabled` - какие темы доступны игрокам при выборе. Если тема не указана в таблице, она считается доступной.
+- `forced` - a forced theme for all players. If empty, each player chooses their own theme.
+- `enabled` - which themes players can select. A theme that is not listed is considered available.
 
 ## config/colors.lua
 
-Здесь создаются цветовые темы через `Mantle.ui.registerTheme(id, title, colors)`.
+Color themes are created here via `Mantle.ui.registerTheme(id, title, colors)`.

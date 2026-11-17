@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "Mantle Wiki",
+    "description": "The title in the navbar"
+  },
+  "item.label.Документация": {
+    "message": "Documentation",
+    "description": "Navbar item with label Документация"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

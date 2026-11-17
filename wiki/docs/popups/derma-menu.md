@@ -1,16 +1,16 @@
 ---
-title: Контекстное меню
-description: Меню у курсора
+title: Context menu
+description: Menu at the cursor
 sidebar_position: 2
 ---
 
-# Контекстное меню
+# Context menu
 
-Контекстное меню, что открывается у курсора.
+A context menu that opens at the cursor.
 
-## Пример
+## Example
 
-![](./assets/derma-menu-1.webp)
+![](/img/docs/popups/derma-menu-1.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -21,22 +21,22 @@ frame:MakePopup()
 local btn = vgui.Create('MantleBtn', frame)
 btn:SetSize(200, 60)
 btn:Center()
-btn:SetTxt('Открыть DermaMenu')
+btn:SetTxt('Open DermaMenu')
 
 btn.DoClick = function()
     local dm = Mantle.ui.derma_menu()
-    dm:AddOption('Выбрать яблоко', function()
-        print('Яблоко')
+    dm:AddOption('Pick an apple', function()
+        print('Apple')
     end)
-    dm:AddOption('Выбрать банан', function()
-        print('Банан')
+    dm:AddOption('Pick a banana', function()
+        print('Banana')
     end)
 end
 ```
 
-## Пункты с иконками
+## Items with icons
 
-![](./assets/derma-menu-2.webp)
+![](/img/docs/popups/derma-menu-2.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -47,18 +47,18 @@ frame:MakePopup()
 local btn = vgui.Create('MantleBtn', frame)
 btn:SetSize(200, 60)
 btn:Center()
-btn:SetTxt('Открыть с иконками')
+btn:SetTxt('Open with icons')
 
 btn.DoClick = function()
     local dm = Mantle.ui.derma_menu()
-    dm:AddOption('Сохранить', function() end, 'icon16/disk.png')
-    dm:AddOption('Удалить', function() end, 'icon16/delete.png')
+    dm:AddOption('Save', function() end, 'icon16/disk.png')
+    dm:AddOption('Delete', function() end, 'icon16/delete.png')
 end
 ```
 
-## Подменю
+## Submenus
 
-![](./assets/derma-menu-3.webp)
+![](/img/docs/popups/derma-menu-3.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -69,40 +69,40 @@ frame:MakePopup()
 local btn = vgui.Create('MantleBtn', frame)
 btn:SetSize(200, 60)
 btn:Center()
-btn:SetTxt('Опции с подменю')
+btn:SetTxt('Options with submenus')
 
 btn.DoClick = function()
     local menu = Mantle.ui.derma_menu()
 
-    local sub = menu:AddOption('Действия', function() end)
+    local sub = menu:AddOption('Actions', function() end)
     local submenu = sub:AddSubMenu()
-    submenu:AddOption('Переименовать', function() end)
-    submenu:AddOption('Дублировать', function() end)
+    submenu:AddOption('Rename', function() end)
+    submenu:AddOption('Duplicate', function() end)
 end
 ```
 
-## Методы
+## Methods
 
-| Метод                                                              | Описание                                        |
-| ------------------------------------------------------------------ | ----------------------------------------------- |
-| `:AddOption(string text, function func, string\|material icon, table optData)` | Добавить пункт. `optData` содержит доп. поля. Возвращает созданный пункт |
-| `:AddSpacer()`                                                     | Линия-разделитель                               |
-| `:SetAnchor(panel)`                                                | Открыть меню рядом с конкретной панелью                           |
-| `:OpenAt(number x, number y)`                                      | Открыть меню по координатам             |
-| `:UpdateSize()`                                                    | Пересчитать размер под текущие пункты           |
-| `:CloseMenu()`                                                     | Закрыть меню                                    |
+| Method                                                                         | Description                                                         |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `:AddOption(string text, function func, string\|material icon, table optData)` | Add an item. `optData` holds extra fields. Returns the created item |
+| `:AddSpacer()`                                                                 | Separator line                                                      |
+| `:SetAnchor(panel)`                                                            | Open the menu next to a specific panel                              |
+| `:OpenAt(number x, number y)`                                                  | Open the menu at the given coordinates                              |
+| `:UpdateSize()`                                                                | Recalculate the size for the current items                          |
+| `:CloseMenu()`                                                                 | Close the menu                                                      |
 
-## Пункт меню
+## Menu item
 
-Объект, возвращаемый `AddOption`:
+The object returned by `AddOption`:
 
-| Метод                 | Описание             |
-| --------------------- | -------------------- |
-| `option:AddSubMenu()` | Создать подменю      |
-| `option:OpenSubMenu()`  | Открыть подменю    |
-| `option:CloseSubMenu()` | Закрыть подменю    |
+| Method                   | Description       |
+| ------------------------ | ----------------- |
+| `option:AddSubMenu()`    | Create a submenu  |
+| `option:OpenSubMenu()`   | Open the submenu  |
+| `option:CloseSubMenu()`  | Close the submenu |
 
-## Примечания
+## Notes
 
-- Если высота панели велико, то оно ограничивается. А элементы можно просматривать через скролл.
-- Если подменю не помещается справа, оно раскрывается влево; если снизу - поднимается вверх.
+- If the menu would be too tall, its height is capped and the items become scrollable.
+- If a submenu does not fit on the right, it opens to the left; if it does not fit below, it opens upward.

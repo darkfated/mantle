@@ -1,40 +1,40 @@
 ---
-title: Текстовое окно
-description: Окно ввода текста
+title: Text box
+description: Text input window
 sidebar_position: 6
 ---
 
-# Текстовое окно
+# Text box
 
-Окно с полем ввода. Подходит для короткого ввода: никнеймы, команды, числа. Создаётся через `Mantle.ui.text_box(title, desc, callback)`.
+A window with an input field. Suited for short input: nicknames, commands, numbers. Open it with `Mantle.ui.text_box(title, desc, callback)`.
 
-## Пример
+## Example
 
-![](./assets/text-box-1.png)
+![](/img/docs/popups/text-box-1.png)
 
 ```js
-Mantle.ui.text_box('Смена ника', 'Введите новый никнейм', function(text)
-    print('Новый ник:', text)
+Mantle.ui.text_box('Change nickname', 'Enter a new nickname', function(text)
+    print('New nick:', text)
 end)
 ```
 
-## Привер ввод числа
+## Accepting a number
 
 ```js
-Mantle.ui.text_box('Дальность', 'Максимальная дистанция', function(text)
+Mantle.ui.text_box('Range', 'Maximum distance', function(text)
     local value = tonumber(text)
     if !value then
-        print('Некорректное число')
+        print('Invalid number')
         return
     end
-    print('Дальность:', value)
+    print('Range:', value)
 end)
 ```
 
-## Аргументы
+## Arguments
 
-| Аргумент   | Тип        | Описание                       |
-| ---------- | ---------- | ------------------------------ |
-| `title`    | `string`   | Заголовок окна                 |
-| `desc`     | `string`   | Пояснение под заголовком       |
-| `callback` | `function` | Вызывается с введённым текстом |
+| Argument   | Type       | Description                     |
+| ---------- | ---------- | ------------------------------- |
+| `title`    | `string`   | Window title                    |
+| `desc`     | `string`   | Explanation under the title     |
+| `callback` | `function` | Called with the entered text    |

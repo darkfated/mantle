@@ -1,14 +1,14 @@
 ---
-title: Панель выбора модели
-description: Встраиваемая панель каталога моделей
+title: Model selector panel
+description: Embeddable model catalog panel
 sidebar_position: 14
 ---
 
 # MantleModelSelector
 
-Встраиваемая панель выбора модели с поиском и интерактивным предпросмотром. Используется внутри окна [Выбор модели](../popups/model-selector.md), но её можно создать отдельно и встроить в свой интерфейс.
+An embeddable model selector panel with search and an interactive preview. It is used inside the [Model selector](../popups/model-selector.md) window, but you can create it separately and embed it in your own interface.
 
-## Пример
+## Example
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -26,53 +26,53 @@ selector:SetModels({
 })
 
 selector.OnSelect = function(self, index, model, data)
-    print('Выбрана модель:', model, 'индекс:', index)
+    print('Selected model:', model, 'index:', index)
 end
 ```
 
-## Формат моделей
+## Model format
 
-`SetModels` принимает список строк или таблиц:
+`SetModels` accepts a list of strings or tables:
 
 ```js
 selector:SetModels({
-    'models/player/group01/male_01.mdl', -- строчка
+    'models/player/group01/male_01.mdl', -- string
     {
         model = 'models/player/combine_soldier.mdl',
         name = 'Combine Soldier',
         description = 'Combine faction'
-    } -- таблица
+    } -- table
 })
 ```
 
-## Настройка предпросмотра
+## Configuring the preview
 
 ```js
 local selector = vgui.Create('MantleModelSelector', frame)
 selector:Dock(FILL)
 
-selector:SetSearchEnabled(false)  -- скрыть поиск
-selector:SetPreviewEnabled(false) -- скрыть предпросмотр
-selector:SetAutoRotate(true)      -- включить авто-вращение
-selector:SetFOV(40)               -- угол обзора (20..70)
-selector:ResetView()              -- сбросить камеру
+selector:SetSearchEnabled(false)  -- hide the search
+selector:SetPreviewEnabled(false) -- hide the preview
+selector:SetAutoRotate(true)      -- enable auto-rotation
+selector:SetFOV(40)               -- field of view (20..70)
+selector:ResetView()              -- reset the camera
 ```
 
-## Поля и методы
+## Fields and methods
 
-| Поле / метод                                          | Описание                                                          |
-| ----------------------------------------------------- | ----------------------------------------------------------------- |
-| `OnSelect(self, index, model, data)`                  | Вызывается при выборе модели. `data` - нормализованные данные     |
-| `:SetModels(table models)`                            | Задать список моделей                                             |
-| `:GetModels()`                                        | Текущий список моделей                                            |
-| `:SetSelected(int index, bool silent, bool notify)`   | Выбрать модель по индексу                                         |
-| `:GetSelected()`                                      | Индекс выбранной модели                                           |
-| `:GetSelectedModel()`                                 | Путь выбранной модели или `nil`                                   |
-| `:GetSelectedData()`                                  | Таблица данных выбранной модели                                   |
-| `:IsSelectedModelValid()`                             | `true`, если модель существует и прогрузилась                      |
-| `:SetSearchEnabled(bool enabled)`                     | Поиск. По умолчанию `true`                                        |
-| `:SetPreviewEnabled(bool enabled)`                    | Панель предпросмотра. По умолчанию `true`                         |
-| `:SetAutoRotate(bool enabled)`                        | Автоматическое вращение модели. По умолчанию `false`              |
-| `:GetAutoRotate()`                                    | Включено ли авто-вращение                                         |
-| `:SetFOV(number fov)`                                 | Угол обзора камеры (`20..70`). По умолчанию `34`                  |
-| `:ResetView()`                                        | Сбросить поворот, зум и положение камеры                          |
+| Field / method                                        | Description                                                   |
+| ----------------------------------------------------- | ------------------------------------------------------------- |
+| `OnSelect(self, index, model, data)`                  | Called on model selection. `data` is the normalized data      |
+| `:SetModels(table models)`                            | Set the model list                                            |
+| `:GetModels()`                                        | Current model list                                            |
+| `:SetSelected(int index, bool silent, bool notify)`   | Select a model by index                                       |
+| `:GetSelected()`                                      | Index of the selected model                                   |
+| `:GetSelectedModel()`                                 | Path of the selected model, or `nil`                          |
+| `:GetSelectedData()`                                  | Data table of the selected model                              |
+| `:IsSelectedModelValid()`                             | `true` if the model exists and has loaded                     |
+| `:SetSearchEnabled(bool enabled)`                     | Search. Default `true`                                        |
+| `:SetPreviewEnabled(bool enabled)`                    | Preview panel. Default `true`                                 |
+| `:SetAutoRotate(bool enabled)`                        | Automatic model rotation. Default `false`                     |
+| `:GetAutoRotate()`                                    | Whether auto-rotation is enabled                              |
+| `:SetFOV(number fov)`                                 | Camera field of view (`20..70`). Default `34`                 |
+| `:ResetView()`                                        | Reset the camera rotation, zoom, and position                 |

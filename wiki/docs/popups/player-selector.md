@@ -1,36 +1,36 @@
 ---
-title: Выбор игрока
-description: Окно со списком игроков
+title: Player selector
+description: Window with a list of players
 sidebar_position: 3
 ---
 
-# Выбор игрока
+# Player selector
 
-Окно со списком игроков сервера. Игроки сортируются по имени, а также могут показывать игроки с определёнными условиями.
+A window listing the players on the server. Players are sorted by name, and you can show only those matching a condition.
 
-## Пример
+## Example
 
-![](./assets/player-selector-1.png)
+![](/img/docs/popups/player-selector-1.png)
 
 ```js
 Mantle.ui.player_selector(function(pl)
-    print('Выбран игрок:', pl:Name())
+    print('Selected player:', pl:Name())
 end)
 ```
 
-## С фильтром игроков
+## With a player filter
 
-Второй аргумент решает, кто попадёт в список. Например, только ваша команда:
+The second argument decides who ends up in the list. For example, only your team:
 
 ```js
 Mantle.ui.player_selector(function(pl)
-    print('Выбран:', pl:Name())
+    print('Selected:', pl:Name())
 end, function(pl)
     return pl:Team() == TEAM_CITIZEN
 end)
 ```
 
-## Запуск из интерфейса
+## Opening it from your UI
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -41,7 +41,7 @@ frame:MakePopup()
 local btn = vgui.Create('MantleBtn', frame)
 btn:SetSize(160, 40)
 btn:Center()
-btn:SetTxt('Выдать админку')
+btn:SetTxt('Grant admin')
 
 btn.DoClick = function()
     Mantle.ui.player_selector(function(pl)
@@ -50,9 +50,9 @@ btn.DoClick = function()
 end
 ```
 
-## Аргументы
+## Arguments
 
-| Аргумент   | Тип        | Описание                                                           |
-| ---------- | ---------- | ------------------------------------------------------------------ |
-| `onSelect` | `function` | Вызывается с выбранным игроком                                     |
-| `filterFn` | `function` | Фильтр. Возвращает `true`, чтобы игрок попал в список. Опционально |
+| Argument   | Type       | Description                                                       |
+| ---------- | ---------- | ----------------------------------------------------------------- |
+| `onSelect` | `function` | Called with the selected player                                   |
+| `filterFn` | `function` | Filter. Return `true` to include the player. Optional             |

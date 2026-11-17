@@ -3,11 +3,17 @@ name: Deploy Wiki to GitHub Pages
 on:
     push:
         branches: [master]
-        paths: [wiki/**]
+        paths:
+            - wiki/**
+            - .github/workflows/deploy.yml
     workflow_dispatch:
 
 permissions:
     contents: write
+
+concurrency:
+    group: deploy-wiki
+    cancel-in-progress: true
 
 jobs:
     build-and-deploy:
@@ -19,7 +25,9 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 22
+                  cache: npm
+                  cache-dependency-path: wiki/package-lock.json
 
             - name: Install dependencies
               working-directory: wiki
@@ -28,6 +36,14 @@ jobs:
             - name: Build
               working-directory: wiki
               run: npm run build
+
+            - name: Verify locales
+              working-directory: wiki
+              run: |
+                  test -f build/index.html
+                  test -f build/ru/index.html
+                  test -f build/docs/intro.html
+                  test -f build/ru/docs/intro.html
 
             - name: Deploy to gh-pages
               uses: peaceiris/actions-gh-pages@v4

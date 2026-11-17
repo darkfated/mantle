@@ -1,24 +1,24 @@
 ---
-title: Уведомления
-description: Уведомления для игроков
+title: Notifications
+description: Notifications for players
 sidebar_position: 6
 ---
 
-# Уведомления
+# Notifications
 
-Серверные уведомления в чат.
+Server-side chat notifications.
 
 ```js
--- Одному игроку
-Mantle.notify(pl, Color(75, 0, 0), 'Заголовок', 'Текст сообщения')
+-- A single player
+Mantle.notify(pl, Color(75, 0, 0), 'Title', 'Message text')
 
--- Всем игрокам
-Mantle.notify(true, Color(0, 120, 200), 'Сервер', 'Событие запущено')
+-- Every player
+Mantle.notify(true, Color(0, 120, 200), 'Server', 'Event started')
 ```
 
-| Аргумент       | Тип             | Описание                                  |
-| -------------- | --------------- | ----------------------------------------- |
-| `pl`           | `player / true` | Игрок. `true` отправляет уведомление всем |
-| `headerColor`  | `color`         | Цвет заголовка                            |
-| `header`       | `string`        | Заголовок сообщения                       |
-| `text`         | `string`        | Текст сообщения                           |
+| Argument      | Type            | Description                                       |
+| ------------- | --------------- | ------------------------------------------------- |
+| `pl`          | `player / true` | Player. `true` sends the notification to everyone |
+| `headerColor` | `color`         | Header color                                      |
+| `header`      | `string`        | Message header                                    |
+| `text`        | `string`        | Message text                                      |

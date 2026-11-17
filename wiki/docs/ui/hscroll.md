@@ -1,16 +1,16 @@
 ---
-title: Горизонтальная прокрутка
-description: Лента с горизонтальной прокруткой
+title: Horizontal scroll
+description: Strip with horizontal scrolling
 sidebar_position: 7
 ---
 
 # MantleHScroll
 
-Панель с горизонтальной прокруткой. Контент раскладывается слева направо и обрезается по правому краю. Подходит для лент карточек и иконок.
+A panel with horizontal scrolling. Content is laid out from left to right and clipped at the right edge. Suited for strips of cards and icons.
 
-## Пример
+## Example
 
-![](./assets/hscroll-1.gif)
+![](/img/docs/ui/hscroll-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -27,11 +27,11 @@ for i = 1, 10 do
     btn:Dock(LEFT)
     btn:SetWide(140)
     btn:DockMargin(4, 4, 4, 4)
-    btn:SetTxt('Карточка ' .. i)
+    btn:SetTxt('Card ' .. i)
 end
 ```
 
-## Управление позицией
+## Controlling the position
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -42,24 +42,24 @@ frame:MakePopup()
 local hscroll = vgui.Create('MantleHScroll', frame)
 hscroll:Dock(FILL)
 
--- Прокрутить к началу
+-- Scroll to the start
 hscroll:SetScroll(0)
 
--- Текущая позиция
+-- Current position
 print(hscroll:GetScroll())
 ```
 
-## Методы
+## Methods
 
-| Метод                                    | Описание                               |
+| Method                                   | Description                            |
 | ---------------------------------------- | -------------------------------------- |
-| `:GetCanvas()`                           | Получить панель-контейнер для контента |
-| `:AddItem(panel)`                        | Добавить панель в конец ленты          |
-| `:SetScroll(number value)`               | Установить горизонтальную позицию      |
-| `:GetScroll()`                           | Текущая позиция                        |
-| `:Clear()`                               | Удалить всё содержимое                 |
-| `:DockPadding(left, top, right, bottom)` | Внутренние отступы                     |
+| `:GetCanvas()`                           | Get the content container panel        |
+| `:AddItem(panel)`                        | Append a panel to the end of the strip |
+| `:SetScroll(number value)`               | Set the horizontal position            |
+| `:GetScroll()`                           | Current position                       |
+| `:Clear()`                               | Remove all content                     |
+| `:DockPadding(left, top, right, bottom)` | Inner padding                          |
 
-## Примечания
+## Notes
 
-- Полосы прокрутки нет: лента листается колесом мыши или перетаскиванием.
+- There is no scrollbar: the strip is scrolled with the mouse wheel or by dragging.

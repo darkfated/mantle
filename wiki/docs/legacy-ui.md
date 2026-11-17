@@ -1,16 +1,16 @@
 ---
 title: Legacy UI
-description: Старые функции для поддержания древних скриптов
+description: Old helpers kept for legacy scripts
 sidebar_position: 3
 ---
 
 # Legacy UI
 
-Функции оформления для стандартных VGUI-элементов (`DFrame`, `DButton` и др.). Существуют для поддержания старых скриптов. Для новых проектов используйте элементы `Mantle`.
+Styling helpers for standard VGUI elements (`DFrame`, `DButton`, etc.). They exist to keep old scripts working. For new projects, use the `Mantle` elements instead.
 
-## Отличие от новых элементов
+## Differences from the new elements
 
-| Legacy                 | Новый элемент                   |
+| Legacy                 | New element                     |
 | ---------------------- | ------------------------------- |
 | `Mantle.ui.frame`      | `vgui.Create('MantleFrame')`    |
 | `Mantle.ui.btn`        | `vgui.Create('MantleBtn')`      |
@@ -19,13 +19,13 @@ sidebar_position: 3
 | `Mantle.ui.desc_entry` | `vgui.Create('MantleEntry')`    |
 | `Mantle.ui.panel_tabs` | `vgui.Create('MantleTabs')`     |
 
-## Пример
+## Example
 
-![](./assets/legacy-ui-1.png)
+![](/img/docs/legacy-ui-1.png)
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Окно', 600, 500, true, true)
+Mantle.ui.frame(frame, 'Window', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 
@@ -38,30 +38,30 @@ for k = 1, 15 do
     Mantle.ui.btn(btn)
     btn:Dock(TOP)
     btn:DockMargin(0, 0, 0, 6)
-    btn:SetText('Кнопка ' .. k)
+    btn:SetText('Button ' .. k)
 end
 ```
 
-## Функции
+## Functions
 
 ### Mantle.ui.frame
 
-Оформление для `DFrame`.
+Styling for `DFrame`.
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Окно', 600, 500, true, true)
+Mantle.ui.frame(frame, 'Window', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 ```
 
 ### Mantle.ui.sp
 
-Оформление для `DScrollPanel`.
+Styling for `DScrollPanel`.
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Список', 600, 500, true, true)
+Mantle.ui.frame(frame, 'List', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 
@@ -74,17 +74,17 @@ for k = 1, 15 do
     Mantle.ui.btn(btn)
     btn:Dock(TOP)
     btn:DockMargin(0, 0, 0, 6)
-    btn:SetText('Кнопка ' .. k)
+    btn:SetText('Button ' .. k)
 end
 ```
 
 ### Mantle.ui.btn
 
-Оформление для `DButton`.
+Styling for `DButton`.
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Кнопки', 600, 500, true, true)
+Mantle.ui.frame(frame, 'Buttons', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 
@@ -92,62 +92,62 @@ local btn = vgui.Create('DButton', frame)
 Mantle.ui.btn(btn, Material('icon16/delete.png'), 16)
 btn:SetPos(20, 40)
 btn:SetSize(180, 40)
-btn:SetText('Удалить')
+btn:SetText('Delete')
 ```
 
 ### Mantle.ui.slidebox
 
-Слайдер, привязанный к ConVar.
+A slider bound to a ConVar.
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Включение интерфейса', 600, 500, true, true)
+Mantle.ui.frame(frame, 'Interface toggle', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 
-local slider = Mantle.ui.slidebox(frame, 'Параметр', 0, 5, 'cl_drawhud', 0)
+local slider = Mantle.ui.slidebox(frame, 'Value', 0, 5, 'cl_drawhud', 0)
 slider:SetPos(20, 40)
 slider:SetWide(400)
 ```
 
 ### Mantle.ui.desc_entry
 
-Поле ввода с заголовком. Возвращает entry и его фон.
+An input field with a title. Returns the entry and its background panel.
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Ввод', 600, 500, true, true)
+Mantle.ui.frame(frame, 'Input', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 
-local entry, bg = Mantle.ui.desc_entry(frame, 'Никнейм', 'Введите ник...')
+local entry, bg = Mantle.ui.desc_entry(frame, 'Nickname', 'Enter a nickname...')
 bg:SetPos(20, 40)
 bg:SetWide(400)
 ```
 
 ### Mantle.ui.checkbox
 
-Тумблер, привязанный к ConVar. Возвращает панель и кнопку.
+A toggle bound to a ConVar. Returns the panel and the button.
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Настройки', 600, 500, true, true)
+Mantle.ui.frame(frame, 'Settings', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 
-local panel, option = Mantle.ui.checkbox(frame, 'Отображение HUD', 'cl_drawhud')
+local panel, option = Mantle.ui.checkbox(frame, 'Show HUD', 'cl_drawhud')
 panel:SetPos(20, 40)
 ```
 
 ### Mantle.ui.panel_tabs
 
-Панель вкладок. Настройка через `:AddTab(title, panel, icon, col, col_hov)` и `:ActiveTab(title)`.
+A tab panel. Configure it with `:AddTab(title, panel, icon, col, col_hov)` and `:ActiveTab(title)`.
 
-![](./assets/legacy-ui-2.gif)
+![](/img/docs/legacy-ui-2.gif)
 
 ```js
 local frame = vgui.Create('DFrame')
-Mantle.ui.frame(frame, 'Вкладки', 600, 500, true, true)
+Mantle.ui.frame(frame, 'Tabs', 600, 500, true, true)
 frame:Center()
 frame:MakePopup()
 
@@ -156,10 +156,10 @@ tabs:Dock(FILL)
 tabs:DockMargin(20, 30, 20, 20)
 
 local page1 = vgui.Create('DPanel')
-tabs:AddTab('Главная', page1, 'icon16/house.png')
+tabs:AddTab('Home', page1, 'icon16/house.png')
 
 local page2 = vgui.Create('DPanel')
-tabs:AddTab('Настройки', page2, 'icon16/cog.png')
+tabs:AddTab('Settings', page2, 'icon16/cog.png')
 
-tabs:ActiveTab('Настройки')
+tabs:ActiveTab('Settings')
 ```

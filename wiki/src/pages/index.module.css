@@ -35,3 +35,30 @@
   color: #fff;
   text-decoration: none;
 }
+
+.langSwitch {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 3rem;
+  font-size: 0.95rem;
+}
+
+.langOption {
+  color: var(--ifm-color-emphasis-600);
+  text-decoration: none;
+}
+
+.langOption:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.langOptionActive {
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+.langDivider {
+  color: var(--ifm-color-emphasis-400);
+}

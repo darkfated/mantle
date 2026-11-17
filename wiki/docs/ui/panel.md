@@ -1,14 +1,14 @@
 ---
-title: Панель
-description: Базовая панель
+title: Panel
+description: Base panel
 sidebar_position: 13
 ---
 
 # MantlePanel
 
-Базовая панель, обычно используется для блоков.
+The base panel, typically used for blocks.
 
-## Пример
+## Example
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -22,19 +22,19 @@ pan:SetTall(80)
 pan:SetColor(1)
 ```
 
-## Цвет из темы
+## Theme color
 
-Цвет задаётся индексом из массива `Mantle.color.panel`. Имеется `1`, `2` и `3`.
+The color is set by index into the `Mantle.color.panel` array. Available indices are `1`, `2`, and `3`.
 
 ```js
 local pan = vgui.Create('MantlePanel', frame)
 pan:Dock(TOP)
-pan:SetColor(1) -- по умолчанию
+pan:SetColor(1) -- default
 ```
 
-## Полупрозрачный цвет
+## Semi-transparent color
 
-То же самое, но из массива `Mantle.color.panel_alpha`.
+The same thing, but from the `Mantle.color.panel_alpha` array.
 
 ```js
 local pan = vgui.Create('MantlePanel', frame)
@@ -42,9 +42,9 @@ pan:Dock(TOP)
 pan:SetColorAlpha(2)
 ```
 
-## Свой цвет
+## Custom color
 
-Произвольный цвет через `:SetCustomColor()`.
+An arbitrary color via `:SetCustomColor()`.
 
 ```js
 local pan = vgui.Create('MantlePanel', frame)
@@ -52,11 +52,11 @@ pan:Dock(TOP)
 pan:SetCustomColor(Color(86, 132, 235))
 ```
 
-## Методы
+## Methods
 
-| Метод                          | Описание                                                 |
-| ------------------------------ | -------------------------------------------------------- |
-| `:SetColor(number index)`      | Цвет из `Mantle.color.panel[index]`.                     |
-| `:SetColorAlpha(number index)` | Полупрозрачный цвет из `Mantle.color.panel_alpha[index]` |
-| `:SetCustomColor(color color)` | Свой цвет.                                               |
-| `:SetRadius(number radius)`    | Радиус скругления. По умолчанию `12`                     |
+| Method                         | Description                                                   |
+| ------------------------------ | ------------------------------------------------------------- |
+| `:SetColor(number index)`      | Color from `Mantle.color.panel[index]`.                       |
+| `:SetColorAlpha(number index)` | Semi-transparent color from `Mantle.color.panel_alpha[index]` |
+| `:SetCustomColor(color color)` | Custom color.                                                 |
+| `:SetRadius(number radius)`    | Corner radius. Default `12`                                   |

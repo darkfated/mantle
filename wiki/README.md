@@ -1,23 +1,38 @@
 # Mantle Wiki
 
-Документация библиотеки [Mantle](https://github.com/darkfated/mantle) для Garry's Mod.
+Documentation for the [Mantle](https://github.com/darkfated/mantle) library for Garry's Mod.
 
-Сайт собран на [Docusaurus](https://docusaurus.io/).
+## Языки
 
-## Установка
+- English - default language;
+- Russian.
+
+## Installation
 
 ```bash
-bun install
+npm install
 ```
 
-## Локальный запуск
+## Local Development
 
 ```bash
-bun run start
+npm run start
 ```
 
-## Сборка
+Docusaurus in development mode shows only one language at a time. For the Russian version:
 
 ```bash
-bun run build
+npm run start:ru
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Preview the Built Site
+
+```bash
+npm run serve
 ```

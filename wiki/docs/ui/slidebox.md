@@ -1,16 +1,16 @@
 ---
-title: Слайдер
-description: Ползунок с подписью и значением
+title: Slider
+description: Slider with a label and value
 sidebar_position: 11
 ---
 
 # MantleSlideBox
 
-Слайдер. Поддерживает диапазон значений, дробные числа и привязку к ConVar.
+A slider. It supports value ranges, decimals, and ConVar binding.
 
-## Пример
+## Example
 
-![](./assets/sliderbox-1.gif)
+![](/img/docs/ui/sliderbox-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -22,10 +22,10 @@ local slider = vgui.Create('MantleSlideBox', frame)
 slider:SetWide(400)
 slider:Center()
 slider:SetRange(0, 100, 0)
-slider:SetText('Громкость')
+slider:SetText('Volume')
 ```
 
-## Чтение и установка значения
+## Reading and setting the value
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -37,15 +37,15 @@ local slider = vgui.Create('MantleSlideBox', frame)
 slider:SetWide(400)
 slider:Center()
 slider:SetRange(0, 100, 0)
-slider:SetText('Громкость')
+slider:SetText('Volume')
 
 slider:SetValue(50)
 print(slider:GetValue()) -- 50
 ```
 
-## Обработка изменения
+## Handling changes
 
-Переопределите `:OnValueChanged`. Срабатывает при каждом движении ползунка.
+Override `:OnValueChanged`. It fires on every movement of the slider.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -57,18 +57,18 @@ local slider = vgui.Create('MantleSlideBox', frame)
 slider:SetWide(400)
 slider:Center()
 slider:SetRange(0, 1, 2)
-slider:SetText('Прозрачность')
+slider:SetText('Opacity')
 
 slider.OnValueChanged = function(self, value)
-    print('Прозрачность:', value)
+    print('Opacity:', value)
 end
 ```
 
-## Привязка к ConVar
+## Binding to a ConVar
 
-Значение синхронизируется с ConVar, а движение ползунка переписывает его.
+The value stays in sync with the ConVar, and moving the slider writes it back.
 
-![](./assets/sliderbox-2.gif)
+![](/img/docs/ui/sliderbox-2.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -80,21 +80,21 @@ local slider = vgui.Create('MantleSlideBox', frame)
 slider:SetWide(400)
 slider:Center()
 slider:SetRange(0, 1)
-slider:SetText('Выключение интерфейса (как тумблер)')
+slider:SetText('HUD off (acts like a toggle)')
 slider:SetConvar('cl_drawhud')
 ```
 
-`SetRange(min, max, decimals)` - третий аргумент задаёт количество знаков после запятой.
+`SetRange(min, max, decimals)` - the third argument sets the number of decimal places.
 
-## Методы
+## Methods
 
-| Метод                                       | Описание                                                        |
-| ------------------------------------------- | --------------------------------------------------------------- |
-| `:SetRange(int min, int max, int decimals)` | Диапазон и знаки после запятой. По умолчанию `0..1`, `0` знаков |
-| `:SetConvar(string convar)`                 | Привязать к ConVar                                              |
-| `:SetText(string text)`                     | Подпись слева                                                   |
-| `:SetValue(number value)`                   | Установить значение                                             |
-| `:GetValue()`                               | Текущее значение                                                |
-| `:GetFraction()`                            | Позиция ползунка от `0` до `1`                                  |
-| `:SetDecimals(int decimals)`                | Знаки после запятой (`0..6`)                                    |
-| `:OnValueChanged(panel self, number value)` | Вызывается при изменении                                        |
+| Method                                      | Description                                                      |
+| ------------------------------------------- | ---------------------------------------------------------------- |
+| `:SetRange(int min, int max, int decimals)` | Range and decimal places. Default `0..1`, `0` decimals           |
+| `:SetConvar(string convar)`                 | Bind to a ConVar                                                 |
+| `:SetText(string text)`                     | Label on the left                                                |
+| `:SetValue(number value)`                   | Set the value                                                    |
+| `:GetValue()`                               | Current value                                                    |
+| `:GetFraction()`                            | Slider position from `0` to `1`                                  |
+| `:SetDecimals(int decimals)`                | Decimal places (`0..6`)                                          |
+| `:OnValueChanged(panel self, number value)` | Called when the value changes                                    |

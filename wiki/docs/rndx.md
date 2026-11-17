@@ -1,13 +1,13 @@
 ---
-title: Модифицированный RNDX
-description: Быстрая отрисовка графических элементов
+title: Modified RNDX
+description: Fast drawing of graphical primitives
 ---
 
-# Модифицированный RNDX
+# Modified RNDX
 
-Быстрая отрисовка графических элементов (замена `draw`). Является форком оригинальной версии.
+Fast drawing of graphical primitives (a replacement for `draw`). This is a fork of the original library.
 
-## Прямоугольник
+## Rectangle
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
@@ -21,7 +21,7 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Скругление
+## Corner radius
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
@@ -29,13 +29,13 @@ hook.Add('HUDPaint', 'Test', function()
     local x, y = (ScrW() - w) / 2, (ScrH() - h) / 2
 
     RNDX.Rect(x, y, w, h)
-        :Radii(16, 16, 0, 0) -- сверху закругление, снизу нет
+        :Radii(16, 16, 0, 0) -- rounded on top, square on the bottom
         :Color(Mantle.color.panel[1])
     :Draw()
 end)
 ```
 
-## Обводка
+## Outline
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
@@ -50,7 +50,7 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Круг
+## Circle
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
@@ -62,7 +62,7 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Тень под фигурой
+## Shadow under a shape
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
@@ -81,7 +81,7 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Размытие фона
+## Background blur
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
@@ -95,9 +95,9 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Kawase размытие фона
+## Kawase background blur
 
-![](./assets/rndx-1.webp)
+![](/img/docs/rndx-1.webp)
 
 ```js
 local blur = 2
@@ -129,7 +129,7 @@ local function openMenu()
     local btnClose = vgui.Create('MantleBtn', frame)
     btnClose:SetSize(90, 24)
     btnClose:SetPos(frame:GetWide() - 98, 4)
-    btnClose:SetTxt('Закрыть')
+    btnClose:SetTxt('Close')
     btnClose:SetRadius(8)
     btnClose.DoClick = function()
         frame:Remove()
@@ -146,9 +146,9 @@ local function openMenu()
         :Draw()
     end
 
-    addSlider(settings, 'Blur() интенсивность', 0, 12, 1, blur, function(v) blur = v end)
-    addSlider(settings, 'KBlur радиус', 0, 8, 2, kradius, function(v) kradius = v end)
-    addSlider(settings, 'KBlur проходы', 1, 4, 0, kiterations, function(v) kiterations = v end)
+    addSlider(settings, 'Blur() intensity', 0, 12, 1, blur, function(v) blur = v end)
+    addSlider(settings, 'KBlur radius', 0, 8, 2, kradius, function(v) kradius = v end)
+    addSlider(settings, 'KBlur passes', 1, 4, 0, kiterations, function(v) kiterations = v end)
 
     local main = vgui.Create('Panel', frame)
     main:Dock(FILL)
@@ -162,7 +162,7 @@ local function openMenu()
             :Rad(32)
             :Blur(blur)
         :Draw()
-        draw.SimpleText('Обычный блюр', 'Fated.24', w * 0.5, 20, Mantle.color.text, TEXT_ALIGN_CENTER)
+        draw.SimpleText('Regular blur', 'Fated.24', w * 0.5, 20, Mantle.color.text, TEXT_ALIGN_CENTER)
     end
 
     local right = vgui.Create('Panel', main)
@@ -173,7 +173,7 @@ local function openMenu()
             :Rad(32)
             :KBlur(kiterations, kradius)
         :Draw()
-        draw.SimpleText('Kawase блюр', 'Fated.24', w * 0.5, 20, Mantle.color.text, TEXT_ALIGN_CENTER)
+        draw.SimpleText('Kawase blur', 'Fated.24', w * 0.5, 20, Mantle.color.text, TEXT_ALIGN_CENTER)
     end
 
     main.PerformLayout = function(self, w)
@@ -186,19 +186,19 @@ concommand.Add('mantle_test_blur', function()
 end)
 ```
 
-Рекомендованное значение - `:KBlur(4, 2)`.
+The recommended value is `:KBlur(4, 2)`.
 
-## Акриловый материал
+## Acrylic material
 
-![](./assets/rndx-2.webp)
+![](/img/docs/rndx-2.webp)
 
 ```js
 local stateAcrylic = {
-    blur = { enabled = true, iterations = 4, radius = 4 }, -- Фоновое размытие
-    burn = { enabled = true, color = Color(120, 120, 120), amount = 0.4 }, -- Затемнение
-    tint = { enabled = true, color = Color(25, 25, 25), amount = 0.4 }, -- Заливка цветом
-    noise = { enabled = true, intensity = 0.02, scale = 8 }, -- Шум
-    fresnel = { enabled = true, color = Color(70, 140, 230), amount = 0.3, width = 1.4 } -- Свечение по краям
+    blur = { enabled = true, iterations = 4, radius = 4 }, -- Background blur
+    burn = { enabled = true, color = Color(120, 120, 120), amount = 0.4 }, -- Darkening
+    tint = { enabled = true, color = Color(25, 25, 25), amount = 0.4 }, -- Color tint
+    noise = { enabled = true, intensity = 0.02, scale = 8 }, -- Noise
+    fresnel = { enabled = true, color = Color(70, 140, 230), amount = 0.3, width = 1.4 } -- Edge glow
 }
 
 hook.Add('HUDPaint', 'Test', function()
@@ -209,13 +209,13 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Сектор круга
+## Circle sector
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
     local cx, cy = ScrW() / 2, ScrH() / 2
 
-    -- Угол в градусах: от 0 до 180 (полукруг снизу)
+    -- Angle in degrees: 0 to 180 (bottom half-circle)
     RNDX.Circle(cx, cy, 40)
         :Angles(0, 180)
         :Color(Mantle.color.theme)
@@ -223,7 +223,7 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Отрисовка материала
+## Drawing a material
 
 ```js
 hook.Add('HUDPaint', 'Test', function()
@@ -237,42 +237,42 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Конструкторы
+## Constructors
 
-| Конструктор                             | Описание       |
-| --------------------------------------- | -------------- |
-| `RNDX.Rect(int x, int y, int w, int h)` | Прямоугольник  |
-| `RNDX.Circle(int x, int y, int radius)` | Круг по центру |
+| Constructor                             | Description       |
+| --------------------------------------- | ----------------- |
+| `RNDX.Rect(int x, int y, int w, int h)` | Rectangle         |
+| `RNDX.Circle(int x, int y, int radius)` | Circle by center  |
 
-## Модификаторы
+## Modifiers
 
-| Модификатор                                                 | Описание                                                               |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `:Rad(int rad)` / `:Radii(int tl, int tr, int bl, int br)`  | Скругление углов                                                       |
-| `:Color(color col)`                                         | Цвет заливки                                                           |
-| `:Outline(int thickness)`                                   | Обводка вместо заливки. По умолчанию 1                                 |
-| `:Texture(ITexture)` / `:Material(IMaterial)`               | Отрисовка текстуры / материала                                         |
-| `:Blur(int intensity)`                                      | Размытие фона внутри фигуры                                            |
-| `:KBlur(int iterations, int radius)`                        | Kawase размытие фона внутри фигуры                                     |
-| `:Fade(int top, int bottom)`                                | Вертикальное затухание. Например `:Fade(1, 0)` прозрачно снизу         |
-| `:Shadow(int blur, int spread, int offset_x, int offset_y)` | Тень под фигурой                                                       |
-| `:Rotation(int deg)`                                        | Поворот фигуры                                                         |
-| `:Angles(int start, int end)`                               | Сектор круга                                                           |
-| `:StartAngle(int deg)` / `:EndAngle(int deg)`                | Начальный и конечный угол сектора                                      |
-| `:Shape(int shape)`                                         | Форма скругления: `RNDX.SHAPE_CIRCLE`, `RNDX.SHAPE_FIGMA`, `RNDX.SHAPE_IOS` |
-| `:ManualColor()`                                            | Не задавать цвет автоматически (ручное управление цветом)              |
-| `:Alpha(number alpha)`                                      | Прозрачность размытия (`0..1`)                                         |
-| `:Clip(object panel)`                                       | Обрезать отрисовку по границам панели                                  |
-| `:Flags(int flags)`                                         | Быстрые флаги: `RNDX.NO_TL/TR/BL/BR`, `RNDX.BLUR`, `RNDX.MANUAL_COLOR` |
-| `:Draw()`                                                   | Завершить и нарисовать фигуру                                          |
-| `:GetMaterial()`                                            | Получить материал вместо отрисовки. Недоступно для тени и размытия     |
+| Modifier                                                    | Description                                                             |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `:Rad(int rad)` / `:Radii(int tl, int tr, int bl, int br)`  | Corner radius                                                           |
+| `:Color(color col)`                                         | Fill color                                                              |
+| `:Outline(int thickness)`                                   | Outline instead of fill. Defaults to 1                                  |
+| `:Texture(ITexture)` / `:Material(IMaterial)`               | Draw a texture / material                                               |
+| `:Blur(int intensity)`                                      | Blur the background inside the shape                                    |
+| `:KBlur(int iterations, int radius)`                        | Kawase blur of the background inside the shape                          |
+| `:Fade(int top, int bottom)`                                | Vertical fade. For example, `:Fade(1, 0)` is transparent at the bottom  |
+| `:Shadow(int blur, int spread, int offset_x, int offset_y)` | Shadow under the shape                                                  |
+| `:Rotation(int deg)`                                        | Rotate the shape                                                        |
+| `:Angles(int start, int end)`                               | Circle sector                                                           |
+| `:StartAngle(int deg)` / `:EndAngle(int deg)`               | Start and end angle of the sector                                       |
+| `:Shape(int shape)`                                         | Corner shape: `RNDX.SHAPE_CIRCLE`, `RNDX.SHAPE_FIGMA`, `RNDX.SHAPE_IOS` |
+| `:ManualColor()`                                            | Do not set the color automatically (manual color control)               |
+| `:Alpha(number alpha)`                                      | Blur opacity (`0..1`)                                                   |
+| `:Clip(object panel)`                                       | Clip drawing to the panel bounds                                        |
+| `:Flags(int flags)`                                         | Fast flags: `RNDX.NO_TL/TR/BL/BR`, `RNDX.BLUR`, `RNDX.MANUAL_COLOR`     |
+| `:Draw()`                                                   | Finish and draw the shape                                               |
+| `:GetMaterial()`                                            | Get the material instead of drawing. Unavailable for shadows and blur   |
 
-## Настройки по умолчанию
+## Defaults
 
 ```js
-RNDX.SetDefaultShape(RNDX.SHAPE_FIGMA) -- форма скруглений
-RNDX.SetDefaultBlurIntensity(1) -- интенсивность :Blur()
-RNDX.SetDefaultKBlurIterations(4) -- проходы :KBlur()
+RNDX.SetDefaultShape(RNDX.SHAPE_FIGMA) -- corner shape
+RNDX.SetDefaultBlurIntensity(1) -- :Blur() intensity
+RNDX.SetDefaultKBlurIterations(4) -- :KBlur() passes
 
 print(RNDX.GetDefaultBlurIntensity())
 print(RNDX.GetDefaultKBlurIterations())

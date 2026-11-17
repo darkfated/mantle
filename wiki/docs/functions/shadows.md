@@ -1,16 +1,16 @@
 ---
 title: Legacy Shadows
-description: Отрисовка теней через Render Targets
+description: Shadow rendering via Render Targets
 sidebar_position: 10
 ---
 
 # Legacy Shadows
 
-Отрисовка теней через Render Targets. Это устаревшая система, для новых проектов используйте встроенную тень RNDX через `:Shadow()`.
+Shadow rendering via Render Targets. This is a legacy system; for new projects use the built-in RNDX shadow via `:Shadow()`.
 
-## Пример
+## Example
 
-![](./assets/shadows-1.png)
+![](/img/docs/functions/shadows-1.png)
 
 ```js
 local w, h = 300, 120
@@ -25,33 +25,33 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Параметры EndShadow
+## EndShadow parameters
 
-| Аргумент      | Тип      | Описание                          |
-| ------------- | -------- | --------------------------------- |
-| `intensity`   | `number` | Интенсивность тени                |
-| `spread`      | `number` | Размер распространения            |
-| `blur`        | `number` | Размытие                          |
-| `opacity`     | `number` | Прозрачность                      |
-| `direction`   | `number` | Направление                       |
-| `distance`    | `number` | Дистанция от объекта              |
-| `shadow_only` | `bool`   | Рисовать только тень. Опционально |
+| Argument      | Type     | Description                     |
+| ------------- | -------- | ------------------------------- |
+| `intensity`   | `number` | Shadow intensity                |
+| `spread`      | `number` | Spread size                     |
+| `blur`        | `number` | Blur                            |
+| `opacity`     | `number` | Opacity                         |
+| `direction`   | `number` | Direction                       |
+| `distance`    | `number` | Distance from the object        |
+| `shadow_only` | `bool`   | Draw the shadow only. Optional  |
 
-## Тень готовой текстуры
+## Shadow of an existing texture
 
-Рисует тень вокруг уже отрисованной текстуры (например, рендер-таргета панели), без `BeginShadow`/`EndShadow`.
+Draws a shadow around an already rendered texture (for example, a panel render target) without `BeginShadow`/`EndShadow`.
 
 ```js
 BShadows.DrawShadowTexture(texture, 2, 4, 6, 200, 0, 3)
 ```
 
-| Аргумент       | Тип        | Описание                          |
-| -------------- | ---------- | --------------------------------- |
-| `texture`      | `texture`  | Исходная текстура                 |
-| `intensity`    | `number`   | Интенсивность тени                |
-| `spread`       | `number`   | Размер распространения            |
-| `blur`         | `number`   | Размытие                          |
-| `opacity`      | `number`   | Прозрачность. По умолчанию `255`  |
-| `direction`    | `number`   | Направление. По умолчанию `0`     |
-| `distance`     | `number`   | Дистанция от объекта. По умолчанию `0` |
-| `shadow_only`  | `bool`     | Не рисовать исходную текстуру     |
+| Argument      | Type      | Description                           |
+| ------------- | --------- | ------------------------------------- |
+| `texture`     | `texture` | Source texture                        |
+| `intensity`   | `number`  | Shadow intensity                      |
+| `spread`      | `number`  | Spread size                           |
+| `blur`        | `number`  | Blur                                  |
+| `opacity`     | `number`  | Opacity. Default `255`                |
+| `direction`   | `number`  | Direction. Default `0`                |
+| `distance`    | `number`  | Distance from the object. Default `0` |
+| `shadow_only` | `bool`    | Do not draw the source texture        |

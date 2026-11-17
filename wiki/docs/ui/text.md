@@ -1,16 +1,16 @@
 ---
-title: Текст
-description: Многострочный текст с переносом
+title: Text
+description: Multi-line text with wrapping
 sidebar_position: 12
 ---
 
 # MantleText
 
-Многострочный текст с переносом по словам и многоточием при переполнении. Поддерживает кириллицу.
+Multi-line text that wraps by words and adds an ellipsis when it overflows. Cyrillic is supported.
 
-## Пример
+## Example
 
-![](./assets/text-1.png)
+![](/img/docs/ui/text-1.png)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -21,10 +21,10 @@ frame:MakePopup()
 local text = vgui.Create('MantleText', frame)
 text:SetSize(400, 100)
 text:Center()
-text:SetText('Это длинный текст, который будет аккуратно перенесён на новые строки по ширине панели.')
+text:SetText('This is a long piece of text that will be neatly wrapped onto new lines according to the panel width.')
 ```
 
-## Шрифт и цвет
+## Font and color
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -35,16 +35,16 @@ frame:MakePopup()
 local text = vgui.Create('MantleText', frame)
 text:SetSize(400, 100)
 text:Center()
-text:SetText('Заголовок раздела')
+text:SetText('Section title')
 text:SetFont('Fated.22b')
 text:SetColor(Mantle.color.text)
 ```
 
-## Выравнивание
+## Alignment
 
-`SetAlign` выравнивает по горизонтали, `SetVAlign` по вертикали.
+`SetAlign` handles horizontal alignment, `SetVAlign` vertical alignment.
 
-![](./assets/text-2.png)
+![](/img/docs/ui/text-2.png)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -55,12 +55,12 @@ frame:MakePopup()
 local text = vgui.Create('MantleText', frame)
 text:SetSize(400, 100)
 text:Center()
-text:SetText('По центру выравнивание текста происходит, вот такая магия')
+text:SetText('Centered text alignment works like this, such magic')
 text:SetAlign(TEXT_ALIGN_CENTER)
 text:SetVAlign(TEXT_ALIGN_CENTER)
 ```
 
-## Внутренние отступы
+## Inner padding
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -71,23 +71,23 @@ frame:MakePopup()
 local text = vgui.Create('MantleText', frame)
 text:SetSize(400, 100)
 text:Center()
-text:SetText('Текст с отступами')
+text:SetText('Text with padding')
 text:SetPadding(12)
 ```
 
-## Методы
+## Methods
 
-| Метод                               | Описание                                                                                                              |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `:SetText(string text)`             | Установить текст                                                                                                      |
-| `:GetText()`                        | Текущий текст                                                                                                         |
-| `:SetFont(string font)`             | Шрифт. По умолчанию `Fated.16`                                                                                        |
-| `:SetColor(color color)`            | Цвет текста                                                                                                           |
-| `:SetAlign(number align)`           | Выравнивание по горизонтали                                                                                           |
-| `:SetVAlign(string\|number valign)` | Выравнивание по вертикали: `'top'`/`'center'`/`'bottom'` или `TEXT_ALIGN_TOP`/`TEXT_ALIGN_CENTER`/`TEXT_ALIGN_BOTTOM` |
-| `:SetPadding(int padding)`          | Внутренние отступы. По умолчанию `6`                                                                                  |
-| `:InvalidateTextLayout()`           | Пересчитать раскладку текста (после смены шрифта или ширины полезно)                                                          |
+| Method                              | Description                                                                                                            |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `:SetText(string text)`             | Set the text                                                                                                           |
+| `:GetText()`                        | Current text                                                                                                           |
+| `:SetFont(string font)`             | Font. Default `Fated.16`                                                                                               |
+| `:SetColor(color color)`            | Text color                                                                                                             |
+| `:SetAlign(number align)`           | Horizontal alignment                                                                                                   |
+| `:SetVAlign(string\|number valign)` | Vertical alignment: `'top'`/`'center'`/`'bottom'` or `TEXT_ALIGN_TOP`/`TEXT_ALIGN_CENTER`/`TEXT_ALIGN_BOTTOM`          |
+| `:SetPadding(int padding)`          | Inner padding. Default `6`                                                                                             |
+| `:InvalidateTextLayout()`           | Recalculate the text layout (useful after changing the font or width)                                                  |
 
-## Примечания
+## Notes
 
-- Поддерживается кириллица через UTF-8.
+- Cyrillic is supported via UTF-8.

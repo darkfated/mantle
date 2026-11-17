@@ -1,14 +1,14 @@
 ---
-title: URL материал
-description: Скачивает изображение из интернета
+title: URL material
+description: Downloads an image from the internet
 sidebar_position: 5
 ---
 
-# URL материал
+# URL material
 
-Скачивает картинку по ссылке и отдаёт материал.
+Downloads an image from a link and returns a material.
 
-![](./assets/materials-1.png)
+![](/img/docs/functions/materials-1.png)
 
 ```js
 http.DownloadMaterial('https://i.imgur.com/eEnGbcp.jpeg', 'dog.png', function(mat)
@@ -20,9 +20,9 @@ http.DownloadMaterial('https://i.imgur.com/eEnGbcp.jpeg', 'dog.png', function(ma
 end)
 ```
 
-| Аргумент      | Тип      | Описание                                    |
-| ------------- | -------- | ------------------------------------------- |
-| `url`         | `string` | Ссылка на изображение                       |
-| `path`        | `string` | Путь к файлу относительно `garrysmod/data` (например, `data/dog.png`) |
-| `callback`    | `func`   | Вызывается с готовым материалом             |
-| `retry_count` | `int`    | Количество повторов при ошибке. Опционально |
+| Argument      | Type     | Description                                                         |
+| ------------- | -------- | ------------------------------------------------------------------- |
+| `url`         | `string` | Link to the image                                                   |
+| `path`        | `string` | File path relative to `garrysmod/data` (for example `data/dog.png`) |
+| `callback`    | `func`   | Called with the ready material                                      |
+| `retry_count` | `int`    | Number of retries on failure. Optional                              |

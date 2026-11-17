@@ -1,16 +1,16 @@
 ---
-title: Выпадающий список
-description: Список с выбором опции
+title: Dropdown
+description: List with a selectable option
 sidebar_position: 8
 ---
 
 # MantleComboBox
 
-Выпадающий список. Каждая опция может нести дополнительные данные, которые возвращаются при выборе.
+A dropdown list. Each option can carry extra data that is returned when it is selected.
 
-## Пример
+## Example
 
-![](./assets/combobox-1.webp)
+![](/img/docs/ui/combobox-1.webp)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -21,12 +21,12 @@ frame:MakePopup()
 local combo = vgui.Create('MantleComboBox', frame)
 combo:SetWide(300)
 combo:Center()
-combo:AddChoice('День')
-combo:AddChoice('Ночь')
-combo:AddChoice('Вечер')
+combo:AddChoice('Day')
+combo:AddChoice('Night')
+combo:AddChoice('Evening')
 ```
 
-## Выбор из кода
+## Selecting from code
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -37,16 +37,16 @@ frame:MakePopup()
 local combo = vgui.Create('MantleComboBox', frame)
 combo:SetWide(300)
 combo:Center()
-combo:AddChoice('Красный')
-combo:AddChoice('Синий')
+combo:AddChoice('Red')
+combo:AddChoice('Blue')
 
-combo:SetValue('Синий')
-print(combo:GetValue()) -- "Синий"
+combo:SetValue('Blue')
+print(combo:GetValue()) -- "Blue"
 ```
 
-## Обработка выбора
+## Handling selection
 
-Переопределите `:OnSelect`. Аргументы: индекс опции, текст, дополнительные данные.
+Override `:OnSelect`. The arguments are the option index, its text, and the extra data.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -57,18 +57,18 @@ frame:MakePopup()
 local combo = vgui.Create('MantleComboBox', frame)
 combo:SetWide(300)
 combo:Center()
-combo:AddChoice('Лёгкая', {"Палка", "Камень"})
-combo:AddChoice('Средняя', 256)
-combo:AddChoice('Тяжёлая', {64, 64, 96})
+combo:AddChoice('Light', {"Stick", "Stone"})
+combo:AddChoice('Medium', 256)
+combo:AddChoice('Heavy', {64, 64, 96})
 
 combo.OnSelect = function(index, text, data)
-    print('Выбрано:', index, text, data)
+    print('Selected:', index, text, data)
 end
 ```
 
 ## Placeholder
 
-Пока ничего не выбрано, отображается серая подсказка.
+Until something is selected, a gray hint is displayed.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -79,26 +79,26 @@ frame:MakePopup()
 local combo = vgui.Create('MantleComboBox', frame)
 combo:SetWide(300)
 combo:Center()
-combo:SetPlaceholder('Выберите режим...')
+combo:SetPlaceholder('Pick a mode...')
 
-combo:AddChoice('Выживание')
-combo:AddChoice('Постройка')
+combo:AddChoice('Survival')
+combo:AddChoice('Creative')
 ```
 
-## Методы
+## Methods
 
-| Метод                                         | Описание                             |
+| Method                                        | Description                          |
 | --------------------------------------------- | ------------------------------------ |
-| `:AddChoice(string text, any data)`           | Добавить опцию. Возвращает её индекс |
-| `:SetValue(string text)`                      | Выбрать опцию по тексту              |
-| `:GetValue()`                                 | Текст выбранной опции                |
-| `:SelectChoice(int index)`                    | Выбрать опцию по индексу             |
-| `:SetPlaceholder(string text)`                | Подсказка, пока ничего не выбрано    |
-| `:OpenMenu()`                                 | Открыть список                       |
-| `:CloseMenu()`                                | Закрыть список                       |
-| `:OnSelect(int index, string text, any data)` | Вызывается при выборе                |
+| `:AddChoice(string text, any data)`           | Add an option. Returns its index     |
+| `:SetValue(string text)`                      | Select an option by its text         |
+| `:GetValue()`                                 | Text of the selected option          |
+| `:SelectChoice(int index)`                    | Select an option by index            |
+| `:SetPlaceholder(string text)`                | Hint shown while nothing is selected |
+| `:OpenMenu()`                                 | Open the list                        |
+| `:CloseMenu()`                                | Close the list                       |
+| `:OnSelect(int index, string text, any data)` | Called on selection                  |
 
-## Примечания
+## Notes
 
-- Список закрывается при клике мимо него.
-- Если `SetValue` вызвать с текстом, которого нет в списке, выбор сбросится.
+- The list closes when you click outside it.
+- If `SetValue` is called with text that is not in the list, the selection is reset.

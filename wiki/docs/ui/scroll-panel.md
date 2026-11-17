@@ -1,16 +1,16 @@
 ---
-title: Панель прокрутки
-description: Панель вертикально прокрутки контента
+title: Scroll panel
+description: Panel with vertical content scrolling
 sidebar_position: 6
 ---
 
 # MantleScrollPanel
 
-Панель с вертикальной прокруткой. Поддерживает прокрутку колесом мыши, перетаскивание контента мышью. Контент раскладывается через `:Dock(TOP)` и автоматически растягивается по ширине.
+A panel with vertical scrolling. It supports mouse wheel scrolling and dragging the content with the mouse. Content is laid out with `:Dock(TOP)` and stretches to the full width automatically.
 
-## Пример
+## Example
 
-![](./assets/scroll-panel-1.gif)
+![](/img/docs/ui/scroll-panel-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -26,11 +26,11 @@ for i = 1, 20 do
     btn:Dock(TOP)
     btn:SetTall(36)
     btn:DockMargin(0, 0, 0, 8)
-    btn:SetTxt('Пункт ' .. i)
+    btn:SetTxt('Item ' .. i)
 end
 ```
 
-## Управление прокруткой из кода
+## Controlling scrolling from code
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -46,22 +46,22 @@ for i = 1, 20 do
     btn:Dock(TOP)
     btn:SetTall(36)
     btn:DockMargin(0, 0, 0, 8)
-    btn:SetTxt('Пункт ' .. i)
+    btn:SetTxt('Item ' .. i)
 end
 
--- Прокрутка вниз
+-- Scroll down
 scroll:SetScroll(500)
 
 timer.Simple(2, function()
-    -- Наверх
+    -- Back to the top
     scroll:SetScroll(0)
 end)
 
--- Узнать текущую позицию
+-- Read the current position
 print(scroll:GetScroll())
 ```
 
-## Очистка содержимого
+## Clearing the content
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -75,11 +75,11 @@ scroll:Dock(FILL)
 scroll:Clear()
 ```
 
-Полностью удаляет все панели из CanVas.
+This removes every panel from the canvas.
 
-## Отступы контента
+## Content padding
 
-![](./assets/scroll-panel-2.gif)
+![](/img/docs/ui/scroll-panel-2.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -99,9 +99,9 @@ pan.Paint = function(_, w, h)
 end
 ```
 
-## Настройка скроллбара
+## Scrollbar setup
 
-Позволяет включать/отключать отступ между правой панелью прокрутки и содержимым.
+Lets you enable or disable the gap between the scrollbar and the content.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -112,34 +112,34 @@ frame:MakePopup()
 local scroll = vgui.Create('MantleScrollPanel', frame)
 scroll:Dock(FILL)
 
--- Отключить
+-- Disable it
 scroll:DisableVBarPadding()
 
--- Регулировать вручную
+-- Adjust it manually
 scroll:SetVBarPaddingRight(true)
 
--- Панель самой полосы прокрутки
+-- The scrollbar panel itself
 local vbar = scroll:GetVBar()
 vbar:SetVisible(false)
 ```
 
-## Методы
+## Methods
 
-| Метод                                    | Описание                                                       |
-| ---------------------------------------- | -------------------------------------------------------------- |
-| `:GetCanvas()`                           | Получать панель-контейнер для контента. На неё вешают элементы |
-| `:GetVBar()`                             | Панель полосы прокрутки                                        |
-| `:AddItem(panel)`                        | Добавить панель                                                |
-| `:SetScroll(number value)`               | Установить позицию скролла по вертикали                        |
-| `:GetScroll()`                           | Текущая позиция скролла                                        |
-| `:Clear()`                               | Удалить всё содержимое                                         |
-| `:DockPadding(left, top, right, bottom)` | Внутренние отступы                                             |
-| `:DisableVBarPadding()`                  | Убрать отступ под полосу прокрутки                             |
-| `:SetVBarPaddingRight(bool enabled)`     | Включить/выключить отступ справа для полосы                    |
+| Method                                   | Description                                                     |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| `:GetCanvas()`                           | Get the content container panel. Add elements to it             |
+| `:GetVBar()`                             | The scrollbar panel                                             |
+| `:AddItem(panel)`                        | Add a panel                                                     |
+| `:SetScroll(number value)`               | Set the vertical scroll position                                |
+| `:GetScroll()`                           | Current scroll position                                         |
+| `:Clear()`                               | Remove all content                                              |
+| `:DockPadding(left, top, right, bottom)` | Inner padding                                                   |
+| `:DisableVBarPadding()`                  | Remove the gap reserved for the scrollbar                       |
+| `:SetVBarPaddingRight(bool enabled)`     | Enable or disable the right-side gap for the scrollbar          |
 
-## Примечания
+## Notes
 
-- Полоса прокрутки появляется только при переполнении.
-- Прокручивать можно, зажав ЛКМ.
+- The scrollbar only appears when the content overflows.
+- You can scroll by holding the left mouse button and dragging.
 
-![](./assets/scroll-panel-3.gif)
+![](/img/docs/ui/scroll-panel-3.gif)

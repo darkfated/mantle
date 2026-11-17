@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.UI Элементы": {
+    "message": "UI Elements",
+    "description": "The label for category 'UI Элементы' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Всплывающие элементы": {
+    "message": "Popups",
+    "description": "The label for category 'Всплывающие элементы' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Функции": {
+    "message": "Functions",
+    "description": "The label for category 'Функции' in sidebar 'docs'"
+  }
+}

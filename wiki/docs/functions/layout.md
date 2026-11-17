@@ -1,50 +1,50 @@
 ---
-title: Вёрстка и анимация
-description: Работа с вёрсткой и создание анимаций
+title: Layout and animation
+description: Working with layout and creating animations
 sidebar_position: 3
 ---
 
-# Вёрстка и анимация
+# Layout and animation
 
-## Адаптивные размеры
+## Responsive sizes
 
-Размеры задаются относительно 1920x1080 и подгоняются под монитор.
+Sizes are specified relative to 1920x1080 and scaled to the monitor.
 
 ```js
 local width = Mantle.func.w(400)
 local height = Mantle.func.h(300)
 ```
 
-## Анимация появления панели
+## Panel appearance animation
 
-![](./assets/layout-4.webp)
+![](/img/docs/functions/layout-4.webp)
 
 ```js
 local frame = vgui.Create('DFrame')
-frame:SetTitle('Анимация')
+frame:SetTitle('Animation')
 frame:SetPos(200, 100)
 
 Mantle.func.animate_appearance(frame, 400, 300, 5, 6, function()
-    print('Анимация завершена')
+    print('Animation finished')
 end, 0.8)
 ```
 
-| Аргумент               | Тип      | Описание                                                 |
-| ---------------------- | -------- | -------------------------------------------------------- |
-| `panel`                | `object` | Панель                                                   |
-| `target_w`, `target_h` | `int`    | Целевой размер панели                                    |
-| `duration`             | `int`    | Длительность роста в секундах. Например `5`              |
-| `alpha_dur`            | `int`    | Длительность проявления прозрачности. Например `6`       |
-| `callback`             | `func`   | Вызывается после завершения анимации. Опционально        |
-| `scale_factor`         | `int`    | Стартовый размер в долях от целевого. По умолчанию `0.8` |
+| Argument               | Type     | Description                                               |
+| ---------------------- | -------- | --------------------------------------------------------- |
+| `panel`                | `object` | Panel                                                     |
+| `target_w`, `target_h` | `int`    | Target panel size                                         |
+| `duration`             | `int`    | Growth duration in seconds. For example `5`               |
+| `alpha_dur`            | `int`    | Fade-in duration. For example `6`                         |
+| `callback`             | `func`   | Called when the animation finishes. Optional              |
+| `scale_factor`         | `int`    | Starting size as a fraction of the target. Default `0.8`  |
 
-## Плавный переход цвета
+## Smooth color transition
 
-`LerpColor(speed, from, to, dt)` каждый кадр экспоненциально приближает цвет к целевому. `speed` - скорость приближения: чем больше значение, тем быстрее (например `8`). Скорость не зависит от FPS.
+`LerpColor(speed, from, to, dt)` moves the color exponentially closer to the target every frame. `speed` is the approach rate: the higher the value, the faster it moves (for example `8`). The speed does not depend on FPS.
 
-`dt` опционален: по умолчанию используется `FrameTime()`. Функция возвращает новый `Color`, поэтому результат нужно присваивать.
+`dt` is optional and defaults to `FrameTime()`. The function returns a new `Color`, so you have to assign the result.
 
-![](./assets/layout-1.webp)
+![](/img/docs/functions/layout-1.webp)
 
 ```js
 local col = Mantle.color.theme
@@ -62,11 +62,11 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Экспоненциальное приближение
+## Exponential approach
 
-`approachExp(current, target, speed, dt)` плавно приближает значение к целевому. Подходит для инерционных движений: квадрат плавно съезжает вниз.
+`approachExp(current, target, speed, dt)` smoothly moves a value toward its target. It is a good fit for inertia-like motion: the square glides downward.
 
-![](./assets/layout-2.webp)
+![](/img/docs/functions/layout-2.webp)
 
 ```js
 local offset = 0
@@ -85,11 +85,11 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-## Easing-функции
+## Easing functions
 
-`t` это прогресс от 0 до 1. Квадрат ездит по экрану с ускорением/замедлением.
+`t` is the progress from 0 to 1. The square moves across the screen with acceleration and deceleration.
 
-![](./assets/layout-3.webp)
+![](/img/docs/functions/layout-3.webp)
 
 ```js
 local duration = 2
@@ -97,10 +97,10 @@ local duration = 2
 hook.Add('HUDPaint', 'Test', function()
     local elapsed = (CurTime() % duration) / duration
 
-    -- Быстрый старт, плавное окончание
+    -- Fast start, smooth finish
     local t = Mantle.func.easeOutCubic(elapsed)
 
-    -- Плавные старт, быстрое окончание
+    -- Smooth start, fast finish
     -- local t = Mantle.func.easeInOutCubic(elapsed)
 
     local size = 50
@@ -112,11 +112,11 @@ hook.Add('HUDPaint', 'Test', function()
 end)
 ```
 
-Доступны две функции: `easeOutCubic` (быстрый старт, плавное окончание) и `easeInOutCubic` (плавные старт и окончание). Раскомментируйте нужную строку.
+Two functions are available: `easeOutCubic` (fast start, smooth finish) and `easeInOutCubic` (smooth start and finish). Uncomment the line you need.
 
-## Ограничение позиции экраном
+## Keeping a panel on screen
 
-Не даёт панели выйти за границы экрана.
+Prevents a panel from going off the edge of the screen.
 
 ```js
 local menu = vgui.Create('DPanel')

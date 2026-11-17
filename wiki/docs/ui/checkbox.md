@@ -1,16 +1,16 @@
 ---
-title: Тумблер
-description: Переключатель состояний (True или False)
+title: Toggle
+description: State switch (True or False)
 sidebar_position: 2
 ---
 
 # MantleCheckBox
 
-Тумблер с текстом и кружком. Может быть привязан к ConVar: тогда значение синхронизируется автоматически.
+A toggle with a label and a circle. It can be bound to a ConVar, in which case the value stays in sync automatically.
 
-## Пример
+## Example
 
-![](./assets/checkbox-1.gif)
+![](/img/docs/ui/checkbox-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -21,10 +21,10 @@ frame:MakePopup()
 local checkbox = vgui.Create('MantleCheckBox', frame)
 checkbox:SetWide(300)
 checkbox:Center()
-checkbox:SetTxt('Переключение')
+checkbox:SetTxt('Toggle')
 ```
 
-## Чтение состояния
+## Reading the state
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -35,12 +35,12 @@ frame:MakePopup()
 local checkbox = vgui.Create('MantleCheckBox', frame)
 checkbox:SetWide(300)
 checkbox:Center()
-checkbox:SetTxt('Тест')
+checkbox:SetTxt('Test')
 
 print(checkbox:GetBool())
 ```
 
-## Установка значения
+## Setting the value
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -51,16 +51,16 @@ frame:MakePopup()
 local checkbox = vgui.Create('MantleCheckBox', frame)
 checkbox:SetWide(300)
 checkbox:Center()
-checkbox:SetTxt('Включён сразу')
+checkbox:SetTxt('On from the start')
 
 checkbox:SetValue(true)
 
 print(checkbox:GetBool()) -- true
 ```
 
-## Привязка к ConVar
+## Binding to a ConVar
 
-При создании элемента значение с ConVar считывается и меняется от `0` до `1`.
+When the element is created, the ConVar value is read and mapped from `0`/`1`.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -71,13 +71,13 @@ frame:MakePopup()
 local checkbox = vgui.Create('MantleCheckBox', frame)
 checkbox:SetWide(300)
 checkbox:Center()
-checkbox:SetTxt('Интерфейс')
+checkbox:SetTxt('Interface')
 checkbox:SetConvar('cl_drawhud')
 ```
 
-## Обработка изменения
+## Handling changes
 
-Переопределите `:OnChange`. Он вызывается при любом изменении: нажатие, `SetValue`, синхронизация с ConVar.
+Override `:OnChange`. It is called on any change: a click, `SetValue`, or a ConVar sync.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -88,29 +88,29 @@ frame:MakePopup()
 local checkbox = vgui.Create('MantleCheckBox', frame)
 checkbox:SetWide(300)
 checkbox:Center()
-checkbox:SetTxt('Звук')
+checkbox:SetTxt('Sound')
 checkbox.OnChange = function(self, value)
     if value then
-        print('Звук включён')
+        print('Sound enabled')
     else
-        print('Звук выключен')
+        print('Sound disabled')
     end
 end
 ```
 
-## Методы
+## Methods
 
-| Метод                                   | Описание                        |
+| Method                                  | Description                     |
 | --------------------------------------- | ------------------------------- |
-| `:SetTxt(string text)`                  | Текст                           |
-| `:SetText(string text)`                 | Синоним `SetTxt`                |
-| `:GetText()`                            | Текущий текст                   |
-| `:SetValue(bool value)`                 | Установить состояние (вкл/выкл) |
-| `:GetBool()`                            | Текущее состояние тумблера      |
-| `:GetValue()`                           | Синоним `GetBool`               |
-| `:SetConvar(string convar)`             | Привязать к ConVar              |
-| `:OnChange(panel self, bool new_value)` | Вызывается при переключении     |
+| `:SetTxt(string text)`                  | Label                           |
+| `:SetText(string text)`                 | Alias for `SetTxt`              |
+| `:GetText()`                            | Current label                   |
+| `:SetValue(bool value)`                 | Set the state (on/off)          |
+| `:GetBool()`                            | Current toggle state            |
+| `:GetValue()`                           | Alias for `GetBool`             |
+| `:SetConvar(string convar)`             | Bind to a ConVar                |
+| `:OnChange(panel self, bool new_value)` | Called when the toggle changes  |
 
-## Примечания
+## Notes
 
-- При удалении элемента таймер синхронизации тумблера с ConVar удаляется автоматически.
+- When the element is removed, its ConVar sync timer is cleaned up automatically.

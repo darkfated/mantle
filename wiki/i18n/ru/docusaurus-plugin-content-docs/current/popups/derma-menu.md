@@ -1,0 +1,108 @@
+---
+title: Контекстное меню
+description: Меню у курсора
+sidebar_position: 2
+---
+
+# Контекстное меню
+
+Контекстное меню, что открывается у курсора.
+
+## Пример
+
+![](/img/docs/popups/derma-menu-1.webp)
+
+```js
+local frame = vgui.Create('MantleFrame')
+frame:SetSize(400, 300)
+frame:Center()
+frame:MakePopup()
+
+local btn = vgui.Create('MantleBtn', frame)
+btn:SetSize(200, 60)
+btn:Center()
+btn:SetTxt('Открыть DermaMenu')
+
+btn.DoClick = function()
+    local dm = Mantle.ui.derma_menu()
+    dm:AddOption('Выбрать яблоко', function()
+        print('Яблоко')
+    end)
+    dm:AddOption('Выбрать банан', function()
+        print('Банан')
+    end)
+end
+```
+
+## Пункты с иконками
+
+![](/img/docs/popups/derma-menu-2.webp)
+
+```js
+local frame = vgui.Create('MantleFrame')
+frame:SetSize(400, 300)
+frame:Center()
+frame:MakePopup()
+
+local btn = vgui.Create('MantleBtn', frame)
+btn:SetSize(200, 60)
+btn:Center()
+btn:SetTxt('Открыть с иконками')
+
+btn.DoClick = function()
+    local dm = Mantle.ui.derma_menu()
+    dm:AddOption('Сохранить', function() end, 'icon16/disk.png')
+    dm:AddOption('Удалить', function() end, 'icon16/delete.png')
+end
+```
+
+## Подменю
+
+![](/img/docs/popups/derma-menu-3.webp)
+
+```js
+local frame = vgui.Create('MantleFrame')
+frame:SetSize(400, 300)
+frame:Center()
+frame:MakePopup()
+
+local btn = vgui.Create('MantleBtn', frame)
+btn:SetSize(200, 60)
+btn:Center()
+btn:SetTxt('Опции с подменю')
+
+btn.DoClick = function()
+    local menu = Mantle.ui.derma_menu()
+
+    local sub = menu:AddOption('Действия', function() end)
+    local submenu = sub:AddSubMenu()
+    submenu:AddOption('Переименовать', function() end)
+    submenu:AddOption('Дублировать', function() end)
+end
+```
+
+## Методы
+
+| Метод                                                                          | Описание                                                                 |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `:AddOption(string text, function func, string\|material icon, table optData)` | Добавить пункт. `optData` содержит доп. поля. Возвращает созданный пункт |
+| `:AddSpacer()`                                                                 | Линия-разделитель                                                        |
+| `:SetAnchor(panel)`                                                            | Открыть меню рядом с конкретной панелью                                  |
+| `:OpenAt(number x, number y)`                                                  | Открыть меню по координатам                                              |
+| `:UpdateSize()`                                                                | Пересчитать размер под текущие пункты                                    |
+| `:CloseMenu()`                                                                 | Закрыть меню                                                             |
+
+## Пункт меню
+
+Объект, возвращаемый `AddOption`:
+
+| Метод                   | Описание             |
+| ----------------------- | -------------------- |
+| `option:AddSubMenu()`   | Создать подменю      |
+| `option:OpenSubMenu()`  | Открыть подменю      |
+| `option:CloseSubMenu()` | Закрыть подменю      |
+
+## Примечания
+
+- Если высота панели велико, то оно ограничивается. А элементы можно просматривать через скролл.
+- Если подменю не помещается справа, оно раскрывается влево; если снизу - поднимается вверх.

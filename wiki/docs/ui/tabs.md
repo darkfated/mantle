@@ -1,16 +1,16 @@
 ---
-title: Вкладки
-description: Переключение между панелями
+title: Tabs
+description: Switching between panels
 sidebar_position: 5
 ---
 
 # MantleTabs
 
-Вкладки с переключением контента. Два стиля: `modern` (вкладки сверху) и `classic` (список слева).
+Tabs that switch content. Two styles are available: `modern` (tabs on top) and `classic` (list on the left).
 
-## Пример
+## Example
 
-![](./assets/tabs-1.gif)
+![](/img/docs/ui/tabs-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -25,16 +25,16 @@ local page1 = vgui.Create('Panel', tabs)
 page1.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Color(210, 95, 95))
 end
-tabs:AddTab('Главная', page1)
+tabs:AddTab('Home', page1)
 
 local page2 = vgui.Create('Panel', tabs)
 page2.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Color(95, 210, 95))
 end
-tabs:AddTab('Настройки', page2)
+tabs:AddTab('Settings', page2)
 ```
 
-## Переключение из кода
+## Switching from code
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -49,21 +49,21 @@ local page1 = vgui.Create('Panel', tabs)
 page1.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Color(210, 95, 95))
 end
-tabs:AddTab('Главная', page1)
+tabs:AddTab('Home', page1)
 
 local page2 = vgui.Create('Panel', tabs)
 page2.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Color(95, 210, 95))
 end
-tabs:AddTab('Настройки', page2)
+tabs:AddTab('Settings', page2)
 
--- Активировать вторую вкладку (нумерация с 1)
+-- Activate the second tab (indexing starts at 1)
 tabs:SetActiveTab(2)
 ```
 
-## Вкладки с иконкой
+## Tabs with icons
 
-![](./assets/tabs-2.gif)
+![](/img/docs/ui/tabs-2.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -78,20 +78,20 @@ local page1 = vgui.Create('Panel', tabs)
 page1.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[1])
 end
-tabs:AddTab({ title = 'Профиль', icon = Material('icon16/user.png') }, page1)
+tabs:AddTab({ title = 'Profile', icon = Material('icon16/user.png') }, page1)
 
 local page2 = vgui.Create('Panel', tabs)
 page2.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[1])
 end
-tabs:AddTab({ title = 'Ошибки', icon = Material('icon16/error.png') }, page2)
+tabs:AddTab({ title = 'Errors', icon = Material('icon16/error.png') }, page2)
 ```
 
-## Классический стиль
+## Classic style
 
-Список вкладок располагается слева.
+The list of tabs sits on the left.
 
-![](./assets/tabs-3.gif)
+![](/img/docs/ui/tabs-3.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -107,20 +107,20 @@ local page1 = vgui.Create('DPanel', tabs)
 page1.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
 end
-tabs:AddTab('Общее', page1)
+tabs:AddTab('General', page1)
 
 local page2 = vgui.Create('DPanel', tabs)
 page2.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[3])
 end
-tabs:AddTab('Дополнительно', page2)
+tabs:AddTab('Advanced', page2)
 ```
 
-## Вкладки со скроллом
+## Tabs with scrolling
 
-Благодаря постепенной тени и размытию сверху создаётся плавный эффект перехода.
+A gradual top shadow and blur create a smooth transition effect.
 
-![](./assets/tabs-5.gif)
+![](/img/docs/ui/tabs-5.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -145,19 +145,19 @@ page1.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
 end
 createElements(page1)
-tabs:AddTab({ title = 'Тест 1', icon = Material('icon16/bell.png') }, page1)
+tabs:AddTab({ title = 'Test 1', icon = Material('icon16/bell.png') }, page1)
 
 local page2 = vgui.Create('MantleScrollPanel', tabs)
 page2.Paint = function(_, w, h)
     draw.RoundedBox(6, 0, 0, w, h, Mantle.color.panel_alpha[2])
 end
 createElements(page2)
-tabs:AddTab({ title = 'Тест 2', icon = Material('icon16/chart_bar.png') }, page2)
+tabs:AddTab({ title = 'Test 2', icon = Material('icon16/chart_bar.png') }, page2)
 ```
 
-## Страницы с элементами
+## Pages with elements
 
-![](./assets/tabs-4.png)
+![](/img/docs/ui/tabs-4.png)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -171,38 +171,38 @@ tabs:Dock(FILL)
 local settings = vgui.Create('Panel', tabs)
 local cb = vgui.Create('MantleCheckBox', settings)
 cb:Dock(TOP)
-cb:SetTxt('Прицел')
+cb:SetTxt('Crosshair')
 
 local slider = vgui.Create('MantleSlideBox', settings)
 slider:Dock(TOP)
 slider:SetRange(0, 100, 0)
-slider:SetText('Громкость')
+slider:SetText('Volume')
 
-tabs:AddTab('Настройки', settings)
+tabs:AddTab('Settings', settings)
 ```
 
-## Методы
+## Methods
 
-| Метод                                        | Описание                                                              |
-| -------------------------------------------- | --------------------------------------------------------------------- |
-| `:AddTab(string\|table tab, pan panel, icon)` | Добавить вкладку. `tab` может быть строкой или `{ title, description, icon, pan }` |
-| `:SetActiveTab(int\|string id, bool silent)` | Переключить вкладку по номеру или заголовку. `silent` отключает звук клика |
-| `:GetActiveTab()`                            | Номер активной вкладки                                                |
-| `:GetTabCount()`                             | Количество вкладок                                                    |
-| `:SetTabStyle(string style)`                 | Стиль: `modern` или `classic`. По умолчанию `modern`                  |
-| `:SetTabHeight(int height)`                  | Высота области вкладок (`36..72`). По умолчанию `44`                  |
-| `:SetIndicatorHeight(int height)`            | Толщина полосы активной вкладки (`1..3`). По умолчанию `1`            |
-| `:SetClassicTabWidth(int width)`             | Ширина вкладки в стиле `classic` (`128..240`). По умолчанию `200`     |
+| Method                                        | Description                                                             |
+| --------------------------------------------- | ----------------------------------------------------------------------- |
+| `:AddTab(string\|table tab, pan panel, icon)` | Add a tab. `tab` can be a string or `{ title, description, icon, pan }` |
+| `:SetActiveTab(int\|string id, bool silent)`  | Switch to a tab by index or title. `silent` disables the click sound    |
+| `:GetActiveTab()`                             | Index of the active tab                                                 |
+| `:GetTabCount()`                              | Number of tabs                                                          |
+| `:SetTabStyle(string style)`                  | Style: `modern` or `classic`. Default `modern`                          |
+| `:SetTabHeight(int height)`                   | Height of the tab area (`36..72`). Default `44`                         |
+| `:SetIndicatorHeight(int height)`             | Thickness of the active tab indicator (`1..3`). Default `1`             |
+| `:SetClassicTabWidth(int width)`              | Width of a tab in the `classic` style (`128..240`). Default `200`       |
 
-### Поля таблицы вкладки
+### Tab table fields
 
-При передаче таблицы в `AddTab` доступны поля:
+When you pass a table to `AddTab`, these fields are available:
 
-| Поле          | Тип        | Описание                          |
-| ------------- | ---------- | --------------------------------- |
-| `title`       | `string`   | Заголовок вкладки                 |
-| `name`        | `string`   | Альтернатива `title`              |
-| `description` | `string`   | Подпись под заголовком            |
-| `icon`        | `material` | Иконка вкладки                    |
-| `pan`         | `panel`    | Панель содержимого                |
-| `panel`       | `panel`    | Альтернатива `pan`                |
+| Field         | Type       | Description             |
+| ------------- | ---------- | ----------------------- |
+| `title`       | `string`   | Tab title               |
+| `name`        | `string`   | Alternative to `title`  |
+| `description` | `string`   | Caption under the title |
+| `icon`        | `material` | Tab icon                |
+| `pan`         | `panel`    | Content panel           |
+| `panel`       | `panel`    | Alternative to `pan`    |

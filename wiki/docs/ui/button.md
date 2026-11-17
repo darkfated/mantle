@@ -1,16 +1,16 @@
 ---
-title: Кнопка
-description: Элемент кнопки
+title: Button
+description: Button element
 sidebar_position: 1
 ---
 
 # MantleBtn
 
-Кнопка с настройкой цвета, эффектом волны и другим.
+A button with color options, a ripple effect, and more.
 
-## Пример
+## Example
 
-![](./assets/button-1.png)
+![](/img/docs/ui/button-1.png)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -21,18 +21,18 @@ frame:MakePopup()
 local btn = vgui.Create('MantleBtn', frame)
 btn:SetSize(180, 60)
 btn:Center()
-btn:SetTxt('Нажми на меня')
+btn:SetTxt('Click me')
 btn.DoClick = function()
     chat.AddText('Hello World')
     chat.PlaySound()
 end
 ```
 
-## С иконкой
+## With an icon
 
-Иконку можно указывать через текст `:SetIcon("icon16/example.png", 16)` или `:SetIcon(mat_icon, 16)`.
+You can pass an icon either as a string path: `:SetIcon("icon16/example.png", 16)` or as a material: `:SetIcon(mat_icon, 16)`.
 
-![](./assets/button-2.png)
+![](/img/docs/ui/button-2.png)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -43,15 +43,15 @@ frame:MakePopup()
 local btnIcon = vgui.Create('MantleBtn', frame)
 btnIcon:SetSize(200, 40)
 btnIcon:Center()
-btnIcon:SetTxt('Удалить')
+btnIcon:SetTxt('Delete')
 btnIcon:SetIcon(Material('icon16/delete.png'), 16)
 ```
 
-## С эффектом волны
+## With a ripple effect
 
-Волна рисуется от точки клика. Включается через `:SetRipple(true)`.
+The ripple is drawn from the click position. Enable it with `:SetRipple(true)`.
 
-![](./assets/button-3.gif)
+![](/img/docs/ui/button-3.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -61,15 +61,15 @@ frame:MakePopup()
 
 local btnRipple = vgui.Create('MantleBtn', frame)
 btnRipple:SetSize(200, 40)
-btnRipple:SetTxt('Волна')
+btnRipple:SetTxt('Ripple')
 btnRipple:SetRipple(true)
 ```
 
-## Изменение визуала
+## Changing the look
 
-Параметры кнопки можно переопределять, полный список возможностей найдёте в Методах.
+Button parameters can be overridden; the full list is in Methods.
 
-![](./assets/button-4.gif)
+![](/img/docs/ui/button-4.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -81,15 +81,15 @@ local btn = vgui.Create('MantleBtn', frame)
 btn:Dock(TOP)
 btn:SetTall(40)
 btn:DockMargin(8, 8, 8, 8)
-btn:SetTxt('Акцент')
+btn:SetTxt('Accent')
 btn:SetColor(Color(182, 65, 65))
 btn:SetColorHover(Color(210, 90, 90))
 btn:SetRadius(32)
 ```
 
-Отключение градиента и подсветки:
+Disabling the gradient and the hover highlight:
 
-![](./assets/button-5.gif)
+![](/img/docs/ui/button-5.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -101,16 +101,16 @@ local btn = vgui.Create('MantleBtn', frame)
 btn:Dock(TOP)
 btn:SetTall(40)
 btn:DockMargin(8, 8, 8, 8)
-btn:SetTxt('Без градиента')
+btn:SetTxt('No gradient')
 btn:SetGradient(false)
 btn:SetHover(false)
 ```
 
-## Кнопка-иконка
+## Icon button
 
-Если текст не задан, кнопка центрирует иконку.
+If no text is set, the button centers its icon.
 
-![](./assets/button-6.gif)
+![](/img/docs/ui/button-6.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -125,22 +125,22 @@ iconBtn:SetTxt('')
 iconBtn:SetIcon(Material('icon16/star.png'), 16)
 ```
 
-## Методы
+## Methods
 
-| Метод                                       | Описание                                     |
-| ------------------------------------------- | -------------------------------------------- |
-| `:SetTxt(string text)`                      | Текст кнопки                                 |
-| `:SetFont(string font)`                     | Шрифт. По умолчанию `Fated.18`               |
-| `:SetColor(color color)`                    | Основной цвет кнопки                         |
-| `:SetColorHover(color color)`               | Цвет при наведении                           |
-| `:SetRadius(int rad)`                       | Скругление углов. По умолчанию `12`          |
-| `:SetGradient(bool enabled)`                | Градиент внизу кнопки. По умолчанию `true`   |
-| `:SetRipple(bool enabled)`                  | Эффект волны при клике. По умолчанию `false` |
-| `:SetHover(bool isHover)`                   | Подсветка при наведении. По умолчанию `true` |
-| `:SetIcon(string\|material icon, int size)` | Иконка                                       |
+| Method                                      | Description                                          |
+| ------------------------------------------- | ---------------------------------------------------- |
+| `:SetTxt(string text)`                      | Button text                                          |
+| `:SetFont(string font)`                     | Font. Default `Fated.18`                             |
+| `:SetColor(color color)`                    | Base button color                                    |
+| `:SetColorHover(color color)`               | Hover color                                          |
+| `:SetRadius(int rad)`                       | Corner radius. Default `12`                          |
+| `:SetGradient(bool enabled)`                | Gradient at the bottom of the button. Default `true` |
+| `:SetRipple(bool enabled)`                  | Click ripple effect. Default `false`                 |
+| `:SetHover(bool isHover)`                   | Hover highlight. Default `true`                      |
+| `:SetIcon(string\|material icon, int size)` | Icon                                                 |
 
-## Примечания
+## Notes
 
-- Остальные методы наследуются от [DButton](https://wiki.facepunch.com/gmod/DButton).
-- Стандартные цвета кнопки используют тему Mantle, установка кастомных значений не позволит менять цвета.
-- Встроенный `DoClick` проигрывает звук `mantle/btn_click.ogg` через `Mantle.func.sound()`. Если переопределяете `DoClick`, звук нужно вызывать вручную: `Mantle.func.sound()`.
+- The remaining methods are inherited from [DButton](https://wiki.facepunch.com/gmod/DButton).
+- The default button colors come from the Mantle theme; setting custom values means the theme will no longer change the colors.
+- The built-in `DoClick` plays `mantle/btn_click.ogg` via `Mantle.func.sound()`. If you override `DoClick`, call the sound manually: `Mantle.func.sound()`.

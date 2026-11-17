@@ -1,49 +1,49 @@
 ---
-title: Окно
-description: Окно, содержащие элементы
+title: Window
+description: Window that holds elements
 sidebar_position: 4
 ---
 
 # MantleFrame
 
-Реализация окна для элементов.
+A window implementation for holding elements.
 
-## Пример
+## Example
 
-![](./assets/frame-1.gif)
+![](/img/docs/ui/frame-1.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
 frame:SetSize(600, 500)
 frame:Center()
 frame:MakePopup()
-frame:SetTitle('Заголовок')
-frame:SetCenterTitle('Центральный текст')
+frame:SetTitle('Title')
+frame:SetCenterTitle('Centered text')
 frame:ShowAnimation()
 ```
 
-## Заголовки
+## Titles
 
-`SetTitle` рисует заголовок слева, `SetCenterTitle` - по центру шапки.
+`SetTitle` draws a title on the left, `SetCenterTitle` in the middle of the header.
 
 ```js
 local frame = vgui.Create('MantleFrame')
 frame:SetSize(600, 500)
 frame:Center()
 frame:MakePopup()
-frame:SetTitle('Слева')
-frame:SetCenterTitle('По центру')
+frame:SetTitle('Left')
+frame:SetCenterTitle('Center')
 ```
 
-## Плавное появление и закрытие
+## Smooth open and close
 
 ```js
 local frame = vgui.Create('MantleFrame')
 frame:SetSize(600, 500)
 frame:Center()
-frame:ShowAnimation() -- метод анимации
+frame:ShowAnimation() -- animation method
 
--- Закрытие
+-- Closing
 timer.Simple(2, function()
     if IsValid(frame) then
         frame:Close()
@@ -51,7 +51,7 @@ timer.Simple(2, function()
 end)
 ```
 
-## Отключение перетаскивания за шапку
+## Disabling drag by the header
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -61,11 +61,11 @@ frame:MakePopup()
 frame:SetDraggable(false)
 ```
 
-## Режим без шапки
+## Headerless mode
 
-Убирает шапку, а также заголовки. Подходит для всплывающих меню.
+Removes the header and the titles. Suited for popup menus.
 
-![](./assets/frame-2.gif)
+![](/img/docs/ui/frame-2.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -87,9 +87,9 @@ for k = 1, 35 do
 end
 ```
 
-## Прозрачный фон
+## Transparent background
 
-Включает/отключает размытый фон. По умолчанию стоит включено.
+Toggles the blurred background. It is enabled by default.
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -100,9 +100,9 @@ frame:MakePopup()
 frame:SetAlphaBackground(true)
 ```
 
-## Уведомление внизу окна
+## Notification at the bottom of the window
 
-![](./assets/frame-3.gif)
+![](/img/docs/ui/frame-3.gif)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -111,13 +111,13 @@ frame:Center()
 frame:MakePopup()
 
 timer.Simple(1.5, function()
-    frame:Notify('Сохранено', 2) -- текст, длительность
+    frame:Notify('Saved', 2) -- text, duration
 end)
 ```
 
-## Скрыть кнопку закрытия
+## Hiding the close button
 
-![](./assets/frame-4.png)
+![](/img/docs/ui/frame-4.png)
 
 ```js
 local frame = vgui.Create('MantleFrame')
@@ -131,23 +131,23 @@ timer.Simple(5, function()
 end)
 ```
 
-## Методы
+## Methods
 
-| Метод                                   | Описание                                                   |
-| --------------------------------------- | ---------------------------------------------------------- |
-| `:SetTitle(string title)`               | Заголовок слева в шапке                                    |
-| `:SetCenterTitle(string centerTitle)`   | Заголовок по центру шапки                                  |
-| `:SetAlphaBackground(bool isAlpha)`     | Прозрачный фон окна. По умолчанию `true`                   |
-| `:SetDraggable(bool isDraggable)`       | Перетаскивание окна. По умолчанию `true`                   |
-| `:ShowAnimation()`                      | Анимация появления окна                                    |
-| `:Close()`                              | Закрыть окно                                               |
-| `:DisableCloseBtn()`                    | Скрыть кнопку закрытия                                     |
-| `:LiteMode()`                           | Режим без верхней панели                                   |
-| `:Notify(string text, number duration)` | Уведомление внизу окна. Длительность по умолчанию `2 сек.` |
-| `:SetPopupPad(number pad)`              | Отступ содержимого от краёв окна. По умолчанию `8`         |
+| Method                                  | Description                                                         |
+| --------------------------------------- | ------------------------------------------------------------------- |
+| `:SetTitle(string title)`               | Title on the left of the header                                     |
+| `:SetCenterTitle(string centerTitle)`   | Title in the center of the header                                   |
+| `:SetAlphaBackground(bool isAlpha)`     | Transparent window background. Default `true`                       |
+| `:SetDraggable(bool isDraggable)`       | Window dragging. Default `true`                                     |
+| `:ShowAnimation()`                      | Window appearance animation                                         |
+| `:Close()`                              | Close the window                                                    |
+| `:DisableCloseBtn()`                    | Hide the close button                                               |
+| `:LiteMode()`                           | Headerless mode                                                     |
+| `:Notify(string text, number duration)` | Notification at the bottom of the window. Default duration `2 sec.` |
+| `:SetPopupPad(number pad)`              | Inset of the content from the window edges. Default `8`             |
 
-## Примечания
+## Notes
 
-- Кнопка закрытия по ПКМ открывает контекстное меню: переключение прозрачности, отключение ввода, удаление окна.
+- Right-clicking the close button opens a context menu: toggle transparency, disable input, remove the window.
 
-![](./assets/frame-5.gif)
+![](/img/docs/ui/frame-5.gif)

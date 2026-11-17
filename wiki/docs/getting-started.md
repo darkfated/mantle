@@ -1,15 +1,15 @@
 ---
-title: Установка
-description: С чего начать
+title: Installation
+description: Getting started
 sidebar_position: 2
 ---
 
-# Установка
+# Installation
 
 ## Steam Workshop
 
-Рекомендуется подписаться в [Мастерской](https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993) и добавить аддон в серверную коллекцию. Это позволит обновляться библиотеке без ручного скачивания ✅
+We recommend subscribing on the [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3126986993) and adding the addon to your server collection. This lets the library update automatically without manual downloads ✅
 
-## Дополнительные требования
+## Additional requirements
 
-- Шрифт [Montserrat](https://steamcommunity.com/sharedfiles/filedetails/?id=2924839375) добавляется автоматически через `resource.AddWorkshop`, но лучше подключить к коллекцию тоже.
+- The [Montserrat](https://steamcommunity.com/sharedfiles/filedetails/?id=2924839375) font is added automatically via `resource.AddWorkshop`, but it is best to add it to your collection as well.

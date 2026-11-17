@@ -1,16 +1,16 @@
 ---
-title: Выбор модели
-description: Окно для просмотра моделей
+title: Model selector
+description: Window for browsing models
 sidebar_position: 4
 ---
 
-# Выбор модели
+# Model selector
 
-Окно с каталогом моделей и интерактивным предпросмотром.
+A window with a model catalog and an interactive preview.
 
-## Пример
+## Example
 
-![](./assets/model-selector-1.jpg)
+![](/img/docs/popups/model-selector-1.jpg)
 
 ```js
 Mantle.ui.model_selector({
@@ -38,19 +38,19 @@ Mantle.ui.model_selector({
 end)
 ```
 
-## Формат моделей
+## Model format
 
-Список поддерживает два варианта передачи моделей.
+The list accepts two ways of passing models.
 
-**Обычная строка с путём к модели:**
+**A plain string with the model path:**
 
 ```js
 'models/player/group01/male_01.mdl'
 ```
 
-В этом случае название формируется автоматически на основе пути модели.
+In this case the display name is generated automatically from the model path.
 
-**Таблица с дополнительной информацией:**
+**A table with extra information:**
 
 ```js
 {
@@ -60,38 +60,38 @@ end)
 }
 ```
 
-Поля:
+Fields:
 
-| Поле | Тип | Описание |
-| --- | --- | --- |
-| `model` | `string` | Путь к `.mdl` файлу |
-| `name` | `string` | Отображаемое название модели |
-| `description` | `string` | Дополнительное описание модели |
+| Field         | Type     | Description               |
+| ------------- | -------- | ------------------------- |
+| `model`       | `string` | Path to the `.mdl` file   |
+| `name`        | `string` | Display name of the model |
+| `description` | `string` | Extra model description   |
 
-## Предпросмотр
+## Preview
 
-В окне доступен интерактивный просмотр выбранной модели:
+The window offers interactive viewing of the selected model:
 
-- Перетаскивание мышью вращает модель.
-- Колёсико мыши приближает и отдаляет её.
-- Кнопка сброса возвращает исходное положение камеры.
-- Автоматическое вращение можно включить или отключить.
+- Drag with the mouse to rotate the model.
+- Use the mouse wheel to zoom in and out.
+- The reset button returns the camera to its starting position.
+- Automatic rotation can be turned on or off.
 
-## Аргументы
+## Arguments
 
-| Аргумент | Тип | Описание |
-| --- | --- | --- |
-| `models` | `table` | Список моделей для отображения |
-| `onSelect` | `function` | Callback, вызываемый после подтверждения выбора |
+| Argument   | Type       | Description                                       |
+| ---------- | ---------- | ------------------------------------------------- |
+| `models`   | `table`    | List of models to display                         |
+| `onSelect` | `function` | Callback invoked after the selection is confirmed |
 
-Callback `onSelect` получает три аргумента:
+The `onSelect` callback receives three arguments:
 
-| Аргумент | Тип | Описание |
-| --- | --- | --- |
-| `model` | `string` | Путь выбранной модели |
-| `data` | `string/table` | Исходная запись из списка моделей |
-| `index` | `number` | Индекс выбранной модели |
+| Argument | Type           | Description                            |
+| -------- | -------------- | -------------------------------------- |
+| `model`  | `string`       | Path of the selected model             |
+| `data`   | `string/table` | The original entry from the model list |
+| `index`  | `number`       | Index of the selected model            |
 
-## Встраиваемая панель
+## Embeddable panel
 
-Если нужно не отдельное окно, а каталог внутри своего интерфейса, используйте панель [`MantleModelSelector`](../ui/model-selector.md).
+If you need a catalog inside your own interface rather than a separate window, use the [`MantleModelSelector`](../ui/model-selector.md) panel.
