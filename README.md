@@ -24,5 +24,3 @@ Grab the latest release from the [Releases](https://github.com/darkfated/mantle/
 ## 🔐 License
 
 This project is under the MIT terms - see the [LICENSE](LICENSE) file for details.
-
-Copyright (C) 2026 darkfated.
