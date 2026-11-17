@@ -130,10 +130,10 @@ iconBtn:SetIcon(Material('icon16/star.png'), 16)
 | Метод                                       | Описание                                     |
 | ------------------------------------------- | -------------------------------------------- |
 | `:SetTxt(string text)`                      | Текст кнопки                                 |
-| `:SetFont(string font)`                     | Шрифт                                        |
+| `:SetFont(string font)`                     | Шрифт. По умолчанию `Fated.18`               |
 | `:SetColor(color color)`                    | Основной цвет кнопки                         |
 | `:SetColorHover(color color)`               | Цвет при наведении                           |
-| `:SetRadius(int rad)`                       | Скругление углов. По умолчанию `16`          |
+| `:SetRadius(int rad)`                       | Скругление углов. По умолчанию `12`          |
 | `:SetGradient(bool enabled)`                | Градиент внизу кнопки. По умолчанию `true`   |
 | `:SetRipple(bool enabled)`                  | Эффект волны при клике. По умолчанию `false` |
 | `:SetHover(bool isHover)`                   | Подсветка при наведении. По умолчанию `true` |
@@ -143,3 +143,4 @@ iconBtn:SetIcon(Material('icon16/star.png'), 16)
 
 - Остальные методы наследуются от [DButton](https://wiki.facepunch.com/gmod/DButton).
 - Стандартные цвета кнопки используют тему Mantle, установка кастомных значений не позволит менять цвета.
+- Встроенный `DoClick` проигрывает звук `mantle/btn_click.ogg` через `Mantle.func.sound()`. Если переопределяете `DoClick`, звук нужно вызывать вручную: `Mantle.func.sound()`.

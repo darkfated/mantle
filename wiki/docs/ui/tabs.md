@@ -185,8 +185,24 @@ tabs:AddTab('Настройки', settings)
 
 | Метод                                        | Описание                                                              |
 | -------------------------------------------- | --------------------------------------------------------------------- |
-| `:AddTab(string\|table tab, pan panel)`      | Добавить вкладку. `tab` может быть строкой или `{ title, icon, ... }` |
-| `:SetActiveTab(int\|string id, bool silent)` | Переключить вкладку. `silent` отключает анимацию                      |
+| `:AddTab(string\|table tab, pan panel, icon)` | Добавить вкладку. `tab` может быть строкой или `{ title, description, icon, pan }` |
+| `:SetActiveTab(int\|string id, bool silent)` | Переключить вкладку по номеру или заголовку. `silent` отключает звук клика |
+| `:GetActiveTab()`                            | Номер активной вкладки                                                |
+| `:GetTabCount()`                             | Количество вкладок                                                    |
 | `:SetTabStyle(string style)`                 | Стиль: `modern` или `classic`. По умолчанию `modern`                  |
-| `:SetTabHeight(int height)`                  | Высота области вкладок. По умолчанию `38`                             |
-| `:SetIndicatorHeight(int height)`            | Толщина полосы активной вкладки. По умолчанию `2`                     |
+| `:SetTabHeight(int height)`                  | Высота области вкладок (`36..72`). По умолчанию `44`                  |
+| `:SetIndicatorHeight(int height)`            | Толщина полосы активной вкладки (`1..3`). По умолчанию `1`            |
+| `:SetClassicTabWidth(int width)`             | Ширина вкладки в стиле `classic` (`128..240`). По умолчанию `200`     |
+
+### Поля таблицы вкладки
+
+При передаче таблицы в `AddTab` доступны поля:
+
+| Поле          | Тип        | Описание                          |
+| ------------- | ---------- | --------------------------------- |
+| `title`       | `string`   | Заголовок вкладки                 |
+| `name`        | `string`   | Альтернатива `title`              |
+| `description` | `string`   | Подпись под заголовком            |
+| `icon`        | `material` | Иконка вкладки                    |
+| `pan`         | `panel`    | Панель содержимого                |
+| `panel`       | `panel`    | Альтернатива `pan`                |

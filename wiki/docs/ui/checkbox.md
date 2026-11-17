@@ -103,8 +103,11 @@ end
 | Метод                                   | Описание                        |
 | --------------------------------------- | ------------------------------- |
 | `:SetTxt(string text)`                  | Текст                           |
+| `:SetText(string text)`                 | Синоним `SetTxt`                |
+| `:GetText()`                            | Текущий текст                   |
 | `:SetValue(bool value)`                 | Установить состояние (вкл/выкл) |
 | `:GetBool()`                            | Текущее состояние тумблера      |
+| `:GetValue()`                           | Синоним `GetBool`               |
 | `:SetConvar(string convar)`             | Привязать к ConVar              |
 | `:OnChange(panel self, bool new_value)` | Вызывается при переключении     |
 

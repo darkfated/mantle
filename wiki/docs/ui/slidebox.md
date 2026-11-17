@@ -95,4 +95,6 @@ slider:SetConvar('cl_drawhud')
 | `:SetText(string text)`                     | Подпись слева                                                   |
 | `:SetValue(number value)`                   | Установить значение                                             |
 | `:GetValue()`                               | Текущее значение                                                |
+| `:GetFraction()`                            | Позиция ползунка от `0` до `1`                                  |
+| `:SetDecimals(int decimals)`                | Знаки после запятой (`0..6`)                                    |
 | `:OnValueChanged(panel self, number value)` | Вызывается при изменении                                        |

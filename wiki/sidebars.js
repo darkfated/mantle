@@ -19,6 +19,7 @@ const sidebars = {
         "ui/slidebox",
         "ui/text",
         "ui/panel",
+        "ui/model-selector",
       ],
     },
     {
@@ -48,6 +49,7 @@ const sidebars = {
         "functions/fonts",
         "functions/themes",
         "functions/shadows",
+        "functions/utils",
       ],
     },
     "rndx",

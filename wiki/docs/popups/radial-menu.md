@@ -113,9 +113,10 @@ local menu = Mantle.ui.radial_menu({
 
 | Метод                                                                     | Описание                                        |
 | ------------------------------------------------------------------------- | ----------------------------------------------- |
-| `:AddOption(string text, function func, string icon, string desc)`        | Добавить пункт. Возвращает его индекс           |
+| `:AddOption(string text, function func, string icon, string desc, table submenu, bool disabled)` | Добавить пункт. Возвращает его индекс |
 | `:CreateSubMenu(string title, string desc)`                               | Создать подменю. Возвращает подменю             |
 | `:AddSubMenuOption(string text, table submenu, string icon, string desc)` | Добавить пункт, ведущий в подменю               |
+| `:ApplySettings(table settings)`                                          | Применить настройки внешности из конфиг-таблицы    |
 | `:SelectOption(int index)`                                                | Выбрать пункт программно                        |
 | `:SetCenterText(string title, string desc)`                               | Надпись в центре меню                           |
 | `:GetCurrentOptions()`                                                    | Пункты текущего меню (или подменю)              |

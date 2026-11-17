@@ -126,14 +126,14 @@ tbl:AddItem('max', 'Модератор', 87)
 tbl:AddItem('dima', 'Игрок', 33)
 
 -- Клик по строке
-tbl:SetAction(function(row)
-    print('Клик по строке')
+tbl:SetAction(function(row, index)
+    print('Клик по строке', index)
     PrintTable(row)
 end)
 
 -- ПКМ по строке
-tbl:SetRightClickAction(function(row)
-    print('ПКМ по строке')
+tbl:SetRightClickAction(function(row, index)
+    print('ПКМ по строке', index)
     PrintTable(row)
 end)
 ```
@@ -169,13 +169,28 @@ print(tbl:GetRowCount()) -- 3
 | ------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | `:AddColumn(string name, int width, string\|number align, bool sortable)` | Колонка. `align`: `'left'`, `'center'`, `'right'` или `TEXT_ALIGN_*` |
 | `:AddItem(...)`                                                           | Добавить строку. Возвращает номер строки                             |
-| `:SortByColumn(int columnIndex)`                                          | Программная сортировка                                               |
-| `:SetAction(function func)`                                               | Действие при ЛКМ: `func(row)`                                        |
-| `:SetRightClickAction(function func)`                                     | Действие при ПКМ: `func(row)`                                        |
+| `:SortByColumn(int columnIndex, bool descending)`                         | Сортировка по колонке. `descending` - от меньшего к большему, или наоборот (опционально)                     |
+| `:SetAction(function func)`                                               | Действие при ЛКМ: `func(row, index)`                                 |
+| `:SetRightClickAction(function func)`                                     | Действие при ПКМ: `func(row, index)`                                 |
+| `:SetContextMenuEnabled(bool enabled)`                                    | Показывать встроенное контекстное меню. По умолчанию `true`          |
 | `:Clear()`                                                                | Очистка                                                              |
+| `:ClearSelection()`                                                       | Снять выделение                                                      |
 | `:GetSelectedRow()`                                                       | Данные выбранной строки или `nil`                                    |
+| `:SetSelectedRow(int index)`                                              | Выделить строку по индексу. `nil` снимает выделение                  |
 | `:GetRowCount()`                                                          | Количество строк                                                     |
+| `:GetColumnCount()`                                                       | Количество колонок                                                   |
+| `:GetRow(int index)`                                                      | Данные строки или `nil`                                              |
+| `:GetRowIndex(table rowData)`                                             | Индекс строки по её данным                                           |
 | `:RemoveRow(int index)`                                                   | Удалить строку по индексу                                            |
+| `:RemoveItem(table rowData)`                                              | Удалить строку по данным                                             |
+| `:SetCellValue(int rowIndex, int columnIndex, any value)`                 | Записать значение ячейки                                             |
+| `:GetCellValue(int rowIndex, int columnIndex)`                            | Значение ячейки                                                      |
+| `:SetFont(string font)`                                                   | Шрифт заголовка. По умолчанию `Fated.18`                             |
+| `:SetRowFont(string font)`                                                | Шрифт строк. По умолчанию `Fated.16`                                 |
+| `:SetHeaderHeight(int height)`                                            | Высота заголовка. По умолчанию `36`                                  |
+| `:SetRowHeight(int height)`                                               | Высота строки. По умолчанию `38`                                     |
+| `:SetPadding(int padding)`                                                | Отступ текста в ячейке. По умолчанию `12`                            |
+| `:SetSidePadding(int padding)`                                            | Боковой отступ таблицы. По умолчанию `14`                            |
 
 ## Примечания
 

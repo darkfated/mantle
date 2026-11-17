@@ -258,6 +258,22 @@ end)
 | `:Shadow(int blur, int spread, int offset_x, int offset_y)` | Тень под фигурой                                                       |
 | `:Rotation(int deg)`                                        | Поворот фигуры                                                         |
 | `:Angles(int start, int end)`                               | Сектор круга                                                           |
+| `:StartAngle(int deg)` / `:EndAngle(int deg)`                | Начальный и конечный угол сектора                                      |
+| `:Shape(int shape)`                                         | Форма скругления: `RNDX.SHAPE_CIRCLE`, `RNDX.SHAPE_FIGMA`, `RNDX.SHAPE_IOS` |
+| `:ManualColor()`                                            | Не задавать цвет автоматически (ручное управление цветом)              |
+| `:Alpha(number alpha)`                                      | Прозрачность размытия (`0..1`)                                         |
 | `:Clip(object panel)`                                       | Обрезать отрисовку по границам панели                                  |
 | `:Flags(int flags)`                                         | Быстрые флаги: `RNDX.NO_TL/TR/BL/BR`, `RNDX.BLUR`, `RNDX.MANUAL_COLOR` |
 | `:Draw()`                                                   | Завершить и нарисовать фигуру                                          |
+| `:GetMaterial()`                                            | Получить материал вместо отрисовки. Недоступно для тени и размытия     |
+
+## Настройки по умолчанию
+
+```js
+RNDX.SetDefaultShape(RNDX.SHAPE_FIGMA) -- форма скруглений
+RNDX.SetDefaultBlurIntensity(1) -- интенсивность :Blur()
+RNDX.SetDefaultKBlurIterations(4) -- проходы :KBlur()
+
+print(RNDX.GetDefaultBlurIntensity())
+print(RNDX.GetDefaultKBlurIterations())
+```

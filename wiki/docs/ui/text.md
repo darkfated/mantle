@@ -86,6 +86,7 @@ text:SetPadding(12)
 | `:SetAlign(number align)`           | Выравнивание по горизонтали                                                                                           |
 | `:SetVAlign(string\|number valign)` | Выравнивание по вертикали: `'top'`/`'center'`/`'bottom'` или `TEXT_ALIGN_TOP`/`TEXT_ALIGN_CENTER`/`TEXT_ALIGN_BOTTOM` |
 | `:SetPadding(int padding)`          | Внутренние отступы. По умолчанию `6`                                                                                  |
+| `:InvalidateTextLayout()`           | Пересчитать раскладку текста (после смены шрифта или ширины полезно)                                                          |
 
 ## Примечания
 

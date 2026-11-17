@@ -71,6 +71,9 @@ local resolved = Mantle.ui.getActiveThemeName()
 -- Доступна ли тема игроку
 local available = Mantle.ui.isThemeEnabled('red')
 
+-- Принудительная тема с сервера ('' если не задана)
+local forced = Mantle.ui.getForcedThemeName()
+
 -- Список доступных тем: { {id, title, colors}, ... }
 local themes = Mantle.ui.getAvailableThemes()
 for _, theme in ipairs(themes) do
@@ -78,17 +81,22 @@ for _, theme in ipairs(themes) do
 end
 ```
 
-`getActiveThemeName()` возвращает тему, которая должна быть активна, а `Mantle.ui.activeTheme` - тему, которая сейчас у пользователя.
+`getActiveThemeName()` возвращает тему, которая должна быть активна, а `Mantle.ui.activeTheme` - тему, которая сейчас у пользователя. `getForcedThemeName()` возвращает ID темы из `Mantle.config.theme.forced` (или пустую строку, если принудительной темы нет).
 
 ## Переключение темы
 
 ```js
 -- Лучший вариант
-Mantle.ui.setTheme('red')
+local ok = Mantle.ui.setTheme('red')
+if !ok then
+    print('Смена недоступна')
+end
 
 -- Консольный вариант
 RunConsoleCommand('mantle_theme', 'red')
 ```
+
+Функция `setTheme(name)` возвращает `false`, если темы не существует, или она отключена в `config/theme.lua` или на сервере задана принудительная тема.
 
 При включённом `mantle_smooth` цвета переходят плавно. При `mantle_smooth 0` тема применяется мгновенно.
 
