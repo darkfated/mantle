@@ -1,27 +1,31 @@
-local function build(tab)
+local function L(key)
+    return Mantle.lang.get('mantle_menu', key)
+end
+
+local function buildPanel(tab)
     local panel = vgui.Create('MantleScrollPanel')
 
     local forcedTheme = Mantle.ui.getForcedThemeName()
 
     local checkboxBlur = vgui.Create('MantleCheckBox', panel)
     checkboxBlur:Dock(TOP)
-    checkboxBlur:SetTxt('Размытие фона')
+    checkboxBlur:SetTxt(L('settings_blur'))
     checkboxBlur:SetConvar('mantle_blur')
 
     local checkboxSmooth = vgui.Create('MantleCheckBox', panel)
     checkboxSmooth:Dock(TOP)
-    checkboxSmooth:SetTxt('Эффект плавности')
+    checkboxSmooth:SetTxt(L('settings_smooth'))
     checkboxSmooth:SetConvar('mantle_smooth')
 
     local cat = vgui.Create('MantleCategory', panel)
     cat:Dock(TOP)
-    cat:SetText('Изменение цветовой темы')
+    cat:SetText(L('settings_theme'))
     cat:SetActive(true)
 
     if forcedTheme == '' then
         local comboboxTheme = vgui.Create('MantleComboBox')
         comboboxTheme:Dock(TOP)
-        comboboxTheme:SetPlaceholder('Выберите тему интерфейса')
+        comboboxTheme:SetPlaceholder(L('settings_theme_placeholder'))
 
         for _, theme in ipairs(Mantle.ui.getAvailableThemes()) do
             comboboxTheme:AddChoice(theme.title, theme.id)
@@ -80,8 +84,8 @@ end
 
 Mantle.menu.registerTab('settings', {
     order = 1,
-    title = 'Настройки',
-    description = 'Конфигурационные настройки библиотеки.',
+    title = L('tab_settings'),
+    description = L('tab_settings_desc'),
     icon = Material('icon16/cog.png'),
-    build = build
+    build = buildPanel
 })

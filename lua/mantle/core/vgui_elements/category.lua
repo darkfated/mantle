@@ -8,7 +8,7 @@ function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
     self:SetTall(HEADER_HEIGHT)
 
-    self.name = 'Категория'
+    self.name = Mantle.lang.get('mantle', 'category_default')
     self.opened = false
     self.centered = false
     self.headerColor = Mantle.color.category

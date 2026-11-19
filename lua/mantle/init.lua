@@ -13,6 +13,7 @@ local function runScripts()
     Mantle.run_cl('core/functions/anim.lua')
     Mantle.run_cl('core/functions/draw.lua')
     Mantle.run_cl('core/functions/ui.lua')
+    Mantle.run_sh('core/lang.lua')
     Mantle.run_cl('core/utils.lua')
     Mantle.run_cl('core/vgui.lua')
     Mantle.run_cl('config/colors.lua')
@@ -45,6 +46,16 @@ local function runScripts()
     Mantle.run_sh('modules/utf8.lua')
 end
 
+local function loadLangs()
+    local _, addonNames = file.Find('mantle_addons/*', 'LUA')
+
+    for _, addon in ipairs(addonNames) do
+        if file.Exists('mantle_addons/' .. addon .. '/lang.lua', 'LUA') then
+            Mantle.lang.list[addon] = Mantle.run_sh('mantle_addons/' .. addon .. '/lang.lua')
+        end
+    end
+end
+
 local function runAddons()
     local _, addonNames = file.Find('mantle_addons/*', 'LUA')
 
@@ -52,14 +63,7 @@ local function runAddons()
         if file.Exists('mantle_addons/' .. addon .. '/init.lua', 'LUA') then
             Mantle.run_sh('mantle_addons/' .. addon .. '/init.lua')
         end
-
-        if file.Exists('mantle_addons/' .. addon .. '/lang.lua', 'LUA') then
-            local langTable = Mantle.run_sh('mantle_addons/' .. addon .. '/lang.lua')
-            Mantle.lang.list[addon] = langTable
-        end
     end
-
-    Mantle.run_sh('core/lang.lua')
 end
 
 MsgC(color_white, '------------------\n')
@@ -80,5 +84,6 @@ Mantle.run_sh = function(filePath)
     return SERVER and serverResult or clientResult
 end
 
+loadLangs()
 runScripts()
 runAddons()

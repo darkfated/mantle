@@ -128,8 +128,8 @@ function PANEL:ApplySettings(settings)
     settings = settings or {}
 
     self.rootMenu = {
-        title = settings.title or 'Меню',
-        desc = settings.desc or 'Выберите опцию',
+        title = settings.title or Mantle.lang.get('mantle', 'radial_title'),
+        desc = settings.desc or Mantle.lang.get('mantle', 'radial_desc'),
         options = self.options
     }
     self.currentMenu = self.rootMenu
@@ -593,7 +593,7 @@ end
 
 function PANEL:CreateSubMenu(title, desc)
     local submenu = {
-        title = title or 'Подменю',
+        title = title or Mantle.lang.get('mantle', 'radial_submenu'),
         desc = desc or '',
         options = {}
     }
@@ -920,7 +920,7 @@ function PANEL:_drawCenterButton(cx, cy, innerRadius, alpha)
     )
 
     self:_drawText(
-        'Назад',
+        Mantle.lang.get('mantle', 'radial_back'),
         'Fated.14',
         x + width * 0.5 + Mantle.func.w(6) * self.scale,
         arrowY,

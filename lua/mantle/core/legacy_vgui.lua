@@ -55,7 +55,7 @@ function Mantle.ui.frame(s, title, width, height, close_bool, anim_bool)
         end
         s.cls.DoRightClick = function()
             local DM = Mantle.ui.derma_menu()
-            DM:AddOption('Закрыть окно', function()
+            DM:AddOption(Mantle.lang.get('mantle', 'legacy_close_window'), function()
                 s:Remove()
             end, 'icon16/cross.png')
         end
@@ -310,7 +310,7 @@ function Mantle.ui.checkbox(parent, text, convar)
             :Color(Mantle.color.panel_alpha[1])
             :Shape(RNDX.SHAPE_FIGMA)
         :Draw()
-        draw.SimpleText(self.enabled and 'ВКЛ' or 'ВЫКЛ', 'Fated.19', w * 0.5 - 1, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.enabled and Mantle.lang.get('mantle', 'toggle_on') or Mantle.lang.get('mantle', 'toggle_off'), 'Fated.19', w * 0.5 - 1, h * 0.5 - 1, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     local function toggle()
@@ -365,7 +365,7 @@ function Mantle.ui.panel_tabs(parent)
     panel_tabs.panel_content:Dock(FILL)
     panel_tabs.panel_content.Paint = function(_, w, h)
         if panel_tabs.active_tab == '' then
-            draw.SimpleText('Выберете вкладку', 'Fated.16', w * 0.5, h * 0.5 - panel_tabs.sp:GetTall() - 7, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(Mantle.lang.get('mantle', 'legacy_choose_tab'), 'Fated.16', w * 0.5, h * 0.5 - panel_tabs.sp:GetTall() - 7, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
 

@@ -1,12 +1,10 @@
 function Mantle.menu.open()
-    if IsValid(mantleMenu) then mantleMenu:Remove() end
-
-    mantleMenu = vgui.Create('MantleFrame')
+    local mantleMenu = vgui.Create('MantleFrame')
     mantleMenu:SetSize(920, 640)
     mantleMenu:Center()
     mantleMenu:MakePopup()
     mantleMenu:SetTitle('Mantle')
-    mantleMenu:SetCenterTitle('Основное меню библиотеки')
+    mantleMenu:SetCenterTitle(Mantle.lang.get('mantle_menu', 'menu_center_title'))
     mantleMenu:ShowAnimation()
     mantleMenu.OnRemove = function()
         mantleMenu = nil

@@ -1,4 +1,4 @@
-Mantle.ui.registerTheme('dark', 'Тёмная (dark)', {
+Mantle.ui.registerTheme('dark', Mantle.lang.get('mantle', 'theme_dark'), {
     header = Color(27, 29, 34),
     header_text = Color(174, 179, 190),
     background = Color(15, 16, 19),
@@ -50,7 +50,7 @@ Mantle.ui.registerTheme('dark', 'Тёмная (dark)', {
     text = Color(234, 237, 243)
 })
 
-Mantle.ui.registerTheme('dark_mono', 'Тёмная монотонная (dark_mono)', {
+Mantle.ui.registerTheme('dark_mono', Mantle.lang.get('mantle', 'theme_dark_mono'), {
     header = Color(28, 29, 32),
     header_text = Color(177, 179, 184),
     background = Color(15, 16, 18),
@@ -102,7 +102,7 @@ Mantle.ui.registerTheme('dark_mono', 'Тёмная монотонная (dark_mo
     text = Color(235, 236, 238)
 })
 
-Mantle.ui.registerTheme('blue', 'Синяя (blue)', {
+Mantle.ui.registerTheme('blue', Mantle.lang.get('mantle', 'theme_blue'), {
     header = Color(30, 40, 54),
     header_text = Color(150, 170, 196),
     background = Color(14, 18, 26),
@@ -154,7 +154,7 @@ Mantle.ui.registerTheme('blue', 'Синяя (blue)', {
     text = Color(216, 228, 242)
 })
 
-Mantle.ui.registerTheme('red', 'Красная (red)', {
+Mantle.ui.registerTheme('red', Mantle.lang.get('mantle', 'theme_red'), {
     header = Color(46, 30, 32),
     header_text = Color(196, 168, 172),
     background = Color(20, 14, 16),
@@ -206,7 +206,7 @@ Mantle.ui.registerTheme('red', 'Красная (red)', {
     text = Color(240, 226, 228)
 })
 
-Mantle.ui.registerTheme('green', 'Зелёная (green)', {
+Mantle.ui.registerTheme('green', Mantle.lang.get('mantle', 'theme_green'), {
     header = Color(28, 44, 34),
     header_text = Color(170, 196, 178),
     background = Color(12, 18, 14),
@@ -258,7 +258,7 @@ Mantle.ui.registerTheme('green', 'Зелёная (green)', {
     text = Color(226, 240, 230)
 })
 
-Mantle.ui.registerTheme('purple', 'Фиолетовая (purple)', {
+Mantle.ui.registerTheme('purple', Mantle.lang.get('mantle', 'theme_purple'), {
     header = Color(34, 28, 50),
     header_text = Color(186, 178, 216),
     background = Color(15, 13, 22),
@@ -310,7 +310,7 @@ Mantle.ui.registerTheme('purple', 'Фиолетовая (purple)', {
     text = Color(238, 234, 252)
 })
 
-Mantle.ui.registerTheme('coffee', 'Кофейная (coffee)', {
+Mantle.ui.registerTheme('coffee', Mantle.lang.get('mantle', 'theme_coffee'), {
     header = Color(52, 36, 26),
     header_text = Color(200, 182, 164),
     background = Color(24, 16, 12),
@@ -362,7 +362,7 @@ Mantle.ui.registerTheme('coffee', 'Кофейная (coffee)', {
     text = Color(240, 232, 222)
 })
 
-Mantle.ui.registerTheme('wine', 'Винная (wine)', {
+Mantle.ui.registerTheme('wine', Mantle.lang.get('mantle', 'theme_wine'), {
     header = Color(44, 30, 40),
     header_text = Color(226, 210, 220),
     background = Color(18, 13, 16),
@@ -414,7 +414,7 @@ Mantle.ui.registerTheme('wine', 'Винная (wine)', {
     text = Color(242, 232, 238)
 })
 
-Mantle.ui.registerTheme('violet', 'Фиалковая (violet)', {
+Mantle.ui.registerTheme('violet', Mantle.lang.get('mantle', 'theme_violet'), {
     header = Color(36, 38, 54),
     header_text = Color(208, 214, 240),
     background = Color(16, 18, 28),
@@ -466,7 +466,7 @@ Mantle.ui.registerTheme('violet', 'Фиалковая (violet)', {
     text = Color(236, 240, 252)
 })
 
-Mantle.ui.registerTheme('moss', 'Моховая (moss)', {
+Mantle.ui.registerTheme('moss', Mantle.lang.get('mantle', 'theme_moss'), {
     header = Color(36, 44, 30),
     header_text = Color(196, 208, 190),
     background = Color(15, 18, 12),
@@ -518,7 +518,7 @@ Mantle.ui.registerTheme('moss', 'Моховая (moss)', {
     text = Color(234, 244, 230)
 })
 
-Mantle.ui.registerTheme('coral', 'Коралловая (coral)', {
+Mantle.ui.registerTheme('coral', Mantle.lang.get('mantle', 'theme_coral'), {
     header = Color(44, 26, 30),
     header_text = Color(236, 212, 212),
     background = Color(17, 12, 14),
