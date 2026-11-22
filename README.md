@@ -32,7 +32,7 @@ Mantle - a tool for your server. The library provides capabilities from UI compo
 | --- | --- |
 | **🎨 UI elements** | `MantleBtn`, `MantleFrame`, `MantlePanel`, `MantleEntry`, `MantleCheckBox`, `MantleComboBox`, `MantleSlideBox`, `MantleTabs`, `MantleTable`, `MantleScrollPanel`, `MantleCategory`, `MantleText` and others |
 | **🎉 Popups** | Player and model selector, color picker, context menu, radial menu, text boxes |
-| **⚙️ Rendering** | Fast graphical primitives via [modified RNDX](https://github.com/darkfated/mantle/tree/master/rndx) |
+| **⚙️ Render** | Fast graphical primitives via [modified RNDX](https://github.com/darkfated/mantle/tree/master/rndx) |
 | **🌫️ Effects** | Kawase Blur, acrylic material, shadows, blur and glow |
 | **🎨 Themes** | 11 built-in color schemes, smooth animations and server settings |
 | **🌐 Localization** | Built-in translation system: English, Russian and French |
