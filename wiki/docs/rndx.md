@@ -190,21 +190,31 @@ The recommended value is `:KBlur(4, 2)`.
 
 ## Acrylic material
 
+This is a ready-made frosted glass effect in the spirit of **Windows 11**. Instead of a flat translucent rectangle, the library combines five layers at once:
+
+| Layer | What it does |
+| --- | --- |
+| **blur** | background blur |
+| **burn** | dimming of bright areas |
+| **tint** | color tint |
+| **noise** | light grain |
+| **fresnel** | soft glow at the edges |
+
 ![](/img/docs/rndx-2.webp)
 
 ```js
-local stateAcrylic = {
-    blur = { enabled = true, iterations = 4, radius = 4 }, -- Background blur
-    burn = { enabled = true, color = Color(120, 120, 120), amount = 0.4 }, -- Darkening
-    tint = { enabled = true, color = Color(25, 25, 25), amount = 0.4 }, -- Color tint
-    noise = { enabled = true, intensity = 0.02, scale = 8 }, -- Noise
-    fresnel = { enabled = true, color = Color(70, 140, 230), amount = 0.3, width = 1.4 } -- Edge glow
+local acrylic = {
+    blur = { enabled = true, iterations = 4, radius = 4 },
+    burn = { enabled = true, color = Color(120, 120, 120), amount = 0.4 },
+    tint = { enabled = true, color = Color(25, 25, 25), amount = 0.4 },
+    noise = { enabled = true, intensity = 0.02, scale = 8 },
+    fresnel = { enabled = true, color = Color(70, 140, 230), amount = 0.3, width = 1.4 }
 }
 
 hook.Add('HUDPaint', 'Test', function()
-    RNDX.Rect(50, 50, 150, 150)
+    RNDX.Rect(100, 100, 400, 200)
         :Rad(16)
-        :Acrylic(stateAcrylic)
+        :Acrylic(acrylic)
     :Draw()
 end)
 ```

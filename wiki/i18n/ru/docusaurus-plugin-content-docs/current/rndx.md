@@ -190,21 +190,31 @@ end)
 
 ## Акриловый материал
 
+Это готовый эффект матового стекла в духе **Windows 11**. Вместо плоского полупрозрачного прямоугольника библиотека комбинирует сразу пять слоёв:
+
+| Layer | What it does |
+| --- | --- |
+| **blur** | размытие фона |
+| **burn** | приглушение светлых участков |
+| **tint** | цветовой оттенок |
+| **noise** | лёгкая зернистость |
+| **fresnel** | мягкое свечение по краям |
+
 ![](/img/docs/rndx-2.webp)
 
 ```js
-local stateAcrylic = {
-    blur = { enabled = true, iterations = 4, radius = 4 }, -- Фоновое размытие
-    burn = { enabled = true, color = Color(120, 120, 120), amount = 0.4 }, -- Затемнение
-    tint = { enabled = true, color = Color(25, 25, 25), amount = 0.4 }, -- Заливка цветом
-    noise = { enabled = true, intensity = 0.02, scale = 8 }, -- Шум
-    fresnel = { enabled = true, color = Color(70, 140, 230), amount = 0.3, width = 1.4 } -- Свечение по краям
+local acrylic = {
+    blur = { enabled = true, iterations = 4, radius = 4 },
+    burn = { enabled = true, color = Color(120, 120, 120), amount = 0.4 },
+    tint = { enabled = true, color = Color(25, 25, 25), amount = 0.4 },
+    noise = { enabled = true, intensity = 0.02, scale = 8 },
+    fresnel = { enabled = true, color = Color(70, 140, 230), amount = 0.3, width = 1.4 }
 }
 
 hook.Add('HUDPaint', 'Test', function()
-    RNDX.Rect(50, 50, 150, 150)
+    RNDX.Rect(100, 100, 400, 200)
         :Rad(16)
-        :Acrylic(stateAcrylic)
+        :Acrylic(acrylic)
     :Draw()
 end)
 ```
