@@ -1,5 +1,5 @@
 function Mantle.menu.open()
-    local mantleMenu = vgui.Create('MantleFrame')
+    mantleMenu = vgui.Create('MantleFrame')
     mantleMenu:SetSize(920, 640)
     mantleMenu:Center()
     mantleMenu:MakePopup()

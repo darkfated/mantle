@@ -124,9 +124,7 @@ local function buildPanel(tab)
     cat:SetText(L('popups_notify'))
     cat:SetActive(true)
     local btnNotify = createDemoButton(L('popups_notify_show'), function()
-        if IsValid(mantleMenu) then
-            mantleMenu:Notify(L('popups_notify_text'))
-        end
+        mantleMenu:Notify(L('popups_notify_text'))
     end)
     btnNotify:DockMargin(8, 8, 8, 8)
     cat:AddItem(btnNotify)
