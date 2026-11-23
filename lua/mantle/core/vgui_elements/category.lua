@@ -1,8 +1,14 @@
 local PANEL = {}
 
+local math_max = math.max
+local math_floor = math.floor
+local math_abs = math.abs
+
 local HEADER_HEIGHT = 30
 local CONTENT_OFFSET = 36
 local CONTENT_PADDING = 12
+local ANIM_SNAP = 0.001
+local COLOR_SNAP = 0.5
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
@@ -20,6 +26,9 @@ function PANEL:Init()
     self._animSpeed = 12
     self._childrenAlpha = -1
     self._contentTall = -1
+    self._contentDirty = true
+    self._childCount = 0
+    self._contentVisible = false
 
     self.header = vgui.Create('Button', self)
     self.header:SetText('')
@@ -33,7 +42,20 @@ function PANEL:Init()
         local alignX = self.centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
         draw.SimpleText(self.name, 'Fated.20', posX, 4, Mantle.color.text, alignX)
 
-        self.headerColor = Mantle.func.LerpColor(8, self.headerColor, self.opened and self.headerColorOpened or self.headerColorStandard)
+        local target = self.opened and self.headerColorOpened or self.headerColorStandard
+        local current = self.headerColor
+
+        if current != target then
+            if math_abs(current.r - target.r) < COLOR_SNAP
+                and math_abs(current.g - target.g) < COLOR_SNAP
+                and math_abs(current.b - target.b) < COLOR_SNAP
+                and math_abs(current.a - target.a) < COLOR_SNAP
+            then
+                self.headerColor = target
+            else
+                self.headerColor = Mantle.func.LerpColor(8, current, target)
+            end
+        end
     end
     self.header.DoClick = function()
         self.opened = !self.opened
@@ -42,7 +64,35 @@ function PANEL:Init()
 
     self.content = vgui.Create('Panel', self)
     self.content:SetVisible(false)
-    self._contentVisible = false
+
+    local contentChildAdded = self.content.OnChildAdded
+    self.content.OnChildAdded = function(pnl, child)
+        if contentChildAdded then contentChildAdded(pnl, child) end
+        if !IsValid(self) or !IsValid(child) then return end
+        self:_hookChild(child)
+        self._contentDirty = true
+        self._childCount = self._childCount + 1
+    end
+
+    local contentChildRemoved = self.content.OnChildRemoved
+    self.content.OnChildRemoved = function(pnl, child)
+        if contentChildRemoved then contentChildRemoved(pnl, child) end
+        if !IsValid(self) then return end
+        self._contentDirty = true
+        self._childCount = math_max(0, self._childCount - 1)
+    end
+end
+
+function PANEL:_hookChild(child)
+    if !IsValid(child) or child == self.header or child == self.content then return end
+    if child._mantleCatHook then return end
+    child._mantleCatHook = true
+
+    local old = child.OnSizeChanged
+    child.OnSizeChanged = function(s, ...)
+        if old then old(s, ...) end
+        if IsValid(self) then self._contentDirty = true end
+    end
 end
 
 function PANEL:SetText(name)
@@ -73,7 +123,11 @@ function PANEL:IsActive()
 end
 
 function PANEL:AddItem(panel)
-    if panel:GetParent() == self.content then return panel end
+    if !IsValid(panel) then return panel end
+    if panel:GetParent() == self.content then
+        self:_hookChild(panel)
+        return panel
+    end
     panel:SetParent(self.content)
     return panel
 end
@@ -101,9 +155,11 @@ function PANEL:PerformLayout(w, h)
     self.content:SetWide(w)
 end
 
-local function measureContent(content)
+function PANEL:_measureContent()
+    local children = self.content:GetChildren()
     local total = 0
-    for _, c in ipairs(content:GetChildren()) do
+    for i = 1, #children do
+        local c = children[i]
         if IsValid(c) then
             total = total + c:GetTall()
             local _, t, _, b = c:GetDockMargin()
@@ -116,21 +172,44 @@ end
 function PANEL:Think()
     local ft = FrameTime()
 
-    self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
-    local eased = Mantle.func.easeOutCubic(self._anim)
-
-    local contentTall = measureContent(self.content)
-    if contentTall != self._contentTall then
-        self._contentTall = contentTall
-        self.content:SetTall(math.max(0, contentTall))
+    if self._anim != self._animTarget then
+        self._anim = Mantle.func.approachExp(self._anim, self._animTarget, self._animSpeed, ft)
+        if math_abs(self._anim - self._animTarget) < ANIM_SNAP then
+            self._anim = self._animTarget
+        end
     end
 
-    local targetTall = math.max(HEADER_HEIGHT, math.floor(HEADER_HEIGHT + (contentTall + CONTENT_PADDING) * eased + 0.5))
+    local anim = self._anim
+    local eased
+
+    if anim == 0 then
+        eased = 0
+    elseif anim == 1 then
+        eased = 1
+    else
+        eased = Mantle.func.easeOutCubic(anim)
+    end
+
+    local contentTall = self._contentTall
+
+    if self._contentDirty then
+        contentTall = self:_measureContent()
+        self._contentDirty = false
+
+        if contentTall != self._contentTall then
+            self._contentTall = contentTall
+            self.content:SetTall(math_max(0, contentTall))
+        end
+    elseif contentTall < 0 then
+        contentTall = 0
+    end
+
+    local targetTall = math_max(HEADER_HEIGHT, math_floor(HEADER_HEIGHT + (contentTall + CONTENT_PADDING) * eased + 0.5))
     if self:GetTall() != targetTall then
         self:SetTall(targetTall)
     end
 
-    local alphaVal = math.floor(255 * eased + 0.5)
+    local alphaVal = math_floor(255 * eased + 0.5)
     if alphaVal != self._childrenAlpha then
         self._childrenAlpha = alphaVal
         self.content:SetAlpha(alphaVal)

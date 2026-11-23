@@ -8,6 +8,9 @@ local math_sqrt = math.sqrt
 local math_ceil = math.ceil
 local math_clamp = math.Clamp
 
+local SPRING_SUBSTEP = 120
+local MIN_FRAME_DT = 1 / 240
+
 local function isCursorInside(panel, mouseX, mouseY)
     if !IsValid(panel) then return false end
 
@@ -104,6 +107,7 @@ function PANEL:Init()
     self._dragRaw = 0
     self._dragVelocity = 0
     self._dragLastTime = 0
+    self._lastAppliedOffset = nil
 
     self:SetMouseInputEnabled(true)
 end
@@ -198,13 +202,17 @@ function PANEL:Clear()
     self._springing = false
     self._springVelocity = 0
     self._pendingScroll = false
+    self._lastAppliedOffset = nil
     self:_markDirty()
 end
 
 function PANEL:SetScroll(value)
     if self.drag then self:MouseCapture(false) end
 
-    self.offset = math_max(0, tonumber(value) or 0)
+    local offset = math_max(0, tonumber(value) or 0)
+    local changed = offset != self.offset
+
+    self.offset = offset
     self.vel = 0
     self.drag = false
     self._dragVelocity = 0
@@ -215,9 +223,16 @@ function PANEL:SetScroll(value)
 
     local maxScroll, viewSize = self:_range()
     if viewSize > 0 then
-        self.offset = math_clamp(self.offset, 0, maxScroll)
+        local clamped = math_clamp(self.offset, 0, maxScroll)
+        if clamped != self.offset then
+            self.offset = clamped
+            changed = true
+        end
         self._pendingScroll = false
-        self:_applyScroll()
+        if changed then
+            self:_applyScroll()
+            self._lastAppliedOffset = self.offset
+        end
     end
 end
 
@@ -307,7 +322,7 @@ end
 function PANEL:_stepSpring(ft)
     local stiffness = self.springStiffness or 190
     local damping = self.springDamping or (2 * math_sqrt(stiffness))
-    local steps = math_max(1, math_ceil(ft / (1 / 120)))
+    local steps = math_max(1, math_ceil(ft * SPRING_SUBSTEP))
     local step = ft / steps
 
     for i = 1, steps do
@@ -438,14 +453,17 @@ function PANEL:OnCursorMoved(x, y)
     self.offset = self:_resistedOffset(self._dragRaw, maxScroll, viewSize)
 
     local now = SysTime()
-    local dt = math_max(now - self._dragLastTime, 1 / 240)
+    local dt = math_max(now - self._dragLastTime, MIN_FRAME_DT)
     local instantVelocity = (self.offset - previousOffset) / dt
     self._dragVelocity = self._dragVelocity * self.dragVelocityDamping + instantVelocity * (1 - self.dragVelocityDamping)
     self._dragVelocity = math_clamp(self._dragVelocity, -self.maxVelocity, self.maxVelocity)
     self._dragLastTime = now
     self.lastInput = CurTime()
 
-    self:_applyScroll()
+    if self.offset != previousOffset then
+        self:_applyScroll()
+        self._lastAppliedOffset = self.offset
+    end
 end
 
 function PANEL:PerformLayout(w, h)
@@ -466,7 +484,11 @@ function PANEL:Think()
         end
     end
 
-    self:_applyScroll()
+    if self.offset != self._lastAppliedOffset then
+        self:_applyScroll()
+        self._lastAppliedOffset = self.offset
+    end
+
     self:_afterScroll(ft, maxScroll, viewSize, contentSize)
 end
 

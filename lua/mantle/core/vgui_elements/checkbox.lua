@@ -2,7 +2,12 @@ local PANEL = {}
 
 local math_abs = math.abs
 local math_floor = math.floor
+local LERP_SNAP = 0.001
 local syncCounter = 0
+
+local BOX_SIZE = 18
+local BOX_X = 9
+local INNER_SIZE = 12
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
@@ -16,6 +21,11 @@ function PANEL:Init()
 
     self._checked = 0
     self._convarTimerName = nil
+
+    self._borderColor = nil
+    self._lastCheckedForBorder = nil
+    self._lastUnchecked = nil
+    self._lastTheme = nil
 end
 
 function PANEL:SetTxt(text)
@@ -104,31 +114,42 @@ function PANEL:OnMousePressed(mouseCode)
 end
 
 function PANEL:Think()
-    local ft = FrameTime()
     local checkedTarget = self.value and 1 or 0
+    local checked = self._checked
 
-    self._checked = Mantle.func.approachExp(self._checked, checkedTarget, 16, ft)
-
-    if math_abs(self._checked - checkedTarget) < 0.001 then
-        self._checked = checkedTarget
+    if checked != checkedTarget then
+        checked = Mantle.func.approachExp(checked, checkedTarget, 16, FrameTime())
+        if math_abs(checked - checkedTarget) < LERP_SNAP then
+            checked = checkedTarget
+        end
+        self._checked = checked
     end
 end
 
 function PANEL:Paint(w, h)
-    local checked = self._checked or 0
+    local checked = self._checked
 
-    local boxSize = 18
-    local boxX = 9
-    local boxY = math_floor((h - boxSize) * 0.5)
-    local innerSize = 12
-    local innerX = boxX + (boxSize - innerSize) * 0.5
-    local innerY = boxY + (boxSize - innerSize) * 0.5
+    local boxY = math_floor((h - BOX_SIZE) * 0.5)
+    local innerX = BOX_X + (BOX_SIZE - INNER_SIZE) * 0.5
+    local innerY = boxY + (BOX_SIZE - INNER_SIZE) * 0.5
 
     local unchecked = Mantle.color.toggle
     local theme = Mantle.color.theme
-    local border = Mantle.func.LerpColor(checked, unchecked, theme)
 
-    RNDX.Rect(boxX, boxY, boxSize, boxSize)
+    local border = self._borderColor
+    if !border
+        or self._lastCheckedForBorder != checked
+        or self._lastUnchecked != unchecked
+        or self._lastTheme != theme
+    then
+        border = Mantle.func.LerpColor(checked, unchecked, theme)
+        self._borderColor = border
+        self._lastCheckedForBorder = checked
+        self._lastUnchecked = unchecked
+        self._lastTheme = theme
+    end
+
+    RNDX.Rect(BOX_X, boxY, BOX_SIZE, BOX_SIZE)
         :Rad(5)
         :Color(border)
     :Draw()
@@ -136,7 +157,7 @@ function PANEL:Paint(w, h)
     if checked > 0.001 then
         local fillAlpha = math_floor(255 * checked)
 
-        RNDX.Rect(innerX, innerY, innerSize, innerSize)
+        RNDX.Rect(innerX, innerY, INNER_SIZE, INNER_SIZE)
             :Rad(3.5)
             :Color(Color(theme.r, theme.g, theme.b, fillAlpha))
         :Draw()
@@ -147,7 +168,7 @@ function PANEL:Paint(w, h)
         textColor = Color(textColor.r, textColor.g, textColor.b, 110)
     end
 
-    local textX = boxX + boxSize + 9
+    local textX = BOX_X + BOX_SIZE + 9
     draw.SimpleText(self.text, 'Fated.16', textX, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 

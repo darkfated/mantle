@@ -65,6 +65,8 @@ function PANEL:Init()
     self.tabGap = 8
     self.segmentGap = 0
     self._indicatorSpeedMul = 1
+    self._indicatorDirty = true
+    self._lastIndicatorScroll = nil
 
     self._savedTabScroll = {
         modern = 0,
@@ -179,6 +181,8 @@ function PANEL:_createTabBar()
         alpha = 0,
         initialized = false
     }
+    self._indicatorDirty = true
+    self._lastIndicatorScroll = nil
 
     self._tabFrame = frame
     self.panelTabs = bar
@@ -193,12 +197,26 @@ function PANEL:_updateIndicator(dt)
     local indicator = self._indicator
     if !IsValid(indicator) then return end
 
+    local panelTabs = self.panelTabs
+    if IsValid(panelTabs) then
+        local scroll = panelTabs:GetScroll() or 0
+        if scroll != self._lastIndicatorScroll then
+            self._lastIndicatorScroll = scroll
+            self._indicatorDirty = true
+        end
+    end
+
+    if !self._indicatorDirty and st.initialized then return end
+
     local btn = getTabButton(self, self.activeId)
     local tabFrame = self._tabFrame
 
     if !IsValid(btn) or !IsValid(tabFrame) then
         if st.alpha > 0 then
             st.alpha = approachSnap(st.alpha, 0, INDICATOR_SPEED, dt, SNAP_ALPHA)
+        end
+        if st.alpha == 0 then
+            self._indicatorDirty = false
         end
         return
     end
@@ -217,10 +235,9 @@ function PANEL:_updateIndicator(dt)
         st.initialized = true
         indicator:SetPos(st.x, st.y)
         indicator:SetSize(st.w, st.h)
+        self._indicatorDirty = false
         return
     end
-
-    local moved = false
 
     local nx = approachSnap(st.x, targetX, speed, dt, SNAP_POS)
     local ny = approachSnap(st.y, targetY, speed, dt, SNAP_POS)
@@ -234,6 +251,10 @@ function PANEL:_updateIndicator(dt)
     end
 
     st.alpha = approachSnap(st.alpha, 255, speed, dt, SNAP_ALPHA)
+
+    if nx == targetX and ny == targetY and nw == targetW and nh == targetH and st.alpha == 255 then
+        self._indicatorDirty = false
+    end
 end
 
 function PANEL:_syncPanels()
@@ -262,6 +283,7 @@ function PANEL:_rebuildTabs()
 
     self:_syncPanels()
     self._pendingEnsureActive = true
+    self._indicatorDirty = true
     self:InvalidateLayout(true)
 end
 
@@ -444,6 +466,7 @@ function PANEL:_layoutModernButtons()
     end
 
     self.panelTabs:InvalidateLayout(true)
+    self._indicatorDirty = true
 end
 
 function PANEL:_ensureTabVisible(tabId)
@@ -507,8 +530,6 @@ function PANEL:Think()
         end
     end
 
-    self:_updateIndicator(ft)
-
     if self._pendingEnsureActive then
         self._pendingEnsureActive = false
         if self._skipEnsureAfterScrollRestore then
@@ -517,6 +538,8 @@ function PANEL:Think()
             self:_ensureTabVisible(self.activeId)
         end
     end
+
+    self:_updateIndicator(ft)
 end
 
 function PANEL:_applyTabLayout()
@@ -552,6 +575,7 @@ function PANEL:SetTabHeight(height)
                 tab._btn:SetTall(getClassicButtonHeight(self, tab))
             end
         end
+        self._indicatorDirty = true
     else
         self:_layoutModernButtons()
     end
@@ -644,6 +668,7 @@ function PANEL:SetActiveTab(tabId, isSilent)
     local oldId = self.activeId
     local distance = math_abs(nextId - oldId)
     self._indicatorSpeedMul = (distance <= 1) and (INDICATOR_SPEED_ADJACENT / INDICATOR_SPEED) or 1.0
+    self._indicatorDirty = true
 
     local currentTab = self.tabs[self.activeId]
     if currentTab and IsValid(currentTab.pan) then
@@ -701,6 +726,8 @@ function PANEL:PerformLayout(w, h)
 
         self.content:SetPos(contentX, 0)
         self.content:SetSize(math_max(0, w - contentX), h)
+
+        self._indicatorDirty = true
     end
 
     self.panelTabs:InvalidateLayout(true)

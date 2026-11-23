@@ -3,6 +3,10 @@ local PANEL = {}
 local math_clamp = math.Clamp
 local math_max = math.max
 local math_floor = math.floor
+local math_abs = math.abs
+
+local HOVER_SNAP = 0.005
+local RIPPLE_SNAP = 0.01
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
@@ -22,6 +26,11 @@ function PANEL:Init()
     self.rippleY = 0
     self.rippleSpeed = 4
 
+    self._iconValid = false
+    self._textWidth = nil
+    self._textWidthFor = nil
+    self._textFontFor = nil
+
     self:SetText('')
 end
 
@@ -30,7 +39,9 @@ function PANEL:SetHover(isHover)
 end
 
 function PANEL:SetFont(font)
+    if self.font == font then return end
     self.font = font
+    self._textWidthFor = nil
 end
 
 function PANEL:SetRadius(rad)
@@ -40,10 +51,13 @@ end
 function PANEL:SetIcon(icon, size)
     self.icon = type(icon) == 'IMaterial' and icon or Material(icon)
     self.iconSize = size or self.iconSize
+    self._iconValid = self.icon != nil and self.icon != ''
 end
 
 function PANEL:SetTxt(text)
+    if self.text == text then return end
     self.text = text
+    self._textWidthFor = nil
 end
 
 function PANEL:SetColor(color)
@@ -71,28 +85,46 @@ function PANEL:OnMousePressed(mousecode)
     end
 end
 
+function PANEL:_getTextWidth()
+    local text = self.text
+    local font = self.font
+
+    if self._textWidthFor == text and self._textFontFor == font and self._textWidth then
+        return self._textWidth
+    end
+
+    surface.SetFont(font)
+    local tw = select(1, surface.GetTextSize(text))
+    self._textWidth = tw
+    self._textWidthFor = text
+    self._textFontFor = font
+    return tw
+end
+
 function PANEL:_drawContent(w, h)
-    local hasIcon = self.icon != ''
+    local hasIcon = self._iconValid
     local hasText = self.text != ''
 
     if hasText then
-        surface.SetFont(self.font)
-        local tw = select(1, surface.GetTextSize(self.text))
-        local total = tw + (hasIcon and (self.iconSize + 6) or 0)
+        local tw = self:_getTextWidth()
+        local iconSize = self.iconSize
+        local total = tw + (hasIcon and (iconSize + 6) or 0)
         local startX = (w - total) * 0.5
         local cy = h * 0.5
+        local iconColor = Mantle.color.icon
 
         if hasIcon then
-            RNDX.Rect(startX, cy - self.iconSize * 0.5, self.iconSize, self.iconSize)
+            RNDX.Rect(startX, cy - iconSize * 0.5, iconSize, iconSize)
                 :Material(self.icon)
-                :Color(Mantle.color.icon)
+                :Color(iconColor)
             :Draw()
-            startX = startX + self.iconSize + 6
+            startX = startX + iconSize + 6
         end
 
         draw.SimpleText(self.text, self.font, startX + tw * 0.5, cy, Mantle.color.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     elseif hasIcon then
-        RNDX.Rect((w - self.iconSize) * 0.5, (h - self.iconSize) * 0.5, self.iconSize, self.iconSize)
+        local iconSize = self.iconSize
+        RNDX.Rect((w - iconSize) * 0.5, (h - iconSize) * 0.5, iconSize, iconSize)
             :Material(self.icon)
             :Color(Mantle.color.icon)
         :Draw()
@@ -100,10 +132,15 @@ function PANEL:_drawContent(w, h)
 end
 
 function PANEL:Paint(w, h)
-    local ft = FrameTime()
     local hovered = self.hoverEnabled and self:IsHovered()
+    local hoverTarget = hovered and 1 or 0
 
-    self.hoverAmount = Mantle.func.approachExp(self.hoverAmount, hovered and 1 or 0, 14, ft)
+    if self.hoverAmount != hoverTarget then
+        self.hoverAmount = Mantle.func.approachExp(self.hoverAmount, hoverTarget, 14, FrameTime())
+        if math_abs(self.hoverAmount - hoverTarget) < HOVER_SNAP then
+            self.hoverAmount = hoverTarget
+        end
+    end
 
     RNDX.Rect(0, 0, w, h)
         :Rad(self.radius)
@@ -122,14 +159,16 @@ function PANEL:Paint(w, h)
         :Draw()
     end
 
-    if self.rippleEnabled and self.rippleAlpha > 0.01 then
-        self.rippleAlpha = math_clamp(self.rippleAlpha - ft * self.rippleSpeed, 0, 1)
+    local rippleAlpha = self.rippleAlpha
+    if self.rippleEnabled and rippleAlpha > RIPPLE_SNAP then
+        rippleAlpha = math_clamp(rippleAlpha - FrameTime() * self.rippleSpeed, 0, 1)
+        self.rippleAlpha = rippleAlpha
 
         local rippleColor = self.rippleColor or Mantle.color.ripple
-        local size = (1 - self.rippleAlpha) * math_max(w, h) * 2
+        local size = (1 - rippleAlpha) * math_max(w, h) * 2
         RNDX.Rect(self.rippleX - size * 0.5, self.rippleY - size * 0.5, size, size)
             :Rad(100)
-            :Color(Color(rippleColor.r, rippleColor.g, rippleColor.b, math_floor(rippleColor.a * self.rippleAlpha)))
+            :Color(Color(rippleColor.r, rippleColor.g, rippleColor.b, math_floor(rippleColor.a * rippleAlpha)))
         :Draw()
     end
 

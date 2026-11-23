@@ -3,6 +3,8 @@ local PANEL = {}
 local ELLIPSIS = '...'
 local DEFAULT_LINE_H = 16
 local math_floor = math.floor
+local math_max = math.max
+local math_min = math.min
 
 local function charIter(str)
     return string.gmatch(str, utf8.charpattern)
@@ -228,7 +230,7 @@ end
 function PANEL:SetPadding(padding)
     padding = tonumber(padding) or 0
     if padding != padding then padding = 0 end
-    padding = math.max(0, padding)
+    padding = math_max(0, padding)
 
     if self.padding == padding then return end
 
@@ -241,8 +243,11 @@ function PANEL:InvalidateTextLayout()
     self:InvalidateLayout()
 end
 
-function PANEL:_rebuild()
-    local w, h = self:GetSize()
+function PANEL:_rebuild(w, h)
+    if !w or !h then
+        w, h = self:GetSize()
+    end
+    if !w or !h then return end
     if !self._dirty and w == self._lastW and h == self._lastH then return end
 
     self._lastW, self._lastH = w, h
@@ -257,11 +262,11 @@ function PANEL:_rebuild()
 
     self._lineH = lineH
 
-    local horizontalPadding = math.min(self.padding, math.max(0, w * 0.5))
-    local verticalPadding = math.min(self.padding, math.max(0, (h - lineH) * 0.5))
-    local availWidth = math.max(0, w - horizontalPadding * 2)
-    local innerHeight = math.max(0, h - verticalPadding * 2)
-    local maxLines = math.max(1, math_floor(innerHeight / lineH))
+    local horizontalPadding = math_min(self.padding, math_max(0, w * 0.5))
+    local verticalPadding = math_min(self.padding, math_max(0, (h - lineH) * 0.5))
+    local availWidth = math_max(0, w - horizontalPadding * 2)
+    local innerHeight = math_max(0, h - verticalPadding * 2)
+    local maxLines = math_max(1, math_floor(innerHeight / lineH))
 
     local widthCache = {}
     local function measureText(text)
@@ -280,11 +285,18 @@ function PANEL:_rebuild()
 end
 
 function PANEL:PerformLayout(w, h)
-    self:_rebuild()
+    self:_rebuild(w, h)
 end
 
 function PANEL:Paint(w, h)
-    self:_rebuild()
+    if !w or !h then
+        w, h = self:GetSize()
+    end
+    if !w or !h then return end
+
+    if self._dirty or w != self._lastW or h != self._lastH then
+        self:_rebuild(w, h)
+    end
 
     local lines = self._lines
     local lineH = self._lineH
@@ -302,15 +314,23 @@ function PANEL:Paint(w, h)
         end
     end
 
-    for i, line in ipairs(lines) do
-        local x = horizontalPadding
-        if self.align == TEXT_ALIGN_CENTER then
-            x = w * 0.5
-        elseif self.align == TEXT_ALIGN_RIGHT then
-            x = w - horizontalPadding
-        end
+    local startX
+    if self.align == TEXT_ALIGN_CENTER then
+        startX = w * 0.5
+    elseif self.align == TEXT_ALIGN_RIGHT then
+        startX = w - horizontalPadding
+    else
+        startX = horizontalPadding
+    end
 
-        draw.SimpleText(line, self.font, x, startY + (i - 1) * lineH, self.color or Mantle.color.text, self.align, TEXT_ALIGN_TOP)
+    local textColor = self.color or Mantle.color.text
+    local font = self.font
+    local align = self.align
+    local y = startY
+
+    for i = 1, #lines do
+        draw.SimpleText(lines[i], font, startX, y, textColor, align, TEXT_ALIGN_TOP)
+        y = y + lineH
     end
 
     return true

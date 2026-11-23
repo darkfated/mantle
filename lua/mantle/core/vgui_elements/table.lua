@@ -21,11 +21,9 @@ local function normalizeAlign(align)
     if isstring(align) then
         return ALIGN[string.lower(align)] or TEXT_ALIGN_LEFT
     end
-
     if align == TEXT_ALIGN_LEFT or align == TEXT_ALIGN_CENTER or align == TEXT_ALIGN_RIGHT then
         return align
     end
-
     return TEXT_ALIGN_LEFT
 end
 
@@ -75,6 +73,12 @@ function PANEL:Init()
     self._poolDirty = true
     self._draggingGrip = false
     self._gripOffset = 0
+
+    self._lastGripY = nil
+    self._lastGripH = nil
+    self._lastHoverY = nil
+    self._lastHoverW = nil
+    self._lastHoverH = nil
 
     self.viewport = vgui.Create('Panel', self)
     self.viewport:SetMouseInputEnabled(true)
@@ -130,7 +134,6 @@ function PANEL:_createHeader()
             return self:OnMouseWheeled(delta)
         end
     end
-
 end
 
 function PANEL:_createHoverBar()
@@ -216,6 +219,7 @@ function PANEL:_createVBar()
         local maxScroll = self:_range()
         self.offset = math.Clamp(self.offset, 0, maxScroll)
         self:_applyScroll()
+        self._lastAppliedOffset = self.offset
     end
 
     self.vbar.OnMousePressed = function(pnl, mouseCode)
@@ -302,18 +306,17 @@ function PANEL:_layoutHeader()
             button:SetSize(self._columnWidths[i] or 0, headerHeight)
         end
     end
-
 end
 
 function PANEL:_getHoveredRow()
     local hovered = vgui.GetHoveredPanel()
-    if !IsValid(hovered) then return nil end
+    if !IsValid(hovered) or hovered == self then return nil end
+    if hovered == self.content or hovered == self.viewport then return nil end
 
     while IsValid(hovered) and hovered != self do
         if hovered._mantleTableOwner == self then
             return hovered
         end
-
         hovered = hovered:GetParent()
     end
 
@@ -324,21 +327,44 @@ function PANEL:_updateHover(ft)
     local hovered = self:_getHoveredRow()
     self._hoverRow = hovered
 
-    if IsValid(hovered) and hovered:IsVisible() and hovered._index then
-        local targetY = (hovered._index - 1) * self.rowHeight - self.offset
-        self._hoverA = Mantle.func.approachExp(self._hoverA, 1, 28, ft)
-        self._hoverY = Mantle.func.approachExp(self._hoverY, targetY, 28, ft)
+    local targetA = 0
+    local targetY = self._hoverY
 
-        if math_abs(self._hoverY - targetY) < 0.35 then
-            self._hoverY = targetY
-        end
-    else
-        self._hoverA = Mantle.func.approachExp(self._hoverA, 0, 20, ft)
+    if IsValid(hovered) and hovered:IsVisible() and hovered._index then
+        targetA = 1
+        targetY = (hovered._index - 1) * self.rowHeight - self.offset
     end
 
-    if IsValid(self._hoverBar) then
-        self._hoverBar:SetPos(0, math_floor(self._hoverY))
-        self._hoverBar:SetSize(self._contentWidth, self.rowHeight)
+    if math_abs(self._hoverA - targetA) > 0.001 then
+        self._hoverA = Mantle.func.approachExp(self._hoverA, targetA, targetA > 0 and 28 or 20, ft)
+        if math_abs(self._hoverA - targetA) < 0.005 then
+            self._hoverA = targetA
+        end
+    end
+
+    if self._hoverA > 0.001 then
+        if math_abs(self._hoverY - targetY) > 0.35 then
+            self._hoverY = Mantle.func.approachExp(self._hoverY, targetY, 28, ft)
+            if math_abs(self._hoverY - targetY) < 0.35 then
+                self._hoverY = targetY
+            end
+        end
+    end
+
+    local bar = self._hoverBar
+    if IsValid(bar) and self._hoverA > 0.001 then
+        local y = math_floor(self._hoverY)
+        if self._lastHoverY != y then
+            self._lastHoverY = y
+            bar:SetPos(0, y)
+        end
+        local w = self._contentWidth
+        local h = self.rowHeight
+        if self._lastHoverW != w or self._lastHoverH != h then
+            self._lastHoverW = w
+            self._lastHoverH = h
+            bar:SetSize(w, h)
+        end
     end
 end
 
@@ -362,31 +388,54 @@ end
 
 function PANEL:_assignRow(row, index)
     local rowCount = #self.rows
-    local data = self.rows[index]
+    local visible = index <= rowCount
+
+    if row._visible != visible then
+        row._visible = visible
+        row:SetVisible(visible)
+    end
 
     row._index = index
-    row._data = data
-    row:SetVisible(index <= rowCount)
+    row._data = visible and self.rows[index] or nil
 
-    if index > rowCount then return end
+    if !visible then return end
 
-    local y = (index - 1) * self.rowHeight - self.offset
-    row:SetPos(0, math_floor(y))
-    row:SetSize(self._contentWidth, self.rowHeight)
+    local width = self._contentWidth
+    if row._lastW != width then
+        row._lastW = width
+        row:SetSize(width, self.rowHeight)
+    end
+
+    local y = math_floor((index - 1) * self.rowHeight - self.offset)
+    if row._lastY != y then
+        row._lastY = y
+        row:SetPos(0, y)
+    end
 end
 
 function PANEL:_layoutRows()
     self:_ensureRowPool()
 
-    local firstIndex = math_max(1, math_floor(self.offset / math_max(1, self.rowHeight)) + 1)
+    local rowHeight = math_max(1, self.rowHeight)
+    local firstIndex = math_max(1, math_floor(self.offset / rowHeight) + 1)
 
     for poolIndex, row in ipairs(self._rowPanels) do
         self:_assignRow(row, firstIndex + poolIndex - 1)
     end
 
-    if IsValid(self._hoverBar) then
-        self._hoverBar:SetSize(self._contentWidth, self.rowHeight)
-        self._hoverBar:SetPos(0, math_floor(self._hoverY))
+    local bar = self._hoverBar
+    if IsValid(bar) then
+        local w = self._contentWidth
+        if self._lastHoverW != w or self._lastHoverH != self.rowHeight then
+            self._lastHoverW = w
+            self._lastHoverH = self.rowHeight
+            bar:SetSize(w, self.rowHeight)
+        end
+        local y = math_floor(self._hoverY)
+        if self._lastHoverY != y then
+            self._lastHoverY = y
+            bar:SetPos(0, y)
+        end
     end
 end
 
@@ -457,7 +506,6 @@ end
 
 function PANEL:_applyScroll()
     if !IsValid(self.content) then return end
-
     self:_layoutRows()
 end
 
@@ -467,12 +515,20 @@ function PANEL:_afterScroll(ft, maxScroll, viewHeight, contentHeight)
 
     self:_updateHover(ft)
 
-
     if !bar:IsVisible() or maxScroll <= 0 then
-        self._vbarAlpha = Mantle.func.approachExp(self._vbarAlpha, 0, 6, ft)
-        self._vbarGripY = 0
-        self._vbarGripH = 0
-        bar.btnGrip:SetSize(VBAR_WIDTH, 0)
+        if self._vbarAlpha != 0 then
+            self._vbarAlpha = Mantle.func.approachExp(self._vbarAlpha, 0, 6, ft)
+            if self._vbarAlpha < 0.005 then self._vbarAlpha = 0 end
+        end
+        if self._vbarGripH != 0 then
+            self._vbarGripY = 0
+            self._vbarGripH = 0
+            if self._lastGripH != 0 then
+                self._lastGripY = 0
+                self._lastGripH = 0
+                bar.btnGrip:SetSize(VBAR_WIDTH, 0)
+            end
+        end
         return
     end
 
@@ -482,7 +538,13 @@ function PANEL:_afterScroll(ft, maxScroll, viewHeight, contentHeight)
     local recentlyUsed = self.lastInput > 0 and now - self.lastInput < 0.85
     local visible = hovered or moving or recentlyUsed
 
-    self._vbarAlpha = Mantle.func.approachExp(self._vbarAlpha, visible and 1 or 0, visible and 16 or 5, ft)
+    local targetAlpha = visible and 1 or 0
+    if math_abs(self._vbarAlpha - targetAlpha) > 0.001 then
+        self._vbarAlpha = Mantle.func.approachExp(self._vbarAlpha, targetAlpha, visible and 16 or 5, ft)
+        if math_abs(self._vbarAlpha - targetAlpha) < 0.005 then
+            self._vbarAlpha = targetAlpha
+        end
+    end
 
     local trackHeight = bar:GetTall()
     if trackHeight <= 0 then return end
@@ -501,18 +563,26 @@ function PANEL:_afterScroll(ft, maxScroll, viewHeight, contentHeight)
         self._springing = false
         self._springVelocity = 0
         targetY = gripY
+        self._lastAppliedOffset = self.offset
     else
-        self._vbarGripY = Mantle.func.approachExp(self._vbarGripY, targetY, 18, ft)
+        if math_abs(self._vbarGripY - targetY) > 0.35 then
+            self._vbarGripY = Mantle.func.approachExp(self._vbarGripY, targetY, 18, ft)
+            if math_abs(self._vbarGripY - targetY) < 0.35 then
+                self._vbarGripY = targetY
+            end
+        end
     end
 
     self._vbarGripH = gripHeight
 
-    if math_abs(self._vbarGripY - targetY) < 0.35 then
-        self._vbarGripY = targetY
+    local y = math_floor(self._vbarGripY)
+    local h = self._vbarGripH
+    if self._lastGripY != y or self._lastGripH != h then
+        self._lastGripY = y
+        self._lastGripH = h
+        bar.btnGrip:SetPos(0, y)
+        bar.btnGrip:SetSize(VBAR_WIDTH, h)
     end
-
-    bar.btnGrip:SetPos(0, math_floor(self._vbarGripY))
-    bar.btnGrip:SetSize(VBAR_WIDTH, self._vbarGripH)
 end
 
 function PANEL:CreateHeader()
@@ -562,6 +632,11 @@ function PANEL:_createRowPanel(poolIndex)
     row._index = 0
     row._data = nil
     row._selectedAlpha = 0
+    row._visible = nil
+    row._lastY = nil
+    row._lastW = nil
+    row._lastSelectedData = nil
+    row._selected = false
 
     row.DoClick = function(s)
         if !s._data then return end
@@ -612,9 +687,16 @@ function PANEL:_createRowPanel(poolIndex)
     end
 
     row.Paint = function(s, w, h)
-        local dt = FrameTime()
-        local selected = self._selectedData == s._data
-        s._selectedAlpha = Mantle.func.approachExp(s._selectedAlpha, selected and 1 or 0, 20, dt)
+        local selectedData = self._selectedData
+        local selected = selectedData != nil and selectedData == s._data
+        local targetAlpha = selected and 1 or 0
+
+        if math_abs(s._selectedAlpha - targetAlpha) > 0.001 then
+            s._selectedAlpha = Mantle.func.approachExp(s._selectedAlpha, targetAlpha, 20, FrameTime())
+            if math_abs(s._selectedAlpha - targetAlpha) < 0.005 then
+                s._selectedAlpha = targetAlpha
+            end
+        end
 
         if s._selectedAlpha > 0.01 then
             local color = Mantle.color.theme
@@ -628,22 +710,30 @@ function PANEL:_createRowPanel(poolIndex)
 
         surface.SetFont(self.rowFont)
 
+        local starts = self._columnStarts
+        local widths = self._columnWidths
+        local rowData = s._data
+        local padding = self.padding
+        local textColor = Mantle.color.text
+        local rowFont = self.rowFont
+        local halfH = h * 0.5
+
         for columnIndex, column in ipairs(self.columns) do
-            local colX = self._columnStarts[columnIndex] or 0
-            local colW = self._columnWidths[columnIndex] or 0
-            local value = textValue(s._data[columnIndex])
+            local colX = starts[columnIndex] or 0
+            local colW = widths[columnIndex] or 0
+            local value = textValue(rowData[columnIndex])
             local align = column.align or TEXT_ALIGN_LEFT
 
             local x
             if align == TEXT_ALIGN_RIGHT then
-                x = colX + colW - self.padding
+                x = colX + colW - padding
             elseif align == TEXT_ALIGN_CENTER then
                 x = colX + colW * 0.5
             else
-                x = colX + self.padding
+                x = colX + padding
             end
 
-            draw.SimpleText(value, self.rowFont, x, h * 0.5, Mantle.color.text, align, TEXT_ALIGN_CENTER)
+            draw.SimpleText(value, rowFont, x, halfH, textColor, align, TEXT_ALIGN_CENTER)
         end
     end
 
@@ -754,7 +844,6 @@ function PANEL:SortByColumn(columnIndex, descending)
             if desc then
                 return a.key > b.key
             end
-
             return a.key < b.key
         end
 
@@ -931,6 +1020,7 @@ function PANEL:Clear()
     self._hoverRow = nil
     self._hoverA = 0
     self._hoverY = 0
+    self._lastHoverY = nil
     self:_markDirty()
 end
 

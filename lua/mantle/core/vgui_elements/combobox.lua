@@ -1,10 +1,14 @@
 local PANEL = {}
 
 local math_floor = math.floor
+local math_abs = math.abs
 
 local HEIGHT = 32
 local PAD = 12
 local RADIUS = 12
+local LERP_SNAP = 0.005
+
+local DEFAULT_PLACEHOLDER
 
 function PANEL:Init()
     self:DockMargin(8, 8, 8, 8)
@@ -18,6 +22,10 @@ function PANEL:Init()
     self._focusLerp = 0
     self.OnSelect = function(_, _, _) end
 
+    if !DEFAULT_PLACEHOLDER then
+        DEFAULT_PLACEHOLDER = Mantle.lang.get('mantle', 'color_select') .. '...'
+    end
+
     self.btn = vgui.Create('Button', self)
     self.btn:Dock(FILL)
     self.btn:SetText('')
@@ -25,9 +33,22 @@ function PANEL:Init()
 
     self.btn.Paint = function(button, w, h)
         local ft = FrameTime()
-        local target = button:IsHovered() and 1 or 0
-        self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, target, 12, ft)
-        self._focusLerp = Mantle.func.approachExp(self._focusLerp, self.opened and 1 or 0, 10, ft)
+
+        local hoverTarget = button:IsHovered() and 1 or 0
+        if self.hoverAnim != hoverTarget then
+            self.hoverAnim = Mantle.func.approachExp(self.hoverAnim, hoverTarget, 12, ft)
+            if math_abs(self.hoverAnim - hoverTarget) < LERP_SNAP then
+                self.hoverAnim = hoverTarget
+            end
+        end
+
+        local focusTarget = self.opened and 1 or 0
+        if self._focusLerp != focusTarget then
+            self._focusLerp = Mantle.func.approachExp(self._focusLerp, focusTarget, 10, ft)
+            if math_abs(self._focusLerp - focusTarget) < LERP_SNAP then
+                self._focusLerp = focusTarget
+            end
+        end
 
         RNDX.Rect(0, 0, w, h)
             :Rad(RADIUS)
@@ -55,8 +76,14 @@ function PANEL:Init()
             :Draw()
         end
 
-        local text = self.selected or self.placeholder or Mantle.lang.get('mantle', 'color_select') .. '...'
-        local col = self.selected and Mantle.color.theme or Mantle.color.gray
+        local text, col
+        if self.selected then
+            text = self.selected
+            col = Mantle.color.theme
+        else
+            text = self.placeholder or DEFAULT_PLACEHOLDER
+            col = Mantle.color.gray
+        end
 
         draw.SimpleText(text, 'Fated.16', PAD, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
@@ -146,7 +173,12 @@ function PANEL:CloseMenu()
 end
 
 function PANEL:Think()
-    if !IsValid(self.menu) then return end
+    local menu = self.menu
+    if !IsValid(menu) then return end
+    if !menu:IsVisible() then
+        self:CloseMenu()
+        return
+    end
 
     local panel = self
     while IsValid(panel) do

@@ -3,6 +3,18 @@ local PANEL = {}
 local mat_close = Material('mantle/close_btn_new.png')
 
 local HEADER_TALL = 24
+local RAD = 6
+local ACRYLIC_TTL = 0.25
+
+local function buildAcrylic(alphaBg)
+    return {
+        blur = { enabled = alphaBg, iterations = 4, radius = 4 },
+        burn = { enabled = true, color = Mantle.color.theme, amount = 0.3 },
+        tint = { enabled = true, color = Mantle.color.background_alpha, amount = 0.85 },
+        noise = { enabled = true, intensity = 0.015, scale = 8 },
+        fresnel = { enabled = true, color = Mantle.color.button, amount = 0.3, width = 1.4 }
+    }
+end
 
 function PANEL:Init()
     self.alpha = true
@@ -12,6 +24,9 @@ function PANEL:Init()
     self.centerTitle = ''
 
     self._drag = nil
+    self._acrylic = nil
+    self._acrylicBlur = nil
+    self._acrylicTime = 0
 
     self:DockPadding(8, HEADER_TALL + 8, 8, 8)
 
@@ -133,7 +148,6 @@ end
 function PANEL:Notify(text, duration, col)
     if IsValid(self.messagePanel) then self.messagePanel:Remove() end
     duration = duration or 2
-    col = col or Mantle.color.theme
 
     surface.SetFont('Fated.20')
     local tw, th = surface.GetTextSize(text)
@@ -180,53 +194,54 @@ function PANEL:Notify(text, duration, col)
 end
 
 function PANEL:Paint(w, h)
-    local col = Mantle.color.window_shadow
+    local shadow = Mantle.color.window_shadow
+    local headerColor = Mantle.color.header
+    local headerText = Mantle.color.header_text
+
     RNDX.Rect(0, 0, w, h)
-        :Rad(6)
-        :Color(col)
+        :Rad(RAD)
+        :Color(shadow)
         :Shadow(20, 12)
     :Draw()
     RNDX.Rect(0, 0, w, h)
-        :Rad(6)
-        :Color(col)
+        :Rad(RAD)
+        :Color(shadow)
         :Shadow(6, 3)
     :Draw()
 
     local lite = self.lite
-    local headerTall = lite and 0 or HEADER_TALL
-    local bodyRad = 6
     local alphaBg = self.alpha and Mantle.ui.convar.blur
 
-    local acrylic = {
-        blur = { enabled = alphaBg, iterations = 4, radius = 4 },
-        burn = { enabled = true, color = Mantle.color.theme, amount = 0.3 },
-        tint = { enabled = true, color = Mantle.color.background_alpha, amount = 0.85 },
-        noise = { enabled = true, intensity = 0.015, scale = 8 },
-        fresnel = { enabled = true, color = Mantle.color.button, amount = 0.3, width = 1.4 }
-    }
+    local now = RealTime()
+    if !self._acrylic
+        or self._acrylicBlur != alphaBg
+        or (now - self._acrylicTime) > ACRYLIC_TTL
+    then
+        self._acrylic = buildAcrylic(alphaBg)
+        self._acrylicBlur = alphaBg
+        self._acrylicTime = now
+    end
 
     RNDX.Rect(0, 0, w, h)
-        :Rad(6)
-        :Acrylic(acrylic)
+        :Rad(RAD)
+        :Acrylic(self._acrylic)
     :Draw()
-
-    if !lite then
-        RNDX.Rect(0, 0, w, headerTall)
-            :Radii(6, 6, 0, 0)
-            :Color(Mantle.color.header)
-        :Draw()
-    end
 
     if lite then return end
 
-    Mantle.func.gradient(0, headerTall, w, 6, 2, Mantle.color.window_shadow)
+    RNDX.Rect(0, 0, w, HEADER_TALL)
+        :Radii(RAD, RAD, 0, 0)
+        :Color(headerColor)
+    :Draw()
+
+    Mantle.func.gradient(0, HEADER_TALL, w, 6, 2, shadow)
 
     if self.centerTitle != '' then
-        draw.SimpleText(self.centerTitle, 'Fated.20b', w * 0.5, 12, Mantle.color.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.centerTitle, 'Fated.20b', w * 0.5, 12, headerText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     if self.title != '' then
-        draw.SimpleText(self.title, 'Fated.16', 6, 4, Mantle.color.header_text)
+        draw.SimpleText(self.title, 'Fated.16', 6, 4, headerText)
     end
 end
 
