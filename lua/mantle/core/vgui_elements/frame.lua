@@ -195,18 +195,19 @@ function PANEL:Paint(w, h)
     local lite = self.lite
     local headerTall = lite and 0 or HEADER_TALL
     local bodyRad = 6
-
     local alphaBg = self.alpha and Mantle.ui.convar.blur
-    if alphaBg then
-        RNDX.Rect(0, 0, w, h)
-            :Rad(6)
-            :KBlur(4, 2)
-        :Draw()
-    end
+
+    local acrylic = {
+        blur = { enabled = alphaBg, iterations = 4, radius = 4 },
+        burn = { enabled = true, color = Mantle.color.theme, amount = 0.3 },
+        tint = { enabled = true, color = Mantle.color.background_alpha, amount = 0.85 },
+        noise = { enabled = true, intensity = 0.015, scale = 8 },
+        fresnel = { enabled = true, color = Mantle.color.button, amount = 0.3, width = 1.4 }
+    }
 
     RNDX.Rect(0, 0, w, h)
         :Rad(6)
-        :Color(alphaBg and Mantle.color.background_alpha or Mantle.color.background)
+        :Acrylic(acrylic)
     :Draw()
 
     if !lite then
