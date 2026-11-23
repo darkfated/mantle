@@ -3,6 +3,25 @@ local PANEL = {}
 local math_max = math.max
 local math_min = math.min
 local math_floor = math.floor
+local math_abs = math.abs
+
+local INDICATOR_SPEED = 18
+local INDICATOR_SPEED_ADJACENT = 30
+local ACTIVE_SPEED = 18
+local HOVER_SPEED = 30
+local HOVER_SPEED_ADJACENT = 46
+
+local SNAP_POS = 0.5
+local SNAP_ALPHA = 1
+local SNAP_HOVER = 0.01
+local SNAP_ACTIVE = 0.01
+
+local function approachSnap(current, target, speed, dt, snap)
+    if current == target then return target end
+    local next = Mantle.func.approachExp(current, target, speed, dt)
+    if math_abs(next - target) <= snap then return target end
+    return next
+end
 
 local function getTabButton(self, tabId)
     local tab = self.tabs[tabId]
@@ -11,8 +30,18 @@ end
 
 local function colorAlpha(color, alpha)
     if !color then return Color(255, 255, 255, math_floor(alpha)) end
-
     return Color(color.r, color.g, color.b, math_floor(math.Clamp(alpha, 0, 255)))
+end
+
+local function lerpColor(a, b, t)
+    if !a then a = Color(255, 255, 255, 255) end
+    if !b then b = Color(255, 255, 255, 255) end
+    return Color(
+        a.r + (b.r - a.r) * t,
+        a.g + (b.g - a.g) * t,
+        a.b + (b.b - a.b) * t,
+        a.a + (b.a - a.a) * t
+    )
 end
 
 local function getClassicButtonHeight(self, tab)
@@ -20,7 +49,6 @@ local function getClassicButtonHeight(self, tab)
     if tab.description != '' then
         height = math_max(height, 50)
     end
-
     return height
 end
 
@@ -36,6 +64,7 @@ function PANEL:Init()
     self.classicTabWidth = 200
     self.tabGap = 8
     self.segmentGap = 0
+    self._indicatorSpeedMul = 1
 
     self._savedTabScroll = {
         modern = 0,
@@ -59,27 +88,30 @@ function PANEL:_createTabBar()
 
     local frame = vgui.Create('Panel', self)
     frame:SetZPos(3)
-    frame.Paint = function(_, w, h)
-        local theme = Mantle.color.theme
-        local border = Mantle.color.gray or Mantle.color.icon
 
+    frame.Paint = function(_, w, h)
         if self.tabStyle == 'modern' then
             RNDX.Rect(0, 0, w, h)
                 :Rad(13)
                 :Color(Mantle.color.window_shadow)
-            :Draw()
-
-            RNDX.Rect(0, 0, w, h)
-                :Rad(13)
-                :Color(colorAlpha(border, 82))
-                :Outline(1)
             :Draw()
         else
             RNDX.Rect(0, 0, w, h)
                 :Rad(14)
                 :Color(Mantle.color.window_shadow)
             :Draw()
+        end
+    end
 
+    frame.PaintOver = function(_, w, h)
+        local border = Mantle.color.gray or Mantle.color.icon
+        if self.tabStyle == 'modern' then
+            RNDX.Rect(0, 0, w, h)
+                :Rad(13)
+                :Color(colorAlpha(border, 82))
+                :Outline(1)
+            :Draw()
+        else
             RNDX.Rect(0, 0, w, h)
                 :Rad(14)
                 :Color(colorAlpha(border, 68))
@@ -98,15 +130,110 @@ function PANEL:_createTabBar()
         bar:SetPos(6, 6)
         bar:SetSize(0, 0)
     end
+    bar:SetZPos(1)
 
     bar:DockPadding(0, 0, 0, 0)
     bar.Paint = function() end
     bar.PaintOver = nil
 
+    local indicator = vgui.Create('Panel', frame)
+    indicator:SetZPos(0)
+    indicator:SetMouseInputEnabled(false)
+    indicator:SetKeyboardInputEnabled(false)
+    indicator.Paint = function(_, w, h)
+        local st = self._indicatorState
+        if !st or st.alpha < 1 then return end
+
+        local theme = Mantle.color.theme
+        local a = st.alpha / 255
+
+        if self.tabStyle == 'modern' then
+            RNDX.Rect(0, 0, w, h)
+                :Rad(11)
+                :Color(Color(theme.r, theme.g, theme.b, math_floor(15 * a)))
+            :Draw()
+
+            RNDX.Rect(0, 0, w, h)
+                :Rad(11)
+                :Color(Color(theme.r, theme.g, theme.b, math_floor(220 * a)))
+                :Outline(self.indicatorHeight)
+            :Draw()
+        else
+            local bg = Mantle.color.focus_panel
+            RNDX.Rect(0, 0, w, h)
+                :Rad(9)
+                :Color(Color(bg.r, bg.g, bg.b, math_floor(bg.a * a)))
+            :Draw()
+
+            RNDX.Rect(0, 0, w, h)
+                :Rad(9)
+                :Color(Color(theme.r, theme.g, theme.b, math_floor(14 * a)))
+                :Outline(1)
+            :Draw()
+        end
+    end
+
+    self._indicator = indicator
+    self._indicatorState = {
+        x = 0, y = 0, w = 0, h = 0,
+        alpha = 0,
+        initialized = false
+    }
+
     self._tabFrame = frame
     self.panelTabs = bar
     self._pendingTabScroll = self._savedTabScroll[self.tabStyle] or 0
     self._forceTabScrollReset = self._pendingTabScroll == 0
+end
+
+function PANEL:_updateIndicator(dt)
+    local st = self._indicatorState
+    if !st then return end
+
+    local indicator = self._indicator
+    if !IsValid(indicator) then return end
+
+    local btn = getTabButton(self, self.activeId)
+    local tabFrame = self._tabFrame
+
+    if !IsValid(btn) or !IsValid(tabFrame) then
+        if st.alpha > 0 then
+            st.alpha = approachSnap(st.alpha, 0, INDICATOR_SPEED, dt, SNAP_ALPHA)
+        end
+        return
+    end
+
+    local bx, by = btn:LocalToScreen(0, 0)
+    local fx, fy = tabFrame:LocalToScreen(0, 0)
+    local targetX, targetY = bx - fx, by - fy
+    local targetW, targetH = btn:GetWide(), btn:GetTall()
+
+    local speed = INDICATOR_SPEED * (self._indicatorSpeedMul or 1)
+
+    if !st.initialized then
+        st.x, st.y = targetX, targetY
+        st.w, st.h = targetW, targetH
+        st.alpha = 255
+        st.initialized = true
+        indicator:SetPos(st.x, st.y)
+        indicator:SetSize(st.w, st.h)
+        return
+    end
+
+    local moved = false
+
+    local nx = approachSnap(st.x, targetX, speed, dt, SNAP_POS)
+    local ny = approachSnap(st.y, targetY, speed, dt, SNAP_POS)
+    local nw = approachSnap(st.w, targetW, speed, dt, SNAP_POS)
+    local nh = approachSnap(st.h, targetH, speed, dt, SNAP_POS)
+
+    if nx != st.x or ny != st.y or nw != st.w or nh != st.h then
+        st.x, st.y, st.w, st.h = nx, ny, nw, nh
+        indicator:SetPos(nx, ny)
+        indicator:SetSize(nw, nh)
+    end
+
+    st.alpha = approachSnap(st.alpha, 255, speed, dt, SNAP_ALPHA)
 end
 
 function PANEL:_syncPanels()
@@ -118,8 +245,9 @@ function PANEL:_syncPanels()
 end
 
 function PANEL:_resetTabAnimation()
-    for _, tab in ipairs(self.tabs) do
+    for id, tab in ipairs(self.tabs) do
         tab._hover = 0
+        tab._active = (id == self.activeId) and 1 or 0
     end
 end
 
@@ -147,12 +275,14 @@ function PANEL:_createTabButton(tab, id)
         btn:SetTooltip(tab.description)
     end
 
+    surface.SetFont('Fated.16')
+    tab._titleW = select(1, surface.GetTextSize(tab.title))
+
     self.panelTabs:AddItem(btn)
 
     if self.tabStyle == 'modern' then
         btn:Dock(LEFT)
         btn:DockMargin(0, 0, self.segmentGap, 0)
-        btn:SetTall(math_max(24, self.tabHeight - 4))
         btn:SetWide(88)
     else
         btn:Dock(TOP)
@@ -175,40 +305,35 @@ function PANEL:_createTabButton(tab, id)
     end
 
     btn.Paint = function(_, w, h)
-        local isActive = self.activeId == id
-        local hoverAlpha = tab._hover or 0
         local theme = Mantle.color.theme
-        local textColor = isActive and theme or Mantle.color.text
-        local iconColor = isActive and theme or Mantle.color.icon
+        local activeAmt = tab._active or 0
+        local hoverAmt = tab._hover or 0
+        local hoverAlpha = hoverAmt * (1 - activeAmt)
+
+        local textColor, iconColor
+        if activeAmt < 0.001 then
+            textColor = Mantle.color.text
+            iconColor = Mantle.color.icon
+        elseif activeAmt > 0.999 then
+            textColor = theme
+            iconColor = theme
+        else
+            textColor = lerpColor(Mantle.color.text, theme, activeAmt)
+            iconColor = lerpColor(Mantle.color.icon, theme, activeAmt)
+        end
 
         if self.tabStyle == 'modern' then
-            local radius = 11
-
-            if isActive then
-                RNDX.Rect(0, 0, w, h)
-                    :Rad(radius)
-                    :Color(colorAlpha(theme, 15))
-                :Draw()
-
-                RNDX.Rect(0, 0, w, h)
-                    :Rad(radius)
-                    :Color(colorAlpha(theme, 220))
-                    :Outline(self.indicatorHeight)
-                :Draw()
-            elseif hoverAlpha > 0.01 then
+            if hoverAlpha > 0.01 then
                 local hover = Mantle.color.tab_hover
                 RNDX.Rect(0, 0, w, h)
-                    :Rad(radius)
+                    :Rad(11)
                     :Color(colorAlpha(hover, hover.a * hoverAlpha))
                 :Draw()
             end
 
             local iconW = tab.icon and 16 or 0
             local iconGap = tab.icon and 8 or 0
-            local textW = 0
-            surface.SetFont('Fated.16')
-            textW = select(1, surface.GetTextSize(tab.title))
-
+            local textW = tab._titleW or 0
             local contentW = iconW + iconGap + textW
             local startX = math_floor((w - contentW) * 0.5)
 
@@ -222,18 +347,7 @@ function PANEL:_createTabButton(tab, id)
             local textX = startX + iconW + iconGap
             draw.SimpleText(tab.title, 'Fated.16', textX, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         else
-            if isActive then
-                RNDX.Rect(0, 0, w, h)
-                    :Rad(9)
-                    :Color(Mantle.color.focus_panel)
-                :Draw()
-
-                RNDX.Rect(0, 0, w, h)
-                    :Rad(9)
-                    :Color(colorAlpha(theme, 14))
-                    :Outline(1)
-                :Draw()
-            elseif hoverAlpha > 0.01 then
+            if hoverAlpha > 0.01 then
                 local hover = Mantle.color.tab_hover
                 RNDX.Rect(0, 0, w, h)
                     :Rad(9)
@@ -261,6 +375,7 @@ function PANEL:_createTabButton(tab, id)
 
     tab._btn = btn
     tab._hover = tab._hover or 0
+    tab._active = tab._active or ((id == self.activeId) and 1 or 0)
 end
 
 function PANEL:_layoutModernButtons()
@@ -276,7 +391,7 @@ function PANEL:_layoutModernButtons()
     local maxPreferredWidth = 0
 
     for id, tab in ipairs(self.tabs) do
-        local textWidth = select(1, surface.GetTextSize(tab.title))
+        local textWidth = tab._titleW or select(1, surface.GetTextSize(tab.title))
         local iconWidth = tab.icon and 24 or 0
         local preferredWidth = math_max(72, math.ceil(textWidth + iconWidth + 28))
 
@@ -286,41 +401,41 @@ function PANEL:_layoutModernButtons()
     end
 
     local viewWidth = math_max(0, self.panelTabs:GetWide())
-    local gapWidth = self.segmentGap * math_max(0, count - 1)
-    local availableWidth = math_max(0, viewWidth - gapWidth)
+    local gap = self.segmentGap
+    local totalGap = gap * math_max(0, count - 1)
+    local availableWidth = math_max(0, viewWidth - totalGap)
     local widths = {}
 
     if maxPreferredWidth * count <= availableWidth then
         local baseWidth = math_floor(availableWidth / count)
-        local remainder = availableWidth - baseWidth * count
-
         for id = 1, count do
-            widths[id] = baseWidth + (id <= remainder and 1 or 0)
+            widths[id] = baseWidth
         end
     elseif totalPreferredWidth <= availableWidth then
         local extraWidth = (availableWidth - totalPreferredWidth) / count
-        local usedWidth = 0
-
         for id = 1, count do
             widths[id] = math_floor(preferredWidths[id] + extraWidth)
-            usedWidth = usedWidth + widths[id]
         end
-
-        widths[count] = widths[count] + availableWidth - usedWidth
     else
         for id = 1, count do
             widths[id] = preferredWidths[id]
         end
     end
 
-    local buttonHeight = math_max(24, self.panelTabs:GetTall())
+    local used = 0
+    for id = 1, count do
+        used = used + widths[id]
+    end
+    widths[count] = widths[count] + (availableWidth - used)
+
+    local buttonHeight = math_max(1, self.panelTabs:GetTall())
 
     for id, tab in ipairs(self.tabs) do
         local btn = tab._btn
         if IsValid(btn) then
             btn:SetWide(widths[id])
             btn:SetTall(buttonHeight)
-            btn:DockMargin(0, 0, id < count and self.segmentGap or 0, 0)
+            btn:DockMargin(0, 0, id < count and gap or 0, 0)
         end
     end
 
@@ -368,13 +483,31 @@ end
 
 function PANEL:Think()
     local ft = FrameTime()
-    local hoverSpeed = 26
+    local activeId = self.activeId
+    local tabs = self.tabs
+    local count = #tabs
 
-    for _, tab in ipairs(self.tabs) do
+    for id = 1, count do
+        local tab = tabs[id]
         local btn = tab._btn
-        local target = IsValid(btn) and btn:IsHovered() and 1 or 0
-        tab._hover = Mantle.func.approachExp(tab._hover or 0, target, hoverSpeed, ft)
+        local hoverTarget = (IsValid(btn) and btn:IsHovered()) and 1 or 0
+        local activeTarget = (id == activeId) and 1 or 0
+        local adjacent = math_abs(id - activeId) <= 1
+
+        local hover = tab._hover or 0
+        if hover != hoverTarget then
+            local speed = adjacent and HOVER_SPEED_ADJACENT or HOVER_SPEED
+            tab._hover = approachSnap(hover, hoverTarget, speed, ft, SNAP_HOVER)
+        end
+
+        local active = tab._active or 0
+        if active != activeTarget then
+            local speed = adjacent and (ACTIVE_SPEED * 1.5) or ACTIVE_SPEED
+            tab._active = approachSnap(active, activeTarget, speed, ft, SNAP_ACTIVE)
+        end
     end
+
+    self:_updateIndicator(ft)
 
     if self._pendingEnsureActive then
         self._pendingEnsureActive = false
@@ -384,7 +517,6 @@ function PANEL:Think()
             self:_ensureTabVisible(self.activeId)
         end
     end
-
 end
 
 function PANEL:_applyTabLayout()
@@ -466,7 +598,8 @@ function PANEL:AddTab(data, pan, icon)
         description = description,
         pan = pan,
         icon = icon,
-        _hover = 0
+        _hover = 0,
+        _active = (newId == self.activeId) and 1 or 0
     }
 
     self.tabs[newId] = tab
@@ -508,6 +641,10 @@ function PANEL:SetActiveTab(tabId, isSilent)
         return true
     end
 
+    local oldId = self.activeId
+    local distance = math_abs(nextId - oldId)
+    self._indicatorSpeedMul = (distance <= 1) and (INDICATOR_SPEED_ADJACENT / INDICATOR_SPEED) or 1.0
+
     local currentTab = self.tabs[self.activeId]
     if currentTab and IsValid(currentTab.pan) then
         currentTab.pan:SetVisible(false)
@@ -515,6 +652,10 @@ function PANEL:SetActiveTab(tabId, isSilent)
 
     nextTab.pan:SetVisible(true)
     self.activeId = nextId
+
+    if !self._indicatorState then
+        self._indicatorState = { x = 0, y = 0, w = 0, h = 0, alpha = 0, initialized = false }
+    end
 
     if !isSilent then
         Mantle.func.sound()
@@ -535,8 +676,9 @@ function PANEL:PerformLayout(w, h)
     if !IsValid(self._tabFrame) or !IsValid(self.panelTabs) or !IsValid(self.content) then return end
 
     if self.tabStyle == 'modern' then
-        local barHeight = math_min(self.tabHeight, h)
-        local contentY = math_min(h, self.tabHeight + self.tabGap)
+        local barHeight = self.tabHeight + 2
+        local contentY = barHeight + self.tabGap
+        local contentH = math_max(0, h - contentY)
 
         self._tabFrame:SetPos(0, 0)
         self._tabFrame:SetSize(w, barHeight)
@@ -544,7 +686,7 @@ function PANEL:PerformLayout(w, h)
         self.panelTabs:SetSize(math_max(0, w - 2), math_max(0, barHeight - 2))
 
         self.content:SetPos(0, contentY)
-        self.content:SetSize(w, math_max(0, h - contentY))
+        self.content:SetSize(w, contentH)
 
         self:_layoutModernButtons()
     else
